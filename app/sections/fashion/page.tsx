@@ -227,7 +227,7 @@ export default function FashionPage() {
             transition={{ duration: 1, delay: 0.3 }}
             className="text-2xl md:text-3xl text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed"
           >
-            "Styling identity through fabric and form"
+            "Where thrifted treasures meet fresh fashion finds"
           </motion.p>
           <motion.div
             initial={{ opacity: 0 }}
@@ -235,9 +235,9 @@ export default function FashionPage() {
             transition={{ duration: 1, delay: 0.6 }}
             className="text-lg text-primary-300 max-w-3xl mx-auto"
           >
-            Where style meets substance, where every outfit tells a story, 
-            and where fashion becomes a form of self-expression. Discover 
-            the art of dressing for every occasion and mood.
+            Discover unique pieces that blend vintage charm with contemporary style. 
+            From carefully curated thrifted gems to fresh new arrivals, we help you 
+            build a wardrobe that's authentically yours.
           </motion.div>
         </motion.div>
 
@@ -280,10 +280,10 @@ export default function FashionPage() {
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-400 mb-4">01</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Self-Expression</h3>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Sustainable Style</h3>
                 <p className="text-primary-200 text-lg max-w-md">
-                  Fashion is a language that speaks volumes about who we are 
-                  and how we want to be perceived. Every outfit tells a story.
+                  Every thrifted piece has a story, and every new find adds to yours. 
+                  We believe in fashion that's both beautiful and responsible.
                 </p>
               </div>
             </motion.div>
@@ -305,10 +305,10 @@ export default function FashionPage() {
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-300 mb-4">02</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Confidence</h3>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Unique Finds</h3>
                 <p className="text-primary-200 text-lg max-w-md">
-                  The right outfit can transform not just your appearance, 
-                  but your entire mindset and energy. Confidence is the best accessory.
+                  From vintage treasures to contemporary pieces, we curate collections 
+                  that help you stand out with pieces that can't be found everywhere.
                 </p>
               </div>
             </motion.div>
@@ -330,10 +330,10 @@ export default function FashionPage() {
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-200 mb-4">03</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Individuality</h3>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Personal Style</h3>
                 <p className="text-primary-200 text-lg max-w-md">
-                  Celebrate your unique style and don't be afraid to 
-                  break the rules and create your own trends. Be authentically you.
+                  Whether you love classic vintage or modern minimalism, we help you 
+                  discover and develop your authentic style through carefully selected pieces.
                 </p>
               </div>
             </motion.div>
@@ -463,11 +463,10 @@ export default function FashionPage() {
           className="text-center max-w-4xl mx-auto"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            Ready to <span className="text-primary-400">ડ𝗍ɣᥣ౿
-            </span> Together?
+            Ready to <span className="text-primary-400">Shop</span> Your Style?
           </h2>
           <p className="text-xl text-primary-300 mb-8">
-            Let's discuss your fashion project and create something amazing.
+            Browse our collection of thrifted treasures and fresh finds to create your perfect look.
           </p>
           <Link href="/#contact-section">
             <motion.button
@@ -475,7 +474,7 @@ export default function FashionPage() {
               whileTap={{ scale: 0.95 }}
               className="btn btn-outline text-lg px-8 py-4"
             >
-              Get in Touch
+              Browse Collection
             </motion.button>
           </Link>
         </motion.div>

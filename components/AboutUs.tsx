@@ -26,7 +26,7 @@ const teamMembers = [
     id: 1,
     name: "ᒍOᔕᕼᑌᗩ",
     position: "Creative Director",
-    description: "A visionary artist with over 8 years of experience in digital design and creative direction.  Joshua leads our artistic vision and ensures every project meets the highest creative standards.",
+    description: "A visionary creative director with over 8 years of experience in fashion curation and style direction. Joshua leads our artistic vision and ensures every piece meets the highest style standards.",
     image: "/assets/images/team/joshua-nsereko.jpg",
     hoverImage: "/assets/images/team/joshua-nsereko-hover.jpg",
     social: {
@@ -41,7 +41,7 @@ const teamMembers = [
     id: 2,
     name: "ᑎOᗩᕼ",
     position: "Technical Lead",
-    description: "A seasoned software engineer with expertise in full-stack development and emerging technologies. Noah ensures our digital solutions are cutting-edge and scalable.",
+    description: "A tech-savvy professional with expertise in e-commerce and digital platforms. Noah ensures our online shopping experience is seamless and our digital presence is cutting-edge.",
     image: "/assets/images/team/noah-tayebwa.png",
     hoverImage: "/assets/images/team/noah-tayebwa-hover.jpg",
     social: {
@@ -56,7 +56,7 @@ const teamMembers = [
     id: 3,
     name: "ᗪIᑎGᗯᗩ",
     position: "Fashion Curator",
-    description: "A trendsetter in the fashion industry with a keen eye for style and innovation. Dingwa curates our fashion portfolio and ensures every look tells a story.",
+    description: "A passionate fashion curator with an eye for unique finds and sustainable style. Dingwa specializes in discovering thrifted treasures and curating collections that blend vintage charm with modern trends.",
     image: "/assets/images/team/dingwa.jpg",
     hoverImage: "/assets/images/team/dingwa-hover.jpg",
     social: {
@@ -98,8 +98,8 @@ export default function AboutUs() {
           ᗩᗷOᑌT <span className="text-accent-600">Us</span>
           </h2>
           <p className="text-xl text-primary-700 max-w-3xl mx-auto">
-            We are FusionCRAFT STUDIOS, a creative powerhouse where innovation meets craftsmanship. 
-            Our mission is to materialize ideas through structural ingenuity across multiple creative dimensions.
+            We are FusionCRAFT STUDIOS, passionate curators of fashion and style. 
+            Our mission is to bring you unique thrifted treasures and fresh fashion finds that tell your story.
           </p>
         </motion.div>
 
@@ -113,14 +113,13 @@ export default function AboutUs() {
         >
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-primary-600 leading-relaxed mb-6">
-              At FusionCRAFT STUDIOS, we believe that creativity knows no boundaries. Our multidisciplinary approach 
-              brings together architecture, music, art, technology, and fashion to create experiences that inspire 
-              and innovate. Every project we undertake is a testament to our commitment to excellence and our 
-              passion for pushing creative boundaries.
+              At FusionCRAFT STUDIOS, we believe that style is personal and sustainable. Our carefully curated 
+              collection blends vintage charm with contemporary fashion, offering you unique pieces that can't 
+              be found everywhere. Every item we select tells a story and helps you express your authentic self.
             </p>
             <div className="inline-flex items-center space-x-2 bg-primary-100 px-6 py-3 rounded-full">
-              <span className="text-primary-800 font-semibold">Our Catchphrase:</span>
-              <span className="text-accent-600 font-bold italic">"Materializing ideas through structural ingenuity"</span>
+              <span className="text-primary-800 font-semibold">Our Philosophy:</span>
+              <span className="text-accent-600 font-bold italic">"Where thrifted treasures meet fresh fashion finds"</span>
             </div>
           </div>
         </motion.div>

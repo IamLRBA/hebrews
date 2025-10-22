@@ -23,31 +23,31 @@ const statsData = [
     icon: Users,
     number: 500,
     suffix: "+",
-    label: "Happy Clients",
-    description: "Satisfied customers worldwide",
+    label: "Happy Customers",
+    description: "Satisfied fashion enthusiasts",
     color: "from-primary-400 to-primary-600"
   },
   {
     icon: Award,
-    number: 150,
+    number: 1200,
     suffix: "+",
-    label: "Projects Completed",
-    description: "Successful creative ventures",
+    label: "Items Sold",
+    description: "Unique thrifted & new pieces",
     color: "from-accent-400 to-accent-600"
   },
   {
     icon: Clock,
-    number: 5,
+    number: 3,
     suffix: "+",
-    label: "Years Experience",
-    description: "Industry expertise & innovation",
+    label: "Years Curating",
+    description: "Fashion expertise & style",
     color: "from-primary-500 to-primary-700"
   },
   {
     icon: Star,
     number: 98,
     suffix: "%",
-    label: "Client Satisfaction",
+    label: "Customer Satisfaction",
     description: "Exceeding expectations",
     color: "from-accent-500 to-accent-700"
   }

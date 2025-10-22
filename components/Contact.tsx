@@ -125,7 +125,7 @@ export default function Contact() {
           GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span>
           </h2>
           <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
-            Ready to start your next creative project? Let's discuss how we can bring your vision to life.
+            Have questions about our fashion collection? Need styling advice? We're here to help you find the perfect pieces for your wardrobe.
           </p>
         </motion.div>
 

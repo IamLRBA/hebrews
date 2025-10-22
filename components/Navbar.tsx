@@ -25,11 +25,11 @@ const portalItems = [
 ]
 
 const searchSuggestions = [
-  { name: 'Fashion Styling', href: '/sections/fashion', category: 'Fashion' },
-  { name: 'Lookbook', href: '/sections/fashion', category: 'Fashion' },
+  { name: 'Thrifted Dresses', href: '/sections/fashion', category: 'Fashion' },
+  { name: 'Vintage Finds', href: '/sections/fashion', category: 'Fashion' },
+  { name: 'New Arrivals', href: '/sections/fashion', category: 'Fashion' },
   { name: 'Style Consultation', href: '/sections/fashion', category: 'Fashion' },
-  { name: 'Wardrobe Organization', href: '/sections/fashion', category: 'Fashion' },
-  { name: 'Personal Shopping', href: '/sections/fashion', category: 'Fashion' },
+  { name: 'Outfit Styling', href: '/sections/fashion', category: 'Fashion' },
 ]
 
 export default function Navbar() {
@@ -287,7 +287,7 @@ export default function Navbar() {
                       )}
                       <input
                         type="text"
-                        placeholder="Search services"
+                        placeholder="Search fashion items"
                         value={searchQuery}
                         onChange={handleSearchChange}
                         className={`navbar-search-input ${isSearchOpen ? 'pl-10' : 'pl-4'}`}
@@ -394,7 +394,7 @@ export default function Navbar() {
                           )}
                           <input
                             type="text"
-                            placeholder="Search services"
+                            placeholder="Search fashion items"
                             value={searchQuery}
                             onChange={handleSearchChange}
                             className={`w-full ${isSearchOpen ? 'pl-10' : 'pl-4'} pr-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent`}
@@ -534,7 +534,7 @@ export default function Navbar() {
                   {/* Studio Info */}
                   <div className="text-center">
                     <p className="text-sm text-neutral-500">FusionCRAFT STUDIOS</p>
-                    <p className="text-xs text-neutral-400 mt-1">Materializing ideas through structural ingenuity</p>
+                    <p className="text-xs text-neutral-400 mt-1">Curating unique fashion finds and timeless style</p>
                   </div>
                 </div>
               </div>

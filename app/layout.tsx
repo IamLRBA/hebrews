@@ -8,9 +8,9 @@ import KeyboardShortcuts from '../components/KeyboardShortcuts'
 import ThemeProvider from '../components/ThemeProvider'
 
 export const metadata: Metadata = {
-  title: 'FusionCRAFT STUDIOS - Fashion & Style Excellence',
-  description: 'A creative studio focused on fashion and style, creating innovative solutions and beautiful experiences.',
-  keywords: 'fashion, style, design, creative studio, innovation, craftsmanship, personal styling, wardrobe consultation',
+  title: 'FusionCRAFT STUDIOS - Thrifted Fashion & Style Curators',
+  description: 'Discover unique thrifted treasures and fresh fashion finds. We curate sustainable style collections that blend vintage charm with contemporary fashion.',
+  keywords: 'thrifted fashion, vintage clothing, sustainable style, fashion curation, unique finds, style consultation, wardrobe styling, fashion shopping',
   authors: [{ name: 'LRBA', url: 'https://fusioncraftstudios.com' }],
   creator: 'FusionCRAFT STUDIOS',
   publisher: 'FusionCRAFT STUDIOS',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'FusionCRAFT STUDIOS - Fashion & Style Excellence',
-    description: 'A creative studio focused on fashion and style, creating innovative solutions and beautiful experiences.',
+    title: 'FusionCRAFT STUDIOS - Thrifted Fashion & Style Curators',
+    description: 'Discover unique thrifted treasures and fresh fashion finds. We curate sustainable style collections that blend vintage charm with contemporary fashion.',
     url: 'https://fusioncraftstudios.com',
     siteName: 'FusionCRAFT STUDIOS',
     images: [
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FusionCRAFT STUDIOS - Fashion & Style Excellence',
-    description: 'A creative studio focused on fashion and style, creating innovative solutions and beautiful experiences.',
+    title: 'FusionCRAFT STUDIOS - Thrifted Fashion & Style Curators',
+    description: 'Discover unique thrifted treasures and fresh fashion finds. We curate sustainable style collections that blend vintage charm with contemporary fashion.',
     images: ['/assets/images/og-image.jpg'],
   },
   robots: {
