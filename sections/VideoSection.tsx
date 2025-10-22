@@ -515,7 +515,7 @@ export default function VideoSection() {
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background: #644e2b;
+          background: #5A3E2D;
           cursor: pointer;
         }
         
@@ -523,7 +523,7 @@ export default function VideoSection() {
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background: #e8dbb8;
+          background: #C2B280;
           cursor: pointer;
           border: none;
         }
@@ -536,31 +536,31 @@ export default function VideoSection() {
           width: auto;
           height: auto;
           border: none;
-          color: #644e2b;
+          color: #5A3E2D;
         }
         .video-swiper .swiper-button-prev:after {
           content: '⟸';
           font-weight: 700;
           font-size: 20px;
           line-height: 1;
-          color: #644e2b;
+          color: #5A3E2D;
         }
         .video-swiper .swiper-button-next:after {
           content: '⟹';
           font-weight: 700;
           font-size: 20px;
           line-height: 1;
-          color: #644e2b;
+          color: #5A3E2D;
         }
 
         /* Themed pagination dots */
         .video-swiper .swiper-pagination-bullet {
-          background: #644e2b;
+          background: #5A3E2D;
           opacity: 0.6;
           transition: background-color 0.3s ease, opacity 0.3s ease;
         }
         .video-swiper .swiper-pagination-bullet-active {
-          background: #644e2b;
+          background: #5A3E2D;
           opacity: 1;
         }
       `}</style>

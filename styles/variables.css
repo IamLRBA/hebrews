@@ -1,65 +1,66 @@
 :root {
-  /* Color Palette - Earthy, Neutral Theme */
-  --color-primary-50: #fdfbf7;
-  --color-primary-100: #f9f6ed;
-  --color-primary-200: #f3eed8;
-  --color-primary-300: #e8dbb8;
-  --color-primary-400: #d9c592;
-  --color-primary-500: #c7ad6b;
-  --color-primary-600: #b3954a;
-  --color-primary-700: #96773a;
-  --color-primary-800: #7a5f32;
-  --color-primary-900: #644e2b;
-  --color-primary-950: #3a2e1a;
+  /* Color Palette - Coffee & Cream Theme */
+  /* Primary Colors - Coffee to Light Almond gradient */
+  --color-primary-50: #EEE5DA;   /* Light Almond */
+  --color-primary-100: #EFE9E0;  /* Soft Ivory */
+  --color-primary-200: #EAE0C8;  /* Pearl */
+  --color-primary-300: #C2B280;  /* Ecru */
+  --color-primary-400: #A89B6F;  /* Ecru variant */
+  --color-primary-500: #8B7A5A;  /* Coffee variant */
+  --color-primary-600: #6F4E37;  /* Coffee */
+  --color-primary-700: #5A3E2D;  /* Dark Coffee */
+  --color-primary-800: #453025;  /* Darker Coffee */
+  --color-primary-900: #30221C;  /* Darkest Coffee */
+  --color-primary-950: #1B1410;   /* Almost Black Coffee */
 
-  /* Neutral Colors */
-  --color-neutral-50: #fafaf9;
-  --color-neutral-100: #f5f5f4;
-  --color-neutral-200: #e7e5e4;
-  --color-neutral-300: #d6d3d1;
-  --color-neutral-400: #a8a29e;
-  --color-neutral-500: #78716c;
-  --color-neutral-600: #57534e;
-  --color-neutral-700: #44403c;
-  --color-neutral-800: #292524;
-  --color-neutral-900: #1c1917;
-  --color-neutral-950: #0c0a09;
+  /* Neutral Colors - Charcoal to White */
+  --color-neutral-50: #FEFEFE;   /* Pure White */
+  --color-neutral-100: #F8F8F8; /* Off White */
+  --color-neutral-200: #F0F0F0;  /* Light Gray */
+  --color-neutral-300: #E0E0E0;  /* Light Gray */
+  --color-neutral-400: #C0C0C0;  /* Medium Gray */
+  --color-neutral-500: #808080;  /* Gray */
+  --color-neutral-600: #606060;  /* Dark Gray */
+  --color-neutral-700: #404040;   /* Darker Gray */
+  --color-neutral-800: #252525;  /* Deep Charcoal variant */
+  --color-neutral-900: #262424;  /* Deep Charcoal */
+  --color-neutral-950: #1B1B1B;  /* Almost Black */
 
-  /* Accent Colors */
-  --color-accent-50: #fefce8;
-  --color-accent-100: #fef9c3;
-  --color-accent-200: #fef08a;
-  --color-accent-300: #fde047;
-  --color-accent-400: #facc15;
-  --color-accent-500: #eab308;
-  --color-accent-600: #ca8a04;
-  --color-accent-700: #a16207;
-  --color-accent-800: #854d0e;
-  --color-accent-900: #713f12;
+  /* Accent Colors - Coffee variations */
+  --color-accent-50: #F5F0E8;    /* Light Coffee Cream */
+  --color-accent-100: #E8DCC8;   /* Coffee Cream */
+  --color-accent-200: #D4C4A8;   /* Light Coffee */
+  --color-accent-300: #C2B280;   /* Ecru */
+  --color-accent-400: #A89B6F;   /* Ecru variant */
+  --color-accent-500: #8B7A5A;   /* Coffee variant */
+  --color-accent-600: #6F4E37;   /* Coffee */
+  --color-accent-700: #5A3E2D;   /* Dark Coffee */
+  --color-accent-800: #453025;   /* Darker Coffee */
+  --color-accent-900: #30221C;   /* Darkest Coffee */
 
-  /* Text Colors */
-  --color-text-primary: var(--color-neutral-900);
-  --color-text-secondary: var(--color-neutral-700);
-  --color-text-tertiary: var(--color-neutral-500);
-  --color-text-inverse: var(--color-neutral-50);
-  --color-text-accent: var(--color-primary-600);
+  /* Text Colors - Light Mode */
+  --color-text-primary: #262424;     /* Deep Charcoal */
+  --color-text-secondary: #252525;   /* Deep Charcoal variant */
+  --color-text-tertiary: #404040;    /* Dark Gray */
+  --color-text-inverse: #FEFEFE;     /* Pure White */
+  --color-text-accent: #6F4E37;      /* Coffee */
 
-  /* Background Colors */
-  --color-bg-primary: var(--color-neutral-50);
-  --color-bg-secondary: var(--color-primary-100);
-  --color-bg-tertiary: var(--color-primary-200);
-  --color-bg-card: var(--color-neutral-50);
-  --color-bg-overlay: rgba(26, 25, 24, 0.8);
+  /* Background Colors - Light Mode */
+  --color-bg-primary: #FEFEFE;       /* Pure White */
+  --color-bg-secondary: #EFE9E0;    /* Soft Ivory */
+  --color-bg-tertiary: #EAE0C8;      /* Pearl */
+  --color-bg-card: #F8F8F8;          /* Off White */
+  --color-bg-overlay: rgba(38, 36, 36, 0.8); /* Deep Charcoal overlay */
 
-  /* Border Colors */
-  --color-border-primary: var(--color-neutral-200);
-  --color-border-secondary: var(--color-primary-300);
-  --color-border-accent: var(--color-accent-400);
+  /* Border Colors - Light Mode */
+  --color-border-primary: #E0E0E0;   /* Light Gray */
+  --color-border-secondary: #C2B280; /* Ecru */
+  --color-border-accent: #6F4E37;     /* Coffee */
 
   /* Shadow Colors */
-  --color-shadow-light: rgba(26, 25, 24, 0.05);
-  --color-shadow-medium: rgba(26, 25, 24, 0.1);
-  --color-shadow-heavy: rgba(26, 25, 24, 0.2);
+  --color-shadow-light: rgba(38, 36, 36, 0.05);
+  --color-shadow-medium: rgba(38, 36, 36, 0.1);
+  --color-shadow-heavy: rgba(38, 36, 36, 0.2);
 
   /* Typography */
   --font-family-primary: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -176,4 +177,31 @@
   --container-lg: 1024px;
   --container-xl: 1280px;
   --container-2xl: 1536px;
+}
+
+/* Dark Mode Color Variables */
+[data-theme="dark"] {
+  /* Text Colors - Dark Mode */
+  --color-text-primary: #FEFEFE;       /* Pure White */
+  --color-text-secondary: #F8F8F8;    /* Off White */
+  --color-text-tertiary: #C0C0C0;     /* Medium Gray */
+  --color-text-inverse: #262424;       /* Deep Charcoal */
+  --color-text-accent: #C2B280;        /* Ecru */
+
+  /* Background Colors - Dark Mode */
+  --color-bg-primary: #1B1B1B;        /* Almost Black */
+  --color-bg-secondary: #252525;       /* Deep Charcoal variant */
+  --color-bg-tertiary: #30221C;        /* Darkest Coffee */
+  --color-bg-card: #262424;            /* Deep Charcoal */
+  --color-bg-overlay: rgba(254, 254, 254, 0.8); /* White overlay */
+
+  /* Border Colors - Dark Mode */
+  --color-border-primary: #404040;     /* Darker Gray */
+  --color-border-secondary: #5A3E2D;   /* Dark Coffee */
+  --color-border-accent: #C2B280;       /* Ecru */
+
+  /* Shadow Colors - Dark Mode */
+  --color-shadow-light: rgba(254, 254, 254, 0.05);
+  --color-shadow-medium: rgba(254, 254, 254, 0.1);
+  --color-shadow-heavy: rgba(254, 254, 254, 0.2);
 }

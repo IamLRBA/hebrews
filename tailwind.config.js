@@ -13,42 +13,42 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          50: '#fdfbf7',
-          100: '#f9f6ed',
-          200: '#f3eed8',
-          300: '#e8dbb8',
-          400: '#d9c592',
-          500: '#c7ad6b',
-          600: '#b3954a',
-          700: '#96773a',
-          800: '#7a5f32',
-          900: '#644e2b',
-          950: '#3a2e1a',
+          50: '#EEE5DA',   /* Light Almond */
+          100: '#EFE9E0',  /* Soft Ivory */
+          200: '#EAE0C8',  /* Pearl */
+          300: '#C2B280',  /* Ecru */
+          400: '#A89B6F',  /* Ecru variant */
+          500: '#8B7A5A',  /* Coffee variant */
+          600: '#6F4E37',  /* Coffee */
+          700: '#5A3E2D',  /* Dark Coffee */
+          800: '#453025',  /* Darker Coffee */
+          900: '#30221C',  /* Darkest Coffee */
+          950: '#1B1410',   /* Almost Black Coffee */
         },
         neutral: {
-          50: '#fafaf9',
-          100: '#f5f5f4',
-          200: '#e7e5e4',
-          300: '#d6d3d1',
-          400: '#a8a29e',
-          500: '#78716c',
-          600: '#57534e',
-          700: '#44403c',
-          800: '#292524',
-          900: '#1c1917',
-          950: '#0c0a09',
+          50: '#FEFEFE',   /* Pure White */
+          100: '#F8F8F8', /* Off White */
+          200: '#F0F0F0',  /* Light Gray */
+          300: '#E0E0E0',  /* Light Gray */
+          400: '#C0C0C0',  /* Medium Gray */
+          500: '#808080',  /* Gray */
+          600: '#606060',  /* Dark Gray */
+          700: '#404040',   /* Darker Gray */
+          800: '#252525',  /* Deep Charcoal variant */
+          900: '#262424',  /* Deep Charcoal */
+          950: '#1B1B1B',  /* Almost Black */
         },
         accent: {
-          50: '#fefce8',
-          100: '#fef9c3',
-          200: '#fef08a',
-          300: '#fde047',
-          400: '#facc15',
-          500: '#eab308',
-          600: '#ca8a04',
-          700: '#a16207',
-          800: '#854d0e',
-          900: '#713f12',
+          50: '#F5F0E8',    /* Light Coffee Cream */
+          100: '#E8DCC8',   /* Coffee Cream */
+          200: '#D4C4A8',   /* Light Coffee */
+          300: '#C2B280',   /* Ecru */
+          400: '#A89B6F',   /* Ecru variant */
+          500: '#8B7A5A',   /* Coffee variant */
+          600: '#6F4E37',   /* Coffee */
+          700: '#5A3E2D',   /* Dark Coffee */
+          800: '#453025',   /* Darker Coffee */
+          900: '#30221C',   /* Darkest Coffee */
         },
       },
       fontFamily: {

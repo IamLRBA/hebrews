@@ -564,7 +564,7 @@ export default function FashionVideoSection() {
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background: #e8dbb8;
+          background: #C2B280;
           cursor: pointer;
         }
         
@@ -572,7 +572,7 @@ export default function FashionVideoSection() {
           width: 12px;
           height: 12px;
           border-radius: 50%;
-          background: #e8dbb8;
+          background: #C2B280;
           cursor: pointer;
           border: none;
         }
@@ -585,31 +585,31 @@ export default function FashionVideoSection() {
           width: auto;
           height: auto;
           border: none;
-          color: #e8dbb8;
+          color: #C2B280;
         }
         .video-swiper .swiper-button-prev:after {
           content: '⟸';
           font-weight: 700;
           font-size: 20px;
           line-height: 1;
-          color: #e8dbb8;
+          color: #C2B280;
         }
         .video-swiper .swiper-button-next:after {
           content: '⟹';
           font-weight: 700;
           font-size: 20px;
           line-height: 1;
-          color: #e8dbb8;
+          color: #C2B280;
         }
 
         /* Themed pagination dots (below carousel by Swiper) */
         .video-swiper .swiper-pagination-bullet {
-          background: #e8dbb8;
+          background: #C2B280;
           opacity: 0.6;
           transition: background-color 0.3s ease, opacity 0.3s ease;
         }
         .video-swiper .swiper-pagination-bullet-active {
-          background: #e8dbb8;
+          background: #C2B280;
           opacity: 1;
         }
       `}</style>

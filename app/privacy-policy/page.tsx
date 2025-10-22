@@ -61,7 +61,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-neutral-200 sticky top-0 z-50">
+      <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center space-x-2 text-primary-800 hover:text-primary-600 transition-colors">
@@ -100,7 +100,7 @@ export default function PrivacyPolicy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-200 mb-8"
+          className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700 mb-8"
         >
           <h2 className="text-2xl font-bold text-primary-900 mb-4">Introduction</h2>
           <p className="text-neutral-700 leading-relaxed mb-4">
@@ -121,7 +121,7 @@ export default function PrivacyPolicy() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-200"
+              className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700"
             >
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-4">
@@ -146,7 +146,7 @@ export default function PrivacyPolicy() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="bg-white rounded-2xl p-8 shadow-lg border border-neutral-200 mt-8"
+          className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700 mt-8"
         >
           <h2 className="text-2xl font-bold text-primary-900 mb-4">Contact Us</h2>
           <p className="text-neutral-700 leading-relaxed mb-4">
@@ -168,7 +168,7 @@ export default function PrivacyPolicy() {
         >
           <Link
             href="/"
-            className="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-300 font-medium"
+            className="inline-flex items-center px-6 py-3 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors duration-300 font-medium"
           >
             Return to Homepage
           </Link>

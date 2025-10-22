@@ -111,7 +111,7 @@ export default function Contact() {
   }
 
   return (
-    <section className="section bg-white">
+    <section className="section bg-white dark:bg-neutral-900">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
@@ -121,10 +121,10 @@ export default function Contact() {
           transition={{ duration: 0.8 }}
           className="section-title"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-primary-800 mb-6">
-          GET Iᑎ <span className="text-accent-600">TOᑌᑕᕼ</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
+          GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span>
           </h2>
-          <p className="text-xl text-primary-700 max-w-3xl mx-auto">
+          <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
             Ready to start your next creative project? Let's discuss how we can bring your vision to life.
           </p>
         </motion.div>
@@ -148,7 +148,7 @@ export default function Contact() {
                 transition={{ duration: 0.8, delay: 0.1 * index }}
                 className="group"
               >
-                <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-200">
+                <div className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-neutral-800 dark:to-neutral-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-200 dark:border-neutral-600">
                   {/* Icon */}
                   <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-br ${info.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                     <Icon className="w-8 h-8 text-white" />
@@ -156,8 +156,8 @@ export default function Contact() {
 
                   {/* Content */}
                   <div className="text-center mb-6">
-                    <h4 className="text-lg font-bold text-primary-800 mb-2">{info.title}</h4>
-                    <p className="text-primary-600 text-sm leading-relaxed">{info.subtitle}</p>
+                    <h4 className="text-lg font-bold text-primary-800 dark:text-primary-100 mb-2">{info.title}</h4>
+                    <p className="text-primary-600 dark:text-primary-300 text-sm leading-relaxed">{info.subtitle}</p>
                   </div>
 
                   {/* Button */}
@@ -181,8 +181,8 @@ export default function Contact() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl p-8 shadow-lg border border-primary-200">
-            <h3 className="text-3xl font-bold text-primary-800 mb-8 text-center">
+          <div className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-neutral-800 dark:to-neutral-700 rounded-2xl p-8 shadow-lg border border-primary-200 dark:border-neutral-600">
+            <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-8 text-center">
             ᔕEᑎᗪ ᑌᔕ ᗩ ᗰEᔕᔕᗩGE
             </h3>
 
@@ -190,7 +190,7 @@ export default function Contact() {
               {/* Name Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-primary-700 mb-2">
+                  <label htmlFor="firstName" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
                     First Name *
                   </label>
                   <input
@@ -200,13 +200,13 @@ export default function Contact() {
                     value={formData.firstName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-primary-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                    className="w-full px-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 bg-white dark:bg-neutral-800 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400"
                     placeholder="Enter your first name"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-primary-700 mb-2">
+                  <label htmlFor="lastName" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
                     Last Name *
                   </label>
                   <input
@@ -216,7 +216,7 @@ export default function Contact() {
                     value={formData.lastName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-primary-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                    className="w-full px-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 bg-white dark:bg-neutral-800 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400"
                     placeholder="Enter your last name"
                   />
                 </div>
@@ -224,7 +224,7 @@ export default function Contact() {
 
               {/* Email Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-primary-700 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
                   Email Address *
                 </label>
                 <input
@@ -234,14 +234,14 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-primary-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 bg-white dark:bg-neutral-800 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400"
                   placeholder="Enter your email address"
                 />
               </div>
 
               {/* Subject Field */}
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-primary-700 mb-2">
+                <label htmlFor="subject" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
                   Subject *
                 </label>
                 <input
@@ -251,14 +251,14 @@ export default function Contact() {
                   value={formData.subject}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-primary-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-300"
+                  className="w-full px-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 bg-white dark:bg-neutral-800 text-primary-900 dark:text-primary-100 placeholder-primary-500 dark:placeholder-primary-400"
                   placeholder="What is this about?"
                 />
               </div>
 
               {/* Message Field */}
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-primary-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
                   Message *
                 </label>
                 <textarea
@@ -275,7 +275,7 @@ export default function Contact() {
 
               {/* Contact Method Selection */}
               <div>
-                <label className="block text-sm font-medium text-primary-700 mb-4">
+                <label className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-4">
                   How would you like to be contacted? *
                 </label>
                 <div className="flex flex-col sm:flex-row gap-4">

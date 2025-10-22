@@ -204,10 +204,10 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
       className="relative group"
     >
       {/* Background Glow Effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-100 to-accent-100 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-800/30 dark:to-accent-800/30 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
       
              {/* Main Card */}
-       <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 border border-white/20">
+       <div className="relative bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 border border-white/20 dark:border-neutral-700/20">
          {/* Icon Container */}
          <motion.div
            initial={{ scale: 0, rotate: -180 }}
@@ -252,7 +252,7 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
              type: "spring",
              stiffness: 100
            }}
-           className="text-lg font-bold text-primary-800 text-center mb-2"
+           className="text-lg font-bold text-primary-800 dark:text-primary-100 text-center mb-2"
          >
            {stat.label}
          </motion.h3>
@@ -267,7 +267,7 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
              type: "spring",
              stiffness: 100
            }}
-           className="text-primary-600 text-center text-xs leading-relaxed"
+           className="text-primary-600 dark:text-primary-300 text-center text-xs leading-relaxed"
          >
            {stat.description}
          </motion.p>
@@ -354,7 +354,7 @@ const LogoSlider = () => {
                 <div className={`w-16 h-16 bg-gradient-to-br ${logo.color} rounded-xl flex items-center justify-center shadow-lg`}>
                   <logo.icon className="w-8 h-8 text-white" />
                 </div>
-                <span className="text-sm font-medium text-primary-700 text-center">
+                <span className="text-sm font-medium text-primary-700 dark:text-primary-200 text-center">
                   {logo.name}
                 </span>
               </motion.div>
@@ -402,12 +402,12 @@ export default function Stats() {
       {/* Animated Background */}
       <motion.div
         style={{ y: backgroundY, scale: backgroundScale }}
-        className="absolute inset-0 bg-gradient-to-br from-primary-50 via-accent-50 to-primary-100"
+        className="absolute inset-0 bg-gradient-to-br from-primary-50 via-accent-50 to-primary-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-primary-950"
       >
         {/* Floating Geometric Shapes */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-primary-200/30 to-accent-200/30 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-accent-200/30 to-primary-200/30 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-br from-primary-100/20 to-accent-100/20 rounded-full blur-3xl animate-pulse delay-500" />
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-primary-200/30 to-accent-200/30 dark:from-primary-800/20 dark:to-accent-800/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-accent-200/30 to-primary-200/30 dark:from-accent-800/20 dark:to-primary-800/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-br from-primary-100/20 to-accent-100/20 dark:from-primary-900/10 dark:to-accent-900/10 rounded-full blur-3xl animate-pulse delay-500" />
       </motion.div>
 
       <div className="container-custom relative z-10">
@@ -430,10 +430,10 @@ export default function Stats() {
             <TrendingUp className="w-10 h-10 text-white" />
           </motion.div>
           
-          <h2 className="text-4xl md:text-5xl font-bold text-primary-800 mb-6">
-          Oᑌᖇ <span className="text-accent-600">IᗰᑭᗩᑕT</span> Iᑎ ᑎᑌᗰᗷEᖇᔕ
+          <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
+          Oᑌᖇ <span className="text-accent-600 dark:text-accent-300">IᗰᑭᗩᑕT</span> Iᑎ ᑎᑌᗰᗷEᖇᔕ
           </h2>
-          <p className="text-xl text-primary-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-primary-600 dark:text-primary-300 max-w-3xl mx-auto leading-relaxed">
             Discover the impressive statistics that showcase our commitment to excellence, 
             innovation, and client satisfaction across all our creative endeavors.
           </p>
@@ -454,12 +454,12 @@ export default function Stats() {
            transition={{ duration: 0.8, delay: 1.2, type: "spring", stiffness: 100 }}
            className="text-center mt-16"
          >
-           <div className="inline-flex items-center space-x-4 bg-white/80 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-white/20">
-             <Heart className="w-6 h-6 text-primary-600 animate-pulse" />
-             <span className="text-primary-800 font-semibold">
+           <div className="inline-flex items-center space-x-4 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-white/20 dark:border-neutral-700/20">
+             <Heart className="w-6 h-6 text-primary-600 dark:text-primary-300 animate-pulse" />
+             <span className="text-primary-800 dark:text-primary-100 font-semibold">
                Trusted by creative professionals worldwide
              </span>
-             <Target className="w-6 h-6 text-accent-600 animate-pulse delay-1000" />
+             <Target className="w-6 h-6 text-accent-600 dark:text-accent-300 animate-pulse delay-1000" />
            </div>
          </motion.div>
 

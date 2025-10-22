@@ -368,7 +368,7 @@ export default function CEOProfile() {
               {/* Fullscreen Button */}
               <button
                 onClick={() => openImageModal(currentImageIndex)}
-                className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-700 hover:text-primary-800 transition-all duration-300 hover:scale-110 shadow-lg"
+                className="absolute top-4 right-4 w-10 h-10 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100 transition-all duration-300 hover:scale-110 shadow-lg"
               >
                 <Maximize2 className="w-5 h-5" />
               </button>
@@ -377,14 +377,14 @@ export default function CEOProfile() {
             {/* Navigation Arrows */}
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 hover:text-primary-800"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
             >
               <span className="text-2xl">⟸</span>
             </button>
             
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 hover:text-primary-800"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
             >
               <span className="text-2xl">⟹</span>
             </button>
@@ -520,7 +520,7 @@ export default function CEOProfile() {
             >
               <button
                 onClick={closeImageModal}
-                className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-700 hover:text-primary-800 transition-all duration-300 hover:scale-110 shadow-lg z-10"
+                className="absolute top-4 right-4 w-10 h-10 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100 transition-all duration-300 hover:scale-110 shadow-lg z-10"
               >
                 <X className="w-5 h-5" />
               </button>

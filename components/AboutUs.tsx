@@ -83,7 +83,7 @@ export default function AboutUs() {
   const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
 
   return (
-    <section ref={containerRef} className="section bg-white">
+    <section ref={containerRef} className="section bg-white dark:bg-neutral-900">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div
@@ -188,7 +188,7 @@ export default function AboutUs() {
                 onMouseEnter={() => setHoveredMember(member.id)}
                 onMouseLeave={() => setHoveredMember(null)}
               >
-                <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-100 relative overflow-hidden">
+                <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-100 dark:border-neutral-700 relative overflow-hidden">
                   {/* Member Image */}
                   <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-primary-200">
                     <img

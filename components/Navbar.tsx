@@ -11,10 +11,6 @@ import {
   HiX, 
   HiSearch, 
   HiHome,
-  HiOfficeBuilding,
-  HiMusicNote,
-  HiColorSwatch,
-  HiCode,
   HiShoppingBag,
   HiGlobeAlt
 } from 'react-icons/hi'
@@ -25,25 +21,15 @@ const navigation = [
 ]
 
 const portalItems = [
-  { name: 'Architecture', href: '/sections/architecture', icon: HiOfficeBuilding },
-  { name: 'Music & Poetry', href: '/sections/music', icon: HiMusicNote },
-  { name: 'Art & Design', href: '/sections/art', icon: HiColorSwatch },
-  { name: 'Software Development', href: '/sections/coding', icon: HiCode },
   { name: 'Fashion', href: '/sections/fashion', icon: HiShoppingBag },
 ]
 
 const searchSuggestions = [
-  { name: 'Architecture Design', href: '/sections/architecture', category: 'Architecture' },
-  { name: 'Building Plans', href: '/sections/architecture', category: 'Architecture' },
-  { name: '3D Renders', href: '/sections/architecture', category: 'Architecture' },
-  { name: 'Music Production', href: '/sections/music', category: 'Music' },
-  { name: 'Poetry Collection', href: '/sections/music', category: 'Music' },
-  { name: 'Digital Art', href: '/sections/art', category: 'Art' },
-  { name: 'Interactive Canvas', href: '/sections/art', category: 'Art' },
-  { name: 'Web Development', href: '/sections/coding', category: 'Development' },
-  { name: 'Mobile Apps', href: '/sections/coding', category: 'Development' },
   { name: 'Fashion Styling', href: '/sections/fashion', category: 'Fashion' },
   { name: 'Lookbook', href: '/sections/fashion', category: 'Fashion' },
+  { name: 'Style Consultation', href: '/sections/fashion', category: 'Fashion' },
+  { name: 'Wardrobe Organization', href: '/sections/fashion', category: 'Fashion' },
+  { name: 'Personal Shopping', href: '/sections/fashion', category: 'Fashion' },
 ]
 
 export default function Navbar() {
@@ -152,7 +138,7 @@ export default function Navbar() {
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled 
-            ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-neutral-200' 
+            ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg border-b border-neutral-200 dark:border-neutral-700' 
             : 'bg-transparent'
         }`}
       >
@@ -165,7 +151,7 @@ export default function Navbar() {
                 <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white font-bold text-lg">F</span>
                 </div>
-                <span className="text-xl font-bold text-primary-800 group-hover:text-primary-900 transition-colors duration-300">
+                <span className="text-xl font-bold text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300">
                   FusionCRAFT
                 </span>
               </Link>
@@ -248,7 +234,7 @@ export default function Navbar() {
                         exit={{ opacity: 0, y: -10 }}
                         onMouseEnter={() => setIsPortalsOpen(true)}
                         onMouseLeave={() => setIsPortalsOpen(false)}
-                        className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-neutral-200 z-50"
+                        className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-neutral-800 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 z-50"
                       >
                         <div className="py-2">
                           {portalItems.map((item, index) => {
@@ -366,7 +352,7 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 right-0 h-[70vh] w-80 bg-white shadow-2xl z-50 lg:hidden rounded-l-2xl"
+              className="fixed top-0 right-0 h-[70vh] w-80 bg-white dark:bg-neutral-800 shadow-2xl z-50 lg:hidden rounded-l-2xl"
             >
               <div className="flex flex-col h-full">
                 {/* Header */}

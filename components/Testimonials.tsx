@@ -122,7 +122,7 @@ const TestimonialsSection = () => {
   }
 
   return (
-    <section className="testimonials section bg-gradient-to-br from-primary-100 to-primary-200 relative overflow-hidden" id="testimonials">
+    <section className="testimonials section bg-gradient-to-br from-primary-100 to-primary-200 dark:from-neutral-800 dark:to-neutral-900 relative overflow-hidden" id="testimonials">
       {/* Floating Particles */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -185,13 +185,13 @@ const TestimonialsSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-primary-800 mb-16 text-center"
+          className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-16 text-center"
         >
           TEᔕTIᗰOᑎIᗩᒪᔕ
         </motion.h2>
         
         <div className="slider-container relative">
-          <button className="nav-button prev absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 hover:text-primary-800" onClick={handlePrev}>
+          <button className="nav-button prev absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100" onClick={handlePrev}>
             ⟸
           </button>
           
@@ -215,22 +215,22 @@ const TestimonialsSection = () => {
                 onClick={() => setSelectedTestimonial(testimonial)}
                 style={{ width: `${cardWidth}px` }}
               >
-                <div className="testimonial-content bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105">
+                <div className="testimonial-content bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105">
                   {/* Quote Icon */}
                   <div className="flex justify-center mb-3">
-                    <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                      <svg className="w-4 h-4 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-primary-600 dark:text-primary-300" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                       </svg>
                     </div>
                   </div>
-                  <p className="testimonial-text text-primary-700 text-sm leading-relaxed mb-4 flex-grow">"{testimonial.text}"</p>
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-sm leading-relaxed mb-4 flex-grow">"{testimonial.text}"</p>
                   <div className="stars flex justify-center mb-4">
                     {renderStars(testimonial.rating)}
                   </div>
                   
                   <div className="testimonial-author">
-                    <div className="author-image w-12 h-12 bg-primary-200 rounded-full flex items-center justify-center text-primary-800 font-bold text-lg mx-auto mb-2">
+                    <div className="author-image w-12 h-12 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-lg mx-auto mb-2">
                       {testimonial.image ? (
                         <img src={testimonial.image} alt={testimonial.author} className="w-full h-full rounded-full object-cover" />
                       ) : (
@@ -238,8 +238,8 @@ const TestimonialsSection = () => {
                       )}
                     </div>
                     <div className="author-info text-center">
-                      <h4 className="author-name text-primary-800 font-semibold">{testimonial.author}</h4>
-                      <p className="author-role text-primary-600 text-sm">{testimonial.company}</p>
+                      <h4 className="author-name text-primary-800 dark:text-primary-100 font-semibold">{testimonial.author}</h4>
+                      <p className="author-role text-primary-600 dark:text-primary-300 text-sm">{testimonial.company}</p>
                     </div>
                   </div>
                 </div>
@@ -247,16 +247,16 @@ const TestimonialsSection = () => {
             ))}
           </motion.div>
           
-          <button className="nav-button next absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 hover:text-primary-800" onClick={handleNext}>
+          <button className="nav-button next absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100" onClick={handleNext}>
             ⟹
           </button>
         </div>
 
         <div className="mobile-nav-buttons flex justify-center mt-8 space-x-4 lg:hidden">
-          <button className="mobile-nav-button w-12 h-12 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors duration-200" onClick={handlePrev}>
+          <button className="mobile-nav-button w-12 h-12 bg-primary-600 dark:bg-primary-700 text-white rounded-full flex items-center justify-center hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors duration-200" onClick={handlePrev}>
             ⟸
           </button>
-          <button className="mobile-nav-button w-12 h-12 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors duration-200" onClick={handleNext}>
+          <button className="mobile-nav-button w-12 h-12 bg-primary-600 dark:bg-primary-700 text-white rounded-full flex items-center justify-center hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors duration-200" onClick={handleNext}>
             ⟹
           </button>
         </div>
@@ -271,25 +271,25 @@ const TestimonialsSection = () => {
               onClick={() => setSelectedTestimonial(null)}
             >
               <motion.div
-                className="modal-content bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative"
+                className="modal-content bg-white dark:bg-neutral-800 rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <button className="close-button absolute top-4 right-4 w-8 h-8 bg-neutral-200 hover:bg-neutral-300 rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:text-primary-600" onClick={() => setSelectedTestimonial(null)}>
+                <button className="close-button absolute top-4 right-4 w-8 h-8 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:text-primary-600 dark:hover:text-primary-300" onClick={() => setSelectedTestimonial(null)}>
                   <FiX />
                 </button>
                 
                 <div className="testimonial-content">
-                  <p className="testimonial-text text-primary-700 text-lg leading-relaxed mb-6">"{selectedTestimonial.fullText}"</p>
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-lg leading-relaxed mb-6">"{selectedTestimonial.fullText}"</p>
                   <div className="stars flex justify-center mb-6">
                     {renderStars(selectedTestimonial.rating)}
                   </div>
                 </div>
                 
                 <div className="testimonial-author">
-                  <div className="author-image w-16 h-16 bg-primary-200 rounded-full flex items-center justify-center text-primary-800 font-bold text-xl mx-auto mb-4">
+                  <div className="author-image w-16 h-16 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-xl mx-auto mb-4">
                     {selectedTestimonial.image ? (
                       <img src={selectedTestimonial.image} alt={selectedTestimonial.author} className="w-full h-full rounded-full object-cover" />
                     ) : (
@@ -297,8 +297,8 @@ const TestimonialsSection = () => {
                     )}
                   </div>
                   <div className="author-info text-center">
-                    <h4 className="author-name text-primary-800 font-bold text-xl">{selectedTestimonial.author}</h4>
-                    <p className="author-role text-primary-600 text-lg">{selectedTestimonial.company}</p>
+                    <h4 className="author-name text-primary-800 dark:text-primary-100 font-bold text-xl">{selectedTestimonial.author}</h4>
+                    <p className="author-role text-primary-600 dark:text-primary-300 text-lg">{selectedTestimonial.company}</p>
                   </div>
                 </div>
               </motion.div>

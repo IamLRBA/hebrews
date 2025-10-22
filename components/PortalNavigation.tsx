@@ -8,34 +8,6 @@ import { useRouter } from 'next/navigation'
 const portals = [
   {
     id: 1,
-    title: "⾕",
-    subtitle: "ᗩᖇᑕᕼITEᑕTᑌᖇE",
-    image: "/assets/images/sections/portals/architecture.jpg",
-    href: "/sections/architecture"
-  },
-  {
-    id: 2,
-    title: "𝄞",
-    subtitle: "ᗰᑌֆIᑕ & ᑭOETᖇY",
-    image: "/assets/images/sections/portals/music.jpg",
-    href: "/sections/music"
-  },
-  {
-    id: 3,
-    title: "☯",
-    subtitle: "ᗩᖇT & ᗪEᔕIGᑎ",
-    image: "/assets/images/sections/portals/art.jpg",
-    href: "/sections/art"
-  },
-  {
-    id: 4,
-    title: "⚛",
-    subtitle: "ᔕOᖴTᗯᗩᖇE ᗪEᐯEᒪOᑭᗰEᑎT",
-    image: "/assets/images/sections/portals/coding.jpg",
-    href: "/sections/coding"
-  },
-  {
-    id: 5,
     title: "✃",
     subtitle: "ᖴᗩᔕᕼIOᑎ",
     image: "/assets/images/sections/portals/fashion.jpg",

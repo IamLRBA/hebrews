@@ -8,9 +8,9 @@ import KeyboardShortcuts from '../components/KeyboardShortcuts'
 import ThemeProvider from '../components/ThemeProvider'
 
 export const metadata: Metadata = {
-  title: 'FusionCRAFT STUDIOS - Materializing ideas through structural ingenuity',
-  description: 'A creative studio that brings together architecture, music, art, technology, and fashion to create innovative solutions and beautiful experiences.',
-  keywords: 'architecture, music, art, design, software development, fashion, creative studio, innovation, craftsmanship',
+  title: 'FusionCRAFT STUDIOS - Fashion & Style Excellence',
+  description: 'A creative studio focused on fashion and style, creating innovative solutions and beautiful experiences.',
+  keywords: 'fashion, style, design, creative studio, innovation, craftsmanship, personal styling, wardrobe consultation',
   authors: [{ name: 'LRBA', url: 'https://fusioncraftstudios.com' }],
   creator: 'FusionCRAFT STUDIOS',
   publisher: 'FusionCRAFT STUDIOS',
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'FusionCRAFT STUDIOS - Materializing ideas through structural ingenuity',
-    description: 'A creative studio that brings together architecture, music, art, technology, and fashion to create innovative solutions and beautiful experiences.',
+    title: 'FusionCRAFT STUDIOS - Fashion & Style Excellence',
+    description: 'A creative studio focused on fashion and style, creating innovative solutions and beautiful experiences.',
     url: 'https://fusioncraftstudios.com',
     siteName: 'FusionCRAFT STUDIOS',
     images: [
@@ -41,8 +41,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FusionCRAFT STUDIOS - Materializing ideas through structural ingenuity',
-    description: 'A creative studio that brings together architecture, music, art, technology, and fashion to create innovative solutions and beautiful experiences.',
+    title: 'FusionCRAFT STUDIOS - Fashion & Style Excellence',
+    description: 'A creative studio focused on fashion and style, creating innovative solutions and beautiful experiences.',
     images: ['/assets/images/og-image.jpg'],
   },
   robots: {

@@ -203,7 +203,7 @@ export default function Home() {
                         Materializing ideas through structural ingenuity
                       </p>
                       <p className="text-lg text-primary-600 max-w-2xl mx-auto">
-                        Where creativity meets craftsmanship across five dimensions of human expression
+                        Where creativity meets craftsmanship in the art of fashion and style
                       </p>
                     </motion.div>
 
@@ -267,7 +267,7 @@ export default function Home() {
                     E᙭ᑭᒪOᖇE <span className="text-accent-600">the Portals</span>
                     </h2>
                     <p className="text-xl text-primary-700 max-w-3xl mx-auto">
-                      Each portal represents a dimension of creative expression, waiting to be discovered
+                      Discover the art of fashion and style through our curated portal
                     </p>
                   </motion.div>
 

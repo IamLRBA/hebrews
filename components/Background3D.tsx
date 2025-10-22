@@ -22,29 +22,29 @@ function FloatingShapes() {
     <group ref={groupRef}>
       {/* Floating spheres */}
       <Sphere args={[0.5, 16, 16]} position={[-10, 5, -15]}>
-        <meshStandardMaterial color="#f97316" transparent opacity={0.3} />
+        <meshStandardMaterial color="#6F4E37" transparent opacity={0.3} />
       </Sphere>
       
       <Sphere args={[0.3, 16, 16]} position={[8, -3, -10]}>
-        <meshStandardMaterial color="#78716c" transparent opacity={0.2} />
+        <meshStandardMaterial color="#808080" transparent opacity={0.2} />
       </Sphere>
       
       <Sphere args={[0.7, 16, 16]} position={[-5, -8, -20]}>
-        <meshStandardMaterial color="#6c757d" transparent opacity={0.25} />
+        <meshStandardMaterial color="#606060" transparent opacity={0.25} />
       </Sphere>
 
       {/* Floating boxes */}
       <Box args={[1, 1, 1]} position={[12, 7, -25]}>
-        <meshStandardMaterial color="#ea580c" transparent opacity={0.2} />
+        <meshStandardMaterial color="#8B7A5A" transparent opacity={0.2} />
       </Box>
       
       <Box args={[0.8, 0.8, 0.8]} position={[-15, -5, -18]}>
-        <meshStandardMaterial color="#495057" transparent opacity={0.15} />
+        <meshStandardMaterial color="#404040" transparent opacity={0.15} />
       </Box>
 
       {/* Floating torus */}
       <Torus args={[1, 0.3, 8, 16]} position={[0, 10, -30]}>
-        <meshStandardMaterial color="#f97316" transparent opacity={0.2} />
+        <meshStandardMaterial color="#6F4E37" transparent opacity={0.2} />
       </Torus>
     </group>
   )

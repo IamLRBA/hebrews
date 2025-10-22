@@ -249,7 +249,7 @@ export default function FashionPage() {
         </div>
       </section>
 
-      {/* Lookbook Carousel Section */}
+      {/* Fashion Philosophy Section */}
       <section className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -258,308 +258,91 @@ export default function FashionPage() {
           viewport={{ once: true }}
           className="max-w-6xl mx-auto"
         >
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-400">Lookbook</span> 𝒸𝒶𝓇ℴ𝓊𝓈ℯ𝓁
-
+          <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
+            <span className="text-primary-400">ᖴᗩᔕᕼIOᑎ</span> Philosophy
           </h2>
           
-          <div className="glass-effect p-8 rounded-2xl">
-            <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold mb-4 text-white">
-                Style Variations
-              </h3>
-              <p className="text-primary-200">
-                See how the same outfit can be styled differently for various occasions
-              </p>
-            </div>
+          <div className="space-y-16 flex flex-col items-center">
+            {/* Philosophy Item 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
+            >
+              <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
+                <img 
+                  src="/assets/images/sections/fashion/philosophy-1.jpg" 
+                  alt="Self-Expression" 
+                  className="w-24 h-24 object-cover rounded-xl"
+                />
+              </div>
+              <div className="flex flex-col text-center md:text-left">
+                <div className="text-6xl font-bold text-primary-400 mb-4">01</div>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Self-Expression</h3>
+                <p className="text-primary-200 text-lg max-w-md">
+                  Fashion is a language that speaks volumes about who we are 
+                  and how we want to be perceived. Every outfit tells a story.
+                </p>
+              </div>
+            </motion.div>
             
-            {/* Lookbook Component */}
-            <div className="relative">
-              {/* Lookbook Navigation */}
-              <div className="flex justify-center space-x-4 mb-6">
-                {['Casual', 'Formal', 'Streetwear', 'Vintage'].map((category, index) => (
-                  <motion.button
-                    key={category}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 bg-primary-600/20 text-primary-300 hover:bg-primary-600/30 border border-primary-500/30 rounded-full transition-all duration-300"
-                  >
-                    {category}
-                  </motion.button>
-                ))}
+            {/* Philosophy Item 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
+            >
+              <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-8">
+                <img 
+                  src="/assets/images/sections/fashion/philosophy-2.jpg" 
+                  alt="Confidence" 
+                  className="w-24 h-24 object-cover rounded-xl"
+                />
               </div>
-              
-              {/* Lookbook Carousel */}
-              <div className="bg-gradient-to-br from-primary-800/30 to-accent-800/30 h-96 rounded-xl border border-primary-500/30 overflow-hidden relative">
-                {/* Auto-play Toggle */}
-                <div className="absolute top-4 right-4 z-20">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-                    className={`p-2 rounded-full transition-all duration-300 ${
-                      isAutoPlaying 
-                        ? 'bg-accent-600 hover:bg-accent-700' 
-                        : 'bg-primary-600 hover:bg-primary-700'
-                    } text-white`}
-                    title={isAutoPlaying ? 'Pause' : 'Play'}
-                  >
-                    {isAutoPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                  </motion.button>
-                </div>
-
-                {/* Carousel Container */}
-                <div className="relative h-full">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={currentLookIndex}
-                      initial={{ opacity: 0, x: 100 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -100 }}
-                      transition={{ duration: 0.5, ease: "easeInOut" }}
-                      className="absolute inset-0 flex items-center justify-center"
-                    >
-                      {currentLookIndex === 0 && (
-                        <div className="text-center p-8">
-                          <div className="text-6xl mb-4">
-                            <svg className="w-16 h-16 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                          </div>
-                          <h4 className="text-2xl font-bold text-white mb-2">Casual Elegance</h4>
-                          <p className="text-primary-200 mb-4">Perfect blend of comfort and style</p>
-                          <div className="flex justify-center space-x-2">
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Denim</span>
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Cotton</span>
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Linen</span>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {currentLookIndex === 1 && (
-                        <div className="text-center p-8">
-                          <div className="text-6xl mb-4">
-                            <svg className="w-16 h-16 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                          </div>
-                          <h4 className="text-2xl font-bold text-white mb-2">Business Professional</h4>
-                          <p className="text-primary-200 mb-4">Sharp and sophisticated office attire</p>
-                          <div className="flex justify-center space-x-2">
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Wool</span>
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Silk</span>
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Cotton</span>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {currentLookIndex === 2 && (
-                        <div className="text-center p-8">
-                          <div className="text-6xl mb-4">
-                            <svg className="w-16 h-16 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                          </div>
-                          <h4 className="text-2xl font-bold text-white mb-2">Streetwear Edge</h4>
-                          <p className="text-primary-200 mb-4">Urban style with attitude</p>
-                          <div className="flex justify-center space-x-2">
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Leather</span>
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Denim</span>
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Canvas</span>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {currentLookIndex === 3 && (
-                        <div className="text-center p-8">
-                          <div className="text-6xl mb-4">
-                            <svg className="w-16 h-16 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                            </svg>
-                          </div>
-                          <h4 className="text-2xl font-bold text-white mb-2">Vintage Charm</h4>
-                          <p className="text-primary-200 mb-4">Timeless elegance with retro flair</p>
-                          <div className="flex justify-center space-x-2">
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Velvet</span>
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Silk</span>
-                            <span className="bg-primary-500/30 text-primary-200 px-3 py-1 rounded-full text-sm">Lace</span>
-                          </div>
-                        </div>
-                      )}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-                
-                {/* Navigation Arrows */}
-                <button
-                  onClick={() => setCurrentLookIndex(prev => prev > 0 ? prev - 1 : 3)}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors duration-300 z-10"
-                >
-                  <span className="text-2xl">⟸</span>
-                </button>
-                
-                <button
-                  onClick={() => setCurrentLookIndex(prev => prev < 3 ? prev + 1 : 0)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full transition-colors duration-300 z-10"
-                >
-                  <span className="text-2xl">⟹</span>
-                </button>
-                
-                {/* Interactive Dots */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-                  {[0, 1, 2, 3].map((index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentLookIndex(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                        currentLookIndex === index 
-                          ? 'bg-white scale-125' 
-                          : 'bg-white/50 hover:bg-white/75'
-                      }`}
-                    />
-                  ))}
-                </div>
+              <div className="flex flex-col text-center md:text-left">
+                <div className="text-6xl font-bold text-primary-300 mb-4">02</div>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Confidence</h3>
+                <p className="text-primary-200 text-lg max-w-md">
+                  The right outfit can transform not just your appearance, 
+                  but your entire mindset and energy. Confidence is the best accessory.
+                </p>
               </div>
-            </div>
+            </motion.div>
+            
+            {/* Philosophy Item 3 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
+            >
+              <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-8">
+                <img 
+                  src="/assets/images/sections/fashion/philosophy-3.jpg" 
+                  alt="Individuality" 
+                  className="w-24 h-24 object-cover rounded-xl"
+                />
+              </div>
+              <div className="flex flex-col text-center md:text-left">
+                <div className="text-6xl font-bold text-primary-200 mb-4">03</div>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Individuality</h3>
+                <p className="text-primary-200 text-lg max-w-md">
+                  Celebrate your unique style and don't be afraid to 
+                  break the rules and create your own trends. Be authentically you.
+                </p>
+              </div>
+            </motion.div>
           </div>
         </motion.div>
       </section>
 
-      {/* Style Categories Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
-        >
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-400">𝖲𝗍ɣᥣ౿</span> Categories
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {styleCategories.map((style, index) => (
-              <motion.div
-                key={style.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02 }}
-                className="portal-card p-6 text-center cursor-pointer group"
-                onClick={() => toggleStyleExpansion(style.name)}
-              >
-                {/* Cover Image */}
-                <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                  {style.coverImage}
-                </div>
-                
-                <h3 className="text-xl font-bold mb-2 text-white">{style.name}</h3>
-                <p className="text-primary-200 text-sm mb-4">{style.description}</p>
-                
-                {/* Expandable Content */}
-                <AnimatePresence>
-                  {expandedStyle === style.name && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      {/* Image Carousel */}
-                      <div className="relative mb-4">
-                        <div className="relative h-32 bg-primary-800/30 rounded-lg overflow-hidden">
-                          <AnimatePresence mode="wait">
-                            <motion.div
-                              key={currentImageIndex}
-                              initial={{ opacity: 0, x: 100 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -100 }}
-                              transition={{ duration: 0.3 }}
-                              className="absolute inset-0 flex items-center justify-center"
-                            >
-                              <img src={style.images[currentImageIndex]} alt={style.name} className="w-full h-full object-cover" />
-                            </motion.div>
-                          </AnimatePresence>
-                          
-                          {/* Navigation Arrows */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              prevImage()
-                            }}
-                            className="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-primary-600/80 rounded-full flex items-center justify-center text-white hover:bg-primary-600 transition-colors duration-300"
-                          >
-                            ⟸
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              nextImage()
-                            }}
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-primary-600/80 rounded-full flex items-center justify-center text-white hover:bg-primary-600 transition-colors duration-300"
-                          >
-                            ⟹
-                          </button>
-                        </div>
-                        
-                        {/* Carousel Dots */}
-                        <div className="flex justify-center mt-2 space-x-1">
-                          {style.images.map((_, imgIndex) => (
-                            <button
-                              key={imgIndex}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                goToImage(imgIndex)
-                              }}
-                              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                                imgIndex === currentImageIndex 
-                                  ? 'bg-primary-400 w-4' 
-                                  : 'bg-primary-500/50'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* Style Tags */}
-                      <div className="grid grid-cols-2 gap-1 mb-4">
-                        {style.styles.slice(0, 6).map((styleName, styleIndex) => (
-                          <div key={styleIndex} className="text-xs text-primary-200 bg-primary-600/20 px-2 py-1 rounded hover:bg-primary-600/30 transition-colors duration-300">
-                            {styleName}
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                
-                <div className="text-xs text-primary-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  {expandedStyle === style.name ? 'Click to collapse' : 'Click to explore styles'}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Fashion Video Gallery Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="max-w-7xl mx-auto"
-        >
-          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-400">ᖴᗩᔕᕼIOᑎ</span> Video Gallery
-          </h2>
-          <FashionVideoSection />
-        </motion.div>
-      </section>
+      {/* ⏣ Our Services */}
+      <FashionServices />
 
       {/* Moodboard Section */}
       <section className="py-20 px-4">
@@ -578,7 +361,7 @@ export default function FashionPage() {
           
           <div className="glass-effect p-8 rounded-2xl">
             <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold mb-4 text-white">
+              <h3 className="text-3xl font-bold mb-4 text-white dark:text-neutral-100">
                 Visual Inspiration
               </h3>
               <p className="text-primary-200">
@@ -654,100 +437,21 @@ export default function FashionPage() {
         </motion.div>
       </section>
 
-      {/* Fashion Philosophy Section */}
+      {/* Fashion Video Gallery Section */}
       <section className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
+          className="max-w-7xl mx-auto"
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
-            <span className="text-primary-400">ᖴᗩᔕᕼIOᑎ</span> Philosophy
+          <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
+            <span className="text-primary-400">ᖴᗩᔕᕼIOᑎ</span> Video Gallery
           </h2>
-          
-          <div className="space-y-16 flex flex-col items-center">
-            {/* Philosophy Item 1 */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
-            >
-              <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
-                <img 
-                  src="/assets/images/sections/fashion/philosophy-1.jpg" 
-                  alt="Self-Expression" 
-                  className="w-24 h-24 object-cover rounded-xl"
-                />
-              </div>
-              <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-400 mb-4">01</div>
-                <h3 className="text-3xl font-bold mb-2 text-white">Self-Expression</h3>
-                <p className="text-primary-200 text-lg max-w-md">
-                  Fashion is a language that speaks volumes about who we are 
-                  and how we want to be perceived. Every outfit tells a story.
-                </p>
-              </div>
-            </motion.div>
-            
-            {/* Philosophy Item 2 */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
-            >
-              <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-8">
-                <img 
-                  src="/assets/images/sections/fashion/philosophy-2.jpg" 
-                  alt="Confidence" 
-                  className="w-24 h-24 object-cover rounded-xl"
-                />
-              </div>
-              <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-300 mb-4">02</div>
-                <h3 className="text-3xl font-bold mb-2 text-white">Confidence</h3>
-                <p className="text-primary-200 text-lg max-w-md">
-                  The right outfit can transform not just your appearance, 
-                  but your entire mindset and energy. Confidence is the best accessory.
-                </p>
-              </div>
-            </motion.div>
-            
-            {/* Philosophy Item 3 */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
-            >
-              <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-8">
-                <img 
-                  src="/assets/images/sections/fashion/philosophy-3.jpg" 
-                  alt="Individuality" 
-                  className="w-24 h-24 object-cover rounded-xl"
-                />
-              </div>
-              <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-200 mb-4">03</div>
-                <h3 className="text-3xl font-bold mb-2 text-white">Individuality</h3>
-                <p className="text-primary-200 text-lg max-w-md">
-                  Celebrate your unique style and don't be afraid to 
-                  break the rules and create your own trends. Be authentically you.
-                </p>
-              </div>
-            </motion.div>
-          </div>
+          <FashionVideoSection />
         </motion.div>
       </section>
-
-      {/* ⏣ Our Services */}
-      <FashionServices />
 
       {/* Call to Action Section */}
       <section className="py-20 px-4">

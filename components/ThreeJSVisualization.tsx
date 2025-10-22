@@ -40,13 +40,13 @@ function Building({ position, size, color, rotation = 0 }: any) {
           args={[size[0] * 0.8, 0.1, 0.1]}
           position={[0, i * 0.5 - size[1] / 2 + 0.25, size[2] / 2 + 0.01]}
         >
-          <meshStandardMaterial color="#e8dbb8" emissive="#e8dbb8" emissiveIntensity={0.2} />
+          <meshStandardMaterial color="#C2B280" emissive="#C2B280" emissiveIntensity={0.2} />
         </Box>
       ))}
       
       {/* Roof */}
       <Box args={[size[0] * 1.1, 0.2, size[2] * 1.1]} position={[0, size[1] / 2 + 0.1, 0]}>
-        <meshStandardMaterial color="#7a5f32" />
+        <meshStandardMaterial color="#6F4E37" />
       </Box>
       
       {/* Balconies */}
@@ -56,13 +56,13 @@ function Building({ position, size, color, rotation = 0 }: any) {
           args={[size[0] * 0.6, 0.05, 0.3]}
           position={[0, i * 1.5 - size[1] / 2 + 0.75, size[2] / 2 + 0.15]}
         >
-          <meshStandardMaterial color="#d9c592" />
+          <meshStandardMaterial color="#A89B6F" />
         </Box>
       ))}
       
       {/* Entrance */}
       <Box args={[size[0] * 0.3, 0.8, 0.2]} position={[0, -size[1] / 2 + 0.4, size[2] / 2 + 0.01]}>
-        <meshStandardMaterial color="#4a3c2c" />
+        <meshStandardMaterial color="#453025" />
       </Box>
     </group>
   )
@@ -74,20 +74,20 @@ function Road() {
     <group>
       {/* Main road */}
       <Box args={[40, 0.1, 4]} position={[0, -4.9, 0]}>
-        <meshStandardMaterial color="#2c2c2c" />
+        <meshStandardMaterial color="#404040" />
       </Box>
       
       {/* Road markings */}
       <Box args={[40, 0.11, 0.2]} position={[0, -4.89, 0]}>
-        <meshStandardMaterial color="#ffffff" />
+        <meshStandardMaterial color="#FEFEFE" />
       </Box>
       
       {/* Sidewalk */}
       <Box args={[40, 0.1, 1]} position={[0, -4.85, 2.5]}>
-        <meshStandardMaterial color="#8b7355" />
+        <meshStandardMaterial color="#8B7A5A" />
       </Box>
       <Box args={[40, 0.1, 1]} position={[0, -4.85, -2.5]}>
-        <meshStandardMaterial color="#8b7355" />
+        <meshStandardMaterial color="#8B7A5A" />
       </Box>
     </group>
   )
@@ -117,16 +117,16 @@ function Vehicle({ position, color, rotation = 0 }: any) {
       
       {/* Wheels */}
       <Cylinder args={[0.2, 0.2, 0.1, 8]} position={[-0.6, -4.6, 0.4]} rotation={[Math.PI / 2, 0, 0]}>
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#1B1B1B" />
       </Cylinder>
       <Cylinder args={[0.2, 0.2, 0.1, 8]} position={[0.6, -4.6, 0.4]} rotation={[Math.PI / 2, 0, 0]}>
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#1B1B1B" />
       </Cylinder>
       <Cylinder args={[0.2, 0.2, 0.1, 8]} position={[-0.6, -4.6, -0.4]} rotation={[Math.PI / 2, 0, 0]}>
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#1B1B1B" />
       </Cylinder>
       <Cylinder args={[0.2, 0.2, 0.1, 8]} position={[0.6, -4.6, -0.4]} rotation={[Math.PI / 2, 0, 0]}>
-        <meshStandardMaterial color="#1a1a1a" />
+        <meshStandardMaterial color="#1B1B1B" />
       </Cylinder>
     </group>
   )
@@ -146,28 +146,28 @@ function Person({ position, rotation = 0 }: any) {
     <group ref={groupRef} position={position}>
       {/* Head */}
       <Sphere args={[0.15, 16, 16]} position={[0, -3.5, 0]}>
-        <meshStandardMaterial color="#f4d03f" />
+        <meshStandardMaterial color="#C2B280" />
       </Sphere>
       
       {/* Body */}
       <Box args={[0.3, 0.6, 0.2]} position={[0, -4.1, 0]}>
-        <meshStandardMaterial color="#3498db" />
+        <meshStandardMaterial color="#6F4E37" />
       </Box>
       
       {/* Arms */}
       <Box args={[0.1, 0.4, 0.1]} position={[-0.25, -4, 0]}>
-        <meshStandardMaterial color="#f4d03f" />
+        <meshStandardMaterial color="#C2B280" />
       </Box>
       <Box args={[0.1, 0.4, 0.1]} position={[0.25, -4, 0]}>
-        <meshStandardMaterial color="#f4d03f" />
+        <meshStandardMaterial color="#C2B280" />
       </Box>
       
       {/* Legs */}
       <Box args={[0.1, 0.4, 0.1]} position={[-0.1, -4.6, 0]}>
-        <meshStandardMaterial color="#2c3e50" />
+        <meshStandardMaterial color="#453025" />
       </Box>
       <Box args={[0.1, 0.4, 0.1]} position={[0.1, -4.6, 0]}>
-        <meshStandardMaterial color="#2c3e50" />
+        <meshStandardMaterial color="#453025" />
       </Box>
     </group>
   )
@@ -191,24 +191,24 @@ function FloatingElements() {
     <group ref={groupRef}>
       {/* Floating spheres */}
       <Sphere args={[0.3, 16, 16]} position={[-8, 5, -10]}>
-        <meshStandardMaterial color="#d9c592" transparent opacity={0.6} />
+        <meshStandardMaterial color="#A89B6F" transparent opacity={0.6} />
       </Sphere>
       
       <Sphere args={[0.2, 16, 16]} position={[6, -2, -8]}>
-        <meshStandardMaterial color="#7a5f32" transparent opacity={0.5} />
+        <meshStandardMaterial color="#6F4E37" transparent opacity={0.5} />
       </Sphere>
       
       <Sphere args={[0.4, 16, 16]} position={[-4, -6, -15]}>
-        <meshStandardMaterial color="#644e2b" transparent opacity={0.4} />
+        <meshStandardMaterial color="#5A3E2D" transparent opacity={0.4} />
       </Sphere>
 
       {/* Floating cylinders */}
       <Cylinder args={[0.2, 0.2, 1, 8]} position={[10, 6, -20]}>
-        <meshStandardMaterial color="#b3954a" transparent opacity={0.5} />
+        <meshStandardMaterial color="#8B7A5A" transparent opacity={0.5} />
       </Cylinder>
       
       <Cylinder args={[0.15, 0.15, 0.8, 8]} position={[-12, -4, -12]}>
-        <meshStandardMaterial color="#e8dbb8" transparent opacity={0.4} />
+        <meshStandardMaterial color="#C2B280" transparent opacity={0.4} />
       </Cylinder>
     </group>
   )
@@ -219,7 +219,7 @@ function Ground() {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -5, 0]}>
       <planeGeometry args={[50, 50]} />
-              <meshStandardMaterial color="#f3eed8" transparent opacity={0.3} />
+              <meshStandardMaterial color="#EAE0C8" transparent opacity={0.3} />
     </mesh>
   )
 }
@@ -252,12 +252,12 @@ export default function ThreeJSVisualization() {
     >
       <Canvas
         camera={{ position: [15, 10, 15], fov: 60 }}
-        style={{ background: 'linear-gradient(to bottom, #F5DEB3, #DEB887)' }}
+        style={{ background: 'linear-gradient(to bottom, #EFE9E0, #C2B280)' }}
       >
         {/* Lighting */}
         <ambientLight intensity={0.4} />
         <directionalLight position={[10, 10, 5]} intensity={0.8} castShadow />
-        <pointLight position={[-10, 10, -10]} intensity={0.5} color="#FFD700" />
+        <pointLight position={[-10, 10, -10]} intensity={0.5} color="#C2B280" />
         
         {/* Scene Elements */}
         <Ground />
@@ -275,32 +275,32 @@ export default function ThreeJSVisualization() {
         <Building 
           position={[0, 0, -10]} 
           size={[3, 6, 3]} 
-          color="#A0522D" 
+          color="#6F4E37" 
           rotation={-0.1}
         />
         <Building 
           position={[8, 0, -6]} 
           size={[2.5, 5, 2.5]} 
-          color="#CD853F" 
+          color="#A89B6F" 
           rotation={0.3}
         />
         <Building 
           position={[-3, 0, -2]} 
           size={[1.5, 3, 1.5]} 
-          color="#DEB887" 
+          color="#C2B280" 
           rotation={0.1}
         />
         <Building 
           position={[5, 0, -2]} 
           size={[2, 4, 2]} 
-          color="#D2B48C" 
+          color="#EAE0C8" 
           rotation={-0.2}
         />
         
         {/* Vehicles on the road */}
-        <Vehicle position={[-15, 0, 0]} color="#e74c3c" rotation={0} />
-        <Vehicle position={[10, 0, 0]} color="#3498db" rotation={Math.PI} />
-        <Vehicle position={[-5, 0, 0]} color="#f39c12" rotation={0.5} />
+        <Vehicle position={[-15, 0, 0]} color="#6F4E37" rotation={0} />
+        <Vehicle position={[10, 0, 0]} color="#8B7A5A" rotation={Math.PI} />
+        <Vehicle position={[-5, 0, 0]} color="#A89B6F" rotation={0.5} />
         
         {/* People walking */}
         <Person position={[-8, 0, 2.5]} rotation={0} />
