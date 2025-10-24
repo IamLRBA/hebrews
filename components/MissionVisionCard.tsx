@@ -6,7 +6,7 @@ import { Plus, Minus } from 'lucide-react'
 
 interface MissionVisionCardProps {
   item: {
-    icon: any
+    image: string
     title: string
     description: string
   }
@@ -24,8 +24,12 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
       transition={{ duration: 0.8, delay: 0.1 * index }}
       className="text-center group"
     >
-      <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-primary-400 to-primary-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-        <item.icon className="w-10 h-10 text-white" />
+      <div className="flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+        <img 
+          src={item.image} 
+          alt={item.title} 
+          className="w-24 h-24 object-cover rounded-xl"
+        />
       </div>
       <h4 className="text-2xl font-bold text-primary-800 mb-4">{item.title}</h4>
       

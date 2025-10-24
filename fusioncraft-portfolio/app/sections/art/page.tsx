@@ -3,9 +3,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef, useState } from 'react'
 import Link from 'next/link'
-import InteractiveCanvas from '@/sections/InteractiveCanvas'
-import ArtGallery from '@/sections/ArtGallery'
-import JerryRigGenerator from '@/sections/JerryRigGenerator'
 import { Palette, Wrench, Sparkles } from 'lucide-react'
 
 export default function ArtPage() {
@@ -82,53 +79,6 @@ export default function ArtPage() {
         </div>
       </section>
 
-      {/* Interactive Canvas Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-gradient">Interactive</span> Canvas
-          </h2>
-          <InteractiveCanvas />
-        </motion.div>
-      </section>
-
-      {/* Art Gallery Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-gradient">Digital</span> & Physical Art
-          </h2>
-          <ArtGallery />
-        </motion.div>
-      </section>
-
-      {/* Jerry-Rig Philosophy Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-gradient">Jerry-Rig</span> Philosophy
-          </h2>
-          <JerryRigGenerator />
-        </motion.div>
-      </section>
 
       {/* Creative Process Section */}
       <section className="py-20 px-4">

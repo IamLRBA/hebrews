@@ -3,9 +3,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef, useState } from 'react'
 import Link from 'next/link'
-import AudioPlayer from '@/sections/AudioPlayer'
-import PoetryVisualizer from '@/sections/PoetryVisualizer'
-import SoundWaveBackground from '@/sections/SoundWaveBackground'
 
 export default function MusicPage() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -16,12 +13,9 @@ export default function MusicPage() {
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  const [isPlaying, setIsPlaying] = useState(false)
 
   return (
             <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-primary-800/20 via-primary-900 to-accent-800/20 relative overflow-hidden">
-      {/* Sound Wave Background */}
-      <SoundWaveBackground isPlaying={isPlaying} />
       
       {/* Navigation Back */}
       <motion.div
@@ -85,37 +79,6 @@ export default function MusicPage() {
         </div>
       </section>
 
-      {/* Audio Player Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-gradient">Listen</span> to the Music
-          </h2>
-          <AudioPlayer onPlayStateChange={setIsPlaying} />
-        </motion.div>
-      </section>
-
-      {/* Poetry Visualizer Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="max-w-6xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-gradient">Poetry</span> in Motion
-          </h2>
-          <PoetryVisualizer />
-        </motion.div>
-      </section>
 
       {/* Creative Process Section */}
       <section className="py-20 px-4">

@@ -25,7 +25,8 @@
   }
   
   .portal-card::before {
-    @apply content-[''] absolute inset-0 bg-gradient-to-br from-transparent via-primary-600/10 to-transparent opacity-0 transition-opacity duration-500;
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-transparent via-primary-600/10 to-transparent opacity-0 transition-opacity duration-500;
   }
   
   .portal-card:hover::before {

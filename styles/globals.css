@@ -1,3 +1,4 @@
+/* stylelint-disable */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import './variables.css';
@@ -5,16 +6,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* stylelint-enable */
 
 @layer base {
   * {
-    @apply border-primary;
+    @apply border-neutral-200;
   }
 
   /* Suppress browser warnings for vendor prefixes */
   * {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
   }
 
   /* Reset button styles */
@@ -30,6 +33,7 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-scroll-behavior: smooth;
   }
   
   @keyframes spin-slow {
@@ -53,7 +57,7 @@
     line-height: var(--leading-normal);
     font-weight: var(--font-weight-thin);
     -webkit-font-smoothing: antialiased;
-    font-smooth: always;
+    -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
   }
 
@@ -209,7 +213,9 @@
   }
 
   .portal-card::before {
-    @apply content-[''] absolute inset-0  from-transparent via-accent-500/20 to-transparent opacity-0 transition-opacity duration-500;
+    /* stylelint-disable-next-line property-no-unknown */
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-transparent via-accent-500/20 to-transparent opacity-0 transition-opacity duration-500;
   }
   
   .portal-card:hover::before {

@@ -3,8 +3,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
 import Link from 'next/link'
-import Architecture3DGallery from '@/sections/Architecture3DGallery'
-import BlueprintAnimation from '@/sections/BlueprintAnimation'
 
 export default function ArchitecturePage() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -80,26 +78,6 @@ export default function ArchitecturePage() {
         </div>
       </section>
 
-      {/* Blueprint Animation Section */}
-      <section className="py-20 px-4">
-        <BlueprintAnimation />
-      </section>
-
-      {/* 3D Gallery Section */}
-      <section className="py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="max-w-7xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-gradient">3D</span> Gallery
-          </h2>
-          <Architecture3DGallery />
-        </motion.div>
-      </section>
 
       {/* Philosophy Section */}
       <section className="py-20 px-4">

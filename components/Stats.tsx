@@ -7,7 +7,6 @@ import {
   Award, 
   Clock, 
   Star,
-  TrendingUp,
   Heart,
   Zap,
   Target,
@@ -55,14 +54,13 @@ const statsData = [
 
 // Company logos data - you can replace these with actual company logos
 const companyLogos = [
-  { name: "TechCorp", icon: Building2, color: "from-primary-400 to-primary-600" },
-  { name: "CreativeStudio", icon: Palette, color: "from-accent-400 to-accent-600" },
-  { name: "MusicPro", icon: Music, color: "from-primary-500 to-primary-700" },
-  { name: "CodeCraft", icon: Code, color: "from-accent-500 to-accent-700" },
-  { name: "FashionHub", icon: Shirt, color: "from-primary-400 to-primary-600" },
-  { name: "DesignLab", icon: Palette, color: "from-accent-400 to-accent-600" },
-  { name: "InnovateTech", icon: Building2, color: "from-primary-500 to-primary-700" },
-  { name: "CreativeFlow", icon: Music, color: "from-accent-500 to-accent-700" }
+  { name: "WalkingWardrobe", image: "/assets/images/sections/companies/walkingwardrobe.jpg", color: "from-primary-400 to-primary-600" },
+  { name: "CreativeStudio", image: "/assets/images/sections/companies/creativestudio.jpg", color: "from-accent-400 to-accent-600" },
+  { name: "IsabellaCribb", image: "/assets/images/sections/companies/isabellacribb.jpg", color: "from-primary-500 to-primary-700" },
+  { name: "Coutured", image: "/assets/images/sections/companies/coutured.jpg", color: "from-accent-500 to-accent-700" },
+  { name: "Abryanz", image: "/assets/images/sections/companies/abryanz.jpg", color: "from-accent-400 to-accent-600" },
+  { name: "Mooditive", image: "/assets/images/sections/companies/mooditive.jpg", color: "from-primary-500 to-primary-700" },
+  { name: "SilkArmour", image: "/assets/images/sections/companies/silkarmour.jpg", color: "from-accent-500 to-accent-700" }
 ]
 
 // AnimatedCounter Component
@@ -351,8 +349,12 @@ const LogoSlider = () => {
                   index === currentIndex ? 'transform scale-110' : ''
                 }`}
               >
-                <div className={`w-16 h-16 bg-gradient-to-br ${logo.color} rounded-xl flex items-center justify-center shadow-lg`}>
-                  <logo.icon className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-2 flex items-center justify-center">
+                  <img 
+                    src={logo.image} 
+                    alt={logo.name} 
+                    className="w-12 h-12 object-cover rounded-xl"
+                  />
                 </div>
                 <span className="text-sm font-medium text-primary-700 dark:text-primary-200 text-center">
                   {logo.name}
@@ -425,9 +427,13 @@ export default function Stats() {
             whileInView={{ scale: 1, rotate: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-primary-400 to-accent-600 rounded-2xl flex items-center justify-center shadow-lg"
+            className="flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mx-auto mb-6"
           >
-            <TrendingUp className="w-10 h-10 text-white" />
+            <img 
+              src="/assets/images/sections/stats/impact-icon.jpg" 
+              alt="Impact Icon" 
+              className="w-24 h-24 object-cover rounded-xl"
+            />
           </motion.div>
           
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">

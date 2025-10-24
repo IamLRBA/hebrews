@@ -148,22 +148,18 @@ export default function Contact() {
                 transition={{ duration: 0.8, delay: 0.1 * index }}
                 className="group"
               >
-                <div className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-neutral-800 dark:to-neutral-700 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-200 dark:border-neutral-600">
+                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-100 to-primary-200 dark:from-neutral-800 dark:to-neutral-900 border border-primary-500/30 overflow-hidden shadow-2xl">
                   {/* Icon */}
-                  <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-br ${info.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
+                  <Icon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
 
                   {/* Content */}
-                  <div className="text-center mb-6">
-                    <h4 className="text-lg font-bold text-primary-800 dark:text-primary-100 mb-2">{info.title}</h4>
-                    <p className="text-primary-600 dark:text-primary-300 text-sm leading-relaxed">{info.subtitle}</p>
-                  </div>
-
+                  <h4 className="font-semibold text-primary-900 mb-2">{info.title}</h4>
+                  <p className="text-sm text-neutral-600 mb-3">{info.subtitle}</p>
+                  
                   {/* Button */}
                   <button
                     onClick={info.action}
-                    className="w-full btn btn-outline text-sm py-2"
+                    className="btn btn-outline"
                   >
                     {info.buttonText}
                   </button>

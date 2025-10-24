@@ -15,9 +15,7 @@ import {
   Send,
   Mail,
   ExternalLink,
-  Eye,
-  Zap,
-  Heart
+  Zap
 } from 'lucide-react'
 import { FaWhatsapp } from 'react-icons/fa'
 
@@ -493,12 +491,12 @@ export default function AboutUs() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {[
               { 
-                icon: Heart, 
+                image: "/assets/images/sections/mission/mission-icon.jpg", 
                 title: "Mission Statement", 
                 description: "To materialize ideas through structural ingenuity across multiple creative dimensions, delivering exceptional experiences that inspire and transform. We commit to pushing boundaries, embracing innovation, and crafting solutions that exceed expectations while maintaining the highest standards of quality and creativity." 
               },
               { 
-                icon: Eye, 
+                image: "/assets/images/sections/mission/vision-icon.jpg", 
                 title: "Vision Statement", 
                 description: "To become the leading creative studio that transforms ideas into extraordinary experiences across all dimensions of human expression. We envision a future where our innovative approach to creativity and technology sets new industry standards and inspires the next generation of creative professionals." 
               }
