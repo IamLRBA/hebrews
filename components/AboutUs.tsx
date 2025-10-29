@@ -303,19 +303,19 @@ export default function AboutUs() {
                transition={{ duration: 0.8, delay: 0.1 }}
                className="flex flex-row items-center space-x-4 md:space-x-12"
              >
-               <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-4 md:p-8">
-                 <img 
-                   src="/assets/images/sections/home/values-1.jpg" 
-                   alt="Innovation" 
-                   className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-xl"
-                 />
-               </div>
+              <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-4 md:p-8">
+                <img 
+                  src="/assets/images/sections/home/values-1.jpg" 
+                  alt="Sustainable Style" 
+                  className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-xl"
+                />
+              </div>
                <div className="flex flex-col text-left">
                  <div className="text-4xl md:text-6xl font-bold text-primary-400 mb-2 md:mb-4">01</div>
-                 <h4 className="text-xl md:text-3xl font-bold text-primary-800 mb-2">Innovation</h4>
-                 <p className="text-primary-600 text-sm md:text-lg max-w-xs md:max-w-md">
-                   Pushing boundaries in every creative field, constantly exploring new possibilities and approaches.
-                 </p>
+                <h4 className="text-xl md:text-3xl font-bold text-primary-800 mb-2">Sustainability</h4>
+                <p className="text-primary-600 text-sm md:text-lg max-w-xs md:max-w-md">
+                  Championing circular fashion by blending thrifted gems with responsibly made new pieces.
+                </p>
                </div>
              </motion.div>
             
@@ -327,19 +327,19 @@ export default function AboutUs() {
                transition={{ duration: 0.8, delay: 0.2 }}
                className="flex flex-row items-center space-x-4 md:space-x-12"
              >
-               <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-4 md:p-8">
-                 <img 
-                   src="/assets/images/sections/home/values-2.jpg" 
-                   alt="Passion" 
-                   className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-xl"
-                 />
-               </div>
+              <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-4 md:p-8">
+                <img 
+                  src="/assets/images/sections/home/values-2.jpg" 
+                  alt="Quality & Authenticity" 
+                  className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-xl"
+                />
+              </div>
                <div className="flex flex-col text-left">
                  <div className="text-4xl md:text-6xl font-bold text-primary-300 mb-2 md:mb-4">02</div>
-                 <h4 className="text-xl md:text-3xl font-bold text-primary-800 mb-2">Passion</h4>
-                 <p className="text-primary-600 text-sm md:text-lg max-w-xs md:max-w-md">
-                   Infusing every project with genuine enthusiasm and dedication to creative excellence.
-                 </p>
+                <h4 className="text-xl md:text-3xl font-bold text-primary-800 mb-2">Authenticity</h4>
+                <p className="text-primary-600 text-sm md:text-lg max-w-xs md:max-w-md">
+                  Every item is hand-checked for condition, fabric, and authenticity so it lasts and feels right.
+                </p>
                </div>
              </motion.div>
             
@@ -351,19 +351,19 @@ export default function AboutUs() {
                transition={{ duration: 0.8, delay: 0.3 }}
                className="flex flex-row items-center space-x-4 md:space-x-12"
              >
-               <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-300/30 overflow-hidden shadow-2xl p-4 md:p-8">
-                 <img 
-                   src="/assets/images/sections/home/values-3.jpg" 
-                   alt="Excellence" 
-                   className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-xl"
-                 />
-               </div>
+              <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-300/30 overflow-hidden shadow-2xl p-4 md:p-8">
+                <img 
+                  src="/assets/images/sections/home/values-3.jpg" 
+                  alt="Accessible Fashion" 
+                  className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-xl"
+                />
+              </div>
                <div className="flex flex-col text-left">
                  <div className="text-4xl md:text-6xl font-bold text-primary-200 mb-2 md:mb-4">03</div>
-                 <h4 className="text-xl md:text-3xl font-bold text-primary-800 mb-2">Excellence</h4>
-                 <p className="text-primary-600 text-sm md:text-lg max-w-xs md:max-w-md">
-                   Maintaining the highest standards of quality in every aspect of our creative work.
-                 </p>
+                <h4 className="text-xl md:text-3xl font-bold text-primary-800 mb-2">Accessibility</h4>
+                <p className="text-primary-600 text-sm md:text-lg max-w-xs md:max-w-md">
+                  Fair pricing and inclusive sizing so everyone can build a wardrobe they love.
+                </p>
                </div>
              </motion.div>
             
@@ -375,19 +375,19 @@ export default function AboutUs() {
                transition={{ duration: 0.8, delay: 0.4 }}
                className="flex flex-row items-center space-x-4 md:space-x-12"
              >
-               <div className="flex-shrink-0 bg-gradient-to-br from-primary-200/30 to-primary-100/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-4 md:p-8">
-                 <img 
-                   src="/assets/images/sections/home/values-4.jpg" 
-                   alt="Collaboration" 
-                   className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-xl"
-                 />
-               </div>
+              <div className="flex-shrink-0 bg-gradient-to-br from-primary-200/30 to-primary-100/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-4 md:p-8">
+                <img 
+                  src="/assets/images/sections/home/values-4.jpg" 
+                  alt="Community & Storytelling" 
+                  className="w-16 h-16 md:w-24 md:h-24 object-cover rounded-xl"
+                />
+              </div>
                <div className="flex flex-col text-left">
                  <div className="text-4xl md:text-6xl font-bold text-primary-200 mb-2 md:mb-4">04</div>
-                 <h4 className="text-xl md:text-3xl font-bold text-primary-800 mb-2">Collaboration</h4>
-                 <p className="text-primary-600 text-sm md:text-lg max-w-xs md:max-w-md">
-                   Working together to achieve extraordinary results through teamwork and shared vision.
-                 </p>
+                <h4 className="text-xl md:text-3xl font-bold text-primary-800 mb-2">Collaboration</h4>
+                <p className="text-primary-600 text-sm md:text-lg max-w-xs md:max-w-md">
+                  We love working together to achieve extraordinary results through teamwork and shared vision.
+                </p>
                </div>
              </motion.div>
           </div>
@@ -423,7 +423,7 @@ export default function AboutUs() {
                 <div className="text-6xl font-bold text-primary-400 mb-4">01</div>
                 <h4 className="text-3xl font-bold text-primary-800 mb-2">Leadership</h4>
                 <p className="text-primary-600 text-lg max-w-md">
-                  To become the leading creative studio that transforms ideas into extraordinary experiences across all dimensions of human expression.
+                  To lead sustainable style in our community by championing thrift culture and launching responsibly made new collections with transparency and care.
                 </p>
               </div>
             </motion.div>
@@ -447,7 +447,7 @@ export default function AboutUs() {
                 <div className="text-6xl font-bold text-primary-300 mb-4">02</div>
                 <h4 className="text-3xl font-bold text-primary-800 mb-2">Innovation</h4>
                 <p className="text-primary-600 text-lg max-w-md">
-                  To push the boundaries of creativity and technology, creating solutions that inspire and amaze.
+                  To reimagine style through smart curation, upcycling, and limited new drops that use ethical materials and modern design.
                 </p>
               </div>
             </motion.div>
@@ -471,7 +471,7 @@ export default function AboutUs() {
                 <div className="text-6xl font-bold text-primary-200 mb-4">03</div>
                 <h4 className="text-3xl font-bold text-primary-800 mb-2">Impact</h4>
                 <p className="text-primary-600 text-lg max-w-md">
-                  To make a meaningful difference in people's lives through creative excellence and innovative design.
+                  To reduce fashion waste, support local sellers and makers, and make high‑quality style attainable for more people.
                 </p>
               </div>
             </motion.div>
@@ -493,12 +493,12 @@ export default function AboutUs() {
               { 
                 image: "/assets/images/sections/mission/mission-icon.jpg", 
                 title: "Mission Statement", 
-                description: "To materialize ideas through structural ingenuity across multiple creative dimensions, delivering exceptional experiences that inspire and transform. We commit to pushing boundaries, embracing innovation, and crafting solutions that exceed expectations while maintaining the highest standards of quality and creativity." 
+                description: "To curate sustainable style by uniting thrifted treasures with responsibly made new apparel and thus delivering quality, value, and self‑expression with transparency and care." 
               },
               { 
                 image: "/assets/images/sections/mission/vision-icon.jpg", 
                 title: "Vision Statement", 
-                description: "To become the leading creative studio that transforms ideas into extraordinary experiences across all dimensions of human expression. We envision a future where our innovative approach to creativity and technology sets new industry standards and inspires the next generation of creative professionals." 
+                description: "To build a circular fashion and styling ecosystem where conscious choices are easy, local creators thrive, and timeless pieces outlast trends." 
               }
             ].map((item, index) => (
               <MissionVisionCard key={index} item={item} index={index} />
