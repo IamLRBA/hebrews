@@ -451,7 +451,7 @@ export default function CEOProfile() {
               <p className="text-sm text-neutral-600 mb-3">jerrylarubafestus@gmail.com</p>
               <a
                 href="mailto:jerrylarubafestus@gmail.com"
-                className="btn btn-outline"
+                className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
               >
                 Email Me
               </a>
@@ -463,7 +463,7 @@ export default function CEOProfile() {
               <p className="text-sm text-neutral-600 mb-3">+256774948086</p>
               <a
                 href="tel:+256774948086"
-                className="btn btn-outline"
+                className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
               >
                 Call Me
               </a>
@@ -477,7 +477,7 @@ export default function CEOProfile() {
                 href="https://wa.me/256755915549"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline"
+                className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
               >
                 Message Me
               </a>
@@ -491,7 +491,7 @@ export default function CEOProfile() {
                 href="https://maps.google.com/?q=Kampala,Uganda"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline"
+                className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
               >
                 Find Me
                 </a>

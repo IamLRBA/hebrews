@@ -12,12 +12,14 @@ import {
   HiSearch, 
   HiHome,
   HiShoppingBag,
-  HiGlobeAlt
+  HiGlobeAlt,
+  HiUserCircle
 } from 'react-icons/hi'
 import ThemeSwitcher from './ThemeSwitcher'
 
 const navigation = [
   { name: 'Home', href: '/', icon: HiHome },
+  { name: 'About Us', href: '/about-us', icon: HiUserCircle },
 ]
 
 const portalItems = [
@@ -158,7 +160,8 @@ export default function Navbar() {
 
               {/* Navigation - Hidden on mobile */}
               <div className="hidden lg:flex items-center space-x-8">
-                {navigation.map((item) => {
+                {/* Home Link */}
+                {navigation.filter(item => item.name === 'Home').map((item) => {
                   const Icon = item.icon
                   const active = isActive(item.href)
                   
@@ -259,6 +262,42 @@ export default function Navbar() {
                     )}
                   </AnimatePresence>
                 </div>
+
+                {/* About Us Link */}
+                {navigation.filter(item => item.name === 'About Us').map((item) => {
+                  const Icon = item.icon
+                  const active = isActive(item.href)
+                  
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${
+                        active 
+                          ? 'text-primary-700' 
+                          : 'text-neutral-600 hover:text-primary-700'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="font-medium">{item.name}</span>
+                      
+                      {/* Active underline */}
+                      {active && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full"
+                          initial={false}
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        />
+                      )}
+                      
+                      {/* Hover underline */}
+                      {!active && (
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                      )}
+                    </Link>
+                  )
+                })}
               </div>
             </div>
 
@@ -439,7 +478,8 @@ export default function Navbar() {
                 {/* Mobile Navigation */}
                 <nav className="flex-1 p-6 overflow-y-auto custom-scrollbar">
                   <div className="space-y-2">
-                    {navigation.map((item) => {
+                    {/* Home Link */}
+                    {navigation.filter(item => item.name === 'Home').map((item) => {
                       const Icon = item.icon
                       const active = isActive(item.href)
                       
@@ -516,6 +556,43 @@ export default function Navbar() {
                         )
                       })}
                     </div>
+
+                    {/* About Us Link */}
+                    {navigation.filter(item => item.name === 'About Us').map((item) => {
+                      const Icon = item.icon
+                      const active = isActive(item.href)
+                      
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          onClick={closeMenu}
+                          className={`flex items-center space-x-3 px-4 py-3 transition-all duration-300 group relative ${
+                            active 
+                              ? 'text-primary-700 bg-primary-50' 
+                              : 'text-neutral-600 hover:text-primary-700'
+                          }`}
+                        >
+                          <Icon className="w-5 h-5" />
+                          <span className="font-medium">{item.name}</span>
+                          
+                          {/* Active underline */}
+                          {active && (
+                            <motion.div
+                              layoutId="activeTabMobile"
+                              className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full"
+                              initial={false}
+                              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                            />
+                          )}
+                          
+                          {/* Hover underline */}
+                          {!active && (
+                            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                          )}
+                        </Link>
+                      )
+                    })}
                   </div>
                 </nav>
 

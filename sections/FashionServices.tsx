@@ -5,12 +5,12 @@ import { Plus, Minus } from 'lucide-react'
 
 interface Service { id:number; number:string; title:string; description:string; image:string }
 const services: Service[] = [
-  { id:1, number:'01', title:'Personal Styling', description:'One-on-one styling sessions tailored to your body type, lifestyle, and personal preferences.', image:'/assets/images/services/fashion/personal-styling.jpg' },
-  { id:2, number:'02', title:'Wardrobe Consultation', description:'Professional assessment of your current wardrobe with recommendations for additions and improvements.', image:'/assets/images/services/fashion/wardrobe-consultation.jpg' },
-  { id:3, number:'03', title:'Event Styling', description:'Special occasion styling for weddings, parties, business events, and other important gatherings.', image:'/assets/images/services/fashion/event-styling.jpg' },
-  { id:4, number:'04', title:'Shopping Assistance', description:'Guided shopping experiences to help you find the perfect pieces for your style and budget.', image:'/assets/images/services/fashion/shopping-assistance.jpg' },
-  { id:5, number:'05', title:'Style Education', description:'Workshops and courses on fashion fundamentals, color theory, and personal style development.', image:'/assets/images/services/fashion/style-education.jpg' },
-  { id:6, number:'06', title:'Virtual Styling', description:'Remote styling sessions via video calls for clients who prefer online consultations. All that is needed is a time appointment.', image:'/assets/images/services/fashion/virtual-styling.jpg' },
+  { id:1, number:'01', title:'Shirts', description:'Discover our collection of elegant and versatile shirts, from classic button-downs to modern casual styles that complement any wardrobe.', image:'/assets/images/services/fashion/personal-styling.jpg' },
+  { id:2, number:'02', title:'Tees', description:'Comfortable and stylish t-shirts in various designs, materials, and fits perfect for everyday wear or casual outings.', image:'/assets/images/services/fashion/wardrobe-consultation.jpg' },
+  { id:3, number:'03', title:'Coats', description:'Stylish outerwear to keep you warm and fashionable, from classic trench coats to modern jackets for all seasons.', image:'/assets/images/services/fashion/event-styling.jpg' },
+  { id:4, number:'04', title:'Pants and Shorts', description:'Complete your look with our selection of pants and shorts, ranging from formal trousers to relaxed casual styles.', image:'/assets/images/services/fashion/shopping-assistance.jpg' },
+  { id:5, number:'05', title:'Footwear', description:'Step out in style with our curated footwear collection including sneakers, boots, and more for every occasion.', image:'/assets/images/services/fashion/style-education.jpg' },
+  { id:6, number:'06', title:'Accessories', description:'Add the perfect finishing touches with our range of accessories including bags, belts, and other essential styling elements.', image:'/assets/images/services/fashion/virtual-styling.jpg' },
 ]
 
 export default function FashionServices(){

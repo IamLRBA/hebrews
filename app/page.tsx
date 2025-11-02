@@ -9,7 +9,6 @@ import {
 import { useRef, useState, useEffect } from 'react'
 import LoadingScreen from '../components/LoadingScreen'
 import PortalNavigation from '../components/PortalNavigation'
-import AboutUs from '../components/AboutUs'
 import Stats from '../components/Stats'
 import Testimonials from '../components/Testimonials'
 import Contact from '../components/Contact'
@@ -199,11 +198,8 @@ export default function Home() {
                       <h1 className="text-7xl md:text-7xl font-bold mb-6">
                         <span className="text-primary-800">ᔕTᑌᗪIOᔕ</span>
                       </h1>
-                      <p className="text-2xl md:text-3xl text-primary-700 mb-6 max-w-4xl mx-auto leading-relaxed">
-                        Materializing ideas through structural ingenuity
-                      </p>
                       <p className="text-lg text-primary-600 max-w-2xl mx-auto">
-                        Where creativity meets craftsmanship in the art of fashion and style
+                        A creativity and craftsmanship intersection in the art of fashion and style
                       </p>
                     </motion.div>
 
@@ -249,9 +245,6 @@ export default function Home() {
                   </motion.div>
                 </motion.div>
               </section>
-
-              {/* About Us Section */}
-              <AboutUs />
 
               {/* Portals Section */}
               <section ref={portalsRef} id="portals-section" className="section">
