@@ -1,0 +1,540 @@
+{
+  "products": {
+    "shirts": {
+      "title": "Shirts",
+      "description": "Discover our collection of elegant and versatile shirts, from classic button-downs to modern casual styles.",
+      "subcategories": {
+        "gentle": [
+          {
+            "id": "shirt-gentle-1",
+            "name": "Classic White Shirt",
+            "brand": "FusionCRAFT",
+            "category": "shirts",
+            "section": "gentle",
+            "price_ugx": 45000,
+            "original_price": 60000,
+            "sizes": ["S", "M", "L", "XL"],
+            "colors": ["White", "Ivory"],
+            "images": [
+              "/assets/images/products/shirts/gentle/1.jpg",
+              "/assets/images/products/shirts/gentle/1-2.jpg"
+            ],
+            "description": "A timeless white shirt perfect for business and casual occasions. Made from premium cotton blend.",
+            "condition": "Like New",
+            "sku": "SRT-GNT-001",
+            "stock_qty": 5
+          },
+          {
+            "id": "shirt-gentle-2",
+            "name": "Silk Blend Shirt",
+            "brand": "Thrifted",
+            "category": "shirts",
+            "section": "gentle",
+            "price_ugx": 55000,
+            "original_price": 80000,
+            "sizes": ["M", "L"],
+            "colors": ["Beige", "Cream"],
+            "images": [
+              "/assets/images/products/shirts/gentle/2.jpg"
+            ],
+            "description": "Luxurious silk blend shirt with elegant finish. Perfect for special occasions.",
+            "condition": "Good",
+            "sku": "SRT-GNT-002",
+            "stock_qty": 3
+          }
+        ],
+        "checked": [
+          {
+            "id": "shirt-checked-1",
+            "name": "Red Check Shirt",
+            "brand": "Thrifted",
+            "category": "shirts",
+            "section": "checked",
+            "price_ugx": 35000,
+            "original_price": 50000,
+            "sizes": ["S", "M", "L"],
+            "colors": ["Red/White", "Red/Blue"],
+            "images": [
+              "/assets/images/products/shirts/checked/1.jpg"
+            ],
+            "description": "Classic checked shirt in vibrant red. Great for casual and semi-formal wear.",
+            "condition": "Like New",
+            "sku": "SRT-CHK-001",
+            "stock_qty": 7
+          }
+        ],
+        "textured": [
+          {
+            "id": "shirt-textured-1",
+            "name": "Linen Textured Shirt",
+            "brand": "FusionCRAFT",
+            "category": "shirts",
+            "section": "textured",
+            "price_ugx": 40000,
+            "original_price": 60000,
+            "sizes": ["M", "L", "XL"],
+            "colors": ["Tan", "Olive"],
+            "images": [
+              "/assets/images/products/shirts/textured/1.jpg"
+            ],
+            "description": "Breathable linen shirt with textured finish. Perfect for warm weather.",
+            "condition": "Like New",
+            "sku": "SRT-TXT-001",
+            "stock_qty": 4
+          }
+        ],
+        "denim": [
+          {
+            "id": "shirt-denim-1",
+            "name": "Classic Denim Shirt",
+            "brand": "Thrifted",
+            "category": "shirts",
+            "section": "denim",
+            "price_ugx": 45000,
+            "original_price": 65000,
+            "sizes": ["S", "M", "L"],
+            "colors": ["Light Blue", "Medium Blue"],
+            "images": [
+              "/assets/images/products/shirts/denim/1.jpg"
+            ],
+            "description": "Durable denim shirt with timeless style. Perfect for casual outings.",
+            "condition": "Good",
+            "sku": "SRT-DNM-001",
+            "stock_qty": 6
+          }
+        ]
+      }
+    },
+    "tees": {
+      "title": "Tees",
+      "description": "Comfortable and stylish t-shirts in various designs, materials, and fits.",
+      "subcategories": {
+        "plain": [
+          {
+            "id": "tee-plain-1",
+            "name": "Basic White Tee",
+            "brand": "FusionCRAFT",
+            "category": "tees",
+            "section": "plain",
+            "price_ugx": 25000,
+            "original_price": 35000,
+            "sizes": ["S", "M", "L", "XL"],
+            "colors": ["White", "Black", "Navy"],
+            "images": [
+              "/assets/images/products/tees/plain/1.jpg"
+            ],
+            "description": "Essential white t-shirt made from premium cotton. Perfect foundation piece.",
+            "condition": "Like New",
+            "sku": "TEE-PLN-001",
+            "stock_qty": 12
+          }
+        ],
+        "graphic": [
+          {
+            "id": "tee-graphic-1",
+            "name": "Vintage Band Tee",
+            "brand": "Thrifted",
+            "category": "tees",
+            "section": "graphic",
+            "price_ugx": 35000,
+            "original_price": 55000,
+            "sizes": ["M", "L"],
+            "colors": ["Black"],
+            "images": [
+              "/assets/images/products/tees/graphic/1.jpg"
+            ],
+            "description": "Authentic vintage band t-shirt with retro graphics.",
+            "condition": "Good",
+            "sku": "TEE-GRP-001",
+            "stock_qty": 2
+          }
+        ],
+        "collared": [
+          {
+            "id": "tee-collared-1",
+            "name": "Polo T-Shirt",
+            "brand": "Thrifted",
+            "category": "tees",
+            "section": "collared",
+            "price_ugx": 30000,
+            "original_price": 45000,
+            "sizes": ["S", "M", "L"],
+            "colors": ["Blue", "Green", "Red"],
+            "images": [
+              "/assets/images/products/tees/collared/1.jpg"
+            ],
+            "description": "Classic polo shirt with collar. Perfect for smart casual occasions.",
+            "condition": "Like New",
+            "sku": "TEE-COL-001",
+            "stock_qty": 8
+          }
+        ],
+        "sporty": [
+          {
+            "id": "tee-sporty-1",
+            "name": "Athletic Performance Tee",
+            "brand": "FusionCRAFT",
+            "category": "tees",
+            "section": "sporty",
+            "price_ugx": 35000,
+            "original_price": 50000,
+            "sizes": ["S", "M", "L", "XL"],
+            "colors": ["Navy", "Grey", "Black"],
+            "images": [
+              "/assets/images/products/tees/sporty/1.jpg"
+            ],
+            "description": "Moisture-wicking athletic t-shirt for workouts and sports.",
+            "condition": "Like New",
+            "sku": "TEE-SPT-001",
+            "stock_qty": 10
+          }
+        ]
+      }
+    },
+    "coats": {
+      "title": "Coats",
+      "description": "Stylish outerwear to keep you warm and fashionable.",
+      "subcategories": {
+        "sweater": [
+          {
+            "id": "coat-sweater-1",
+            "name": "Cable Knit Sweater",
+            "brand": "Thrifted",
+            "category": "coats",
+            "section": "sweater",
+            "price_ugx": 65000,
+            "original_price": 95000,
+            "sizes": ["M", "L"],
+            "colors": ["Cream", "Navy"],
+            "images": [
+              "/assets/images/products/coats/sweater/1.jpg"
+            ],
+            "description": "Warm cable knit sweater perfect for chilly days.",
+            "condition": "Good",
+            "sku": "COT-SWR-001",
+            "stock_qty": 4
+          }
+        ],
+        "hoodie": [
+          {
+            "id": "coat-hoodie-1",
+            "name": "Classic Hoodie",
+            "brand": "FusionCRAFT",
+            "category": "coats",
+            "section": "hoodie",
+            "price_ugx": 55000,
+            "original_price": 85000,
+            "sizes": ["S", "M", "L", "XL"],
+            "colors": ["Grey", "Black", "Navy"],
+            "images": [
+              "/assets/images/products/coats/hoodie/1.jpg"
+            ],
+            "description": "Comfortable hoodie with kangaroo pocket and adjustable hood.",
+            "condition": "Like New",
+            "sku": "COT-HOO-001",
+            "stock_qty": 9
+          }
+        ],
+        "coat": [
+          {
+            "id": "coat-coat-1",
+            "name": "Trench Coat",
+            "brand": "Thrifted",
+            "category": "coats",
+            "section": "coat",
+            "price_ugx": 120000,
+            "original_price": 180000,
+            "sizes": ["M", "L"],
+            "colors": ["Beige", "Black"],
+            "images": [
+              "/assets/images/products/coats/coat/1.jpg"
+            ],
+            "description": "Elegant trench coat perfect for formal and semi-formal occasions.",
+            "condition": "Like New",
+            "sku": "COT-COT-001",
+            "stock_qty": 3
+          }
+        ],
+        "jacket": [
+          {
+            "id": "coat-jacket-1",
+            "name": "Denim Jacket",
+            "brand": "Thrifted",
+            "category": "coats",
+            "section": "jacket",
+            "price_ugx": 75000,
+            "original_price": 110000,
+            "sizes": ["S", "M", "L"],
+            "colors": ["Light Blue", "Black"],
+            "images": [
+              "/assets/images/products/coats/jacket/1.jpg"
+            ],
+            "description": "Classic denim jacket with timeless style.",
+            "condition": "Good",
+            "sku": "COT-JKT-001",
+            "stock_qty": 5
+          }
+        ]
+      }
+    },
+    "pants-and-shorts": {
+      "title": "Pants and Shorts",
+      "description": "Complete your look with our selection of pants and shorts.",
+      "subcategories": {
+        "gentle": [
+          {
+            "id": "pants-gentle-1",
+            "name": "Chino Pants",
+            "brand": "FusionCRAFT",
+            "category": "pants-and-shorts",
+            "section": "gentle",
+            "price_ugx": 85000,
+            "original_price": 120000,
+            "sizes": ["30", "32", "34", "36"],
+            "colors": ["Beige", "Navy", "Olive"],
+            "images": [
+              "/assets/images/products/pants/gentle/1.jpg"
+            ],
+            "description": "Comfortable chino pants perfect for business casual wear.",
+            "condition": "Like New",
+            "sku": "PNS-GNT-001",
+            "stock_qty": 8
+          }
+        ],
+        "denim": [
+          {
+            "id": "pants-denim-1",
+            "name": "Classic Blue Jeans",
+            "brand": "Thrifted",
+            "category": "pants-and-shorts",
+            "section": "denim",
+            "price_ugx": 75000,
+            "original_price": 110000,
+            "sizes": ["28", "30", "32", "34", "36"],
+            "colors": ["Light Blue", "Medium Blue"],
+            "images": [
+              "/assets/images/products/pants/denim/1.jpg"
+            ],
+            "description": "Classic blue jeans with perfect fit. Essential wardrobe piece.",
+            "condition": "Good",
+            "sku": "PNS-DNM-001",
+            "stock_qty": 12
+          }
+        ],
+        "cargo": [
+          {
+            "id": "pants-cargo-1",
+            "name": "Cargo Shorts",
+            "brand": "Thrifted",
+            "category": "pants-and-shorts",
+            "section": "cargo",
+            "price_ugx": 55000,
+            "original_price": 80000,
+            "sizes": ["S", "M", "L"],
+            "colors": ["Green", "Khaki", "Black"],
+            "images": [
+              "/assets/images/products/pants/cargo/1.jpg"
+            ],
+            "description": "Durable cargo shorts with multiple pockets. Perfect for outdoor activities.",
+            "condition": "Good",
+            "sku": "PNS-CRG-001",
+            "stock_qty": 6
+          }
+        ],
+        "sporty": [
+          {
+            "id": "pants-sporty-1",
+            "name": "Athletic Shorts",
+            "brand": "FusionCRAFT",
+            "category": "pants-and-shorts",
+            "section": "sporty",
+            "price_ugx": 35000,
+            "original_price": 50000,
+            "sizes": ["S", "M", "L", "XL"],
+            "colors": ["Black", "Navy", "Grey"],
+            "images": [
+              "/assets/images/products/pants/sporty/1.jpg"
+            ],
+            "description": "Moisture-wicking athletic shorts for workouts and sports.",
+            "condition": "Like New",
+            "sku": "PNS-SPT-001",
+            "stock_qty": 10
+          }
+        ]
+      }
+    },
+    "footwear": {
+      "title": "Footwear",
+      "description": "Step out in style with our curated footwear collection.",
+      "subcategories": {
+        "gentle": [
+          {
+            "id": "footwear-gentle-1",
+            "name": "Leather Dress Shoes",
+            "brand": "Thrifted",
+            "category": "footwear",
+            "section": "gentle",
+            "price_ugx": 150000,
+            "original_price": 250000,
+            "sizes": ["40", "41", "42", "43", "44"],
+            "colors": ["Black", "Brown"],
+            "images": [
+              "/assets/images/products/footwear/gentle/1.jpg"
+            ],
+            "description": "Premium leather dress shoes perfect for formal occasions.",
+            "condition": "Good",
+            "sku": "FWR-GNT-001",
+            "stock_qty": 4
+          }
+        ],
+        "sneakers": [
+          {
+            "id": "footwear-sneakers-1",
+            "name": "Classic Sneakers",
+            "brand": "Thrifted",
+            "category": "footwear",
+            "section": "sneakers",
+            "price_ugx": 95000,
+            "original_price": 150000,
+            "sizes": ["40", "41", "42", "43", "44"],
+            "colors": ["White", "Black/White"],
+            "images": [
+              "/assets/images/products/footwear/sneakers/1.jpg"
+            ],
+            "description": "Comfortable classic sneakers for everyday wear.",
+            "condition": "Like New",
+            "sku": "FWR-SNK-001",
+            "stock_qty": 8
+          }
+        ],
+        "sandals": [
+          {
+            "id": "footwear-sandals-1",
+            "name": "Leather Sandals",
+            "brand": "FusionCRAFT",
+            "category": "footwear",
+            "section": "sandals",
+            "price_ugx": 45000,
+            "original_price": 70000,
+            "sizes": ["40", "41", "42", "43"],
+            "colors": ["Brown", "Black"],
+            "images": [
+              "/assets/images/products/footwear/sandals/1.jpg"
+            ],
+            "description": "Comfortable leather sandals perfect for warm weather.",
+            "condition": "Like New",
+            "sku": "FWR-SND-001",
+            "stock_qty": 6
+          }
+        ],
+        "boots": [
+          {
+            "id": "footwear-boots-1",
+            "name": "Leather Boots",
+            "brand": "Thrifted",
+            "category": "footwear",
+            "section": "boots",
+            "price_ugx": 120000,
+            "original_price": 180000,
+            "sizes": ["41", "42", "43", "44"],
+            "colors": ["Brown", "Black"],
+            "images": [
+              "/assets/images/products/footwear/boots/1.jpg"
+            ],
+            "description": "Durable leather boots for all weather conditions.",
+            "condition": "Good",
+            "sku": "FWR-BOT-001",
+            "stock_qty": 5
+          }
+        ]
+      }
+    },
+    "accessories": {
+      "title": "Accessories",
+      "description": "Add the perfect finishing touches with our range of accessories.",
+      "subcategories": {
+        "rings-necklaces": [
+          {
+            "id": "accessory-rings-1",
+            "name": "Silver Ring Set",
+            "brand": "Thrifted",
+            "category": "accessories",
+            "section": "rings-necklaces",
+            "price_ugx": 45000,
+            "original_price": 70000,
+            "sizes": ["One Size"],
+            "colors": ["Silver", "Gold Plated"],
+            "images": [
+              "/assets/images/products/accessories/rings-necklaces/1.jpg"
+            ],
+            "description": "Set of 3 elegant silver rings for everyday wear.",
+            "condition": "Good",
+            "sku": "ACS-RNG-001",
+            "stock_qty": 4
+          }
+        ],
+        "shades-glasses": [
+          {
+            "id": "accessory-shades-1",
+            "name": "Vintage Sunglasses",
+            "brand": "Thrifted",
+            "category": "accessories",
+            "section": "shades-glasses",
+            "price_ugx": 35000,
+            "original_price": 60000,
+            "sizes": ["One Size"],
+            "colors": ["Black", "Tortoise"],
+            "images": [
+              "/assets/images/products/accessories/shades-glasses/1.jpg"
+            ],
+            "description": "Classic vintage style sunglasses with UV protection.",
+            "condition": "Like New",
+            "sku": "ACS-SHD-001",
+            "stock_qty": 6
+          }
+        ],
+        "bracelets-watches": [
+          {
+            "id": "accessory-watch-1",
+            "name": "Leather Strap Watch",
+            "brand": "Thrifted",
+            "category": "accessories",
+            "section": "bracelets-watches",
+            "price_ugx": 85000,
+            "original_price": 130000,
+            "sizes": ["One Size"],
+            "colors": ["Brown Leather", "Black Leather"],
+            "images": [
+              "/assets/images/products/accessories/bracelets-watches/1.jpg"
+            ],
+            "description": "Classic leather strap watch with minimalist design.",
+            "condition": "Good",
+            "sku": "ACS-WAT-001",
+            "stock_qty": 3
+          }
+        ],
+        "decor": [
+          {
+            "id": "accessory-decor-1",
+            "name": "Leather Belt",
+            "brand": "FusionCRAFT",
+            "category": "accessories",
+            "section": "decor",
+            "price_ugx": 40000,
+            "original_price": 65000,
+            "sizes": ["S", "M", "L"],
+            "colors": ["Brown", "Black"],
+            "images": [
+              "/assets/images/products/accessories/decor/1.jpg"
+            ],
+            "description": "Genuine leather belt with classic buckle.",
+            "condition": "Like New",
+            "sku": "ACS-DCR-001",
+            "stock_qty": 8
+          }
+        ]
+      }
+    }
+  }
+}
+

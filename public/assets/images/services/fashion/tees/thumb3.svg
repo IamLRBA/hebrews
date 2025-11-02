@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradtees3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8898AB80;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#8898AB40;stop-opacity:0.1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="#8898AB15"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="gridtees3" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#8898AB20" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#gridtees3)"/>
+  
+  <!-- Border -->
+  <rect width="100%" height="100%" fill="none" stroke="#8898AB" stroke-width="2" rx="8"/>
+  
+  <!-- Center icon placeholder -->
+  <rect x="150" y="150" width="100" height="100" fill="#8898AB30" rx="8" stroke="#8898AB" stroke-width="2" stroke-dasharray="5,5"/>
+  
+  <!-- Text -->
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" 
+        font-family="Arial, sans-serif" font-size="14" font-weight="bold" 
+        fill="#8898AB">
+    Placeholder
+  </text>
+</svg>

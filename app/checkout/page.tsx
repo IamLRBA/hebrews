@@ -1,0 +1,350 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { ArrowLeft, ShoppingCart } from 'lucide-react'
+import { CartManager, OrderManager, calculateDeliveryFee, isKampalaAddress, type CartItem } from '@/lib/cart'
+import { EmailTemplates } from '@/lib/emails/templates'
+
+export default function CheckoutPage() {
+  const [cart, setCart] = useState<CartItem[]>([])
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    street: '',
+    city: '',
+    notes: '',
+    deliveryOption: 'kampala' as 'kampala' | 'outside'
+  })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    setCart(CartManager.getCart())
+    
+    // Auto-detect delivery option based on address
+    if (formData.city && isKampalaAddress(formData.city)) {
+      setFormData(prev => ({ ...prev, deliveryOption: 'kampala' }))
+    }
+  }, [formData.city])
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {}
+    
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required'
+    if (!formData.email.trim()) newErrors.email = 'Email is required'
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Invalid email format'
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required'
+    if (!formData.street.trim()) newErrors.street = 'Street address is required'
+    if (!formData.city.trim()) newErrors.city = 'City/Area is required'
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!validateForm()) return
+    if (cart.length === 0) {
+      alert('Your cart is empty!')
+      return
+    }
+    
+    setIsSubmitting(true)
+    
+    // Calculate totals
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+    const deliveryFee = calculateDeliveryFee(formData.deliveryOption, formData.city)
+    const total = subtotal + deliveryFee
+    
+    // Create order
+    const order = OrderManager.createOrder({
+      customer: {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        address: {
+          street: formData.street,
+          city: formData.city
+        }
+      },
+      items: cart,
+      subtotal,
+      deliveryFee,
+      total,
+      deliveryOption: formData.deliveryOption,
+      notes: formData.notes || undefined,
+      status: 'pending'
+    })
+    
+    // Send emails (async, don't wait for completion)
+    EmailTemplates.sendEmail(EmailTemplates.buyerConfirmation(order))
+    EmailTemplates.sendEmail(EmailTemplates.sellerNotification(order))
+    
+    // Clear cart
+    CartManager.clearCart()
+    
+    // Redirect to confirmation page
+    window.location.href = `/order-confirmation?orderId=${order.id}`
+  }
+
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  const deliveryFee = calculateDeliveryFee(formData.deliveryOption, formData.city)
+  const total = subtotal + deliveryFee
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-primary-900/20 via-primary-900 to-accent-900/20 pt-24 pb-20">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300 mb-6">
+            <ArrowLeft className="w-5 h-5" />
+            <span className="text-sm font-medium">Back to Shopping</span>
+          </Link>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">Checkout</h1>
+          <p className="text-primary-200">Complete your order with secure checkout</p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Order Summary */}
+          <div className="md:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-primary-800/30 rounded-xl border border-primary-500/30 p-8"
+            >
+              <h2 className="text-2xl font-bold text-white mb-6">Order Details</h2>
+              
+              {cart.length === 0 ? (
+                <div className="text-center py-12">
+                  <ShoppingCart className="w-16 h-16 mx-auto text-primary-400/50 mb-4" />
+                  <p className="text-primary-300 text-lg">Your cart is empty</p>
+                  <Link href="/products/shirts" className="mt-4 inline-block btn btn-primary">
+                    Start Shopping
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {cart.map((item, index) => (
+                    <div key={index} className="flex items-start space-x-4 pb-4 border-b border-primary-700/50">
+                      <div className="w-20 h-20 bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-white font-medium">{item.name}</h3>
+                        <p className="text-primary-300 text-sm">{item.sku}</p>
+                        {item.size && <p className="text-primary-400 text-sm">Size: {item.size}</p>}
+                        {item.color && <p className="text-primary-400 text-sm">Color: {item.color}</p>}
+                        <p className="text-primary-200 text-sm">Qty: {item.quantity}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-white font-bold">
+                          UGX {(item.price * item.quantity).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+
+            {/* Customer Information Form */}
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              onSubmit={handleSubmit}
+              className="mt-8 bg-primary-800/30 rounded-xl border border-primary-500/30 p-8"
+            >
+              <h2 className="text-2xl font-bold text-white mb-6">Customer Information</h2>
+              
+              <div className="space-y-6">
+                {/* Full Name */}
+                <div>
+                  <label className="block text-primary-200 font-medium mb-2">
+                    Full Name <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="Enter your full name"
+                  />
+                  {errors.fullName && <p className="mt-1 text-red-400 text-sm">{errors.fullName}</p>}
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-primary-200 font-medium mb-2">
+                    Email <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="your.email@example.com"
+                  />
+                  {errors.email && <p className="mt-1 text-red-400 text-sm">{errors.email}</p>}
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="block text-primary-200 font-medium mb-2">
+                    Phone Number <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="+256 700 000 000"
+                  />
+                  {errors.phone && <p className="mt-1 text-red-400 text-sm">{errors.phone}</p>}
+                </div>
+
+                {/* Street Address */}
+                <div>
+                  <label className="block text-primary-200 font-medium mb-2">
+                    Street Address <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.street}
+                    onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="Street, Building, House Number"
+                  />
+                  {errors.street && <p className="mt-1 text-red-400 text-sm">{errors.street}</p>}
+                </div>
+
+                {/* City/Area */}
+                <div>
+                  <label className="block text-primary-200 font-medium mb-2">
+                    City / Area <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="Kampala, Mukono, etc."
+                  />
+                  {errors.city && <p className="mt-1 text-red-400 text-sm">{errors.city}</p>}
+                </div>
+
+                {/* Delivery Option */}
+                <div>
+                  <label className="block text-primary-200 font-medium mb-3">
+                    Delivery Option
+                  </label>
+                  <div className="space-y-3">
+                    <label className="flex items-center space-x-3 p-4 bg-primary-900/30 border border-primary-600/30 rounded-lg cursor-pointer hover:bg-primary-900/50 transition-colors">
+                      <input
+                        type="radio"
+                        name="delivery"
+                        value="kampala"
+                        checked={formData.deliveryOption === 'kampala'}
+                        onChange={(e) => setFormData({ ...formData, deliveryOption: e.target.value as 'kampala' | 'outside' })}
+                        className="w-4 h-4 text-primary-500"
+                      />
+                      <div className="flex-1">
+                        <p className="text-white font-medium">Kampala (Free Delivery)</p>
+                        <p className="text-primary-300 text-sm">Delivery within Kampala city limits</p>
+                      </div>
+                    </label>
+                    
+                    <label className="flex items-center space-x-3 p-4 bg-primary-900/30 border border-primary-600/30 rounded-lg cursor-pointer hover:bg-primary-900/50 transition-colors">
+                      <input
+                        type="radio"
+                        name="delivery"
+                        value="outside"
+                        checked={formData.deliveryOption === 'outside'}
+                        onChange={(e) => setFormData({ ...formData, deliveryOption: e.target.value as 'kampala' | 'outside' })}
+                        className="w-4 h-4 text-primary-500"
+                      />
+                      <div className="flex-1">
+                        <p className="text-white font-medium">Outside Kampala</p>
+                        <p className="text-primary-300 text-sm">Transport fee: UGX {deliveryFee.toLocaleString()}</p>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Notes */}
+                <div>
+                  <label className="block text-primary-200 font-medium mb-2">
+                    Additional Notes (Optional)
+                  </label>
+                  <textarea
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    rows={4}
+                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
+                    placeholder="Any special instructions for delivery..."
+                  />
+                </div>
+              </div>
+            </motion.form>
+          </div>
+
+          {/* Order Summary Sidebar */}
+          <div className="md:col-span-1">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="sticky top-24 bg-primary-800/30 rounded-xl border border-primary-500/30 p-6"
+            >
+              <h2 className="text-xl font-bold text-white mb-4">Order Summary</h2>
+              
+              <div className="space-y-4 pb-4 border-b border-primary-700/50">
+                <div className="flex justify-between text-primary-200">
+                  <span>Subtotal</span>
+                  <span>UGX {subtotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-primary-200">
+                  <span>Delivery</span>
+                  <span>{deliveryFee === 0 ? 'Free' : `UGX ${deliveryFee.toLocaleString()}`}</span>
+                </div>
+              </div>
+              
+              <div className="flex justify-between items-center py-4">
+                <span className="text-xl font-bold text-white">Total</span>
+                <span className="text-2xl font-bold text-primary-400">
+                  UGX {total.toLocaleString()}
+                </span>
+              </div>
+
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting || cart.length === 0}
+                className={`w-full py-4 rounded-lg font-bold text-lg transition-all duration-200 ${
+                  cart.length === 0
+                    ? 'bg-gray-500 cursor-not-allowed'
+                    : 'bg-primary-500 hover:bg-primary-600 text-white'
+                }`}
+              >
+                {isSubmitting ? 'Processing...' : 'Confirm Order'}
+              </button>
+
+              <p className="text-primary-300 text-sm text-center mt-4">
+                ✓ Pay on Delivery Available
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
