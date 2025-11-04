@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowLeft, ShoppingCart } from 'lucide-react'
 import { CartManager, OrderManager, calculateDeliveryFee, isKampalaAddress, type CartItem } from '@/lib/cart'
 import { EmailTemplates } from '@/lib/emails/templates'
+import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -80,9 +81,31 @@ export default function CheckoutPage() {
       status: 'pending'
     })
     
-    // Send emails (async, don't wait for completion)
-    EmailTemplates.sendEmail(EmailTemplates.buyerConfirmation(order))
-    EmailTemplates.sendEmail(EmailTemplates.sellerNotification(order))
+    // Send notifications (async, don't wait for completion)
+    try {
+      // Send emails
+      await Promise.all([
+        EmailTemplates.sendEmail(EmailTemplates.buyerConfirmation(order)),
+        EmailTemplates.sendEmail(EmailTemplates.sellerNotification(order))
+      ])
+      
+      // Send WhatsApp messages
+      // Business WhatsApp notification (always send)
+      await WhatsAppNotifications.sendWhatsApp(
+        WhatsAppNotifications.businessNotification(order)
+      )
+      
+      // Customer WhatsApp notification (if phone is on WhatsApp)
+      const isOnWhatsApp = await WhatsAppNotifications.isPhoneOnWhatsApp(order.customer.phone)
+      if (isOnWhatsApp) {
+        await WhatsAppNotifications.sendWhatsApp(
+          WhatsAppNotifications.customerConfirmation(order)
+        )
+      }
+    } catch (error) {
+      console.error('Error sending notifications:', error)
+      // Don't block order confirmation if notifications fail
+    }
     
     // Clear cart
     CartManager.clearCart()

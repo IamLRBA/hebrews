@@ -40,42 +40,65 @@ export class CartManager {
     return cartData ? JSON.parse(cartData) : []
   }
   
-  static addToCart(item: CartItem): void {
+  private static dispatchCartUpdate(): void {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('cartUpdated'))
+    }
+  }
+
+  static addToCart(item: CartItem): boolean {
     const cart = this.getCart()
+    // Check if product already exists in cart (by productId only, since each product is unique)
     const existingIndex = cart.findIndex(
-      cartItem => 
-        cartItem.productId === item.productId && 
-        cartItem.size === item.size && 
-        cartItem.color === item.color
+      cartItem => cartItem.productId === item.productId
     )
     
     if (existingIndex >= 0) {
-      cart[existingIndex].quantity += item.quantity
-    } else {
-      cart.push(item)
+      // Product already in cart - return false to indicate it wasn't added
+      return false
     }
     
+    // Set quantity to 1 (each product is a single piece)
+    const newItem = { ...item, quantity: 1 }
+    cart.push(newItem)
+    
     localStorage.setItem(this.CART_KEY, JSON.stringify(cart))
+    this.dispatchCartUpdate()
+    return true
+  }
+
+  /**
+   * Check if a product is already in the cart
+   */
+  static isProductInCart(productId: string): boolean {
+    const cart = this.getCart()
+    return cart.some(item => item.productId === productId)
   }
   
   static removeFromCart(index: number): void {
     const cart = this.getCart()
     cart.splice(index, 1)
     localStorage.setItem(this.CART_KEY, JSON.stringify(cart))
+    this.dispatchCartUpdate()
   }
   
   static updateQuantity(index: number, quantity: number): void {
+    // Since each product is a single piece, quantity is always 1
+    // This method is kept for compatibility but won't change quantity
     const cart = this.getCart()
     if (quantity <= 0) {
       this.removeFromCart(index)
       return
     }
-    cart[index].quantity = quantity
+    // Force quantity to 1 (each product is unique)
+    cart[index].quantity = 1
     localStorage.setItem(this.CART_KEY, JSON.stringify(cart))
+    this.dispatchCartUpdate()
   }
   
   static clearCart(): void {
     localStorage.removeItem(this.CART_KEY)
+    this.dispatchCartUpdate()
   }
   
   static getCartTotal(): number {
@@ -83,7 +106,8 @@ export class CartManager {
   }
   
   static getCartCount(): number {
-    return this.getCart().reduce((sum, item) => sum + item.quantity, 0)
+    // Since each product has quantity 1, count is just the number of items
+    return this.getCart().length
   }
 }
 

@@ -303,34 +303,37 @@ Next Steps:
     }
   }
 
-  // Helper function to send emails (placeholder - implement with actual email service)
+  // Helper function to send emails via API
   static async sendEmail(config: EmailConfig): Promise<boolean> {
     try {
-      // TODO: Implement actual email sending using your preferred service:
-      // - Nodemailer with SMTP
-      // - SendGrid
-      // - AWS SES
-      // - Mailgun
-      // etc.
+      // Send email via API route
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      })
       
-      console.log('Email would be sent:', {
+      if (!response.ok) {
+        const error = await response.json()
+        console.error('Failed to send email:', error)
+        return false
+      }
+      
+      const result = await response.json()
+      console.log('Email sent successfully:', {
+        to: config.to,
+        subject: config.subject
+      })
+      
+      return result.success
+    } catch (error) {
+      console.error('Error sending email:', error)
+      // Fallback: log email details for manual sending
+      console.log('Email details (manual send):', {
         to: config.to,
         subject: config.subject,
         textPreview: config.text.substring(0, 100) + '...'
       })
-      
-      // For now, just log the email
-      // In production, uncomment and implement:
-      // const response = await fetch('/api/send-email', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(config)
-      // })
-      // return response.ok
-      
-      return true
-    } catch (error) {
-      console.error('Error sending email:', error)
       return false
     }
   }

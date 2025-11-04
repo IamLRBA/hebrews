@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, ShoppingCart, Heart } from 'lucide-react'
+import { ArrowLeft, ShoppingCart, Heart, X } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 // Import products data - We'll need to create a proper data structure
 // For now, using mock data inline
@@ -236,16 +236,38 @@ export default function ProductCategoryPage() {
 
 // Product Modal Component
 function ProductModal({ product, onClose }: { product: Product; onClose: () => void }) {
-  const [selectedSize, setSelectedSize] = useState<string>('')
-  const [selectedColor, setSelectedColor] = useState<string>('')
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [addedToCart, setAddedToCart] = useState(false)
+  const [isInCart, setIsInCart] = useState(false)
+
+  // Get the single size and color for this product (since each product is one piece)
+  const productSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : ''
+  const productColor = product.colors && product.colors.length > 0 ? product.colors[0] : ''
+
+  // Check if product is already in cart
+  useEffect(() => {
+    const checkCartStatus = () => {
+      setIsInCart(CartManager.isProductInCart(product.id))
+    }
+    
+    checkCartStatus()
+    
+    // Listen for cart updates
+    window.addEventListener('cartUpdated', checkCartStatus)
+    
+    return () => {
+      window.removeEventListener('cartUpdated', checkCartStatus)
+    }
+  }, [product.id])
 
   const addToCart = () => {
-    if (!selectedSize) {
-      alert('Please select a size')
+    // Check if already in cart
+    if (isInCart || addedToCart) {
+      alert('This product is already in your cart. Each product is a single unique piece.')
       return
     }
+
     setIsAddingToCart(true)
     
     const cartItem: CartItem = {
@@ -253,19 +275,25 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       productId: product.id,
       name: product.name,
       price: product.price_ugx,
-      size: selectedSize,
-      color: selectedColor,
+      size: productSize,
+      color: productColor,
       quantity: 1,
       image: product.images[0],
       sku: product.sku
     }
     
-    CartManager.addToCart(cartItem)
+    const success = CartManager.addToCart(cartItem)
+    
+    if (!success) {
+      alert('This product is already in your cart. Each product is a single unique piece.')
+      setIsAddingToCart(false)
+      setAddedToCart(true) // Show as already added
+      return
+    }
     
     setTimeout(() => {
       setIsAddingToCart(false)
-      alert('Product added to cart!')
-      onClose()
+      setAddedToCart(true)
     }, 300)
   }
 
@@ -282,8 +310,17 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-primary-800 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-primary-800 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative"
       >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-primary-700/50 hover:bg-primary-700 text-white transition-colors duration-200"
+          aria-label="Close modal"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        
         <div className="grid md:grid-cols-2 gap-8 p-8">
           {/* Image Gallery */}
           <div className="space-y-4">
@@ -330,52 +367,27 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 <span className="px-3 py-1 bg-primary-500/30 text-primary-200 text-sm rounded-full">
                   {product.condition}
                 </span>
-                <span className="px-3 py-1 bg-green-500/30 text-green-200 text-sm rounded-full">
-                  {product.stock_qty} in stock
-                </span>
               </div>
             </div>
 
             <p className="text-primary-200 leading-relaxed">{product.description}</p>
 
-            {/* Size Selection */}
-            <div>
-              <label className="block text-primary-200 font-medium mb-2">Size *</label>
-              <div className="flex flex-wrap gap-2">
-                {product.sizes.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 rounded-lg transition-all duration-200 ${
-                      selectedSize === size
-                        ? 'bg-primary-500 text-white'
-                        : 'bg-primary-700/30 text-primary-200 hover:bg-primary-700/50'
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
+            {/* Size Display */}
+            {productSize && (
+              <div>
+                <label className="block text-primary-200 font-medium mb-2">Size</label>
+                <div className="px-4 py-2 rounded-lg bg-primary-700/30 text-primary-200 inline-block">
+                  {productSize}
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Color Selection */}
-            {product.colors.length > 0 && (
+            {/* Color Display */}
+            {productColor && (
               <div>
                 <label className="block text-primary-200 font-medium mb-2">Color</label>
-                <div className="flex flex-wrap gap-2">
-                  {product.colors.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`px-4 py-2 rounded-lg transition-all duration-200 border-2 ${
-                        selectedColor === color
-                          ? 'border-primary-500 bg-primary-500/30 text-white'
-                          : 'border-primary-600/30 bg-primary-700/30 text-primary-200 hover:border-primary-500/50'
-                      }`}
-                    >
-                      {color}
-                    </button>
-                  ))}
+                <div className="px-4 py-2 rounded-lg bg-primary-700/30 text-primary-200 inline-block">
+                  {productColor}
                 </div>
               </div>
             )}
@@ -383,16 +395,16 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             {/* Add to Cart Button */}
             <button
               onClick={addToCart}
-              disabled={isAddingToCart || product.stock_qty === 0}
+              disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
               className={`w-full py-4 rounded-lg font-bold text-lg flex items-center justify-center space-x-2 transition-all duration-200 ${
-                product.stock_qty === 0
+                product.stock_qty === 0 || addedToCart || isInCart
                   ? 'bg-gray-500 cursor-not-allowed'
                   : 'bg-primary-500 hover:bg-primary-600 text-white'
               }`}
             >
               <ShoppingCart className="w-5 h-5" />
               <span>
-                {isAddingToCart ? 'Adding...' : product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
+                {isAddingToCart ? 'Adding...' : (addedToCart || isInCart) ? 'Already in Cart' : product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
               </span>
             </button>
           </div>

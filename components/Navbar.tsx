@@ -13,9 +13,11 @@ import {
   HiHome,
   HiShoppingBag,
   HiGlobeAlt,
-  HiUserCircle
+  HiUserCircle,
+  HiShoppingCart
 } from 'react-icons/hi'
 import ThemeSwitcher from './ThemeSwitcher'
+import { CartManager } from '@/lib/cart'
 
 const navigation = [
   { name: 'Home', href: '/', icon: HiHome },
@@ -43,8 +45,33 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
   const pathname = usePathname()
   const searchRef = useRef<HTMLDivElement>(null)
+
+  // Update cart count
+  useEffect(() => {
+    const updateCartCount = () => {
+      setCartCount(CartManager.getCartCount())
+    }
+    
+    updateCartCount()
+    
+    // Listen for storage changes (when cart is updated from other tabs/components)
+    window.addEventListener('storage', updateCartCount)
+    
+    // Custom event for cart updates within the same tab
+    window.addEventListener('cartUpdated', updateCartCount)
+    
+    // Poll for cart updates (in case event isn't fired)
+    const interval = setInterval(updateCartCount, 1000)
+    
+    return () => {
+      window.removeEventListener('storage', updateCartCount)
+      window.removeEventListener('cartUpdated', updateCartCount)
+      clearInterval(interval)
+    }
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -357,6 +384,23 @@ export default function Navbar() {
                 )}
               </div>
               
+              {/* Cart Icon */}
+              <Link 
+                href="/cart"
+                className="relative p-2 text-neutral-600 hover:text-primary-700 transition-all duration-200"
+              >
+                <HiShoppingCart className="w-5 h-5" />
+                {cartCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                  >
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </motion.span>
+                )}
+              </Link>
+              
               {/* Theme Switcher */}
               <ThemeSwitcher />
             </div>
@@ -596,8 +640,25 @@ export default function Navbar() {
                   </div>
                 </nav>
 
-                {/* Footer with Theme Switcher */}
+                {/* Footer with Cart and Theme Switcher */}
                 <div className="p-6 border-t border-neutral-200">
+                  {/* Cart Link */}
+                  <Link
+                    href="/cart"
+                    onClick={closeMenu}
+                    className="flex items-center justify-between px-4 py-3 mb-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg transition-all duration-200 hover:bg-primary-100 dark:hover:bg-primary-900/30"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <HiShoppingCart className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                      <span className="font-medium text-primary-700 dark:text-primary-300">Shopping Cart</span>
+                    </div>
+                    {cartCount > 0 && (
+                      <span className="bg-primary-600 text-white text-xs font-bold rounded-full px-2 py-1 min-w-[24px] text-center">
+                        {cartCount > 99 ? '99+' : cartCount}
+                      </span>
+                    )}
+                  </Link>
+                  
                   {/* Theme Switcher */}
                   <div className="mb-4">
                     <div className="px-4 py-2 text-sm font-semibold text-neutral-500 uppercase tracking-wide mb-2">

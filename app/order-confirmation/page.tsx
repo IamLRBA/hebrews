@@ -1,14 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { CheckCircle, Printer, Home, Package } from 'lucide-react'
+import { CheckCircle, Download, Home, Package } from 'lucide-react'
 import { OrderManager, type Order } from '@/lib/cart'
+import { downloadReceipt } from '@/lib/utils/receipt-generator'
 
 export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null)
   const [orderId, setOrderId] = useState<string>('')
+  const [isDownloading, setIsDownloading] = useState(false)
+  const receiptRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     // Get order ID from URL params
@@ -23,8 +26,21 @@ export default function OrderConfirmationPage() {
     }
   }, [])
 
-  const handlePrint = () => {
-    window.print()
+  const handleDownloadReceipt = async () => {
+    if (!receiptRef.current || !order) return
+    
+    setIsDownloading(true)
+    try {
+      await downloadReceipt(receiptRef.current, order.id, {
+        width: 800,
+        backgroundColor: '#ffffff'
+      })
+    } catch (error) {
+      console.error('Error downloading receipt:', error)
+      alert('Failed to download receipt. Please try again.')
+    } finally {
+      setIsDownloading(false)
+    }
   }
 
   if (!order) {
@@ -73,77 +89,109 @@ export default function OrderConfirmationPage() {
 
         {/* Order Receipt */}
         <motion.div
+          ref={receiptRef}
+          data-receipt
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-primary-800/30 rounded-xl border border-primary-500/30 p-8 print:bg-white print:border-gray-300 print:p-6"
+          className="bg-white rounded-xl shadow-2xl p-8 mx-auto max-w-2xl receipt-container"
+          style={{
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+            color: '#1f2937'
+          }}
         >
-          {/* Order Header */}
-          <div className="border-b border-primary-700/50 pb-6 mb-6 print:border-gray-300">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <p className="text-primary-300 text-sm print:text-gray-600">Order Number</p>
-                <p className="text-2xl font-bold text-white print:text-gray-900">{order.id}</p>
+          {/* Receipt Header */}
+          <div className="text-center mb-8 pb-6 border-b-2 border-gray-200">
+            <div className="mb-4">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '0.5px' }}>
+                FusionCRAFT STUDIOS
+              </h1>
+              <p className="text-gray-600 text-sm">Thrifted Fashion & Style Curators</p>
+            </div>
+            <div className="flex justify-between items-center text-sm text-gray-600">
+              <div className="text-left">
+                <p className="font-semibold text-gray-900">Order Receipt</p>
+                <p className="mt-1">{order.id}</p>
               </div>
               <div className="text-right">
-                <p className="text-primary-300 text-sm print:text-gray-600">Order Date</p>
-                <p className="text-white font-medium print:text-gray-900">
+                <p className="font-semibold text-gray-900">Date</p>
+                <p className="mt-1">
                   {new Date(order.timestamp).toLocaleDateString('en-US', {
                     year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
                   })}
                 </p>
               </div>
             </div>
-            <p className="text-primary-400 text-sm print:text-gray-600">
-              Status: <span className="font-bold text-primary-300 print:text-gray-900">{order.status.toUpperCase()}</span>
-            </p>
           </div>
 
           {/* Customer Information */}
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-white mb-4 print:text-gray-900">
-              <Package className="w-5 h-5 inline mr-2" />
-              Delivery Information
-            </h2>
-            <div className="bg-primary-900/30 rounded-lg p-4 print:bg-gray-50">
-              <p className="text-white print:text-gray-900">
-                <strong>Full Name:</strong> {order.customer.fullName}
-              </p>
-              <p className="text-white mt-2 print:text-gray-900">
-                <strong>Email:</strong> {order.customer.email}
-              </p>
-              <p className="text-white mt-2 print:text-gray-900">
-                <strong>Phone:</strong> {order.customer.phone}
-              </p>
-              <p className="text-white mt-2 print:text-gray-900">
-                <strong>Address:</strong> {order.customer.address.street}, {order.customer.address.city}
-              </p>
+          <div className="mb-6 pb-6 border-b border-gray-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide text-sm">
+              Customer Information
+            </h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Name:</span>
+                <span className="text-gray-900 font-medium">{order.customer.fullName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Phone:</span>
+                <span className="text-gray-900 font-medium">{order.customer.phone}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Email:</span>
+                <span className="text-gray-900 font-medium text-xs">{order.customer.email}</span>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <p className="text-gray-600 text-xs mb-1">Delivery Address:</p>
+                <p className="text-gray-900 font-medium text-sm">
+                  {order.customer.address.street}<br />
+                  {order.customer.address.city}
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Order Items */}
           <div className="mb-6">
-            <h2 className="text-xl font-bold text-white mb-4 print:text-gray-900">Order Items</h2>
+            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wide text-sm">
+              Items Ordered
+            </h3>
             <div className="space-y-4">
               {order.items.map((item, index) => (
-                <div key={index} className="flex items-start justify-between pb-4 border-b border-primary-700/50 print:border-gray-200">
-                  <div className="flex items-start space-x-4 flex-1">
-                    <div className="w-16 h-16 bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0 print:bg-gray-100 print:border print:border-gray-300">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                <div key={index} className="flex items-start justify-between pb-4 border-b border-gray-100">
+                  <div className="flex items-start space-x-3 flex-1">
+                    <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
+                      <img 
+                        src={item.image || '/assets/images/placeholder.jpg'} 
+                        alt={item.name} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.src = '/assets/images/placeholder.jpg'
+                        }}
+                      />
                     </div>
-                    <div>
-                      <h3 className="text-white font-medium print:text-gray-900">{item.name}</h3>
-                      <p className="text-primary-300 text-sm print:text-gray-600">{item.sku}</p>
-                      {item.size && <p className="text-primary-400 text-sm print:text-gray-600">Size: {item.size}</p>}
-                      {item.color && <p className="text-primary-400 text-sm print:text-gray-600">Color: {item.color}</p>}
-                      <p className="text-primary-200 text-sm mt-1 print:text-gray-700">Quantity: {item.quantity}</p>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-gray-900 font-semibold text-sm mb-1">{item.name}</h4>
+                      <p className="text-gray-500 text-xs mb-1">SKU: {item.sku}</p>
+                      <div className="flex flex-wrap gap-2 text-xs text-gray-600">
+                        {item.size && <span>Size: <strong>{item.size}</strong></span>}
+                        {item.color && <span>Color: <strong>{item.color}</strong></span>}
+                        <span>Qty: <strong>{item.quantity}</strong></span>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-white font-bold print:text-gray-900">
+                  <div className="text-right ml-4">
+                    <p className="text-gray-900 font-bold text-base">
                       UGX {(item.price * item.quantity).toLocaleString()}
+                    </p>
+                    <p className="text-gray-500 text-xs mt-1">
+                      UGX {item.price.toLocaleString()} each
                     </p>
                   </div>
                 </div>
@@ -152,39 +200,57 @@ export default function OrderConfirmationPage() {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-primary-900/30 rounded-lg p-4 mb-6 print:bg-gray-50">
-            <div className="flex justify-between text-primary-200 mb-2 print:text-gray-700">
-              <span>Subtotal</span>
-              <span>UGX {order.subtotal.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between text-primary-200 mb-2 print:text-gray-700">
-              <span>Delivery Fee</span>
-              <span>{order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}</span>
-            </div>
-            <div className="flex justify-between items-center pt-4 border-t border-primary-700/50 print:border-gray-300">
-              <span className="text-xl font-bold text-white print:text-gray-900">Total</span>
-              <span className="text-2xl font-bold text-primary-400 print:text-gray-900">
-                UGX {order.total.toLocaleString()}
-              </span>
+          <div className="bg-gray-50 rounded-lg p-5 mb-6 border border-gray-200">
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Subtotal</span>
+                <span className="text-gray-900 font-medium">UGX {order.subtotal.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Delivery Fee</span>
+                <span className="text-gray-900 font-medium">
+                  {order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}
+                </span>
+              </div>
+              <div className="pt-3 border-t-2 border-gray-300 mt-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-bold text-gray-900 uppercase tracking-wide">Total</span>
+                  <span className="text-2xl font-bold text-gray-900">
+                    UGX {order.total.toLocaleString()}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Delivery Notes */}
           {order.notes && (
-            <div className="mb-6">
-              <h3 className="text-white font-medium mb-2 print:text-gray-900">Special Instructions</h3>
-              <p className="text-primary-200 text-sm print:text-gray-700">{order.notes}</p>
+            <div className="mb-6 pb-6 border-b border-gray-200">
+              <h3 className="text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Special Instructions</h3>
+              <p className="text-gray-700 text-sm">{order.notes}</p>
             </div>
           )}
 
           {/* Payment Notice */}
-          <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4 text-center print:bg-yellow-50 print:border-yellow-300">
-            <p className="text-white font-medium print:text-yellow-900">
-              💳 Payment will be collected on delivery
+          <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 text-center mb-6">
+            <p className="text-amber-900 font-semibold text-sm mb-1">
+              💳 Payment Method: Cash on Delivery
             </p>
-            <p className="text-primary-200 text-sm mt-2 print:text-yellow-700">
+            <p className="text-amber-700 text-xs">
               Expected delivery within 2-3 business days
             </p>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center pt-6 border-t-2 border-gray-200">
+            <p className="text-gray-600 text-xs mb-2">
+              Thank you for shopping with FusionCRAFT STUDIOS!
+            </p>
+            <div className="text-gray-500 text-xs space-y-1">
+              <p>Email: jerrylarubafestus@gmail.com</p>
+              <p>Phone: +256 755 915 549</p>
+              <p className="mt-2">© {new Date().getFullYear()} FusionCRAFT STUDIOS. All rights reserved.</p>
+            </div>
           </div>
         </motion.div>
 
@@ -196,11 +262,12 @@ export default function OrderConfirmationPage() {
           className="flex flex-col sm:flex-row gap-4 justify-center mt-12 print:hidden"
         >
           <button
-            onClick={handlePrint}
-            className="btn btn-outline inline-flex items-center justify-center space-x-2"
+            onClick={handleDownloadReceipt}
+            disabled={isDownloading}
+            className="btn btn-outline inline-flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Printer className="w-5 h-5" />
-            <span>Print Receipt</span>
+            <Download className="w-5 h-5" />
+            <span>{isDownloading ? 'Downloading...' : 'Download Receipt'}</span>
           </button>
           <Link href="/products/shirts" className="btn btn-primary inline-flex items-center justify-center space-x-2">
             <Package className="w-5 h-5" />
@@ -213,44 +280,15 @@ export default function OrderConfirmationPage() {
         </motion.div>
       </div>
 
-      {/* Print Styles */}
+      {/* Receipt Styles */}
       <style jsx global>{`
+        .receipt-container {
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
         @media print {
           .print\\:hidden {
             display: none !important;
-          }
-          .print\\:bg-white {
-            background-color: white !important;
-          }
-          .print\\:text-gray-900 {
-            color: #111827 !important;
-          }
-          .print\\:text-gray-700 {
-            color: #374151 !important;
-          }
-          .print\\:text-gray-600 {
-            color: #4b5563 !important;
-          }
-          .print\\:border-gray-300 {
-            border-color: #d1d5db !important;
-          }
-          .print\\:border-gray-200 {
-            border-color: #e5e7eb !important;
-          }
-          .print\\:bg-gray-50 {
-            background-color: #f9fafb !important;
-          }
-          .print\\:bg-gray-100 {
-            background-color: #f3f4f6 !important;
-          }
-          .print\\:text-yellow-900 {
-            color: #78350f !important;
-          }
-          .print\\:text-yellow-700 {
-            color: #a16207 !important;
-          }
-          .print\\:border-yellow-300 {
-            border-color: #fde68a !important;
           }
         }
       `}</style>

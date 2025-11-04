@@ -57,6 +57,7 @@
     line-height: var(--leading-normal);
     font-weight: var(--font-weight-thin);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
   }
@@ -644,7 +645,8 @@
 
 
 /* Dark mode backdrop blur for navbar */
-.dark nav.bg-white\/95 {
+/* Using attribute selector to avoid issues with Tailwind's slash in class names */
+.dark nav[class*="bg-white"] {
   @apply bg-neutral-900/95;
 }
 

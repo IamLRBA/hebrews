@@ -1,7 +1,7 @@
 'use client'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
-import { Plus, Minus } from 'lucide-react'
+import { Plus, Minus, Quote } from 'lucide-react'
 import Link from 'next/link'
 
 interface ProductSubcategory {
@@ -17,6 +17,10 @@ interface Service {
   image: string
   slug: string
   subcategories: ProductSubcategory[]
+  quote: {
+    text: string
+    author: string
+  }
 }
 
 const services: Service[] = [
@@ -32,7 +36,11 @@ const services: Service[] = [
       { name: 'Checked', slug: 'checked' },
       { name: 'Textured', slug: 'textured' },
       { name: 'Denim', slug: 'denim' }
-    ]
+    ],
+    quote: {
+      text: 'A shirt that fits well is worth more than one that costs a fortune.',
+      author: 'Tommy Hilfiger'
+    }
   },
   { 
     id: 2, 
@@ -46,7 +54,11 @@ const services: Service[] = [
       { name: 'Graphic', slug: 'graphic' },
       { name: 'Collared', slug: 'collared' },
       { name: 'Sporty', slug: 'sporty' }
-    ]
+    ],
+    quote: {
+      text: 'Less is more when you\'re wearing the right t-shirt.',
+      author: 'Ralph Lauren'
+    }
   },
   { 
     id: 3, 
@@ -60,7 +72,11 @@ const services: Service[] = [
       { name: 'Hoodie', slug: 'hoodie' },
       { name: 'Coat', slug: 'coat' },
       { name: 'Jacket', slug: 'jacket' }
-    ]
+    ],
+    quote: {
+      text: 'A coat should keep you warm, but a great coat should make you feel like you can conquer the world.',
+      author: 'Coco Chanel'
+    }
   },
   { 
     id: 4, 
@@ -74,7 +90,11 @@ const services: Service[] = [
       { name: 'Denim', slug: 'denim' },
       { name: 'Cargo', slug: 'cargo' },
       { name: 'Sporty', slug: 'sporty' }
-    ]
+    ],
+    quote: {
+      text: 'The right pair of pants can make you feel confident and ready to take on anything.',
+      author: 'Karl Lagerfeld'
+    }
   },
   { 
     id: 5, 
@@ -88,7 +108,11 @@ const services: Service[] = [
       { name: 'Sneakers', slug: 'sneakers' },
       { name: 'Sandals', slug: 'sandals' },
       { name: 'Boots', slug: 'boots' }
-    ]
+    ],
+    quote: {
+      text: 'Walk like you have a destination and shoes that can take you there.',
+      author: 'Manolo Blahnik'
+    }
   },
   { 
     id: 6, 
@@ -102,7 +126,11 @@ const services: Service[] = [
       { name: 'Shades & Glasses', slug: 'shades-glasses' },
       { name: 'Bracelets & Watches', slug: 'bracelets-watches' },
       { name: 'Decor', slug: 'decor' }
-    ]
+    ],
+    quote: {
+      text: 'Accessories are like vitamins to fashion – they enhance the outfit.',
+      author: 'Anna Dello Russo'
+    }
   }
 ]
 
@@ -157,17 +185,15 @@ export default function FashionServices() {
                                 onMouseLeave={() => setHoveredThumbnail(null)}
                               >
                                 <div className="bg-primary-900/20 rounded-lg h-48 w-48 flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg hover:shadow-none transition-all duration-300 cursor-pointer group">
-                                  <img 
-                                    src={`/assets/images/services/fashion/${s.slug}/thumb${thumbIndex}.svg`}
-                                    alt={`${subcategory.name} - ${s.title}`}
-                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                                    onError={(e) => {
-                                      const target = e.target as HTMLImageElement
-                                      target.style.display = 'none'
-                                      const fallback = target.nextElementSibling as HTMLElement
-                                      if (fallback) fallback.style.display = 'flex'
-                                    }}
-                                  />
+                            <img 
+                              src={`/assets/images/services/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
+                              alt={`${subcategory.name} - ${s.title}`}
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement
+                                target.src = `/assets/images/services/fashion/${s.slug}/thumb${thumbIndex}.svg`
+                              }}
+                            />
                                   <div className="hidden text-primary-400 text-sm items-center justify-center w-full h-full">
                                     {subcategory.name}
                                   </div>
@@ -205,6 +231,19 @@ export default function FashionServices() {
                               </Link>
                             )
                           })}
+                        </div>
+                        
+                        {/* Quote Section */}
+                        <div className="mt-8 pt-8 border-t border-primary-500/20">
+                          <blockquote className="text-center">
+                            <Quote className="w-8 h-8 mx-auto mb-4 text-primary-400/50" />
+                            <p className="text-primary-300 italic text-lg md:text-xl mb-3">
+                              {s.quote.text}
+                            </p>
+                            <footer className="text-primary-400 text-sm font-medium">
+                              — {s.quote.author}
+                            </footer>
+                          </blockquote>
                         </div>
                       </div>
                     </motion.div>
