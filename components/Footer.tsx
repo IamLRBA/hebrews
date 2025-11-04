@@ -10,9 +10,10 @@ import {
   Youtube, 
   Github, 
   Send,
-  MapPin
+  MapPin,
+  MessageCircle,
+  Twitter
 } from 'lucide-react'
-import { FaXTwitter, FaWhatsapp, FaSnapchat, FaTiktok } from 'react-icons/fa6'
 
 const socialLinks = [
   {
@@ -28,12 +29,12 @@ const socialLinks = [
   {
     name: 'TikTok',
     href: 'https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1',
-    icon: FaTiktok
+    icon: Youtube
   },
   {
     name: 'X (Twitter)',
     href: 'https://x.com/i/status/1952162823766708588',
-    icon: FaXTwitter
+    icon: Twitter
   },
   {
     name: 'GitHub',
@@ -43,7 +44,7 @@ const socialLinks = [
   {
     name: 'WhatsApp',
     href: 'https://wa.me/256755915549',
-    icon: FaWhatsapp
+    icon: MessageCircle
   },
   {
     name: 'Telegram',
@@ -53,7 +54,7 @@ const socialLinks = [
   {
     name: 'Snapchat',
     href: 'https://t.snapchat.com/pQuWROd2',
-    icon: FaSnapchat
+    icon: MessageCircle
   },
   {
     name: 'YouTube',

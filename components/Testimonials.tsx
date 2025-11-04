@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiX, FiStar } from 'react-icons/fi'
+import { X, Star } from 'lucide-react'
 
 interface Testimonial {
   id: number
@@ -113,7 +113,7 @@ const TestimonialsSection = () => {
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <FiStar 
+      <Star 
         key={i} 
         size={16} 
         className={i < rating ? "text-accent-500 fill-accent-500" : "text-gray-300"} 
@@ -278,7 +278,7 @@ const TestimonialsSection = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <button className="close-button absolute top-4 right-4 w-8 h-8 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:text-primary-600 dark:hover:text-primary-300" onClick={() => setSelectedTestimonial(null)}>
-                  <FiX />
+                  <X />
                 </button>
                 
                 <div className="testimonial-content">

@@ -15,9 +15,11 @@ import {
   Music,
   Palette,
   Code,
-  Shirt
+  Shirt,
+  MessageCircle,
+  Twitter,
+  Youtube
 } from 'lucide-react'
-import { FaXTwitter, FaWhatsapp, FaSnapchat, FaTiktok } from 'react-icons/fa6'
 import Link from 'next/link'
 import EducationalJourney from '@/components/EducationalJourney'
 
@@ -63,12 +65,12 @@ export default function CEOProfile() {
   const socialLinks = [
     { icon: Mail, href: 'mailto:jerrylarubafestus@gmail.com' },
     { icon: Instagram, href: 'https://www.instagram.com/iamlrba?igsh=MXcwcTF3b3R6ZG9yeQ%3D%3D&utm_source=qr' },
-    { icon: FaTiktok, href: 'https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1' },
-    { icon: FaXTwitter, href: 'https://x.com/i/status/1952162823766708588' },
+    { icon: Youtube, href: 'https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1' },
+    { icon: Twitter, href: 'https://x.com/i/status/1952162823766708588' },
     { icon: Github, href: 'https://github.com/IamLRBA' },
-    { icon: FaWhatsapp, href: 'https://wa.me/256755915549' },
+    { icon: MessageCircle, href: 'https://wa.me/256755915549' },
     { icon: Send, href: 'https://t.me/+256755915549' },
-    { icon: FaSnapchat, href: 'https://t.snapchat.com/pQuWROd2' }
+    { icon: MessageCircle, href: 'https://t.snapchat.com/pQuWROd2' }
   ]
 
   const galleryImages = [
@@ -470,7 +472,7 @@ export default function CEOProfile() {
             </div>
 
             <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 border border-primary-500/30 overflow-hidden shadow-2xl">
-              <FaWhatsapp className="w-8 h-8 text-primary-600 mx-auto mb-3" />
+              <MessageCircle className="w-8 h-8 text-primary-600 mx-auto mb-3" />
               <h4 className="font-semibold text-primary-900 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
               <p className="text-sm text-neutral-600 mb-3">+256755915549</p>
               <a

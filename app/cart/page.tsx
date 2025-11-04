@@ -67,7 +67,7 @@ export default function CartPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300 mb-6">
+          <Link href="/sections/fashion" className="inline-flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300 mb-6">
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-medium">Continue Shopping</span>
           </Link>
@@ -102,7 +102,7 @@ export default function CartPage() {
             <h2 className="text-2xl font-bold text-white mb-4">Your cart is empty</h2>
             <p className="text-primary-300 mb-8">Looks like you haven't added anything to your cart yet.</p>
             <Link 
-              href="/products/shirts"
+              href="/sections/fashion"
               className="inline-block btn btn-primary"
             >
               Start Shopping
@@ -212,7 +212,7 @@ export default function CartPage() {
                 </Link>
 
                 <Link
-                  href="/products/shirts"
+                  href="/sections/fashion"
                   className="block w-full py-3 rounded-lg font-medium text-center bg-primary-800/50 hover:bg-primary-800/70 text-primary-200 transition-all duration-200"
                 >
                   Continue Shopping

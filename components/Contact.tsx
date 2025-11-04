@@ -6,9 +6,9 @@ import {
   Mail, 
   Phone, 
   MapPin,
-  Send
+  Send,
+  MessageCircle
 } from 'lucide-react'
-import { FaWhatsapp } from 'react-icons/fa'
 
 const contactInfo = [
   {
@@ -39,7 +39,7 @@ const contactInfo = [
   {
     title: "ᗯᕼᗩTᔕᗩᑭᑭ",
     subtitle: "+256 755 915 549",
-    icon: FaWhatsapp,
+    icon: MessageCircle,
     buttonText: "Message Us",
     action: () => window.open('https://wa.me/256755915549', '_blank'),
     color: "from-accent-500 to-accent-600"
@@ -298,7 +298,7 @@ export default function Contact() {
                       onChange={(e) => setContactMethod(e.target.value as 'email' | 'whatsapp')}
                     />
                     <div className="flex items-center space-x-2">
-                      <FaWhatsapp className="w-5 h-5 text-primary-600" />
+                      <MessageCircle className="w-5 h-5 text-primary-600" />
                       <span className="text-primary-700 font-medium">WhatsApp</span>
                     </div>
                   </label>
@@ -328,7 +328,7 @@ export default function Contact() {
                         </>
                       ) : (
                         <>
-                          <FaWhatsapp className="w-5 h-5" />
+                          <MessageCircle className="w-5 h-5" />
                           <span>Send Message</span>
                         </>
                       )}

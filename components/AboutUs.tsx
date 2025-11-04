@@ -15,9 +15,9 @@ import {
   Send,
   Mail,
   ExternalLink,
-  Zap
+  Zap,
+  MessageCircle
 } from 'lucide-react'
-import { FaWhatsapp } from 'react-icons/fa'
 
 const teamMembers = [
   {
@@ -262,7 +262,7 @@ export default function AboutUs() {
                          rel="noopener noreferrer"
                          className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-200 transition-colors duration-200"
                        >
-                         <FaWhatsapp className="w-4 h-4" />
+                         <MessageCircle className="w-4 h-4" />
                        </a>
                       <a
                         href={`mailto:${member.social.email}`}

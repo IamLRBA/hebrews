@@ -9,6 +9,7 @@ import {
 import { useRef, useState, useEffect } from 'react'
 import LoadingScreen from '../components/LoadingScreen'
 import PortalNavigation from '../components/PortalNavigation'
+import FeaturedCollections from '../components/FeaturedCollections'
 import Stats from '../components/Stats'
 import Testimonials from '../components/Testimonials'
 import Contact from '../components/Contact'
@@ -245,6 +246,9 @@ export default function Home() {
                   </motion.div>
                 </motion.div>
               </section>
+
+              {/* Featured Collections Section */}
+              <FeaturedCollections />
 
               {/* Portals Section */}
               <section ref={portalsRef} id="portals-section" className="section">

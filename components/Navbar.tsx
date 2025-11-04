@@ -5,27 +5,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-// Icon imports - using Hi (Heroicons) instead of lucide-react
+// Icon imports - using Hi (Heroicons) for menu/search, lucide-react for outline icons
 import { 
   HiMenu, 
   HiX, 
-  HiSearch, 
-  HiHome,
-  HiShoppingBag,
-  HiGlobeAlt,
-  HiUserCircle,
-  HiShoppingCart
+  HiSearch
 } from 'react-icons/hi'
+import { Home, UserCircle, ShoppingCart, Globe, ShoppingBag } from 'lucide-react'
 import ThemeSwitcher from './ThemeSwitcher'
 import { CartManager } from '@/lib/cart'
 
 const navigation = [
-  { name: 'Home', href: '/', icon: HiHome },
-  { name: 'About Us', href: '/about-us', icon: HiUserCircle },
+  { name: 'Home', href: '/', icon: Home },
+  { name: 'About Us', href: '/about-us', icon: UserCircle },
 ]
 
 const portalItems = [
-  { name: 'Fashion', href: '/sections/fashion', icon: HiShoppingBag },
+  { name: 'Fashion', href: '/sections/fashion', icon: ShoppingBag },
 ]
 
 const searchSuggestions = [
@@ -235,7 +231,7 @@ export default function Navbar() {
                         : 'text-neutral-600 hover:text-primary-700'
                     }`}
                   >
-                    <HiGlobeAlt className="w-4 h-4" />
+                    <Globe className="w-4 h-4" />
                     <span className="font-medium">Portals</span>
                     <span className="text-sm">⇓</span>
                     
@@ -389,7 +385,7 @@ export default function Navbar() {
                 href="/cart"
                 className="relative p-2 text-neutral-600 hover:text-primary-700 transition-all duration-200"
               >
-                <HiShoppingCart className="w-5 h-5" />
+                <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
                   <motion.span
                     initial={{ scale: 0 }}
@@ -649,7 +645,7 @@ export default function Navbar() {
                     className="flex items-center justify-between px-4 py-3 mb-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg transition-all duration-200 hover:bg-primary-100 dark:hover:bg-primary-900/30"
                   >
                     <div className="flex items-center space-x-3">
-                      <HiShoppingCart className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                      <ShoppingCart className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                       <span className="font-medium text-primary-700 dark:text-primary-300">Shopping Cart</span>
                     </div>
                     {cartCount > 0 && (
