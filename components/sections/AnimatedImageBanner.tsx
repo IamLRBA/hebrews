@@ -146,7 +146,7 @@ export default function AnimatedImageBanner() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="relative w-[750px] h-[450px] md:w-[750px] md:h-[500px] lg:w-[920px] lg:h-[410px]"
+              className="relative w-[450px] h-[330px] md:w-[750px] md:h-[350px] lg:w-[920px] lg:h-[440px]"
             >
               <img
                 src="/assets/images/sections/home/hero-banner.jpg"
