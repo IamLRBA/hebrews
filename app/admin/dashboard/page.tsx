@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Plus, Trash2, Package, DollarSign, ShoppingCart, Users, BarChart3, LogOut } from 'lucide-react'
+import { ArrowLeft, Plus, Trash2, Package, DollarSign, ShoppingCart, Users, BarChart3, LogOut, X, Image as ImageIcon, Maximize2, Minimize2 } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
-import { ProductManager, type Product } from '@/lib/products'
+import { ProductManager, type Product, type BoughtProduct } from '@/lib/products'
 import { OrderManager, type Order } from '@/lib/cart'
 
 const categories = ['shirts', 'tees', 'coats', 'pants-and-shorts', 'footwear', 'accessories']
@@ -26,6 +26,10 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [showAddForm, setShowAddForm] = useState(false)
+  const [showRemoveForm, setShowRemoveForm] = useState(false)
+  const [selectedRemoveProduct, setSelectedRemoveProduct] = useState<Product | null>(null)
+  const [removeReason, setRemoveReason] = useState<'Product Bought' | 'Mistakenly Posted' | ''>('')
+  const [productImages, setProductImages] = useState<string[]>([]) // Base64 images
   const [newProduct, setNewProduct] = useState({
     name: '',
     brand: '',
@@ -35,7 +39,7 @@ export default function AdminDashboard() {
     original_price: '',
     sizes: [] as string[],
     colors: [] as string[],
-    images: [''],
+    images: [] as string[],
     description: '',
     condition: 'Like New',
     sku: '',
@@ -57,9 +61,41 @@ export default function AdminDashboard() {
     setOrders(OrderManager.getOrders())
   }
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    if (files.length === 0) return
+
+    files.forEach(file => {
+      if (!file.type.startsWith('image/')) {
+        alert('Please select only image files')
+        return
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB')
+        return
+      }
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const base64String = reader.result as string
+        setProductImages(prev => [...prev, base64String])
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const removeImage = (index: number) => {
+    setProductImages(prev => prev.filter((_, i) => i !== index))
+  }
+
   const handleAddProduct = (e: React.FormEvent) => {
     e.preventDefault()
     
+    if (productImages.length === 0) {
+      alert('Please add at least one product image')
+      return
+    }
+
     const product: Product = {
       id: `${newProduct.category}-${newProduct.section}-${Date.now()}`,
       name: newProduct.name,
@@ -70,7 +106,7 @@ export default function AdminDashboard() {
       original_price: newProduct.original_price ? parseInt(newProduct.original_price) : undefined,
       sizes: newProduct.sizes,
       colors: newProduct.colors,
-      images: newProduct.images.filter(img => img.trim()),
+      images: productImages, // Use uploaded images (first image is main display)
       description: newProduct.description,
       condition: newProduct.condition,
       sku: newProduct.sku || `${newProduct.category.substring(0, 3).toUpperCase()}-${newProduct.section.substring(0, 3).toUpperCase()}-${Date.now().toString().slice(-3)}`,
@@ -80,6 +116,7 @@ export default function AdminDashboard() {
     if (ProductManager.addProduct(product)) {
       alert('Product added successfully!')
       setShowAddForm(false)
+      setProductImages([])
       setNewProduct({
         name: '',
         brand: '',
@@ -89,7 +126,7 @@ export default function AdminDashboard() {
         original_price: '',
         sizes: [],
         colors: [],
-        images: [''],
+        images: [],
         description: '',
         condition: 'Like New',
         sku: '',
@@ -101,13 +138,16 @@ export default function AdminDashboard() {
     }
   }
 
-  const handleDeleteProduct = (productId: string, category: string, section: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      if (ProductManager.deleteProduct(productId, category, section)) {
-        alert('Product deleted successfully!')
+  const handleDeleteProduct = (productId: string, category: string, section: string, reason: 'Product Bought' | 'Mistakenly Posted') => {
+    if (confirm(`Are you sure you want to remove this product? Reason: ${reason}`)) {
+      if (ProductManager.deleteProduct(productId, category, section, reason)) {
+        alert(`Product removed successfully!${reason === 'Product Bought' ? ' It has been added to bought products.' : ''}`)
+        setShowRemoveForm(false)
+        setSelectedRemoveProduct(null)
+        setRemoveReason('')
         loadData()
       } else {
-        alert('Error deleting product')
+        alert('Error removing product')
       }
     }
   }
@@ -121,11 +161,13 @@ export default function AdminDashboard() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
 
+  const boughtProducts = ProductManager.getBoughtProducts()
   const stats = {
     totalProducts: products.length,
     totalOrders: orders.length,
     totalRevenue: orders.reduce((sum, order) => sum + order.total, 0),
-    totalItemsSold: orders.reduce((sum, order) => sum + order.items.reduce((itemSum, item) => itemSum + item.quantity, 0), 0)
+    totalItemsSold: orders.reduce((sum, order) => sum + order.items.reduce((itemSum, item) => itemSum + item.quantity, 0), 0),
+    boughtProducts: boughtProducts.length
   }
 
   return (
@@ -329,15 +371,34 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Images (URLs, one per line) *</label>
-                <textarea
-                  required
-                  rows={3}
-                  value={newProduct.images.join('\n')}
-                  onChange={(e) => setNewProduct({ ...newProduct, images: e.target.value.split('\n').filter(img => img.trim()) })}
-                  placeholder="/assets/images/products/shirts/gentle/1.jpg"
-                  className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
+                <label className="block text-sm font-medium mb-2">Product Images *</label>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-3">First image will be the main display image. Others will appear as thumbnails in the product modal.</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageUpload}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white mb-3"
                 />
+                {productImages.length > 0 && (
+                  <div className="grid grid-cols-4 gap-4 mt-4">
+                    {productImages.map((img, index) => (
+                      <div key={index} className="relative group">
+                        <img src={img} alt={`Product image ${index + 1}`} className="w-full h-32 object-cover rounded-lg border-2 border-primary-500" />
+                        {index === 0 && (
+                          <span className="absolute top-1 left-1 px-2 py-1 bg-primary-600 text-white text-xs rounded">Main</span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Description *</label>
@@ -353,6 +414,76 @@ export default function AdminDashboard() {
                 Add Product
               </button>
             </form>
+          </motion.div>
+        )}
+
+        {/* Remove Product Section */}
+        <div className="mb-6">
+          <button
+            onClick={() => setShowRemoveForm(!showRemoveForm)}
+            className="btn bg-red-600 hover:bg-red-700 text-white flex items-center space-x-2"
+          >
+            <Trash2 className="w-5 h-5" />
+            <span>{showRemoveForm ? 'Cancel' : 'Remove Product'}</span>
+          </button>
+        </div>
+
+        {showRemoveForm && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white dark:bg-neutral-800 rounded-xl p-8 shadow-lg mb-8"
+          >
+            <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Remove Product</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Select Product *</label>
+                <select
+                  value={selectedRemoveProduct?.id || ''}
+                  onChange={(e) => {
+                    const product = products.find(p => p.id === e.target.value)
+                    setSelectedRemoveProduct(product || null)
+                  }}
+                  className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
+                >
+                  <option value="">Select a product...</option>
+                  {products.map(product => (
+                    <option key={product.id} value={product.id}>
+                      {product.name} - {product.category} / {product.section} - UGX {product.price_ugx.toLocaleString()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {selectedRemoveProduct && (
+                <>
+                  <div className="p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg">
+                    <p className="font-medium">{selectedRemoveProduct.name}</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">{selectedRemoveProduct.brand} • {selectedRemoveProduct.category} / {selectedRemoveProduct.section}</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">Price: UGX {selectedRemoveProduct.price_ugx.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Reason for Removal *</label>
+                    <select
+                      value={removeReason}
+                      onChange={(e) => setRemoveReason(e.target.value as 'Product Bought' | 'Mistakenly Posted')}
+                      className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
+                    >
+                      <option value="">Select reason...</option>
+                      <option value="Product Bought">Product Bought</option>
+                      <option value="Mistakenly Posted">Mistakenly Posted</option>
+                    </select>
+                  </div>
+                  {removeReason && (
+                    <button
+                      onClick={() => handleDeleteProduct(selectedRemoveProduct.id, selectedRemoveProduct.category, selectedRemoveProduct.section, removeReason)}
+                      className="btn bg-red-600 hover:bg-red-700 text-white w-full"
+                    >
+                      Remove Product
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
           </motion.div>
         )}
 
@@ -382,7 +513,11 @@ export default function AdminDashboard() {
                       <td className="p-4">{product.stock_qty}</td>
                       <td className="p-4">
                         <button
-                          onClick={() => handleDeleteProduct(product.id, product.category, product.section)}
+                          onClick={() => {
+                            setSelectedRemoveProduct(product)
+                            setRemoveReason('')
+                            setShowRemoveForm(true)
+                          }}
                           className="text-red-600 hover:text-red-700"
                         >
                           <Trash2 className="w-5 h-5" />

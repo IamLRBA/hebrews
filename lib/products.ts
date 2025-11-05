@@ -17,8 +17,16 @@ export interface Product {
   stock_qty: number
 }
 
+export interface BoughtProduct {
+  id: string
+  product: Product
+  reason: 'Product Bought' | 'Mistakenly Posted'
+  removedAt: string
+}
+
 export class ProductManager {
   private static PRODUCTS_KEY = 'fusioncraft_products'
+  private static BOUGHT_PRODUCTS_KEY = 'fusioncraft_bought_products'
 
   static getProducts(): any {
     if (typeof window === 'undefined') return { products: {} }
@@ -61,11 +69,27 @@ export class ProductManager {
     }
   }
 
-  static deleteProduct(productId: string, category: string, section: string): boolean {
+  static deleteProduct(productId: string, category: string, section: string, reason?: 'Product Bought' | 'Mistakenly Posted'): boolean {
     try {
       const productsData = this.getProducts()
       
       if (productsData.products[category]?.subcategories[section]) {
+        const product = productsData.products[category].subcategories[section].find(
+          (p: Product) => p.id === productId
+        )
+        
+        if (product && reason === 'Product Bought') {
+          // Store as bought product
+          const boughtProducts = this.getBoughtProducts()
+          boughtProducts.push({
+            id: `BOUGHT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            product,
+            reason,
+            removedAt: new Date().toISOString()
+          })
+          localStorage.setItem(this.BOUGHT_PRODUCTS_KEY, JSON.stringify(boughtProducts))
+        }
+        
         productsData.products[category].subcategories[section] = 
           productsData.products[category].subcategories[section].filter(
             (p: Product) => p.id !== productId
@@ -78,6 +102,12 @@ export class ProductManager {
       console.error('Error deleting product:', error)
       return false
     }
+  }
+
+  static getBoughtProducts(): BoughtProduct[] {
+    if (typeof window === 'undefined') return []
+    const boughtProductsData = localStorage.getItem(this.BOUGHT_PRODUCTS_KEY)
+    return boughtProductsData ? JSON.parse(boughtProductsData) : []
   }
 
   static getAllProductsArray(): Product[] {

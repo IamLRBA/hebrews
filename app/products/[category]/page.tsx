@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, ShoppingCart, Heart, X } from 'lucide-react'
+import { ArrowLeft, ShoppingCart, Heart, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import { ProductManager } from '@/lib/products'
 import { AuthManager } from '@/lib/auth'
@@ -189,7 +189,7 @@ export default function ProductCategoryPage() {
               ).join(' ')}
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
               {products.map((product: Product, index: number) => (
                 <motion.div
                   key={product.id}
@@ -201,7 +201,7 @@ export default function ProductCategoryPage() {
                   onClick={() => openProductModal(product)}
                 >
                   {/* Product Image */}
-                  <div className="relative h-64 bg-primary-900/20 overflow-hidden">
+                  <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 bg-primary-900/20 overflow-hidden">
                     <img
                       src={product.images[0] || '/assets/images/placeholder.jpg'}
                       alt={product.name}
@@ -228,23 +228,24 @@ export default function ProductCategoryPage() {
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-4">
-                    <p className="text-primary-300 text-sm mb-1">{product.brand}</p>
-                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{product.name}</h3>
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-2xl font-bold text-primary-400">
+                  <div className="p-2 sm:p-3 md:p-4">
+                    <p className="text-primary-300 text-xs sm:text-sm mb-1 line-clamp-1">{product.brand}</p>
+                    <h3 className="text-sm sm:text-base md:text-lg font-bold text-white mb-1 sm:mb-2 line-clamp-2">{product.name}</h3>
+                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 flex-wrap">
+                      <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary-400">
                         UGX {product.price_ugx.toLocaleString()}
                       </span>
                       {product.original_price && (
-                        <span className="text-sm text-primary-400/50 line-through">
+                        <span className="text-xs sm:text-sm text-primary-400/50 line-through">
                           UGX {product.original_price.toLocaleString()}
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center space-x-2 mt-3">
-                      <button className="flex-1 bg-primary-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-600 transition-colors duration-200 flex items-center justify-center space-x-2">
-                        <ShoppingCart className="w-4 h-4" />
-                        <span>Quick View</span>
+                    <div className="flex items-center space-x-2 mt-2 sm:mt-3">
+                      <button className="flex-1 bg-primary-500 text-white py-1.5 sm:py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-medium hover:bg-primary-600 transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2">
+                        <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">Quick View</span>
+                        <span className="sm:hidden">View</span>
                       </button>
                     </div>
                   </div>
@@ -271,6 +272,8 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
   const [isInCart, setIsInCart] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const thumbnailRef = useRef<HTMLDivElement>(null)
 
   // Get the single size and color for this product (since each product is one piece)
   const productSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : ''
@@ -328,6 +331,35 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
     }, 300)
   }
 
+  const scrollThumbnails = (direction: 'left' | 'right') => {
+    if (thumbnailRef.current) {
+      const scrollAmount = 200
+      thumbnailRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      })
+    }
+  }
+
+  const toggleFullscreen = () => {
+    if (!isFullscreen) {
+      setIsFullscreen(true)
+    } else {
+      setIsFullscreen(false)
+    }
+  }
+
+  // Handle ESC key to exit fullscreen
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false)
+      }
+    }
+    window.addEventListener('keydown', handleEsc)
+    return () => window.removeEventListener('keydown', handleEsc)
+  }, [isFullscreen])
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -336,6 +368,11 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
+      <style jsx>{`
+        .thumbnail-scroll::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -355,26 +392,57 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         <div className="grid md:grid-cols-2 gap-8 p-8">
           {/* Image Gallery */}
           <div className="space-y-4">
-            <div className="relative h-96 bg-primary-900/20 rounded-lg overflow-hidden">
+            <div className="relative h-96 bg-primary-900/20 rounded-lg overflow-hidden group">
               <img
                 src={product.images[currentImageIndex] || '/assets/images/placeholder.jpg'}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
+              {product.images.length > 0 && (
+                <button
+                  onClick={toggleFullscreen}
+                  className="absolute top-4 right-4 p-2 bg-primary-700/80 hover:bg-primary-700 text-white rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
+                  aria-label="Fullscreen"
+                >
+                  {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+                </button>
+              )}
             </div>
             {product.images.length > 1 && (
-              <div className="grid grid-cols-4 gap-2">
-                {product.images.map((img, index) => (
+              <div className="relative">
+                {product.images.length > 4 && (
                   <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`h-20 rounded overflow-hidden border-2 ${
-                      currentImageIndex === index ? 'border-primary-500' : 'border-transparent'
-                    }`}
+                    onClick={() => scrollThumbnails('left')}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 bg-primary-700/80 hover:bg-primary-700 text-white rounded-l-lg transition-all duration-200"
                   >
-                    <img src={img} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                    <ChevronLeft className="w-4 h-4" />
                   </button>
-                ))}
+                )}
+                <div
+                  ref={thumbnailRef}
+                  className="flex gap-2 overflow-x-auto scroll-smooth thumbnail-scroll"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {product.images.map((img, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`flex-shrink-0 h-20 w-20 rounded overflow-hidden border-2 transition-all duration-200 ${
+                        currentImageIndex === index ? 'border-primary-500 scale-105' : 'border-transparent hover:border-primary-300'
+                      }`}
+                    >
+                      <img src={img} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+                {product.images.length > 4 && (
+                  <button
+                    onClick={() => scrollThumbnails('right')}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 bg-primary-700/80 hover:bg-primary-700 text-white rounded-r-lg transition-all duration-200"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -441,6 +509,60 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           </div>
         </div>
       </motion.div>
+
+      {/* Fullscreen Image Modal */}
+      <AnimatePresence>
+        {isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black z-[60] flex items-center justify-center p-4"
+            onClick={toggleFullscreen}
+          >
+            <button
+              onClick={toggleFullscreen}
+              className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-200 z-10"
+            >
+              <Minimize2 className="w-6 h-6" />
+            </button>
+            <motion.img
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              src={product.images[currentImageIndex] || '/assets/images/placeholder.jpg'}
+              alt={product.name}
+              className="max-w-full max-h-full object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+            {product.images.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : product.images.length - 1))
+                  }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-200"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setCurrentImageIndex((prev) => (prev < product.images.length - 1 ? prev + 1 : 0))
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-200"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
+                  {currentImageIndex + 1} / {product.images.length}
+                </div>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

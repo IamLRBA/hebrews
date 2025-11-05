@@ -166,7 +166,7 @@ export default function FeaturedCollections() {
         </motion.div>
 
         {featuredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-7xl mx-auto">
             {featuredProducts.map((item, index) => {
               const { product, categoryName, categorySlug } = item
               const isAdding = addingToCart === product.id
@@ -190,7 +190,7 @@ export default function FeaturedCollections() {
                     </div>
 
                     <Link href={`/products/${categorySlug}`}>
-                      <div className="relative h-64 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+                      <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
                         <img
                           src={product.images[0] || '/assets/images/placeholder.jpg'}
                           alt={product.name}
@@ -214,24 +214,24 @@ export default function FeaturedCollections() {
                       </div>
                     </Link>
 
-                    <div className="p-5 flex-1 flex flex-col">
+                    <div className="p-3 sm:p-4 md:p-5 flex-1 flex flex-col">
                       <Link href={`/products/${categorySlug}`}>
-                        <div className="mb-3">
-                          <p className="text-primary-500 text-xs font-medium mb-1">{product.brand}</p>
-                          <h3 className="text-lg font-bold text-primary-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                        <div className="mb-2 sm:mb-3">
+                          <p className="text-primary-500 text-xs font-medium mb-1 line-clamp-1">{product.brand}</p>
+                          <h3 className="text-sm sm:text-base md:text-lg font-bold text-primary-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
                             {product.name}
                           </h3>
-                          <p className="text-primary-400 text-xs mb-3">{product.sku}</p>
+                          <p className="text-primary-400 text-xs mb-2 sm:mb-3 line-clamp-1">{product.sku}</p>
                         </div>
                       </Link>
 
-                      <div className="mb-4 mt-auto">
-                        <div className="flex items-baseline space-x-2">
-                          <span className="text-2xl font-bold text-primary-700">
+                      <div className="mb-3 sm:mb-4 mt-auto">
+                        <div className="flex items-baseline space-x-1 sm:space-x-2 flex-wrap">
+                          <span className="text-lg sm:text-xl md:text-2xl font-bold text-primary-700">
                             UGX {product.price_ugx.toLocaleString()}
                           </span>
                           {hasDiscount && (
-                            <span className="text-sm text-primary-400 line-through">
+                            <span className="text-xs sm:text-sm text-primary-400 line-through">
                               UGX {product.original_price!.toLocaleString()}
                             </span>
                           )}
@@ -241,13 +241,13 @@ export default function FeaturedCollections() {
                       <button
                         onClick={() => handleAddToCart(product)}
                         disabled={isAdding || isInCart || product.stock_qty === 0}
-                        className={`w-full py-3 rounded-lg font-semibold flex items-center justify-center space-x-2 transition-all duration-200 ${
+                        className={`w-full py-2 sm:py-3 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center space-x-1 sm:space-x-2 transition-all duration-200 ${
                           isInCart || product.stock_qty === 0
                             ? 'bg-gray-400 cursor-not-allowed text-white'
                             : 'bg-primary-600 hover:bg-primary-700 text-white hover:shadow-lg'
                         }`}
                       >
-                        <ShoppingCart className="w-4 h-4" />
+                        <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
                         <span>
                           {isAdding
                             ? 'Adding...'
@@ -261,10 +261,10 @@ export default function FeaturedCollections() {
 
                       <Link
                         href={`/products/${categorySlug}`}
-                        className="mt-3 text-center text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center space-x-1 transition-colors"
+                        className="mt-2 sm:mt-3 text-center text-xs sm:text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center space-x-1 transition-colors"
                       >
                         <span>View Collection</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Link>
                     </div>
                   </div>
