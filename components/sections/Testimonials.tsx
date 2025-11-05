@@ -34,22 +34,24 @@ export default function Testimonials() {
 
   useEffect(() => {
     // Load user reviews and merge with default testimonials
-    const userReviews = AuthManager.getAllReviews()
-    const reviewsAsTestimonials: Testimonial[] = userReviews.map((review: any) => ({
-      id: review.id,
-      text: review.text.length > 150 ? review.text.substring(0, 150) + '...' : review.text,
-      fullText: review.text,
-      author: review.author || 'Customer',
-      company: 'Verified Customer',
-      image: review.image || '/assets/images/testimonials/default.jpg',
-      rating: review.rating || 5
-    }))
-    
-    setTestimonialsData([...defaultTestimonials, ...reviewsAsTestimonials])
-    
-    const handleReviewsUpdate = () => {
-      const updatedReviews = AuthManager.getAllReviews()
-      const updatedTestimonials: Testimonial[] = updatedReviews.map((review: any) => ({
+    const loadReviews = () => {
+      const userReviews = AuthManager.getAllReviews()
+      
+      // Ensure reviews have the latest profile images from users
+      const users = AuthManager.getUsersList?.() || []
+      const reviewsWithUpdatedImages = userReviews.map((review: any) => {
+        // Find the user who wrote this review
+        const reviewUser = users.find((u: any) => u.fullName === review.author)
+        if (reviewUser && reviewUser.profileImage) {
+          return {
+            ...review,
+            image: reviewUser.profileImage
+          }
+        }
+        return review
+      })
+      
+      const reviewsAsTestimonials: Testimonial[] = reviewsWithUpdatedImages.map((review: any) => ({
         id: review.id,
         text: review.text.length > 150 ? review.text.substring(0, 150) + '...' : review.text,
         fullText: review.text,
@@ -58,11 +60,23 @@ export default function Testimonials() {
         image: review.image || '/assets/images/testimonials/default.jpg',
         rating: review.rating || 5
       }))
-      setTestimonialsData([...defaultTestimonials, ...updatedTestimonials])
+      
+      setTestimonialsData([...defaultTestimonials, ...reviewsAsTestimonials])
+    }
+    
+    loadReviews()
+    
+    const handleReviewsUpdate = () => {
+      loadReviews()
     }
 
     window.addEventListener('reviewsUpdated', handleReviewsUpdate)
-    return () => window.removeEventListener('reviewsUpdated', handleReviewsUpdate)
+    window.addEventListener('authStateChanged', handleReviewsUpdate) // Also update when user updates profile
+    
+    return () => {
+      window.removeEventListener('reviewsUpdated', handleReviewsUpdate)
+      window.removeEventListener('authStateChanged', handleReviewsUpdate)
+    }
   }, [])
 
   useEffect(() => {

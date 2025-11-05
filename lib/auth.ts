@@ -111,6 +111,10 @@ export class AuthManager {
     return usersData ? JSON.parse(usersData) : []
   }
 
+  static getUsersList(): any[] {
+    return this.getUsers()
+  }
+
   private static setCurrentUser(user: User): void {
     if (typeof window === 'undefined') return
     localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user))
@@ -132,7 +136,25 @@ export class AuthManager {
     // Update current user if it's the same user
     const currentUser = this.getCurrentUser()
     if (currentUser && currentUser.id === userId) {
-      this.setCurrentUser({ ...currentUser, ...updates })
+      const updatedUser = { ...currentUser, ...updates }
+      this.setCurrentUser(updatedUser)
+      
+      // If profile image was updated, update all reviews with this user's name
+      if (updates.profileImage !== undefined) {
+        const allReviews = this.getAllReviews()
+        const updatedReviews = allReviews.map((review: any) => {
+          // Check if review belongs to this user (by matching author name)
+          if (review.author === updatedUser.fullName) {
+            return {
+              ...review,
+              image: updatedUser.profileImage || '/assets/images/testimonials/default.jpg'
+            }
+          }
+          return review
+        })
+        localStorage.setItem(this.REVIEWS_KEY, JSON.stringify(updatedReviews))
+        window.dispatchEvent(new CustomEvent('reviewsUpdated'))
+      }
     }
 
     return true
