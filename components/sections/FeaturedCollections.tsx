@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ShoppingCart, ArrowRight, Sparkles } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
@@ -123,15 +123,25 @@ export default function FeaturedCollections() {
 
     setTimeout(() => {
       setAddingToCart(null)
-      setAddedToCart(new Set([...addedToCart, product.id]))
+      const updatedSet = new Set(addedToCart)
+      updatedSet.add(product.id)
+      setAddedToCart(updatedSet)
     }, 300)
   }
 
   return (
     <section className="py-20 px-4 bg-gradient-to-b from-primary-50 via-white to-primary-50 relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-primary-200/20 to-accent-200/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-accent-200/20 to-primary-200/20 rounded-full blur-3xl" />
+        <motion.div
+          animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-primary-200/20 to-accent-200/20 rounded-full blur-3xl" 
+        />
+        <motion.div
+          animate={{ x: [0, -100, 0], y: [0, -50, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-accent-200/20 to-primary-200/20 rounded-full blur-3xl" 
+        />
       </div>
 
       <div className="container-custom relative z-10">
@@ -142,31 +152,38 @@ export default function FeaturedCollections() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center space-x-2 text-primary-600 mb-4">
-            <Sparkles className="w-6 h-6" />
+          <motion.div
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 200, damping: 10 }}
+            className="inline-flex items-center space-x-2 text-primary-600 mb-4"
+          >
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-6 h-6" />
+            </motion.div>
             <span className="text-sm font-semibold uppercase tracking-wider">Featured</span>
-            <Sparkles className="w-6 h-6" />
-          </div>
+            <motion.div
+              animate={{ rotate: [360, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            >
+              <Sparkles className="w-6 h-6" />
+            </motion.div>
+          </motion.div>
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 mb-4">
             Featured <span className="text-accent-600">Collections</span>
           </h2>
           <p className="text-xl text-primary-700 max-w-3xl mx-auto mb-6">
             Discover our handpicked selection from each category
           </p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="inline-flex items-center space-x-2 text-primary-600 text-sm bg-primary-100 px-4 py-2 rounded-full"
-          >
-            <span>Click the portal below to explore more products</span>
-            <ArrowRight className="w-4 h-4" />
-          </motion.div>
         </motion.div>
 
         {featuredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-7xl mx-auto">
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 max-w-7xl">
             {featuredProducts.map((item, index) => {
               const { product, categoryName, categorySlug } = item
               const isAdding = addingToCart === product.id
@@ -176,78 +193,145 @@ export default function FeaturedCollections() {
               return (
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  transition={{ 
+                    duration: 0.5, 
+                    delay: index * 0.1,
+                    type: "spring",
+                    stiffness: 100
+                  }}
+                  whileHover={{ 
+                    y: -8,
+                    scale: 1.02,
+                    transition: { duration: 0.3 }
+                  }}
                   className="group relative"
                 >
-                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-100 h-full flex flex-col">
-                    <div className="absolute top-4 left-4 z-10">
-                      <span className="px-3 py-1 bg-primary-600/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
+                  <motion.div
+                    className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-100 h-full flex flex-col relative"
+                    whileHover={{
+                      boxShadow: "0 20px 40px rgba(139, 69, 19, 0.2)"
+                    }}
+                  >
+                    {/* Animated background gradient on hover */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-br from-primary-50 to-accent-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      initial={false}
+                    />
+
+                    {/* Category badge with animation */}
+                    <motion.div
+                      initial={{ x: -20, opacity: 0 }}
+                      whileInView={{ x: 0, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 + 0.3 }}
+                      className="absolute top-3 left-3 z-10"
+                    >
+                      <motion.span
+                        whileHover={{ scale: 1.1 }}
+                        className="px-2.5 py-1 bg-primary-600/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full shadow-lg"
+                      >
                         {categoryName}
-                      </span>
-                    </div>
+                      </motion.span>
+                    </motion.div>
 
                     <Link href={`/products/${categorySlug}`}>
-                      <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
-                        <img
+                      <div className="relative h-64 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+                        <motion.img
                           src={product.images[0] || '/assets/images/placeholder.jpg'}
                           alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          className="w-full h-full object-cover"
+                          whileHover={{ scale: 1.15 }}
+                          transition={{ duration: 0.4 }}
                           onError={(e) => {
                             const target = e.target as HTMLImageElement
                             target.src = '/assets/images/placeholder.jpg'
                           }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
+                          initial={{ opacity: 0 }}
+                          whileHover={{ opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                        />
                         {product.condition && (
-                          <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-primary-800 text-xs font-semibold rounded-full">
+                          <motion.div
+                            initial={{ scale: 0, rotate: -180 }}
+                            whileInView={{ scale: 1, rotate: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 + 0.4, type: "spring" }}
+                            className="absolute top-3 right-3 px-2 py-1 bg-white/90 backdrop-blur-sm text-primary-800 text-xs font-semibold rounded-full shadow-lg"
+                          >
                             {product.condition}
-                          </div>
+                          </motion.div>
                         )}
                         {hasDiscount && (
-                          <div className="absolute bottom-4 right-4 px-3 py-1 bg-accent-500 text-white text-xs font-bold rounded-full">
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            whileInView={{ scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
+                            className="absolute bottom-3 right-3 px-2 py-1 bg-accent-500 text-white text-xs font-bold rounded-full shadow-lg"
+                          >
                             {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
-                          </div>
+                          </motion.div>
                         )}
                       </div>
                     </Link>
 
-                    <div className="p-3 sm:p-4 md:p-5 flex-1 flex flex-col">
+                    <div className="p-5 flex-1 flex flex-col relative z-10">
                       <Link href={`/products/${categorySlug}`}>
-                        <div className="mb-2 sm:mb-3">
+                        <motion.div
+                          whileHover={{ x: 5 }}
+                          transition={{ duration: 0.2 }}
+                          className="mb-2"
+                        >
                           <p className="text-primary-500 text-xs font-medium mb-1 line-clamp-1">{product.brand}</p>
-                          <h3 className="text-sm sm:text-base md:text-lg font-bold text-primary-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                          <h3 className="text-sm sm:text-base font-bold text-primary-900 mb-1 line-clamp-2 group-hover:text-primary-600 transition-colors">
                             {product.name}
                           </h3>
-                          <p className="text-primary-400 text-xs mb-2 sm:mb-3 line-clamp-1">{product.sku}</p>
-                        </div>
+                          <p className="text-primary-400 text-xs mb-2 line-clamp-1">{product.sku}</p>
+                        </motion.div>
                       </Link>
 
-                      <div className="mb-3 sm:mb-4 mt-auto">
-                        <div className="flex items-baseline space-x-1 sm:space-x-2 flex-wrap">
-                          <span className="text-lg sm:text-xl md:text-2xl font-bold text-primary-700">
+                      <div className="mb-3 mt-auto">
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.1 + 0.6 }}
+                          className="flex items-baseline space-x-1 flex-wrap"
+                        >
+                          <span className="text-base sm:text-lg font-bold text-primary-700">
                             UGX {product.price_ugx.toLocaleString()}
                           </span>
                           {hasDiscount && (
-                            <span className="text-xs sm:text-sm text-primary-400 line-through">
+                            <span className="text-xs text-primary-400 line-through">
                               UGX {product.original_price!.toLocaleString()}
                             </span>
                           )}
-                        </div>
+                        </motion.div>
                       </div>
 
-                      <button
+                      <motion.button
                         onClick={() => handleAddToCart(product)}
                         disabled={isAdding || isInCart || product.stock_qty === 0}
-                        className={`w-full py-2 sm:py-3 rounded-lg text-xs sm:text-sm font-semibold flex items-center justify-center space-x-1 sm:space-x-2 transition-all duration-200 ${
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`w-full py-2 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 transition-all duration-200 ${
                           isInCart || product.stock_qty === 0
                             ? 'bg-gray-400 cursor-not-allowed text-white'
                             : 'bg-primary-600 hover:bg-primary-700 text-white hover:shadow-lg'
                         }`}
                       >
-                        <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <motion.div
+                          animate={isAdding ? { rotate: 360 } : {}}
+                          transition={{ duration: 0.5, repeat: isAdding ? Infinity : 0 }}
+                        >
+                          <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </motion.div>
                         <span>
                           {isAdding
                             ? 'Adding...'
@@ -257,20 +341,36 @@ export default function FeaturedCollections() {
                             ? 'Out of Stock'
                             : 'Add to Cart'}
                         </span>
-                      </button>
+                      </motion.button>
 
-                      <Link
-                        href={`/products/${categorySlug}`}
-                        className="mt-2 sm:mt-3 text-center text-xs sm:text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center space-x-1 transition-colors"
-                      >
-                        <span>View Collection</span>
-                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </Link>
+                      <motion.div whileHover={{ x: 5 }}>
+                        <Link
+                          href={`/products/${categorySlug}`}
+                          className="mt-2 text-center text-xs text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center space-x-1 transition-colors"
+                        >
+                          <span>View Collection</span>
+                          <motion.span
+                            animate={{ x: [0, 3, 0] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                          >
+                            <ArrowRight className="w-3 h-3" />
+                          </motion.span>
+                        </Link>
+                      </motion.div>
                     </div>
-                  </div>
+
+                    {/* Shine effect on hover */}
+                    <motion.div
+                      className="absolute inset-0 -z-10 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100"
+                      initial={{ x: '-100%' }}
+                      whileHover={{ x: '100%' }}
+                      transition={{ duration: 0.6 }}
+                    />
+                  </motion.div>
                 </motion.div>
               )
             })}
+            </div>
           </div>
         ) : (
           <div className="text-center py-12">

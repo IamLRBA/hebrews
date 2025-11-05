@@ -13,6 +13,7 @@ import FeaturedCollections from '@/components/sections/FeaturedCollections'
 import Stats from '@/components/sections/Stats'
 import Testimonials from '@/components/sections/Testimonials'
 import Contact from '@/components/sections/Contact'
+import AnimatedImageBanner from '@/components/sections/AnimatedImageBanner'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -247,6 +248,9 @@ export default function Home() {
                 </motion.div>
               </section>
 
+              {/* Animated Image Banner */}
+              <AnimatedImageBanner />
+
               {/* Featured Collections Section */}
               <FeaturedCollections />
 
@@ -258,6 +262,35 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
+                    className="text-center mb-8"
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.2 }}
+                      className="inline-flex items-center space-x-3 text-primary-600 text-sm md:text-base bg-gradient-to-r from-primary-100 to-accent-100 px-6 py-3 rounded-full mb-6 shadow-lg border border-primary-200/50"
+                    >
+                      <motion.span
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        ✨
+                      </motion.span>
+                      <span className="font-medium">Click the portal below to explore more products</span>
+                      <motion.span
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        →
+                      </motion.span>
+                    </motion.div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
                     className="section-title"
                   >
                     <h2 className="text-4xl md:text-5xl font-bold text-primary-800 mb-6">
