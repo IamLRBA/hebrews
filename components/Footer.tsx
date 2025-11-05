@@ -10,10 +10,9 @@ import {
   Youtube, 
   Github, 
   Send,
-  MapPin,
-  MessageCircle,
-  Twitter
+  MapPin
 } from 'lucide-react'
+import { IconBrandWhatsapp, IconBrandTiktok, IconBrandSnapchat, IconBrandX } from '@tabler/icons-react'
 
 const socialLinks = [
   {
@@ -29,12 +28,12 @@ const socialLinks = [
   {
     name: 'TikTok',
     href: 'https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1',
-    icon: Youtube
+    icon: IconBrandTiktok
   },
   {
     name: 'X (Twitter)',
     href: 'https://x.com/i/status/1952162823766708588',
-    icon: Twitter
+    icon: IconBrandX
   },
   {
     name: 'GitHub',
@@ -44,7 +43,7 @@ const socialLinks = [
   {
     name: 'WhatsApp',
     href: 'https://wa.me/256755915549',
-    icon: MessageCircle
+    icon: IconBrandWhatsapp
   },
   {
     name: 'Telegram',
@@ -54,7 +53,7 @@ const socialLinks = [
   {
     name: 'Snapchat',
     href: 'https://t.snapchat.com/pQuWROd2',
-    icon: MessageCircle
+    icon: IconBrandSnapchat
   },
   {
     name: 'YouTube',

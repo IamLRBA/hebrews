@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
+    "@tabler/icons-react": "^3.35.0",
     "framer-motion": "latest",
     "gsap": "latest",
     "html2canvas": "^1.4.1",

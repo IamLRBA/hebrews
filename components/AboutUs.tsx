@@ -12,12 +12,11 @@ import {
   Shirt,
   Linkedin,
   Instagram,
-  Send,
   Mail,
   ExternalLink,
-  Zap,
-  MessageCircle
+  Zap
 } from 'lucide-react'
+import { IconBrandWhatsapp, IconBrandX } from '@tabler/icons-react'
 
 const teamMembers = [
   {
@@ -254,7 +253,7 @@ export default function AboutUs() {
                         rel="noopener noreferrer"
                         className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-200 transition-colors duration-200"
                       >
-                        <Send className="w-4 h-4" />
+                        <IconBrandX className="w-4 h-4" />
                       </a>
                                              <a
                          href={`https://wa.me/${member.social.whatsapp}`}
@@ -262,7 +261,7 @@ export default function AboutUs() {
                          rel="noopener noreferrer"
                          className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-200 transition-colors duration-200"
                        >
-                         <MessageCircle className="w-4 h-4" />
+                         <IconBrandWhatsapp className="w-4 h-4" />
                        </a>
                       <a
                         href={`mailto:${member.social.email}`}
