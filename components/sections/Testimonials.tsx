@@ -104,7 +104,7 @@ export default function Testimonials() {
   }
 
   const renderStars = (rating: number) => Array.from({ length: 5 }, (_, i) => (
-    <Star key={i} size={16} className={i < rating ? "text-accent-500 fill-accent-500" : "text-gray-300"} />
+    <Star key={i} size={12} className={i < rating ? "text-accent-500 fill-accent-500" : "text-gray-300"} />
   ))
 
   const duplicatedTestimonials = [...testimonialsData, ...testimonialsData]
@@ -124,16 +124,16 @@ export default function Testimonials() {
           <motion.div className="slider-track flex" animate={{ x: sliderPosition }} transition={{ type: "tween", ease: "linear" }} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)} style={{ gap: `${gap}px` }}>
             {duplicatedTestimonials.map((testimonial, index) => (
               <motion.div key={`${testimonial.id}-${index}`} className="testimonial-card flex-shrink-0" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} viewport={{ once: true }} whileHover={{ scale: 1.05 }} onClick={() => setSelectedTestimonial(testimonial)} style={{ width: `${cardWidth}px` }}>
-                <div className="testimonial-content bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105">
-                  <div className="flex justify-center mb-3">
-                    <div className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center">
-                      <svg className="w-4 h-4 text-primary-600 dark:text-primary-300" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                <div className="testimonial-content bg-white dark:bg-neutral-800 rounded-2xl p-3 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105">
+                  <div className="flex justify-center mb-1.5">
+                    <div className="w-6 h-6 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-primary-600 dark:text-primary-300" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
                     </div>
                   </div>
-                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-sm leading-relaxed mb-4 flex-grow">"{testimonial.text}"</p>
-                  <div className="stars flex justify-center mb-4">{renderStars(testimonial.rating)}</div>
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-xs leading-snug mb-2 flex-grow line-clamp-4">"{testimonial.text}"</p>
+                  <div className="stars flex justify-center mb-2">{renderStars(testimonial.rating)}</div>
                   <div className="testimonial-author">
-                    <div className="author-image w-12 h-12 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-lg mx-auto mb-2">
+                    <div className="author-image w-8 h-8 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-sm mx-auto mb-1">
                       {testimonial.image ? (
                         <img src={testimonial.image} alt={testimonial.author} className="w-full h-full rounded-full object-cover" />
                       ) : (
@@ -141,8 +141,8 @@ export default function Testimonials() {
                       )}
                     </div>
                     <div className="author-info text-center">
-                      <h4 className="author-name text-primary-800 dark:text-primary-100 font-semibold">{testimonial.author}</h4>
-                      <p className="author-role text-primary-600 dark:text-primary-300 text-sm">{testimonial.company}</p>
+                      <h4 className="author-name text-primary-800 dark:text-primary-100 font-semibold text-xs">{testimonial.author}</h4>
+                      <p className="author-role text-primary-600 dark:text-primary-300 text-xs">{testimonial.company}</p>
                     </div>
                   </div>
                 </div>
