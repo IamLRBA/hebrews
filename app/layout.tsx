@@ -4,6 +4,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { NotificationProvider } from '@/components/layout/NotificationSystem'
 import ThemeProvider from '@/components/layout/ThemeProvider'
+import AccountPromptPopup from '@/components/ui/AccountPromptPopup'
 
 export const metadata: Metadata = {
   title: 'FusionCRAFT STUDIOS - Thrifted Fashion & Style Curators',
@@ -81,6 +82,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
+            <AccountPromptPopup />
           </NotificationProvider>
         </ThemeProvider>
       </body>

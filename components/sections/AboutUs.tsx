@@ -288,11 +288,52 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 mb-12 text-center">Oᑌᖇ ᐯᗩᒪᑌEᔕ
-          </h3>
+          <h3 className="text-3xl font-bold text-primary-800 mb-12 text-center">Oᑌᖇ ᐯᗩᒪᑌEᔕ</h3>
           
-          <div className="grid grid-cols-2 gap-8 md:gap-16">
-            {/* Reuse same content as before */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+            {[
+              {
+                image: "/assets/images/sections/home/values-1.jpg",
+                title: "Sustainability",
+                description: "We believe in circular fashion and responsible consumption. Every thrifted piece we curate extends its lifecycle, reducing waste and promoting environmental consciousness."
+              },
+              {
+                image: "/assets/images/sections/home/values-2.jpg",
+                title: "Quality",
+                description: "We meticulously select each item, ensuring it meets our high standards for condition, style, and craftsmanship. Quality is never compromised."
+              },
+              {
+                image: "/assets/images/sections/home/values-3.jpg",
+                title: "Authenticity",
+                description: "We celebrate individuality and authentic self-expression. Every piece in our collection tells a unique story and helps you express your true self."
+              },
+              {
+                image: "/assets/images/sections/home/values-4.jpg",
+                title: "Customer Care",
+                description: "Your satisfaction is our priority. We provide personalized styling advice, transparent service, and support throughout your fashion journey."
+              }
+            ].map((value, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 * index }}
+                className="text-center group"
+              >
+                <div className="flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <img 
+                    src={value.image} 
+                    alt={value.title} 
+                    className="w-24 h-24 object-cover rounded-xl mx-auto"
+                  />
+                </div>
+                <h4 className="text-2xl font-bold text-primary-800 mb-4">{value.title}</h4>
+                <p className="text-primary-600 text-base leading-relaxed">
+                  {value.description}
+                </p>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 
@@ -306,8 +347,67 @@ export default function AboutUs() {
         >
           <h3 className="text-3xl font-bold text-primary-800 mb-12 text-center">Oᑌᖇ ᗰIᔕᔕIOᑎᔕ</h3>
           
-          <div className="space-y-16 flex flex-col items-center">
-            {/* Reuse same content as before */}
+          <div className="space-y-16 flex flex-col items-center max-w-4xl mx-auto">
+            {[
+              {
+                image: "/assets/images/sections/home/missions-1.jpg",
+                title: "Curate Unique Finds",
+                description: "To discover and curate the most unique thrifted treasures and fresh fashion pieces that cannot be found elsewhere. We search for quality, character, and style in every item we select."
+              },
+              {
+                image: "/assets/images/sections/home/missions-2.jpg",
+                title: "Promote Sustainable Fashion",
+                description: "To champion circular fashion by giving pre-loved pieces new life and supporting responsibly made new apparel. We believe fashion should be both beautiful and environmentally conscious."
+              },
+              {
+                image: "/assets/images/sections/home/missions-3.jpg",
+                title: "Empower Self-Expression",
+                description: "To help every individual discover and express their unique style through carefully curated pieces. We believe fashion is a powerful tool for self-expression and personal storytelling."
+              }
+            ].map((mission, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 * index }}
+                className="w-full"
+              >
+                <div className={`flex flex-col items-center space-y-8 ${
+                  index % 2 === 0 
+                    ? 'flex-row space-x-12 md:flex-row md:space-x-12'
+                    : 'flex-row-reverse space-x-reverse space-x-12 md:flex-row-reverse md:space-x-reverse md:space-x-12'
+                }`}>
+                  {/* Image Container */}
+                  <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
+                    <img 
+                      src={mission.image} 
+                      alt={mission.title} 
+                      className="w-24 h-24 object-cover rounded-xl"
+                    />
+                  </div>
+                  
+                  {/* Content */}
+                  <div className={`flex flex-col flex-1 ${
+                    index % 2 === 0 
+                      ? 'text-left'
+                      : 'text-right'
+                  }`}>
+                    <div className={`text-6xl font-bold text-primary-400 mb-4 ${
+                      index % 2 === 0 ? '' : 'text-right'
+                    }`}>0{index + 1}</div>
+                    <h4 className="text-3xl font-bold text-primary-800 mb-2">{mission.title}</h4>
+                    <p className={`text-primary-600 text-lg ${
+                      index % 2 === 0 
+                        ? 'max-w-md'
+                        : 'max-w-md ml-auto'
+                    }`}>
+                      {mission.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 

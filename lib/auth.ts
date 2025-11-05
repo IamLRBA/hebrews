@@ -1,0 +1,217 @@
+// lib/auth.ts - User authentication and management
+
+export interface User {
+  id: string
+  email: string
+  fullName: string
+  phone: string
+  createdAt: string
+  profileImage?: string
+  lastViewedItems?: string[]
+  reviews?: Review[]
+}
+
+export interface Review {
+  id: string
+  text: string
+  rating: number
+  createdAt: string
+  productId?: string
+  productName?: string
+}
+
+export interface Admin {
+  username: string
+  password: string
+}
+
+const ADMIN_CREDENTIALS: Admin = {
+  username: 'IamLRBA',
+  password: 'L@ruba1212'
+}
+
+export class AuthManager {
+  private static USERS_KEY = 'fusioncraft_users'
+  private static CURRENT_USER_KEY = 'fusioncraft_current_user'
+  private static ADMIN_KEY = 'fusioncraft_admin'
+  private static REVIEWS_KEY = 'fusioncraft_reviews'
+
+  // User Management
+  static signUp(email: string, fullName: string, phone: string, password: string, profileImage?: string): { success: boolean; error?: string; user?: User } {
+    if (typeof window === 'undefined') {
+      return { success: false, error: 'Not available on server' }
+    }
+
+    const users = this.getUsers()
+    
+    // Check if user already exists
+    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+      return { success: false, error: 'User with this email already exists' }
+    }
+
+    const newUser: User = {
+      id: `USER-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      email: email.toLowerCase(),
+      fullName,
+      phone,
+      createdAt: new Date().toISOString(),
+      profileImage,
+      lastViewedItems: [],
+      reviews: []
+    }
+
+    // Store user with password (in production, hash passwords!)
+    const userData = { ...newUser, password }
+    users.push(userData)
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users))
+
+    // Auto-login after signup
+    this.setCurrentUser(newUser)
+
+    return { success: true, user: newUser }
+  }
+
+  static login(email: string, password: string): { success: boolean; error?: string; user?: User } {
+    if (typeof window === 'undefined') {
+      return { success: false, error: 'Not available on server' }
+    }
+
+    const users = this.getUsers()
+    const userData = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password)
+
+    if (!userData) {
+      return { success: false, error: 'Invalid email or password' }
+    }
+
+    const { password: _, ...user } = userData
+    this.setCurrentUser(user)
+
+    return { success: true, user }
+  }
+
+  static logout(): void {
+    if (typeof window === 'undefined') return
+    localStorage.removeItem(this.CURRENT_USER_KEY)
+    window.dispatchEvent(new CustomEvent('authStateChanged'))
+  }
+
+  static getCurrentUser(): User | null {
+    if (typeof window === 'undefined') return null
+    const userData = localStorage.getItem(this.CURRENT_USER_KEY)
+    return userData ? JSON.parse(userData) : null
+  }
+
+  static isAuthenticated(): boolean {
+    return this.getCurrentUser() !== null
+  }
+
+  private static getUsers(): any[] {
+    if (typeof window === 'undefined') return []
+    const usersData = localStorage.getItem(this.USERS_KEY)
+    return usersData ? JSON.parse(usersData) : []
+  }
+
+  private static setCurrentUser(user: User): void {
+    if (typeof window === 'undefined') return
+    localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user))
+    window.dispatchEvent(new CustomEvent('authStateChanged'))
+  }
+
+  // Update user info
+  static updateUser(userId: string, updates: Partial<User>): boolean {
+    if (typeof window === 'undefined') return false
+
+    const users = this.getUsers()
+    const userIndex = users.findIndex(u => u.id === userId)
+
+    if (userIndex === -1) return false
+
+    users[userIndex] = { ...users[userIndex], ...updates }
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users))
+
+    // Update current user if it's the same user
+    const currentUser = this.getCurrentUser()
+    if (currentUser && currentUser.id === userId) {
+      this.setCurrentUser({ ...currentUser, ...updates })
+    }
+
+    return true
+  }
+
+  // Track viewed items
+  static addViewedItem(productId: string): void {
+    const user = this.getCurrentUser()
+    if (!user) return
+
+    const lastViewed = user.lastViewedItems || []
+    // Remove if already exists and add to beginning
+    const filtered = lastViewed.filter(id => id !== productId)
+    const updated = [productId, ...filtered].slice(0, 20) // Keep last 20 items
+
+    this.updateUser(user.id, { lastViewedItems: updated })
+  }
+
+  // Reviews
+  static addReview(text: string, rating: number, productId?: string, productName?: string): { success: boolean; review?: Review } {
+    const user = this.getCurrentUser()
+    if (!user) {
+      return { success: false }
+    }
+
+    const review: Review = {
+      id: `REV-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      text,
+      rating,
+      createdAt: new Date().toISOString(),
+      productId,
+      productName
+    }
+
+    // Add to user's reviews
+    const userReviews = user.reviews || []
+    this.updateUser(user.id, { reviews: [...userReviews, review] })
+
+    // Add to global reviews (for testimonials)
+    const allReviews = this.getAllReviews()
+    allReviews.push({
+      ...review,
+      author: user.fullName,
+      image: user.profileImage || '/assets/images/testimonials/default.jpg'
+    })
+    localStorage.setItem(this.REVIEWS_KEY, JSON.stringify(allReviews))
+
+    window.dispatchEvent(new CustomEvent('reviewsUpdated'))
+
+    return { success: true, review }
+  }
+
+  static getAllReviews(): any[] {
+    if (typeof window === 'undefined') return []
+    const reviewsData = localStorage.getItem(this.REVIEWS_KEY)
+    return reviewsData ? JSON.parse(reviewsData) : []
+  }
+
+  // Admin Management
+  static adminLogin(username: string, password: string): boolean {
+    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(this.ADMIN_KEY, 'true')
+        window.dispatchEvent(new CustomEvent('adminStateChanged'))
+      }
+      return true
+    }
+    return false
+  }
+
+  static adminLogout(): void {
+    if (typeof window === 'undefined') return
+    localStorage.removeItem(this.ADMIN_KEY)
+    window.dispatchEvent(new CustomEvent('adminStateChanged'))
+  }
+
+  static isAdmin(): boolean {
+    if (typeof window === 'undefined') return false
+    return localStorage.getItem(this.ADMIN_KEY) === 'true'
+  }
+}
+

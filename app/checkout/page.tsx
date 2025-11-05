@@ -7,6 +7,7 @@ import { ArrowLeft, ShoppingCart } from 'lucide-react'
 import { CartManager, OrderManager, calculateDeliveryFee, isKampalaAddress, type CartItem } from '@/lib/cart'
 import { EmailTemplates } from '@/lib/emails/templates'
 import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
+import { AuthManager } from '@/lib/auth'
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState<CartItem[]>([])
@@ -24,6 +25,17 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     setCart(CartManager.getCart())
+    
+    // Auto-fill user info if logged in
+    const user = AuthManager.getCurrentUser()
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        fullName: user.fullName,
+        email: user.email,
+        phone: user.phone
+      }))
+    }
     
     // Auto-detect delivery option based on address
     if (formData.city && isKampalaAddress(formData.city)) {

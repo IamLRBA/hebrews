@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { HiMenu, HiX, HiSearch } from 'react-icons/hi'
 import { Home, UserCircle, ShoppingCart, Globe, ShoppingBag } from 'lucide-react'
-import ThemeSwitcher from '@/components/ui/ThemeSwitcher'
+import SettingsDropdown from '@/components/ui/SettingsDropdown'
 import { CartManager } from '@/lib/cart'
 
 const navigation = [
@@ -241,7 +241,7 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </Link>
-              <ThemeSwitcher />
+              <SettingsDropdown />
             </div>
 
             <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden absolute right-0 p-2 text-neutral-600 hover:text-primary-700 transition-colors duration-200">

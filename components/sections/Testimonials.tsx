@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Star } from 'lucide-react'
+import { AuthManager } from '@/lib/auth'
 
 interface Testimonial {
-  id: number
+  id: number | string
   text: string
   fullText: string
   author: string
@@ -14,7 +15,7 @@ interface Testimonial {
   rating: number
 }
 
-const testimonialsData: Testimonial[] = [
+const defaultTestimonials: Testimonial[] = [
   { id: 1, text: "FusionCRAFT STUDIOS has an incredible eye for unique fashion finds. Their thrifted pieces are always in perfect condition and their styling advice is spot-on.", fullText: "FusionCRAFT STUDIOS has an incredible eye for unique fashion finds. Their thrifted pieces are always in perfect condition and their styling advice is spot-on. I've built most of my wardrobe from their curated collection, and every piece tells a story. The quality and uniqueness of their items is unmatched.", author: "Sarah M.", company: "Fashion Enthusiast", image: "/assets/images/testimonials/sarah-m.jpg", rating: 5 },
   { id: 2, text: "Their sustainable fashion approach is refreshing. They've helped me discover my personal style while being environmentally conscious.", fullText: "Their sustainable fashion approach is refreshing. They've helped me discover my personal style while being environmentally conscious. The team understands that fashion should be both beautiful and responsible. Every piece I've purchased has been a perfect fit for my lifestyle and values.", author: "Emma K.", company: "Style Consultant", image: "/assets/images/testimonials/emma-k.jpg", rating: 5 },
   { id: 3, text: "The blend of vintage and contemporary pieces they offer is exactly what I was looking for. Their curation is impeccable.", fullText: "The blend of vintage and contemporary pieces they offer is exactly what I was looking for. Their curation is impeccable. FusionCRAFT STUDIOS has helped me create a wardrobe that's both timeless and trendy. Their attention to detail and quality is evident in every piece they select.", author: "Jessica L.", company: "Fashion Blogger", image: "/assets/images/testimonials/jessica-l.jpg", rating: 5 },
@@ -23,9 +24,8 @@ const testimonialsData: Testimonial[] = [
   { id: 6, text: "The personal styling service is worth every penny. They've completely transformed my confidence and style.", fullText: "The personal styling service is worth every penny. They've completely transformed my confidence and style. The team at FusionCRAFT STUDIOS understands that fashion is about self-expression and empowerment. Their personalized approach has made all the difference in my wardrobe.", author: "Amanda S.", company: "Business Owner", image: "/assets/images/testimonials/derrick-jnr.jpg", rating: 5 },
 ]
 
-const duplicatedTestimonials = [...testimonialsData, ...testimonialsData]
-
 export default function Testimonials() {
+  const [testimonialsData, setTestimonialsData] = useState<Testimonial[]>(defaultTestimonials)
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null)
   const [isPaused, setIsPaused] = useState(false)
   const [sliderPosition, setSliderPosition] = useState(0)
@@ -33,7 +33,40 @@ export default function Testimonials() {
   const gap = 32
 
   useEffect(() => {
-    if (isPaused) return
+    // Load user reviews and merge with default testimonials
+    const userReviews = AuthManager.getAllReviews()
+    const reviewsAsTestimonials: Testimonial[] = userReviews.map((review: any) => ({
+      id: review.id,
+      text: review.text.length > 150 ? review.text.substring(0, 150) + '...' : review.text,
+      fullText: review.text,
+      author: review.author || 'Customer',
+      company: 'Verified Customer',
+      image: review.image || '/assets/images/testimonials/default.jpg',
+      rating: review.rating || 5
+    }))
+    
+    setTestimonialsData([...defaultTestimonials, ...reviewsAsTestimonials])
+    
+    const handleReviewsUpdate = () => {
+      const updatedReviews = AuthManager.getAllReviews()
+      const updatedTestimonials: Testimonial[] = updatedReviews.map((review: any) => ({
+        id: review.id,
+        text: review.text.length > 150 ? review.text.substring(0, 150) + '...' : review.text,
+        fullText: review.text,
+        author: review.author || 'Customer',
+        company: 'Verified Customer',
+        image: review.image || '/assets/images/testimonials/default.jpg',
+        rating: review.rating || 5
+      }))
+      setTestimonialsData([...defaultTestimonials, ...updatedTestimonials])
+    }
+
+    window.addEventListener('reviewsUpdated', handleReviewsUpdate)
+    return () => window.removeEventListener('reviewsUpdated', handleReviewsUpdate)
+  }, [])
+
+  useEffect(() => {
+    if (isPaused || testimonialsData.length === 0) return
     const interval = setInterval(() => {
       setSliderPosition(prev => {
         if (Math.abs(prev) >= testimonialsData.length * (cardWidth + gap)) return 0
@@ -41,7 +74,7 @@ export default function Testimonials() {
       })
     }, 15)
     return () => clearInterval(interval)
-  }, [isPaused])
+  }, [isPaused, testimonialsData.length])
 
   const handlePrev = () => {
     setSliderPosition(prev => {
@@ -59,6 +92,8 @@ export default function Testimonials() {
   const renderStars = (rating: number) => Array.from({ length: 5 }, (_, i) => (
     <Star key={i} size={16} className={i < rating ? "text-accent-500 fill-accent-500" : "text-gray-300"} />
   ))
+
+  const duplicatedTestimonials = [...testimonialsData, ...testimonialsData]
 
   return (
     <section className="testimonials section bg-gradient-to-br from-primary-100 to-primary-200 dark:from-neutral-800 dark:to-neutral-900 relative overflow-hidden" id="testimonials">
@@ -138,5 +173,3 @@ export default function Testimonials() {
     </section>
   )
 }
-
-

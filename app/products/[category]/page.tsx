@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ArrowLeft, ShoppingCart, Heart, X } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
+import { ProductManager } from '@/lib/products'
+import { AuthManager } from '@/lib/auth'
 // Import products data - We'll need to create a proper data structure
 // For now, using mock data inline
 const getProductsData = () => {
@@ -39,7 +41,34 @@ export default function ProductCategoryPage() {
   const [cart, setCart] = useState<Product[]>([])
   
   const productsData = getProductsData()
-  const categoryData = productsData.products[category as keyof typeof productsData.products]
+  const savedProducts = ProductManager.getProducts()
+  
+  // Merge saved products with JSON products
+  const mergedProductsData = { ...productsData }
+  if (savedProducts.products) {
+    Object.keys(savedProducts.products).forEach(cat => {
+      if (!mergedProductsData.products[cat]) {
+        mergedProductsData.products[cat] = savedProducts.products[cat]
+      } else {
+        // Merge subcategories
+        Object.keys(savedProducts.products[cat].subcategories || {}).forEach(sub => {
+          if (!mergedProductsData.products[cat].subcategories[sub]) {
+            mergedProductsData.products[cat].subcategories[sub] = savedProducts.products[cat].subcategories[sub]
+          } else {
+            // Merge products in subcategory
+            const existingIds = new Set(mergedProductsData.products[cat].subcategories[sub].map((p: Product) => p.id))
+            savedProducts.products[cat].subcategories[sub].forEach((p: Product) => {
+              if (!existingIds.has(p.id)) {
+                mergedProductsData.products[cat].subcategories[sub].push(p)
+              }
+            })
+          }
+        })
+      }
+    })
+  }
+  
+  const categoryData = mergedProductsData.products[category as keyof typeof mergedProductsData.products]
   
   useEffect(() => {
     // Extract section from hash if present
@@ -64,6 +93,8 @@ export default function ProductCategoryPage() {
 
   const openProductModal = (product: Product) => {
     setSelectedProduct(product)
+    // Track viewed item
+    AuthManager.addViewedItem(product.id)
   }
 
   const closeProductModal = () => {
