@@ -7,12 +7,12 @@ import {
   useTransform 
 } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
-import LoadingScreen from '../components/LoadingScreen'
-import PortalNavigation from '../components/PortalNavigation'
-import FeaturedCollections from '../components/FeaturedCollections'
-import Stats from '../components/Stats'
-import Testimonials from '../components/Testimonials'
-import Contact from '../components/Contact'
+import LoadingScreen from '@/components/ui/LoadingScreen'
+import PortalNavigation from '@/components/ui/PortalNavigation'
+import FeaturedCollections from '@/components/sections/FeaturedCollections'
+import Stats from '@/components/sections/Stats'
+import Testimonials from '@/components/sections/Testimonials'
+import Contact from '@/components/sections/Contact'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)

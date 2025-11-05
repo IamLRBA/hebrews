@@ -34,20 +34,13 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     if (!mounted) return
-
     const root = document.documentElement
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     const activeTheme = theme === 'system' ? systemTheme : theme
-
     root.classList.remove('light', 'dark')
     root.classList.add(activeTheme)
-    
-    // Update meta theme-color
     const metaThemeColor = document.querySelector('meta[name="theme-color"]')
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#1B1B1B' : '#FEFEFE')
-    }
-
+    if (metaThemeColor) metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#1B1B1B' : '#FEFEFE')
     localStorage.setItem('fusioncraft-theme', theme)
   }, [theme, mounted])
 
@@ -60,21 +53,11 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
         root.classList.add(mediaQuery.matches ? 'dark' : 'light')
       }
     }
-
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [theme])
 
-  const handleThemeChange = (newTheme: Theme) => {
-    setTheme(newTheme)
-  }
-
-  // Provide a default context value even when not mounted
-  const contextValue: ThemeContextType = {
-    theme,
-    setTheme: handleThemeChange,
-    mounted
-  }
+  const contextValue: ThemeContextType = { theme, setTheme: (t) => setTheme(t), mounted }
 
   return (
     <ThemeContext.Provider value={contextValue}>
@@ -82,3 +65,5 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     </ThemeContext.Provider>
   )
 }
+
+

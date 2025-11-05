@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { IconBrandWhatsapp, IconBrandTiktok, IconBrandSnapchat, IconBrandX } from '@tabler/icons-react'
+import { SOCIAL_LINKS } from '@/lib/constants/social'
 import { 
   Mail, 
   Instagram, 
@@ -22,7 +23,7 @@ import {
   Youtube
 } from 'lucide-react'
 import Link from 'next/link'
-import EducationalJourney from '@/components/EducationalJourney'
+import EducationalJourney from '@/components/sections/EducationalJourney'
 
 export default function CEOProfile() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -63,16 +64,7 @@ export default function CEOProfile() {
 
 
 
-  const socialLinks = [
-    { icon: Mail, href: 'mailto:jerrylarubafestus@gmail.com' },
-    { icon: Instagram, href: 'https://www.instagram.com/iamlrba?igsh=MXcwcTF3b3R6ZG9yeQ%3D%3D&utm_source=qr' },
-    { icon: IconBrandTiktok, href: 'https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1' },
-    { icon: IconBrandX, href: 'https://x.com/i/status/1952162823766708588' },
-    { icon: Github, href: 'https://github.com/IamLRBA' },
-    { icon: IconBrandWhatsapp, href: 'https://wa.me/256755915549' },
-    { icon: Send, href: 'https://t.me/+256755915549' },
-    { icon: IconBrandSnapchat, href: 'https://t.snapchat.com/pQuWROd2' }
-  ]
+  const socialLinks = SOCIAL_LINKS
 
   const galleryImages = [
     '/assets/images/ceo-1.jpg',

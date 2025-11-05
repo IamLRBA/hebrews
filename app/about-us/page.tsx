@@ -1,6 +1,6 @@
 'use client'
 
-import AboutUs from '../../components/AboutUs'
+import AboutUs from '@/components/sections/AboutUs'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 

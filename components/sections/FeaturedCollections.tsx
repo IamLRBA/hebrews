@@ -35,7 +35,6 @@ export default function FeaturedCollections() {
   const [addedToCart, setAddedToCart] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    // Load products data and get first product from each category
     const loadFeaturedProducts = () => {
       try {
         const getProductsData = () => {
@@ -57,7 +56,6 @@ export default function FeaturedCollections() {
         categories.forEach(({ slug, name }) => {
           const categoryData = productsData.products[slug]
           if (categoryData && categoryData.subcategories) {
-            // Get the first subcategory and its first product
             const subcategories = Object.values(categoryData.subcategories)
             if (subcategories.length > 0) {
               const firstSubcategory = subcategories[0] as Product[]
@@ -79,8 +77,7 @@ export default function FeaturedCollections() {
     }
 
     loadFeaturedProducts()
-
-    // Check which products are already in cart
+    
     const checkCartStatus = () => {
       const cart = CartManager.getCart()
       const cartProductIds = new Set(cart.map(item => item.productId))
@@ -89,14 +86,12 @@ export default function FeaturedCollections() {
 
     checkCartStatus()
     window.addEventListener('cartUpdated', checkCartStatus)
-
     return () => {
       window.removeEventListener('cartUpdated', checkCartStatus)
     }
   }, [])
 
   const handleAddToCart = (product: Product) => {
-    // Check if already in cart
     if (addedToCart.has(product.id) || CartManager.isProductInCart(product.id)) {
       alert('This product is already in your cart. Each product is a single unique piece.')
       return
@@ -104,7 +99,6 @@ export default function FeaturedCollections() {
 
     setAddingToCart(product.id)
 
-    // Get single size and color
     const productSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : ''
     const productColor = product.colors && product.colors.length > 0 ? product.colors[0] : ''
 
@@ -121,7 +115,6 @@ export default function FeaturedCollections() {
     }
 
     const success = CartManager.addToCart(cartItem)
-
     if (!success) {
       alert('This product is already in your cart. Each product is a single unique piece.')
       setAddingToCart(null)
@@ -136,14 +129,12 @@ export default function FeaturedCollections() {
 
   return (
     <section className="py-20 px-4 bg-gradient-to-b from-primary-50 via-white to-primary-50 relative overflow-hidden">
-      {/* Background Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-primary-200/20 to-accent-200/20 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-accent-200/20 to-primary-200/20 rounded-full blur-3xl" />
       </div>
 
       <div className="container-custom relative z-10">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -174,7 +165,6 @@ export default function FeaturedCollections() {
           </motion.div>
         </motion.div>
 
-        {/* Featured Products Grid */}
         {featuredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {featuredProducts.map((item, index) => {
@@ -193,14 +183,12 @@ export default function FeaturedCollections() {
                   className="group relative"
                 >
                   <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-100 h-full flex flex-col">
-                    {/* Category Badge */}
                     <div className="absolute top-4 left-4 z-10">
                       <span className="px-3 py-1 bg-primary-600/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
                         {categoryName}
                       </span>
                     </div>
 
-                    {/* Product Image */}
                     <Link href={`/products/${categorySlug}`}>
                       <div className="relative h-64 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
                         <img
@@ -212,17 +200,12 @@ export default function FeaturedCollections() {
                             target.src = '/assets/images/placeholder.jpg'
                           }}
                         />
-                        {/* Overlay on hover */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        
-                        {/* Condition Badge */}
                         {product.condition && (
                           <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-primary-800 text-xs font-semibold rounded-full">
                             {product.condition}
                           </div>
                         )}
-
-                        {/* Discount Badge */}
                         {hasDiscount && (
                           <div className="absolute bottom-4 right-4 px-3 py-1 bg-accent-500 text-white text-xs font-bold rounded-full">
                             {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
@@ -231,7 +214,6 @@ export default function FeaturedCollections() {
                       </div>
                     </Link>
 
-                    {/* Product Info */}
                     <div className="p-5 flex-1 flex flex-col">
                       <Link href={`/products/${categorySlug}`}>
                         <div className="mb-3">
@@ -243,7 +225,6 @@ export default function FeaturedCollections() {
                         </div>
                       </Link>
 
-                      {/* Price */}
                       <div className="mb-4 mt-auto">
                         <div className="flex items-baseline space-x-2">
                           <span className="text-2xl font-bold text-primary-700">
@@ -257,7 +238,6 @@ export default function FeaturedCollections() {
                         </div>
                       </div>
 
-                      {/* Add to Cart Button */}
                       <button
                         onClick={() => handleAddToCart(product)}
                         disabled={isAdding || isInCart || product.stock_qty === 0}
@@ -279,7 +259,6 @@ export default function FeaturedCollections() {
                         </span>
                       </button>
 
-                      {/* View Collection Link */}
                       <Link
                         href={`/products/${categorySlug}`}
                         className="mt-3 text-center text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center space-x-1 transition-colors"
@@ -302,4 +281,5 @@ export default function FeaturedCollections() {
     </section>
   )
 }
+
 

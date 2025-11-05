@@ -33,7 +33,6 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
       </div>
       <h4 className="text-2xl font-bold text-primary-800 mb-4">{item.title}</h4>
       
-      {/* Expand/Collapse Button */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="inline-flex items-center space-x-2 bg-primary-100 hover:bg-primary-200 text-primary-800 px-4 py-2 rounded-full transition-colors duration-300 mb-4"
@@ -48,7 +47,6 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
         )}
       </button>
       
-      {/* Expandable Description */}
       <motion.div
         initial={{ opacity: 0, height: 0 }}
         animate={{ 
@@ -65,3 +63,5 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
     </motion.div>
   )
 }
+
+

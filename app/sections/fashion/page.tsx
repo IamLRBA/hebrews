@@ -4,8 +4,8 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
-import FashionVideoSection from '@/sections/FashionVideoSection'
-import FashionServices from '@/sections/FashionServices'
+import FashionVideoSection from '@/components/sections/FashionVideoSection'
+import FashionServices from '@/components/sections/FashionServices'
 
 export default function FashionPage() {
   const containerRef = useRef<HTMLDivElement>(null)

@@ -1,0 +1,193 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { 
+  Users, 
+  Award, 
+  Clock, 
+  Star,
+  Heart,
+  Target,
+} from 'lucide-react'
+
+const statsData = [
+  { icon: Users, number: 500, suffix: "+", label: "Happy Customers", description: "Satisfied fashion enthusiasts", color: "from-primary-400 to-primary-600" },
+  { icon: Award, number: 1200, suffix: "+", label: "Items Sold", description: "Unique thrifted & new pieces", color: "from-accent-400 to-accent-600" },
+  { icon: Clock, number: 3, suffix: "+", label: "Years Curating", description: "Fashion expertise & style", color: "from-primary-500 to-primary-700" },
+  { icon: Star, number: 98, suffix: "%", label: "Customer Satisfaction", description: "Exceeding expectations", color: "from-accent-500 to-accent-700" },
+]
+
+const AnimatedCounter = ({ target, suffix = "", duration = 2000, triggerAnimation = false }: { target: number, suffix?: string, duration?: number, triggerAnimation?: boolean }) => {
+  const [count, setCount] = useState(0)
+  const animationRef = useRef<number | null>(null)
+
+  const animateCount = (startValue: number, endValue: number, onComplete?: () => void) => {
+    const startTime = Date.now()
+    const totalChange = endValue - startValue
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+      const currentCount = Math.floor(startValue + (totalChange * easeOutQuart))
+      setCount(currentCount)
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate)
+      } else {
+        setCount(endValue)
+        if (onComplete) onComplete()
+      }
+    }
+    animate()
+  }
+
+  const startAnimationCycle = () => {
+    if (animationRef.current) cancelAnimationFrame(animationRef.current)
+    animateCount(0, target, () => {
+      setTimeout(() => {
+        animateCount(target, 0, () => {
+          setTimeout(() => startAnimationCycle(), 500)
+        })
+      }, 1000)
+    })
+  }
+
+  useEffect(() => {
+    startAnimationCycle()
+    return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current) }
+  }, [target])
+
+  useEffect(() => {
+    if (triggerAnimation) {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current)
+      setCount(0)
+      startAnimationCycle()
+    }
+  }, [triggerAnimation])
+
+  return (
+    <span className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
+      {count}{suffix}
+    </span>
+  )
+}
+
+const StatCard = ({ stat, index }: { stat: any, index: number }) => {
+  const [isInView, setIsInView] = useState(false)
+  const [shouldAnimate, setShouldAnimate] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const lastScrollY = useRef(0)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setIsInView(true) }, { threshold: 0.3 })
+    if (cardRef.current) observer.observe(cardRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      const scrollDelta = Math.abs(currentScrollY - lastScrollY.current)
+      if (scrollDelta > 10 && isInView) setShouldAnimate(prev => !prev)
+      lastScrollY.current = currentScrollY
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isInView])
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 50, scale: 0.8 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.8, delay: index * 0.1, type: "spring", stiffness: 100 }}
+      className="relative group"
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-800/30 dark:to-accent-800/30 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+      <div className="relative bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 border border-white/20 dark:border-neutral-700/20">
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={isInView ? { scale: 1, rotate: 0 } : {}}
+          transition={{ duration: 0.6, delay: index * 0.1 + 0.2, type: "spring", stiffness: 200 }}
+          className={`w-12 h-12 mx-auto mb-4 bg-gradient-to-br ${stat.color} rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
+        >
+          <stat.icon className="w-6 h-6 text-white" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.8, delay: index * 0.1 + 0.4, type: "spring", stiffness: 100 }}
+          className="text-center mb-3"
+        >
+          <AnimatedCounter target={stat.number} suffix={stat.suffix} triggerAnimation={shouldAnimate} />
+        </motion.div>
+        <motion.h3
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: index * 0.1 + 0.6, type: "spring", stiffness: 100 }}
+          className="text-lg font-bold text-primary-800 dark:text-primary-100 text-center mb-2"
+        >
+          {stat.label}
+        </motion.h3>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: index * 0.1 + 0.8, type: "spring", stiffness: 100 }}
+          className="text-primary-600 dark:text-primary-300 text-center text-xs leading-relaxed"
+        >
+          {stat.description}
+        </motion.p>
+        <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={isInView ? { opacity: [0, 1, 0], scale: [0, 1, 0], x: [0, Math.random() * 100 - 50], y: [0, Math.random() * 100 - 50] } : {}}
+              transition={{ duration: 2, delay: index * 0.1 + 1 + i * 0.3, repeat: Infinity, repeatDelay: 3 }}
+              className="absolute w-2 h-2 bg-gradient-to-r from-primary-400 to-accent-400 rounded-full"
+              style={{ left: `${20 + i * 30}%`, top: `${20 + i * 20}%` }}
+            />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+export default function Stats() {
+  const containerRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] })
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const backgroundScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.05, 1])
+
+  return (
+    <section ref={containerRef} className="section relative overflow-hidden">
+      <motion.div style={{ y: backgroundY, scale: backgroundScale }} className="absolute inset-0 bg-gradient-to-br from-primary-50 via-accent-50 to-primary-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-primary-950" />
+      <div className="container-custom relative z-10">
+        <motion.div style={{ y: titleY, scale: titleScale }} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-16">
+          <motion.div initial={{ scale: 0, rotate: -180 }} whileInView={{ scale: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }} className="flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mx-auto mb-6">
+            <img src="/assets/images/sections/stats/impact-icon.jpg" alt="Impact Icon" className="w-24 h-24 object-cover rounded-xl" />
+          </motion.div>
+          <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">Oᑌᖇ <span className="text-accent-600 dark:text-accent-300">IᗰᑭᗩᑕT</span> Iᑎ ᑎᑌᗰᗷEᖇᔕ</h2>
+          <p className="text-xl text-primary-600 dark:text-primary-300 max-w-3xl mx-auto leading-relaxed">Discover the impressive statistics that showcase our commitment to excellence, innovation, and client satisfaction across all our creative endeavors.</p>
+        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {statsData.map((stat, index) => (
+            <StatCard key={index} stat={stat} index={index} />
+          ))}
+        </div>
+        <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 1.2, type: "spring", stiffness: 100 }} className="text-center mt-16">
+          <div className="inline-flex items-center space-x-4 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-white/20 dark:border-neutral-700/20">
+            <Heart className="w-6 h-6 text-primary-600 dark:text-primary-300 animate-pulse" />
+            <span className="text-primary-800 dark:text-primary-100 font-semibold">Trusted by creative professionals worldwide</span>
+            <Target className="w-6 h-6 text-accent-600 dark:text-accent-300 animate-pulse delay-1000" />
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+

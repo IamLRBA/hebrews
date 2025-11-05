@@ -1,11 +1,9 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import BackToTop from '../components/BackToTop'
-import { NotificationProvider } from '../components/NotificationSystem'
-import KeyboardShortcuts from '../components/KeyboardShortcuts'
-import ThemeProvider from '../components/ThemeProvider'
+import Navbar from '@/components/layout/Navbar'
+import Footer from '@/components/layout/Footer'
+import { NotificationProvider } from '@/components/layout/NotificationSystem'
+import ThemeProvider from '@/components/layout/ThemeProvider'
 
 export const metadata: Metadata = {
   title: 'FusionCRAFT STUDIOS - Thrifted Fashion & Style Curators',
@@ -83,8 +81,6 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
-            <BackToTop />
-            <KeyboardShortcuts />
           </NotificationProvider>
         </ThemeProvider>
       </body>

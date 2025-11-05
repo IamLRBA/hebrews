@@ -12,14 +12,6 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/free-mode'
 
-// Fashion Video data (unlimited items; { id, title, thumbnail, src })
-// 
-// To add a new fashion video:
-// 1. Place video file in: public/assets/videos/fashion/[filename].mp4
-// 2. Place thumbnail in: public/assets/images/videos/fashion/[filename]-cover.jpg
-// 3. Add entry below with correct paths:
-//    - src: '/assets/videos/fashion/[filename].mp4'
-//    - thumbnail: '/assets/images/videos/fashion/[filename]-cover.jpg'
 const fashionVideos = [
   {
     id: 1,
@@ -67,7 +59,7 @@ export default function FashionVideoSection() {
   const [selectedVideo, setSelectedVideo] = useState(fashionVideos[0])
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(0.8)
-  const [isMuted, setIsMuted] = useState(true) // Start muted for autoplay
+  const [isMuted, setIsMuted] = useState(true)
   const [progress, setProgress] = useState(0)
   const [duration, setDuration] = useState<number | null>(null)
   const [showControls, setShowControls] = useState(true)
@@ -80,7 +72,6 @@ export default function FashionVideoSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const controlsTimeoutRef = useRef<number | null>(null)
 
-  // Auto-hide controls after 3s while playing; reappear on mouse move
   useEffect(() => {
     if (showControls && isPlaying) {
       controlsTimeoutRef.current = window.setTimeout(() => {
@@ -94,7 +85,6 @@ export default function FashionVideoSection() {
     }
   }, [showControls, isPlaying])
 
-  // Preload next video for faster switching
   useEffect(() => {
     const preloadVideo = (src: string) => {
       const video = document.createElement('video')
@@ -102,8 +92,6 @@ export default function FashionVideoSection() {
       video.src = src
       video.load()
     }
-    
-    // Preload all videos
     fashionVideos.forEach(video => {
       preloadVideo(video.src)
     })
@@ -115,13 +103,11 @@ export default function FashionVideoSection() {
     setShowControls(true)
     setIsLoading(true)
     setVideoError(null)
-    // Start playing after a brief delay to ensure video loads
     setTimeout(() => {
       if (videoRef.current) {
         videoRef.current.play().then(() => {
           setIsPlaying(true)
-        }).catch((error) => {
-          console.log('Autoplay failed:', error)
+        }).catch(() => {
           setIsPlaying(false)
         })
       }
@@ -220,7 +206,6 @@ export default function FashionVideoSection() {
         </h2>
         
         <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
-          {/* Main Video Player */}
           <div 
             ref={containerRef}
             className="relative aspect-video rounded-2xl overflow-hidden bg-black"
@@ -246,8 +231,7 @@ export default function FashionVideoSection() {
                   setProgress(videoRef.current.currentTime / videoRef.current.duration)
                 }
               }}
-              onError={(e) => {
-                console.log('Video error:', e)
+              onError={() => {
                 setVideoError('Failed to load video. Please try again.')
                 setIsLoading(false)
               }}
@@ -256,26 +240,23 @@ export default function FashionVideoSection() {
               onLoadStart={() => setIsLoading(true)}
             />
 
-            {/* Video Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             
-                         {/* Play/Pause Controls - Center Overlay */}
-             <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-               <motion.button
-                 whileHover={{ scale: 1.1 }}
-                 whileTap={{ scale: 0.9 }}
-                 onClick={handlePlayPause}
-                 className="w-20 h-20 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all duration-300 pointer-events-auto"
-               >
-                 {isPlaying ? (
-                   <Pause size={32} />
-                 ) : (
-                   <Play size={32} className="ml-1" />
-                 )}
-               </motion.button>
-             </div>
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={handlePlayPause}
+                className="w-20 h-20 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all duration-300 pointer-events-auto"
+              >
+                {isPlaying ? (
+                  <Pause size={32} />
+                ) : (
+                  <Play size={32} className="ml-1" />
+                )}
+              </motion.button>
+            </div>
             
-            {/* Loading Overlay - Only show for longer loads */}
             {isLoading && (
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-20">
                 <div className="text-center">
@@ -285,7 +266,6 @@ export default function FashionVideoSection() {
               </div>
             )}
             
-            {/* Error Message */}
             {videoError && (
               <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20">
                 <div className="text-center p-6">
@@ -299,7 +279,6 @@ export default function FashionVideoSection() {
                     onClick={() => {
                       setVideoError(null)
                       setIsLoading(true)
-                      // Force reload the video
                       const currentSrc = selectedVideo.src
                       setSelectedVideo({ ...selectedVideo, src: '' })
                       setTimeout(() => setSelectedVideo({ ...selectedVideo, src: currentSrc }), 100)
@@ -312,7 +291,6 @@ export default function FashionVideoSection() {
               </div>
             )}
 
-            {/* Video Info */}
             <div className="absolute top-4 left-4 z-10">
               <h3 className="text-white text-xl font-bold mb-1">{selectedVideo.title}</h3>
               {selectedVideo.description && (
@@ -320,14 +298,12 @@ export default function FashionVideoSection() {
               )}
             </div>
 
-            {/* Custom Controls */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: showControls ? 1 : 0 }}
               transition={{ duration: 0.3 }}
               className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4"
             >
-              {/* Progress Bar */}
               <div 
                 className="w-full h-1 bg-white/30 rounded-full cursor-pointer mb-4"
                 onClick={handleSeek}
@@ -338,10 +314,8 @@ export default function FashionVideoSection() {
                 />
               </div>
 
-              {/* Controls Row */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  {/* Play/Pause */}
                   <button
                     onClick={handlePlayPause}
                     className="text-white hover:text-primary-300 transition-colors duration-300"
@@ -349,70 +323,66 @@ export default function FashionVideoSection() {
                     {isPlaying ? <Pause size={24} /> : <Play size={24} />}
                   </button>
 
-                                     {/* Skip Back/Forward */}
-                   <button
-                     onClick={() => {
-                       const currentIndex = fashionVideos.findIndex(video => video.id === selectedVideo.id)
-                       const prevIndex = (currentIndex - 1 + fashionVideos.length) % fashionVideos.length
-                       handleVideoSelect(fashionVideos[prevIndex])
-                     }}
-                     className="text-white/70 hover:text-white transition-colors duration-300"
-                   >
-                     <SkipBack size={20} />
-                   </button>
-                                       <button
-                      onClick={() => {
-                        const currentIndex = fashionVideos.findIndex(video => video.id === selectedVideo.id)
-                        const nextIndex = (currentIndex + 1) % fashionVideos.length
-                        handleVideoSelect(fashionVideos[nextIndex])
-                      }}
-                      className="text-white/70 hover:text-white transition-colors duration-300"
-                    >
-                      <SkipForward size={20} />
-                    </button>
+                  <button
+                    onClick={() => {
+                      const currentIndex = fashionVideos.findIndex(video => video.id === selectedVideo.id)
+                      const prevIndex = (currentIndex - 1 + fashionVideos.length) % fashionVideos.length
+                      handleVideoSelect(fashionVideos[prevIndex])
+                    }}
+                    className="text-white/70 hover:text-white transition-colors duration-300"
+                  >
+                    <SkipBack size={20} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      const currentIndex = fashionVideos.findIndex(video => video.id === selectedVideo.id)
+                      const nextIndex = (currentIndex + 1) % fashionVideos.length
+                      handleVideoSelect(fashionVideos[nextIndex])
+                    }}
+                    className="text-white/70 hover:text-white transition-colors duration-300"
+                  >
+                    <SkipForward size={20} />
+                  </button>
 
-                                       {/* 10 Second Skip Controls */}
-                    <button
-                      onClick={() => {
-                        if (videoRef.current) {
-                          videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10)
-                        }
-                      }}
-                      className="text-white/70 hover:text-white transition-colors duration-300"
-                    >
-                      <div className="flex items-center space-x-1">
-                        <div className="w-1.5 h-1.5 bg-white/70 rounded-full"></div>
-                        <span className="text-xs font-medium text-white/70">10</span>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (videoRef.current) {
-                          videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + 10)
-                        }
-                      }}
-                      className="text-white/70 hover:text-white transition-colors duration-300"
-                    >
-                      <div className="flex items-center space-x-1">
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                        <span className="text-xs font-medium text-white/70">10</span>
-                        <div className="w-1.5 h-1.5 bg-white/70 rounded-full"></div>
-                      </div>
-                    </button>
+                  <button
+                    onClick={() => {
+                      if (videoRef.current) {
+                        videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10)
+                      }
+                    }}
+                    className="text-white/70 hover:text-white transition-colors duration-300"
+                  >
+                    <div className="flex items-center space-x-1">
+                      <div className="w-1.5 h-1.5 bg-white/70 rounded-full"></div>
+                      <span className="text-xs font-medium text-white/70">10</span>
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (videoRef.current) {
+                        videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + 10)
+                      }
+                    }}
+                    className="text-white/70 hover:text-white transition-colors duration-300"
+                  >
+                    <div className="flex items-center space-x-1">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                      <span className="text-xs font-medium text-white/70">10</span>
+                      <div className="w-1.5 h-1.5 bg-white/70 rounded-full"></div>
+                    </div>
+                  </button>
 
-                   {/* Time Display */}
-                   <span className="text-white/80 text-sm">
-                     {formatTime(progress * (duration || 0))} / {formatTime(duration || 0)}
-                   </span>
+                  <span className="text-white/80 text-sm">
+                    {formatTime(progress * (duration || 0))} / {formatTime(duration || 0)}
+                  </span>
                 </div>
 
                 <div className="flex items-center space-x-4">
-                  {/* Volume Control */}
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={handleMuteToggle}
@@ -431,7 +401,6 @@ export default function FashionVideoSection() {
                     />
                   </div>
 
-                  {/* Settings */}
                   <button
                     onClick={() => setShowSettings(!showSettings)}
                     className="text-white/70 hover:text-white transition-colors duration-300"
@@ -439,7 +408,6 @@ export default function FashionVideoSection() {
                     <Settings size={20} />
                   </button>
 
-                  {/* Fullscreen */}
                   <button
                     onClick={handleFullscreen}
                     className="text-white/70 hover:text-white transition-colors duration-300"
@@ -451,7 +419,6 @@ export default function FashionVideoSection() {
             </motion.div>
           </div>
 
-          {/* Thumbnail Carousel */}
           <div className="mt-8">
             <Swiper
               modules={[Navigation, Pagination, FreeMode]}
@@ -460,7 +427,6 @@ export default function FashionVideoSection() {
               freeMode={true}
               navigation={true}
               pagination={{ clickable: true }}
-              /* Responsive carousel breakpoints: 2 / 3 / 4 / 5 slides */
               breakpoints={{
                 640: {
                   slidesPerView: 3,
@@ -475,7 +441,6 @@ export default function FashionVideoSection() {
               className="video-swiper"
               style={{ paddingBottom: '40px' }}
             >
-              {/* Unlimited videos: map works for any array length */}
               {fashionVideos.map((video) => (
                 <SwiperSlide key={video.id}>
                   <motion.div
@@ -499,7 +464,6 @@ export default function FashionVideoSection() {
                           if (fallback) fallback.style.display = 'flex';
                         }}
                       />
-                      {/* Fallback Placeholder */}
                       <div
                         className="absolute inset-0 flex items-center justify-center"
                         style={{display: 'none'}}
@@ -514,7 +478,6 @@ export default function FashionVideoSection() {
                         </div>
                       </div>
 
-                      {/* Play Button Overlay */}
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
                         <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer"
                              onClick={(e) => {
@@ -533,14 +496,12 @@ export default function FashionVideoSection() {
                         </div>
                       </div>
 
-                      {/* Duration Badge */}
                       {video.duration && (
                         <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
                           {video.duration}
                         </div>
                       )}
 
-                      {/* Active Indicator */}
                       {selectedVideo.id === video.id && (
                         <div className="absolute top-2 left-2 w-3 h-3 bg-primary-400 rounded-full animate-pulse" />
                       )}
@@ -577,7 +538,6 @@ export default function FashionVideoSection() {
           border: none;
         }
 
-        /* Custom navigation arrows: ⟸ ⟹ */
         .video-swiper .swiper-button-next,
         .video-swiper .swiper-button-prev {
           top: -30px;
@@ -602,7 +562,6 @@ export default function FashionVideoSection() {
           color: #C2B280;
         }
 
-        /* Themed pagination dots (below carousel by Swiper) */
         .video-swiper .swiper-pagination-bullet {
           background: #C2B280;
           opacity: 0.6;
