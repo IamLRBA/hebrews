@@ -9,32 +9,32 @@ import BackToTop from '@/components/ui/BackToTop'
 import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
 
 export const metadata: Metadata = {
-  title: 'FusionCRAFT STUDIOS - Thrifted Fashion & Style Curators',
-  description: 'Discover unique thrifted treasures and fresh fashion finds. We curate sustainable style collections that blend vintage charm with contemporary fashion.',
+  title: 'MysteryPieces - Curated Fashion & Style Curators',
+  description: 'Discover hidden treasures in fashion. We curate exceptional pieces that reveal timeless style through sustainable practices.',
   keywords: 'thrifted fashion, vintage clothing, sustainable style, fashion curation, unique finds, style consultation, wardrobe styling, fashion shopping',
-  authors: [{ name: 'LRBA', url: 'https://fusioncraftstudios.com' }],
-  creator: 'FusionCRAFT STUDIOS',
-  publisher: 'FusionCRAFT STUDIOS',
+  authors: [{ name: 'LRBA', url: 'https://mysterypieces.com' }],
+  creator: 'MysteryPieces',
+  publisher: 'MysteryPieces',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://fusioncraftstudios.com'),
+  metadataBase: new URL('https://mysterypieces.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'FusionCRAFT STUDIOS - Thrifted Fashion & Style Curators',
-    description: 'Discover unique thrifted treasures and fresh fashion finds. We curate sustainable style collections that blend vintage charm with contemporary fashion.',
-    url: 'https://fusioncraftstudios.com',
-    siteName: 'FusionCRAFT STUDIOS',
+    title: 'MysteryPieces - Curated Fashion & Style Curators',
+    description: 'Discover hidden treasures in fashion. We curate exceptional pieces that reveal timeless style through sustainable practices.',
+    url: 'https://mysterypieces.com',
+    siteName: 'MysteryPieces',
     images: [
       {
         url: '/assets/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'FusionCRAFT STUDIOS',
+        alt: 'MysteryPieces',
       },
     ],
     locale: 'en_US',
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FusionCRAFT STUDIOS - Thrifted Fashion & Style Curators',
-    description: 'Discover unique thrifted treasures and fresh fashion finds. We curate sustainable style collections that blend vintage charm with contemporary fashion.',
+    title: 'MysteryPieces - Curated Fashion & Style Curators',
+    description: 'Discover hidden treasures in fashion. We curate exceptional pieces that reveal timeless style through sustainable practices.',
     images: ['/assets/images/og-image.jpg'],
   },
   robots: {

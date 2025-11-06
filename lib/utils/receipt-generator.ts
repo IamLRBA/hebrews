@@ -88,7 +88,7 @@ export async function downloadReceipt(
     
     // Create filename with order ID and timestamp
     const timestamp = new Date().toISOString().split('T')[0]
-    const filename = `FusionCRAFT_Receipt_${orderId}_${timestamp}.png`
+    const filename = `MysteryPieces_Receipt_${orderId}_${timestamp}.png`
     
     // Download the image
     downloadImage(dataUrl, filename)

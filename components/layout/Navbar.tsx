@@ -210,9 +210,9 @@ export default function Navbar() {
             <div className="flex items-center space-x-8">
               <Link href="/" className="flex items-center space-x-2 group">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-white font-bold text-lg">F</span>
+                  <span className="text-white font-bold text-lg">M</span>
                 </div>
-                <span className="text-xl font-bold text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300">FusionCRAFT</span>
+                <span className="text-xl font-bold text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300">MysteryPieces</span>
               </Link>
               <div className="hidden lg:flex items-center space-x-8">
                 {navigation.filter(item => item.name === 'Home').map((item) => {

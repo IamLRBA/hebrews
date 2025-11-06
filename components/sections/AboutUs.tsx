@@ -93,8 +93,7 @@ export default function AboutUs() {
           ᗩᗷOᑌT <span className="text-accent-600">Us</span>
           </h2>
           <p className="text-xl text-primary-700 max-w-3xl mx-auto">
-            We are FusionCRAFT STUDIOS, passionate curators of fashion and style. 
-            Our mission is to bring you unique thrifted treasures and fresh fashion finds that tell your story.
+            We discover hidden treasures in fashion aimed at unveiling unique pieces that reveal your authentic style.
           </p>
         </motion.div>
 
@@ -108,13 +107,13 @@ export default function AboutUs() {
         >
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-primary-600 leading-relaxed mb-6">
-              At FusionCRAFT STUDIOS, we believe that style is personal and sustainable. Our carefully curated 
-              collection blends vintage charm with contemporary fashion, offering you unique pieces that can't 
-              be found everywhere. Every item we select tells a story and helps you express your authentic self.
+              True style emerges from pieces with hidden stories. Our curated collection reveals the extraordinary 
+              within the ordinary—blending vintage elegance with contemporary sophistication. Each piece is carefully 
+              examined for its unique character and potential to become part of your personal narrative.
             </p>
             <div className="inline-flex items-center space-x-2 bg-primary-100 px-6 py-3 rounded-full">
-              <span className="text-primary-800 font-semibold">Our Philosophy:</span>
-              <span className="text-accent-600 font-bold italic">"Where thrifted treasures meet fresh fashion finds"</span>
+              <span className="text-primary-800 font-semibold">Our Core:</span>
+              <span className="text-accent-600 font-bold italic">"Hidden treasures reveal a timeless style"</span>
             </div>
           </div>
         </motion.div>
@@ -132,7 +131,7 @@ export default function AboutUs() {
           <div className="max-w-2xl mx-auto">
             <div className="relative group">
               {/* CEO Card */}
-              <div className="bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
+              <div className="bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
                   <img
                     src="/assets/images/team/lrba.jpg"
@@ -182,7 +181,7 @@ export default function AboutUs() {
                 onMouseEnter={() => setHoveredMember(member.id)}
                 onMouseLeave={() => setHoveredMember(null)}
               >
-                <div className="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-100 dark:border-neutral-700 relative overflow-hidden">
+                <div className="bg-primary-800/10 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20 relative overflow-hidden">
                   {/* Member Image */}
                   <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-primary-200">
                     <img
@@ -290,27 +289,27 @@ export default function AboutUs() {
         >
           <h3 className="text-3xl font-bold text-primary-800 mb-12 text-center">Oᑌᖇ ᐯᗩᒪᑌEᔕ</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 px-8 md:px-12 lg:px-16">
             {[
               {
                 image: "/assets/images/sections/home/values-1.jpg",
                 title: "Sustainability",
-                description: "We believe in circular fashion and responsible consumption. Every thrifted piece we curate extends its lifecycle, reducing waste and promoting environmental consciousness."
+                description: "We champion circular fashion through thoughtful curation. Every piece we discover extends its narrative while reducing waste and preserving stories embedded in quality garments."
               },
               {
                 image: "/assets/images/sections/home/values-2.jpg",
-                title: "Quality",
-                description: "We meticulously select each item, ensuring it meets our high standards for condition, style, and craftsmanship. Quality is never compromised."
+                title: "Excellence",
+                description: "Uncompromising standards guide our curation. Each piece undergoes meticulous examination for condition, craftsmanship, and timeless appeal."
               },
               {
                 image: "/assets/images/sections/home/values-3.jpg",
                 title: "Authenticity",
-                description: "We celebrate individuality and authentic self-expression. Every piece in our collection tells a unique story and helps you express your true self."
+                description: "We celebrate unique stories each piece carries. Our collection reveals garments that speak to individual expression, helping you discover pieces that resonate with your authentic self."
               },
               {
                 image: "/assets/images/sections/home/values-4.jpg",
-                title: "Customer Care",
-                description: "Your satisfaction is our priority. We provide personalized styling advice, transparent service, and support throughout your fashion journey."
+                title: "Collaboration",
+                description: "Your style journey is our partnership. We provide expert guidance and dedicated support as you discover pieces that reveal your unique aesthetic."
               }
             ].map((value, index) => (
               <motion.div
@@ -319,19 +318,24 @@ export default function AboutUs() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 * index }}
-                className="text-center group"
+                className={`group ${index % 2 === 0 ? 'text-left' : 'text-right'}`}
               >
-                <div className="flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className={`flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mb-6 group-hover:scale-110 transition-transform duration-300 ${index % 2 === 0 ? 'ml-0 mr-auto' : 'mr-0 ml-auto'}`}>
                   <img 
                     src={value.image} 
                     alt={value.title} 
                     className="w-24 h-24 object-cover rounded-xl mx-auto"
                   />
                 </div>
-                <h4 className="text-2xl font-bold text-primary-800 mb-4">{value.title}</h4>
-                <p className="text-primary-600 text-base leading-relaxed">
-                  {value.description}
-                </p>
+                <div className={`${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
+                  <div className={`text-6xl font-bold text-primary-400 mb-4 ${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
+                    0{index + 1}
+                  </div>
+                  <h4 className="text-2xl font-bold text-primary-800 mb-4">{value.title}</h4>
+                  <p className="text-primary-600 text-base leading-relaxed">
+                    {value.description}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -351,18 +355,18 @@ export default function AboutUs() {
             {[
               {
                 image: "/assets/images/sections/home/missions-1.jpg",
-                title: "Curate Unique Finds",
-                description: "To discover and curate the most unique thrifted treasures and fresh fashion pieces that cannot be found elsewhere. We search for quality, character, and style in every item we select."
+                title: "Discovery",
+                description: "We uncover exceptional pieces others overlook. Our curation process examines each garment for hidden potential—quality construction, timeless design, and unique character."
               },
               {
                 image: "/assets/images/sections/home/missions-2.jpg",
-                title: "Promote Sustainable Fashion",
-                description: "To champion circular fashion by giving pre-loved pieces new life and supporting responsibly made new apparel. We believe fashion should be both beautiful and environmentally conscious."
+                title: "Recycling",
+                description: "We transform pre-loved pieces into future favorites while supporting responsible new apparel. Every curated piece contributes to a more sustainable fashion ecosystem."
               },
               {
                 image: "/assets/images/sections/home/missions-3.jpg",
-                title: "Empower Self-Expression",
-                description: "To help every individual discover and express their unique style through carefully curated pieces. We believe fashion is a powerful tool for self-expression and personal storytelling."
+                title: "Revelation",
+                description: "We help individuals discover their authentic aesthetic through thoughtfully curated selections. Our pieces serve as tools to reveal and refine your unique style narrative."
               }
             ].map((mission, index) => (
               <motion.div
@@ -426,12 +430,12 @@ export default function AboutUs() {
               { 
                 image: "/assets/images/sections/mission/mission-icon.jpg", 
                 title: "Mission Statement", 
-                description: "To curate sustainable style by uniting thrifted treasures with responsibly made new apparel and thus delivering quality, value, and self‑expression with transparency and care." 
+                description: "To curate exceptional fashion pieces that reveal timeless style through sustainable practices. We unite carefully selected thrifted treasures with responsibly made new apparel, delivering quality, value, and authentic self-expression." 
               },
               { 
                 image: "/assets/images/sections/mission/vision-icon.jpg", 
                 title: "Vision Statement", 
-                description: "To build a circular fashion and styling ecosystem where conscious choices are easy, local creators thrive, and timeless pieces outlast trends." 
+                description: "To create a circular fashion ecosystem where conscious choices become effortless, hidden treasures are revealed, and timeless pieces transcend fleeting trends." 
               }
             ].map((item, index) => (
               <MissionVisionCard key={index} item={item} index={index} />

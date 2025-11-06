@@ -21,7 +21,7 @@ export default function Footer() {
         </div>
         <div className="footer-divider"></div>
         <div className="copyright-section">
-          <p className="copyright">© {new Date().getFullYear()} FusionᑕᖇᗩᖴT STUDIOS. All rights reserved.</p>
+          <p className="copyright">© {new Date().getFullYear()} MysteryPieces. All rights reserved.</p>
           <p className="copyright2">Designed by <a href="https://github.com/IamLRBA" target="_blank" rel="noopener noreferrer">ᒪᖇᗷᗩ</a></p>
           <div className="legal-links">
             <Link href="/privacy-policy" className="legal-link">Privacy Policy</Link>

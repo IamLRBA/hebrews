@@ -50,12 +50,12 @@ export default function Home() {
   useEffect(() => {
     // Check if this is the first visit
     if (typeof window !== 'undefined') {
-      const hasVisited = localStorage.getItem('fusioncraft-visited')
+      const hasVisited = localStorage.getItem('mysterypieces-visited')
       
       if (!hasVisited) {
         // First time visitor - show loading animation
         setIsLoading(true)
-        localStorage.setItem('fusioncraft-visited', 'true')
+        localStorage.setItem('mysterypieces-visited', 'true')
         
         const timer = setTimeout(() => {
           setIsLoading(false)
@@ -194,14 +194,11 @@ export default function Home() {
                       className="mb-8"
                     >
                       <h1 className="text-8xl md:text-8xl font-bold mb-6">
-                        <span className="text-primary-800">Fusion</span>
-                        <span className="text-accent-600">ᑕᖇᗩᖴT</span>
-                      </h1>
-                      <h1 className="text-7xl md:text-7xl font-bold mb-6">
-                        <span className="text-primary-800">ᔕTᑌᗪIOᔕ</span>
+                        <span className="text-primary-800">Mystery</span>
+                        <span className="text-accent-600">ᑭIECEᔕ</span>
                       </h1>
                       <p className="text-lg text-primary-600 max-w-2xl mx-auto">
-                        A creativity and craftsmanship intersection in the art of fashion and style
+                        Curated pieces that reveal your unique story
                       </p>
                     </motion.div>
 
@@ -297,7 +294,7 @@ export default function Home() {
                     E᙭ᑭᒪOᖇE <span className="text-accent-600">the Portals</span>
                     </h2>
                     <p className="text-xl text-primary-700 max-w-3xl mx-auto">
-                      Discover the art of fashion and style through our curated portal
+                      Discover hidden treasures—each piece waiting to reveal its story
                     </p>
                   </motion.div>
 
