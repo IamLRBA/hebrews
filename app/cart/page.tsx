@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowLeft, ShoppingCart, Trash2 } from 'lucide-react'
+import { ShoppingCart, Trash2 } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 
 export default function CartPage() {
@@ -68,7 +68,7 @@ export default function CartPage() {
           className="mb-8"
         >
           <Link href="/sections/fashion" className="inline-flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300 mb-6">
-            <ArrowLeft className="w-5 h-5" />
+            <span className="text-lg font-medium">⟸</span>
             <span className="text-sm font-medium">Continue Shopping</span>
           </Link>
           <div className="flex items-center justify-between">

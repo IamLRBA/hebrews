@@ -110,14 +110,8 @@ export default function Testimonials() {
   const duplicatedTestimonials = [...testimonialsData, ...testimonialsData]
 
   return (
-    <section className="testimonials section bg-gradient-to-br from-primary-100 to-primary-200 dark:from-neutral-800 dark:to-neutral-900 relative overflow-hidden" id="testimonials">
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div animate={{ rotate: [0, 360], scale: [1, 1.2, 1], x: [0, 30, 0] }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="absolute top-20 left-20 w-4 h-4 bg-primary-400/20 rounded-full" />
-        <motion.div animate={{ rotate: [360, 0], scale: [1.2, 1, 1.2], y: [0, -40, 0] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute top-40 right-32 w-3 h-3 bg-accent-400/20 rounded-full" />
-        <motion.div animate={{ rotate: [0, -360], scale: [1, 0.8, 1], x: [0, -20, 0] }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute bottom-20 left-1/3 w-2 h-2 bg-primary-500/20 rounded-full" />
-        <motion.div animate={{ rotate: [360, 0], scale: [0.8, 1.2, 0.8], y: [0, 30, 0] }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }} className="absolute bottom-32 right-20 w-5 h-5 bg-accent-500/20 rounded-full" />
-      </div>
-      <div className="container-custom">
+    <section className="section relative overflow-hidden">
+      <div className="container-custom relative z-10">
         <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-16 text-center">TEᔕTIᗰOᑎIᗩᒪᔕ</motion.h2>
         <div className="slider-container relative">
           <button className="nav-button prev absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100" onClick={handlePrev}>⟸</button>

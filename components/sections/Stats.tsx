@@ -164,7 +164,6 @@ export default function Stats() {
 
   return (
     <section ref={containerRef} className="section relative overflow-hidden">
-      <motion.div style={{ y: backgroundY, scale: backgroundScale }} className="absolute inset-0 bg-gradient-to-br from-primary-50 via-accent-50 to-primary-100 dark:from-neutral-900 dark:via-neutral-800 dark:to-primary-950" />
       <div className="container-custom relative z-10">
         <motion.div style={{ y: titleY, scale: titleScale }} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="text-center mb-16">
           <motion.div initial={{ scale: 0, rotate: -180 }} whileInView={{ scale: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 200 }} className="flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mx-auto mb-6">

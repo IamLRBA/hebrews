@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Plus, Trash2, Package, DollarSign, ShoppingCart, Users, BarChart3, LogOut, X, Image as ImageIcon, Maximize2, Minimize2 } from 'lucide-react'
+import { Plus, Trash2, Package, DollarSign, ShoppingCart, Users, BarChart3, LogOut, X, Image as ImageIcon, Maximize2, Minimize2 } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import { ProductManager, type Product, type BoughtProduct } from '@/lib/products'
 import { OrderManager, type Order } from '@/lib/cart'
@@ -175,7 +175,7 @@ export default function AdminDashboard() {
       <div className="container-custom">
         <div className="flex items-center justify-between mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700">
-            <ArrowLeft className="w-4 h-4" />
+            <span className="text-base font-medium">⟸</span>
             <span>Back to Home</span>
           </Link>
           <button onClick={handleLogout} className="flex items-center space-x-2 text-red-600 hover:text-red-700">

@@ -130,20 +130,7 @@ export default function FeaturedCollections() {
   }
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-primary-50 via-white to-primary-50 relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{ x: [0, 100, 0], y: [0, 50, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-primary-200/20 to-accent-200/20 rounded-full blur-3xl" 
-        />
-        <motion.div
-          animate={{ x: [0, -100, 0], y: [0, -50, 0] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-br from-accent-200/20 to-primary-200/20 rounded-full blur-3xl" 
-        />
-      </div>
-
+    <section className="py-20 px-4 relative overflow-hidden">
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -183,7 +170,7 @@ export default function FeaturedCollections() {
 
         {featuredProducts.length > 0 ? (
           <div className="flex justify-center">
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 max-w-7xl">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 sm:gap-8 md:gap-8 lg:gap-15 max-w-7xl">
             {featuredProducts.map((item, index) => {
               const { product, categoryName, categorySlug } = item
               const isAdding = addingToCart === product.id
@@ -207,7 +194,7 @@ export default function FeaturedCollections() {
                     scale: 1.02,
                     transition: { duration: 0.3 }
                   }}
-                  className="group relative"
+                  className="group relative min-w-[280px]"
                 >
                   <motion.div
                     className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-100 h-full flex flex-col relative"
@@ -238,7 +225,7 @@ export default function FeaturedCollections() {
                     </motion.div>
 
                     <Link href={`/products/${categorySlug}`}>
-                      <div className="relative h-64 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
+                      <div className="relative h-56 bg-gradient-to-br from-primary-100 to-primary-200 overflow-hidden">
                         <motion.img
                           src={product.images[0] || '/assets/images/placeholder.jpg'}
                           alt={product.name}
@@ -281,22 +268,22 @@ export default function FeaturedCollections() {
                       </div>
                     </Link>
 
-                    <div className="p-5 flex-1 flex flex-col relative z-10">
+                    <div className="p-3 flex-1 flex flex-col relative z-10">
                       <Link href={`/products/${categorySlug}`}>
                         <motion.div
                           whileHover={{ x: 5 }}
                           transition={{ duration: 0.2 }}
-                          className="mb-2"
+                          className="mb-1"
                         >
-                          <p className="text-primary-500 text-xs font-medium mb-1 line-clamp-1">{product.brand}</p>
-                          <h3 className="text-sm sm:text-base font-bold text-primary-900 mb-1 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                          <p className="text-primary-500 text-xs font-medium mb-0.5 line-clamp-1">{product.brand}</p>
+                          <h3 className="text-sm sm:text-base font-bold text-primary-900 mb-0.5 line-clamp-2 group-hover:text-primary-600 transition-colors leading-tight">
                             {product.name}
                           </h3>
-                          <p className="text-primary-400 text-xs mb-2 line-clamp-1">{product.sku}</p>
+                          <p className="text-primary-400 text-xs mb-0.5 line-clamp-1">{product.sku}</p>
                         </motion.div>
                       </Link>
 
-                      <div className="mb-3 mt-auto">
+                      <div className="mb-1.5 mt-auto">
                         <motion.div
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
@@ -320,7 +307,7 @@ export default function FeaturedCollections() {
                         disabled={isAdding || isInCart || product.stock_qty === 0}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className={`w-full py-2 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 transition-all duration-200 ${
+                        className={`w-full py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 transition-all duration-200 mb-3 ${
                           isInCart || product.stock_qty === 0
                             ? 'bg-gray-400 cursor-not-allowed text-white'
                             : 'bg-primary-600 hover:bg-primary-700 text-white hover:shadow-lg'
@@ -343,17 +330,18 @@ export default function FeaturedCollections() {
                         </span>
                       </motion.button>
 
-                      <motion.div whileHover={{ x: 5 }}>
+                      <motion.div>
                         <Link
                           href={`/products/${categorySlug}`}
-                          className="mt-2 text-center text-xs text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center space-x-1 transition-colors"
+                          className="group/view-collection mt-2 text-center text-xs text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center space-x-1 transition-all duration-200 rounded-lg px-2 py-1 hover:bg-primary-50 dark:hover:bg-primary-900/20"
                         >
                           <span>View Collection</span>
                           <motion.span
                             animate={{ x: [0, 3, 0] }}
                             transition={{ duration: 1.5, repeat: Infinity }}
+                            className="group-hover/view-collection:translate-x-1 transition-transform duration-200"
                           >
-                            <ArrowRight className="w-3 h-3" />
+                            ⟹
                           </motion.span>
                         </Link>
                       </motion.div>

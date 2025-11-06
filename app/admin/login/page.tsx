@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Lock, User, ArrowLeft, Shield } from 'lucide-react'
+import { Lock, User, Shield } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 
 export default function AdminLoginPage() {
@@ -34,7 +34,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 flex items-center justify-center px-4 py-12">
       <div className="max-w-md w-full">
         <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 mb-8">
-          <ArrowLeft className="w-4 h-4" />
+          <span className="text-base font-medium">⟸</span>
           <span>Back to Home</span>
         </Link>
 

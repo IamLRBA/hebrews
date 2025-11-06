@@ -85,6 +85,80 @@ export default function Home() {
   return (
     <>
       <main className="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 relative overflow-hidden">
+        {/* Unified Background Elements - applied to entire page */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent-200/30 to-accent-400/30 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-primary-300/30 to-primary-500/30 rounded-full blur-3xl"
+          />
+          
+          {/* Enhanced Particle System */}
+          <div className="absolute inset-0 pointer-events-none">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{
+                  x: 0,
+                  y: 0,
+                  opacity: 0,
+                  scale: 0
+                }}
+                animate={{
+                  x: [0, 1200, 0],
+                  y: [0, 800, 0],
+                  opacity: [0, 0.6, 0],
+                  scale: [0, 1, 0],
+                  rotate: [0, 360]
+                }}
+                transition={{
+                  duration: 8 + (i * 0.2),
+                  repeat: Infinity,
+                  delay: i * 0.3,
+                  ease: "easeInOut"
+                }}
+                className="absolute w-2 h-2 bg-accent-400/60 rounded-full"
+                style={{
+                  left: `${(i * 5) % 100}%`,
+                  top: `${(i * 7) % 100}%`
+                }}
+              />
+            ))}
+          </div>
+          
+          {/* Geometric Shapes */}
+          <motion.div
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{ 
+              duration: 30, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+            className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-primary-500/20 transform rotate-30"
+          />
+          
+          <motion.div
+            animate={{ 
+              rotate: [360, 0],
+              scale: [1.2, 1, 1.2]
+            }}
+            transition={{ 
+              duration: 35, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+            className="absolute bottom-1/4 right-1/4 w-20 h-20 border-2 border-accent-500/20 transform -rotate-45"
+          />
+        </div>
+
         {/* Loading Screen - Only for first time visitors */}
         <AnimatePresence>
           {isLoading && (
@@ -108,80 +182,6 @@ export default function Home() {
 
               {/* Hero Section */}
               <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-                {/* Background Elements */}
-                <div className="absolute inset-0 overflow-hidden">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-accent-200/30 to-accent-400/30 rounded-full blur-3xl"
-                  />
-                  <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                    className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-primary-300/30 to-primary-500/30 rounded-full blur-3xl"
-                  />
-                  
-                  {/* Enhanced Particle System */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    {[...Array(20)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{
-                          x: 0,
-                          y: 0,
-                          opacity: 0,
-                          scale: 0
-                        }}
-                        animate={{
-                          x: [0, 1200, 0],
-                          y: [0, 800, 0],
-                          opacity: [0, 0.6, 0],
-                          scale: [0, 1, 0],
-                          rotate: [0, 360]
-                        }}
-                        transition={{
-                          duration: 8 + (i * 0.2),
-                          repeat: Infinity,
-                          delay: i * 0.3,
-                          ease: "easeInOut"
-                        }}
-                        className="absolute w-2 h-2 bg-accent-400/60 rounded-full"
-                        style={{
-                          left: `${(i * 5) % 100}%`,
-                          top: `${(i * 7) % 100}%`
-                        }}
-                      />
-                    ))}
-                  </div>
-                  
-                  {/* Geometric Shapes */}
-                  <motion.div
-                    animate={{ 
-                      rotate: [0, 360],
-                      scale: [1, 1.2, 1]
-                    }}
-                    transition={{ 
-                      duration: 30, 
-                      repeat: Infinity, 
-                      ease: "linear" 
-                    }}
-                    className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-primary-500/20 transform rotate-30"
-                  />
-                  
-                  <motion.div
-                    animate={{ 
-                      rotate: [360, 0],
-                      scale: [1.2, 1, 1.2]
-                    }}
-                    transition={{ 
-                      duration: 35, 
-                      repeat: Infinity, 
-                      ease: "linear" 
-                    }}
-                    className="absolute bottom-1/4 right-1/4 w-20 h-20 border-2 border-accent-500/20 transform -rotate-45"
-                  />
-                </div>
-
                 <div className="relative z-10 text-center">
                   <motion.div 
                     className="container-custom"
@@ -255,8 +255,8 @@ export default function Home() {
               <FeaturedCollections />
 
               {/* Portals Section */}
-              <section ref={portalsRef} id="portals-section" className="section">
-                <div className="container-custom">
+              <section ref={portalsRef} id="portals-section" className="section relative">
+                <div className="container-custom relative z-10">
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -275,14 +275,14 @@ export default function Home() {
                         animate={{ rotate: [0, 10, -10, 0] }}
                         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       >
-                        ✨
+                        ✧
                       </motion.span>
                       <span className="font-medium">Click the portal below to explore more products</span>
                       <motion.span
-                        animate={{ x: [0, 5, 0] }}
+                        animate={{ y: [0, 5, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                       >
-                        →
+                        ⇓
                       </motion.span>
                     </motion.div>
                   </motion.div>

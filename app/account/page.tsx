@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Package, Eye, Star, MessageSquare, User, Mail, Phone, Edit2, Camera, X } from 'lucide-react'
+import { Package, Eye, Star, MessageSquare, User, Mail, Phone, Edit2, Camera, X } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
 import { OrderManager, type Order } from '@/lib/cart'
 import type { User as UserType, Review } from '@/lib/auth'
@@ -111,7 +111,7 @@ export default function AccountPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 pt-24 pb-20">
       <div className="container-custom">
         <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 mb-8">
-          <ArrowLeft className="w-4 h-4" />
+          <span className="text-base font-medium">⟸</span>
           <span>Back to Home</span>
         </Link>
 

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, ShoppingCart, Heart, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ShoppingCart, Heart, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import { ProductManager } from '@/lib/products'
 import { AuthManager } from '@/lib/auth'
@@ -119,9 +119,9 @@ export default function ProductCategoryPage() {
       >
         <Link href="/sections/fashion" className="group">
           <div className="flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300">
-            <motion.div whileHover={{ x: -5 }} transition={{ duration: 0.2 }}>
-              <ArrowLeft className="w-5 h-5" />
-            </motion.div>
+            <motion.span whileHover={{ x: -5 }} transition={{ duration: 0.2 }} className="text-lg font-medium">
+              ⟸
+            </motion.span>
             <span className="text-sm font-medium">Back to Fashion</span>
           </div>
         </Link>

@@ -47,7 +47,7 @@ export default function Contact() {
   }
 
   return (
-    <section className="section bg-white dark:bg-neutral-900">
+    <section className="section relative overflow-hidden">
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="section-title">
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span></h2>

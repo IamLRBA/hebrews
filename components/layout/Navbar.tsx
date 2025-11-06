@@ -8,6 +8,7 @@ import { HiMenu, HiX, HiSearch } from 'react-icons/hi'
 import { Home, UserCircle, ShoppingCart, Globe, ShoppingBag } from 'lucide-react'
 import SettingsDropdown from '@/components/ui/SettingsDropdown'
 import { CartManager } from '@/lib/cart'
+import { ProductManager, type Product } from '@/lib/products'
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
@@ -18,26 +19,78 @@ const portalItems = [
   { name: 'Fashion', href: '/sections/fashion', icon: ShoppingBag },
 ]
 
-const searchSuggestions = [
-  { name: 'Thrifted Dresses', href: '/sections/fashion', category: 'Fashion' },
-  { name: 'Vintage Finds', href: '/sections/fashion', category: 'Fashion' },
-  { name: 'New Arrivals', href: '/sections/fashion', category: 'Fashion' },
-  { name: 'Style Consultation', href: '/sections/fashion', category: 'Fashion' },
-  { name: 'Outfit Styling', href: '/sections/fashion', category: 'Fashion' },
-]
+// Helper function to get all products from JSON and ProductManager
+const getAllProducts = (): Product[] => {
+  const allProducts: Product[] = []
+  
+  try {
+    // Get products from JSON file
+    const getProductsData = () => {
+      return require('@/data/products.json')
+    }
+    const productsData = getProductsData()
+    
+    // Extract products from JSON
+    Object.keys(productsData.products || {}).forEach(category => {
+      Object.keys(productsData.products[category].subcategories || {}).forEach(section => {
+        productsData.products[category].subcategories[section].forEach((product: Product) => {
+          allProducts.push(product)
+        })
+      })
+    })
+  } catch (error) {
+    console.error('Error loading products from JSON:', error)
+  }
+  
+  // Get products from ProductManager (saved products)
+  const savedProducts = ProductManager.getAllProductsArray()
+  const existingIds = new Set(allProducts.map(p => p.id))
+  
+  // Add saved products that don't already exist
+  savedProducts.forEach(product => {
+    if (!existingIds.has(product.id)) {
+      allProducts.push(product)
+    }
+  })
+  
+  return allProducts
+}
+
+interface SearchResult {
+  product: Product
+  category: string
+  section: string
+  href: string
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isPortalsOpen, setIsPortalsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filteredSuggestions, setFilteredSuggestions] = useState(searchSuggestions)
+  const [filteredSuggestions, setFilteredSuggestions] = useState<SearchResult[]>([])
+  const [allProducts, setAllProducts] = useState<Product[]>([])
   const [isScrolled, setIsScrolled] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [cartCount, setCartCount] = useState(0)
   const pathname = usePathname()
   const searchRef = useRef<HTMLDivElement>(null)
+  
+  // Load all products on mount and when products are updated
+  useEffect(() => {
+    const loadProducts = () => {
+      setAllProducts(getAllProducts())
+    }
+    
+    loadProducts()
+    
+    // Listen for product updates
+    window.addEventListener('productsUpdated', loadProducts)
+    return () => {
+      window.removeEventListener('productsUpdated', loadProducts)
+    }
+  }, [])
 
   useEffect(() => {
     const updateCartCount = () => {
@@ -60,19 +113,55 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Search through products
   useEffect(() => {
     if (searchQuery.trim() === '') {
-      setFilteredSuggestions(searchSuggestions)
+      setFilteredSuggestions([])
       setIsSearching(false)
+      setShowSuggestions(false)
     } else {
-      const filtered = searchSuggestions.filter(item =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-      setFilteredSuggestions(filtered)
+      const query = searchQuery.toLowerCase().trim()
+      const results: SearchResult[] = []
+      
+      // Search through all products
+      allProducts.forEach(product => {
+        const searchableText = [
+          product.name,
+          product.brand,
+          product.category,
+          product.section,
+          product.description,
+          product.sku
+        ].join(' ').toLowerCase()
+        
+        if (searchableText.includes(query)) {
+          // Format category name for display
+          const categoryName = product.category
+            .split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+          
+          // Format section name for display
+          const sectionName = product.section
+            .split('-')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+          
+          results.push({
+            product,
+            category: categoryName,
+            section: sectionName,
+            href: `/products/${product.category}#${product.section}`
+          })
+        }
+      })
+      
+      // Limit results to 10 for better UX
+      setFilteredSuggestions(results.slice(0, 10))
       setIsSearching(true)
+      setShowSuggestions(true)
     }
-  }, [searchQuery])
+  }, [searchQuery, allProducts])
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -84,19 +173,7 @@ export default function Navbar() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value
     setSearchQuery(query)
-    if (query.trim() === '') {
-      setFilteredSuggestions(searchSuggestions)
-      setIsSearching(false)
-      setShowSuggestions(false)
-    } else {
-      const filtered = searchSuggestions.filter(item =>
-        item.name.toLowerCase().includes(query.toLowerCase()) ||
-        item.category.toLowerCase().includes(query.toLowerCase())
-      )
-      setFilteredSuggestions(filtered)
-      setIsSearching(true)
-      setShowSuggestions(true)
-    }
+    // The useEffect hook will handle filtering automatically
   }
 
   const clearSearch = () => {
@@ -219,13 +296,13 @@ export default function Navbar() {
                         <div className="search-suggestions absolute top-full left-0 mt-2">
                           {filteredSuggestions.length > 0 ? (
                             filteredSuggestions.map((item) => (
-                              <div key={`${item.category}-${item.name}`} className="suggestion-item" onClick={() => handleSuggestionClick(item.href)}>
-                                <span className="suggestion-category">{item.category}</span>
-                                <span className="suggestion-title">{item.name}</span>
+                              <div key={`${item.product.id}-${item.product.name}`} className="suggestion-item" onClick={() => handleSuggestionClick(item.href)}>
+                                <span className="suggestion-category">{item.category} • {item.section}</span>
+                                <span className="suggestion-title">{item.product.name} - {item.product.brand}</span>
                               </div>
                             ))
                           ) : (
-                            <div className="suggestion-item no-results">No results found for "{searchQuery}"</div>
+                            <div className="suggestion-item no-results">No Results for "{searchQuery}"</div>
                           )}
                         </div>
                       )}
@@ -426,13 +503,13 @@ export default function Navbar() {
                           <div className="search-suggestions absolute top-full left-0 mt-2 w-full">
                             {filteredSuggestions.length > 0 ? (
                               filteredSuggestions.map((item) => (
-                                <div key={`${item.category}-${item.name}`} className="suggestion-item" onClick={() => handleSuggestionClick(item.href)}>
-                                  <span className="suggestion-category">{item.category}</span>
-                                  <span className="suggestion-title">{item.name}</span>
+                                <div key={`${item.product.id}-${item.product.name}`} className="suggestion-item" onClick={() => handleSuggestionClick(item.href)}>
+                                  <span className="suggestion-category">{item.category} • {item.section}</span>
+                                  <span className="suggestion-title">{item.product.name} - {item.product.brand}</span>
                                 </div>
                               ))
                             ) : (
-                              <div className="suggestion-item no-results">No results found for "{searchQuery}"</div>
+                              <div className="suggestion-item no-results">No Results for "{searchQuery}"</div>
                             )}
                           </div>
                         )}

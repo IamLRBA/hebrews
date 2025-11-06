@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowLeft, ShoppingCart } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import { CartManager, OrderManager, calculateDeliveryFee, isKampalaAddress, type CartItem } from '@/lib/cart'
 import { EmailTemplates } from '@/lib/emails/templates'
 import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
@@ -140,7 +140,7 @@ export default function CheckoutPage() {
           className="mb-8"
         >
           <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300 mb-6">
-            <ArrowLeft className="w-5 h-5" />
+            <span className="text-lg font-medium">⟸</span>
             <span className="text-sm font-medium">Back to Shopping</span>
           </Link>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">Checkout</h1>
