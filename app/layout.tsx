@@ -4,6 +4,9 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { NotificationProvider } from '@/components/layout/NotificationSystem'
 import ThemeProvider from '@/components/layout/ThemeProvider'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import StructuredData from '@/components/StructuredData'
+import SkipToContent from '@/components/ui/SkipToContent'
 import AccountPromptPopup from '@/components/ui/AccountPromptPopup'
 import BackToTop from '@/components/ui/BackToTop'
 import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
@@ -72,21 +75,27 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>" />
-        <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#6F4E37" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        <StructuredData />
       </head>
       <body className="antialiased">
         <ThemeProvider>
           <NotificationProvider>
-            <Navbar />
-            <main>
-              {children}
-            </main>
-            <Footer />
-            <AccountPromptPopup />
-            <BackToTop />
-            <KeyboardShortcuts />
+            <ErrorBoundary>
+              <SkipToContent />
+              <Navbar />
+              <main id="main-content">
+                {children}
+              </main>
+              <Footer />
+              <AccountPromptPopup />
+              <BackToTop />
+              <KeyboardShortcuts />
+            </ErrorBoundary>
           </NotificationProvider>
         </ThemeProvider>
       </body>

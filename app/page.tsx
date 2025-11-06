@@ -194,8 +194,8 @@ export default function Home() {
                       className="mb-8"
                     >
                       <h1 className="text-8xl md:text-8xl font-bold mb-6">
-                        <span className="text-primary-800">Mystery</span>
-                        <span className="text-accent-600">ᑭIECEᔕ</span>
+                        <span className="text-primary-800">𝑀𝑦𝑠𝑡𝑒𝑟𝑦</span>
+                        <span className="text-accent-600">PIΞCΞS</span>
                       </h1>
                       <p className="text-lg text-primary-600 max-w-2xl mx-auto">
                         Curated pieces that reveal your unique story

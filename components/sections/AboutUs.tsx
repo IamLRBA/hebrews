@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import MissionVisionCard from './MissionVisionCard'
 import { 
   Building2, 
@@ -133,14 +134,20 @@ export default function AboutUs() {
               {/* CEO Card */}
               <div className="bg-gradient-to-br from-primary-800/20 to-primary-600/20 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20">
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
-                  <img
+                  <Image
                     src="/assets/images/team/lrba.jpg"
-                    alt="LRBA - CEO"
+                    alt="LRBA - CEO and Founder of MysteryPieces"
+                    width={128}
+                    height={128}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="eager"
+                    priority
                   />
-                  <img
+                  <Image
                     src="/assets/images/team/lrba-hover.jpg"
                     alt="LRBA - CEO"
+                    width={128}
+                    height={128}
                     className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                   />
                 </div>
@@ -184,14 +191,19 @@ export default function AboutUs() {
                 <div className="bg-primary-800/10 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-primary-500/20 relative overflow-hidden">
                   {/* Member Image */}
                   <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-primary-200">
-                    <img
+                    <Image
                       src={member.image}
-                      alt={member.name}
+                      alt={`${member.name} - ${member.position}`}
+                      width={128}
+                      height={128}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
                     />
-                    <img
+                    <Image
                       src={member.hoverImage}
-                      alt={member.name}
+                      alt={`${member.name} - ${member.position}`}
+                      width={128}
+                      height={128}
                       className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                     />
                   </div>
@@ -321,10 +333,13 @@ export default function AboutUs() {
                 className={`group ${index % 2 === 0 ? 'text-left' : 'text-right'}`}
               >
                 <div className={`flex-shrink-0 w-40 h-40 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 mb-6 group-hover:scale-110 transition-transform duration-300 ${index % 2 === 0 ? 'ml-0 mr-auto' : 'mr-0 ml-auto'}`}>
-                  <img 
+                  <Image 
                     src={value.image} 
-                    alt={value.title} 
+                    alt={`${value.title} value icon`}
+                    width={96}
+                    height={96}
                     className="w-24 h-24 object-cover rounded-xl mx-auto"
+                    loading="lazy"
                   />
                 </div>
                 <div className={`${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
@@ -384,10 +399,13 @@ export default function AboutUs() {
                 }`}>
                   {/* Image Container */}
                   <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
-                    <img 
+                    <Image 
                       src={mission.image} 
-                      alt={mission.title} 
+                      alt={`${mission.title} mission icon`}
+                      width={96}
+                      height={96}
                       className="w-24 h-24 object-cover rounded-xl"
+                      loading="lazy"
                     />
                   </div>
                   
