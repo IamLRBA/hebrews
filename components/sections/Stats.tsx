@@ -104,7 +104,7 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
       className="relative group"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-800/30 dark:to-accent-800/30 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-      <div className="relative bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 border border-white/20 dark:border-neutral-700/20">
+      <div className="relative bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 border border-primary-500/30 dark:border-primary-500/40">
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={isInView ? { scale: 1, rotate: 0 } : {}}
@@ -178,9 +178,9 @@ export default function Stats() {
           ))}
         </div>
         <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 1.2, type: "spring", stiffness: 100 }} className="text-center mt-16">
-          <div className="inline-flex items-center space-x-4 bg-white/80 dark:bg-neutral-800/80 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-white/20 dark:border-neutral-700/20">
+          <div className="inline-flex items-center space-x-4 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40">
             <Heart className="w-6 h-6 text-primary-600 dark:text-primary-300 animate-pulse" />
-            <span className="text-primary-800 dark:text-primary-100 font-semibold">Trusted by creative professionals worldwide</span>
+            <span className="text-primary-800 dark:text-primary-200 font-semibold">Trusted by creative professionals worldwide</span>
             <Target className="w-6 h-6 text-accent-600 dark:text-accent-300 animate-pulse delay-1000" />
           </div>
         </motion.div>

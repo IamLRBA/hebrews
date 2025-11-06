@@ -10,7 +10,7 @@ export default function AboutUsPage() {
       <AboutUs />
       
       {/* CTA Section */}
-      <section className="section bg-gradient-to-br from-primary-100 via-primary-200 to-primary-300 py-20">
+      <section className="section bg-unified py-20">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

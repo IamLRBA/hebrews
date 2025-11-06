@@ -60,6 +60,38 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Unified Background System */
+  .bg-unified {
+    @apply bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200;
+  }
+
+  .dark .bg-unified {
+    @apply bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-800;
+  }
+
+  /* Unified Container/Card Styling */
+  .container-card {
+    @apply bg-white rounded-xl shadow-lg border border-neutral-200;
+  }
+
+  .dark .container-card {
+    @apply bg-neutral-800 border-neutral-700;
+  }
+
+  .container-card-hover {
+    @apply hover:shadow-xl transition-all duration-300;
+  }
+
+  /* Text colors for unified backgrounds */
+  .text-on-unified {
+    @apply text-neutral-900;
+  }
+
+  .dark .text-on-unified {
+    @apply text-neutral-100;
   }
 
   /* Custom Scrollbar - Modern, Unified System */
@@ -665,16 +697,16 @@
 
 /* Dark mode body and main content styles */
 .dark body {
-  background-color: var(--color-neutral-900);
+  background-color: var(--color-neutral-950);
   color: var(--color-neutral-100);
 }
 
 .dark main {
-  background-color: var(--color-neutral-900);
+  background-color: var(--color-neutral-950);
 }
 
 .dark .section {
-  background-color: var(--color-neutral-900);
+  background-color: transparent;
 }
 
 /* Dark mode section subtitle */

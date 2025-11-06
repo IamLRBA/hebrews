@@ -106,7 +106,7 @@ export default function CEOProfile() {
   }
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 relative overflow-hidden">
+    <div ref={containerRef} className="min-h-screen bg-unified relative overflow-hidden">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -440,10 +440,10 @@ export default function CEOProfile() {
         >
           <h3 className="text-3xl font-bold text-primary-900 mb-8 text-center">GET Iᑎ TOᑌᑕᕼ</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 border border-primary-500/30 overflow-hidden shadow-2xl">
+            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
               <Mail className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-primary-900 mb-2">EᗰᗩIᒪ</h4>
-              <p className="text-sm text-neutral-600 mb-3">jerrylarubafestus@gmail.com</p>
+              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">EᗰᗩIᒪ</h4>
+              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
               <a
                 href="mailto:jerrylarubafestus@gmail.com"
                 className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
@@ -452,10 +452,10 @@ export default function CEOProfile() {
               </a>
             </div>
 
-            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 border border-primary-500/30 overflow-hidden shadow-2xl">
+            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
               <Phone className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-primary-900 mb-2">ᑭᕼOᑎE</h4>
-              <p className="text-sm text-neutral-600 mb-3">+256774948086</p>
+              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᑭᕼOᑎE</h4>
+              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256774948086</p>
               <a
                 href="tel:+256774948086"
                 className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
@@ -464,10 +464,10 @@ export default function CEOProfile() {
               </a>
             </div>
 
-            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 border border-primary-500/30 overflow-hidden shadow-2xl">
+            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
               <IconBrandWhatsapp className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-primary-900 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
-              <p className="text-sm text-neutral-600 mb-3">+256755915549</p>
+              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᗯᕼᗩTᔕᗩᑭᑭ</h4>
+              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256755915549</p>
               <a
                 href="https://wa.me/256755915549"
                 target="_blank"
@@ -478,10 +478,10 @@ export default function CEOProfile() {
               </a>
             </div>
 
-            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 border border-primary-500/30 overflow-hidden shadow-2xl">
+            <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
               <MapPin className="w-8 h-8 text-primary-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-primary-900 mb-2">ᒪOᑕᗩTIOᑎ</h4>
-              <p className="text-sm text-neutral-600 mb-3">Kampala, Uganda</p>
+              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᒪOᑕᗩTIOᑎ</h4>
+              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Kampala, Uganda</p>
               <a
                 href="https://maps.google.com/?q=Kampala,Uganda"
                 target="_blank"

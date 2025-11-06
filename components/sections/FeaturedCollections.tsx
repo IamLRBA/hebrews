@@ -197,14 +197,14 @@ export default function FeaturedCollections() {
                   className="group relative min-w-[280px]"
                 >
                   <motion.div
-                    className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-100 h-full flex flex-col relative"
+                    className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40 h-full flex flex-col relative"
                     whileHover={{
                       boxShadow: "0 20px 40px rgba(139, 69, 19, 0.2)"
                     }}
                   >
                     {/* Animated background gradient on hover */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-primary-50 to-accent-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      className="absolute inset-0 bg-gradient-to-br from-primary-50 to-accent-50 dark:from-primary-700/30 dark:to-accent-700/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       initial={false}
                     />
 
@@ -275,11 +275,11 @@ export default function FeaturedCollections() {
                           transition={{ duration: 0.2 }}
                           className="mb-1"
                         >
-                          <p className="text-primary-500 text-xs font-medium mb-0.5 line-clamp-1">{product.brand}</p>
-                          <h3 className="text-sm sm:text-base font-bold text-primary-900 mb-0.5 line-clamp-2 group-hover:text-primary-600 transition-colors leading-tight">
+                          <p className="text-primary-500 dark:text-primary-300 text-xs font-medium mb-0.5 line-clamp-1">{product.brand}</p>
+                          <h3 className="text-sm sm:text-base font-bold text-primary-900 dark:text-primary-100 mb-0.5 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors leading-tight">
                             {product.name}
                           </h3>
-                          <p className="text-primary-400 text-xs mb-0.5 line-clamp-1">{product.sku}</p>
+                          <p className="text-primary-400 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.sku}</p>
                         </motion.div>
                       </Link>
 
@@ -291,11 +291,11 @@ export default function FeaturedCollections() {
                           transition={{ delay: index * 0.1 + 0.6 }}
                           className="flex items-baseline space-x-1 flex-wrap"
                         >
-                          <span className="text-base sm:text-lg font-bold text-primary-700">
+                          <span className="text-base sm:text-lg font-bold text-primary-700 dark:text-primary-200">
                             UGX {product.price_ugx.toLocaleString()}
                           </span>
                           {hasDiscount && (
-                            <span className="text-xs text-primary-400 line-through">
+                            <span className="text-xs text-primary-400 dark:text-primary-500 line-through">
                               UGX {product.original_price!.toLocaleString()}
                             </span>
                           )}
@@ -333,7 +333,7 @@ export default function FeaturedCollections() {
                       <motion.div>
                         <Link
                           href={`/products/${categorySlug}`}
-                          className="group/view-collection mt-2 text-center text-xs text-primary-600 hover:text-primary-800 font-medium flex items-center justify-center space-x-1 transition-all duration-200 rounded-lg px-2 py-1 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+                          className="group/view-collection mt-2 text-center text-xs text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 font-medium flex items-center justify-center space-x-1 transition-all duration-200 rounded-lg px-2 py-1 hover:bg-primary-50 dark:hover:bg-primary-900/20"
                         >
                           <span>View Collection</span>
                           <motion.span

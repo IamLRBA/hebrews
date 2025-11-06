@@ -78,7 +78,7 @@ export default function AboutUs() {
   const titleScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.1, 1])
 
   return (
-    <section ref={containerRef} className="section bg-white dark:bg-neutral-900">
+    <section ref={containerRef} className="section bg-unified">
       <div className="container-custom">
         {/* Section Header */}
         <motion.div

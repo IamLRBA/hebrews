@@ -131,7 +131,7 @@ export default function CheckoutPage() {
   const total = subtotal + deliveryFee
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-900/20 via-primary-900 to-accent-900/20 pt-24 pb-20">
+    <div className="min-h-screen bg-unified pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <motion.div

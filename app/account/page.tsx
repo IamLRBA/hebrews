@@ -108,14 +108,14 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 pt-24 pb-20">
+    <div className="min-h-screen bg-unified pt-24 pb-20">
       <div className="container-custom">
         <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 mb-8">
           <span className="text-base font-medium">⟸</span>
           <span>Back to Home</span>
         </Link>
 
-        <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700">
           {/* Header */}
           <div className="bg-gradient-to-r from-primary-600 to-primary-800 p-8 text-white">
             <div className="flex items-center space-x-4">

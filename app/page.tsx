@@ -84,7 +84,7 @@ export default function Home() {
 
   return (
     <>
-      <main className="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 relative overflow-hidden">
+      <main className="min-h-screen bg-unified relative overflow-hidden">
         {/* Unified Background Elements - applied to entire page */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
           <motion.div
@@ -269,7 +269,7 @@ export default function Home() {
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.2 }}
-                      className="inline-flex items-center space-x-3 text-primary-600 text-sm md:text-base bg-gradient-to-r from-primary-100 to-accent-100 px-6 py-3 rounded-full mb-6 shadow-lg border border-primary-200/50"
+                      className="inline-flex items-center space-x-3 text-primary-600 dark:text-primary-300 text-sm md:text-base bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 px-6 py-3 rounded-full mb-6 shadow-lg border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm"
                     >
                       <motion.span
                         animate={{ rotate: [0, 10, -10, 0] }}

@@ -171,7 +171,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-primary-100 to-primary-200 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 pt-24 pb-20">
+    <div className="min-h-screen bg-unified pt-24 pb-20">
       <div className="container-custom">
         <div className="flex items-center justify-between mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700">
@@ -192,36 +192,36 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Products</p>
-                <p className="text-3xl font-bold text-primary-800">{stats.totalProducts}</p>
+                <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalProducts}</p>
               </div>
-              <Package className="w-12 h-12 text-primary-600" />
+              <Package className="w-12 h-12 text-primary-600 dark:text-primary-400" />
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
-                <p className="text-3xl font-bold text-primary-800">{stats.totalOrders}</p>
+                <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalOrders}</p>
               </div>
-              <ShoppingCart className="w-12 h-12 text-primary-600" />
+              <ShoppingCart className="w-12 h-12 text-primary-600 dark:text-primary-400" />
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Revenue</p>
-                <p className="text-3xl font-bold text-primary-800">UGX {stats.totalRevenue.toLocaleString()}</p>
+                <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">UGX {stats.totalRevenue.toLocaleString()}</p>
               </div>
-              <DollarSign className="w-12 h-12 text-primary-600" />
+              <DollarSign className="w-12 h-12 text-primary-600 dark:text-primary-400" />
             </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">Items Sold</p>
-                <p className="text-3xl font-bold text-primary-800">{stats.totalItemsSold}</p>
+                <p className="text-3xl font-bold text-primary-800 dark:text-primary-200">{stats.totalItemsSold}</p>
               </div>
-              <BarChart3 className="w-12 h-12 text-primary-600" />
+              <BarChart3 className="w-12 h-12 text-primary-600 dark:text-primary-400" />
             </div>
           </motion.div>
         </div>

@@ -110,7 +110,7 @@ export default function ProductCategoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-900/20 via-primary-900 to-accent-900/20 relative overflow-hidden pt-24">
+    <div className="min-h-screen bg-unified relative overflow-hidden pt-24">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}

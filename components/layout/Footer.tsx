@@ -6,7 +6,7 @@ import { SOCIAL_LINKS } from '@/lib/constants/social'
 
 export default function Footer() {
   return (
-    <footer className="footer relative bg-gradient-to-br from-primary-800 to-primary-900 text-white overflow-hidden">
+    <footer className="footer relative bg-gradient-to-br from-primary-800 to-primary-900 dark:from-neutral-800 dark:to-neutral-900 text-white overflow-hidden border-t border-primary-700/30 dark:border-neutral-700">
       <div className="footer-wave"></div>
       <div className="footer-content container-custom relative z-10">
         <div className="social-links">

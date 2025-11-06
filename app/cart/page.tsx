@@ -59,7 +59,7 @@ export default function CartPage() {
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-900/20 via-primary-900 to-accent-900/20 pt-24 pb-20">
+    <div className="min-h-screen bg-unified pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <motion.div

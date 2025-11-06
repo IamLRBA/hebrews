@@ -45,7 +45,7 @@ export default function OrderConfirmationPage() {
 
   if (!order) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-900/20 via-primary-900 to-accent-900/20">
+      <div className="min-h-screen flex items-center justify-center bg-unified">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-4">Order Not Found</h1>
           <p className="text-primary-300 mb-8">We couldn't find an order with that ID.</p>
@@ -58,7 +58,7 @@ export default function OrderConfirmationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-900/20 via-primary-900 to-accent-900/20 py-20 px-4 print:bg-white print:py-0">
+    <div className="min-h-screen bg-unified py-20 px-4 print:bg-white print:py-0">
       <div className="max-w-4xl mx-auto">
         {/* Success Icon */}
         <motion.div

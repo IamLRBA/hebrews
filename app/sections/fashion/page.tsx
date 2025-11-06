@@ -186,7 +186,7 @@ export default function FashionPage() {
   }, [])
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-primary-900/20 via-primary-900 to-accent-900/20 relative overflow-hidden">
+    <div ref={containerRef} className="min-h-screen bg-unified relative overflow-hidden">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
