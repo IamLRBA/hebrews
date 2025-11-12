@@ -271,13 +271,11 @@ export default function CEOProfile() {
                       }`}>
                         <button
                           onClick={() => toggleSkill(skill.category)}
-                          className={`flex items-center space-x-2 text-primary-600 hover:text-primary-700 transition-colors duration-300 group ${
-                            index % 2 === 0 
-                              ? 'justify-start' // Left aligned - both mobile and desktop
-                              : 'justify-end ml-auto' // Right aligned - both mobile and desktop
+                          className={`btn btn-outline btn-hover-secondary-filled text-sm font-medium gap-2 inline-flex items-center ${
+                            index % 2 === 0 ? 'justify-start' : 'justify-end ml-auto'
                           }`}
                         >
-                         <span className="text-sm font-medium">
+                         <span>
                            {expandedSkills[skill.category] ? 'Read Less' : 'Read More'}
                          </span>
                          <div className="w-5 h-5 flex items-center justify-center">
@@ -286,7 +284,7 @@ export default function CEOProfile() {
                                initial={{ rotate: 0 }}
                                animate={{ rotate: 45 }}
                                transition={{ duration: 0.3 }}
-                               className="text-lg font-bold"
+                               className="text-lg font-bold leading-none"
                              >
                                −
                              </motion.div>
@@ -295,7 +293,7 @@ export default function CEOProfile() {
                                initial={{ rotate: 0 }}
                                animate={{ rotate: 0 }}
                                transition={{ duration: 0.3 }}
-                               className="text-lg font-bold"
+                               className="text-lg font-bold leading-none"
                              >
                                +
                              </motion.div>
@@ -446,7 +444,7 @@ export default function CEOProfile() {
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
               <a
                 href="mailto:jerrylarubafestus@gmail.com"
-                className="btn btn-primary inline-flex items-center justify-center px-6"
+                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"
               >
                 Email Me
               </a>
@@ -458,7 +456,7 @@ export default function CEOProfile() {
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256774948086</p>
               <a
                 href="tel:+256774948086"
-                className="btn btn-primary inline-flex items-center justify-center px-6"
+                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"
               >
                 Call Me
               </a>
@@ -472,7 +470,7 @@ export default function CEOProfile() {
                 href="https://wa.me/256755915549"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-primary inline-flex items-center justify-center px-6"
+                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"
               >
                 Message Me
               </a>
@@ -486,7 +484,7 @@ export default function CEOProfile() {
                 href="https://maps.google.com/?q=Kampala,Uganda"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-primary inline-flex items-center justify-center px-6"
+                className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"
               >
                 Find Me
                 </a>
