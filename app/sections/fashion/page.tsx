@@ -372,15 +372,15 @@ export default function FashionPage() {
             {/* Interactive Moodboard */}
             <div className="space-y-6">
               {/* Mood Selector */}
-              <div className="flex justify-center space-x-4">
+              <div className="flex justify-center flex-wrap gap-3">
                 {Object.keys(moodboardData).map((mood) => (
                   <button
                     key={mood}
                     onClick={() => changeMood(mood)}
-                    className={`btn transition-all duration-300 capitalize ${
+                    className={`btn transition-all duration-300 capitalize px-5 py-2 ${
                       selectedMood === mood
-                        ? 'btn-primary'
-                        : 'btn-outline'
+                        ? 'btn-secondary'
+                        : 'btn-outline btn-hover-secondary-filled'
                     }`}
                   >
                     {mood}
@@ -472,7 +472,7 @@ export default function FashionPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="btn btn-outline text-lg px-8 py-4"
+              className="btn btn-outline btn-hover-secondary-filled text-lg px-8 py-4"
             >
               Browse Collection
             </motion.button>

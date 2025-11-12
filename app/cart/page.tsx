@@ -206,14 +206,14 @@ export default function CartPage() {
 
                 <Link
                   href="/checkout"
-                  className="btn btn-secondary w-full text-lg font-semibold justify-center mb-4"
+                  className="btn btn-secondary btn-hover-primary-outline w-full text-lg font-semibold justify-center mb-4"
                 >
                   Proceed to Checkout
                 </Link>
 
                 <Link
                   href="/sections/fashion"
-                  className="btn btn-primary w-full font-medium justify-center"
+                  className="btn btn-primary btn-hover-secondary-filled w-full font-medium justify-center"
                 >
                   Continue Shopping
                 </Link>

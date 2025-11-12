@@ -363,7 +363,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || cart.length === 0}
-                className="btn btn-secondary w-full text-lg font-semibold justify-center"
+                className="btn btn-primary btn-hover-secondary-filled w-full text-lg font-semibold justify-center"
               >
                 {isSubmitting ? 'Processing...' : 'Confirm Order'}
               </button>

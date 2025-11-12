@@ -235,7 +235,7 @@ export default function AccountPage() {
                   <div className="text-center py-12">
                     <Package className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
                     <p className="text-neutral-600 dark:text-neutral-400 mb-4">No orders yet</p>
-                    <Link href="/sections/fashion" className="btn btn-primary">
+                    <Link href="/sections/fashion" className="btn btn-outline btn-hover-secondary-filled">
                       Start Shopping
                     </Link>
                   </div>
@@ -323,7 +323,7 @@ export default function AccountPage() {
                         required
                       />
                     </div>
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn-outline btn-hover-secondary-filled">
                       Submit Review
                     </button>
                   </form>
@@ -429,7 +429,7 @@ export default function AccountPage() {
                         onChange={handleImageUpload}
                         className="hidden"
                       />
-                      <div className="btn btn-primary w-full justify-center">
+                      <div className="btn btn-outline btn-hover-secondary-filled w-full justify-center">
                         {profileImage ? 'Change Photo' : 'Upload Photo'}
                       </div>
                     </label>
@@ -445,13 +445,13 @@ export default function AccountPage() {
                         setProfileImage(user.profileImage || '')
                         setProfileImageFile(null)
                       }}
-                      className="btn btn-primary flex-1 justify-center"
+                      className="btn btn-outline btn-hover-secondary-filled flex-1 justify-center"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleSaveProfile}
-                      className="btn btn-secondary flex-1 justify-center"
+                      className="btn btn-primary btn-hover-secondary-filled flex-1 justify-center"
                     >
                       Save Changes
                     </button>

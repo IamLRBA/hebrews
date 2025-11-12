@@ -227,7 +227,9 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-secondary w-full justify-center text-base font-semibold"
+                  className={`btn btn-outline btn-hover-secondary-filled w-full justify-center text-base font-semibold ${
+                    loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
+                  }`}
                 >
                   {loading ? 'Signing in...' : 'Sign In'}
                 </button>
@@ -328,7 +330,7 @@ export default function LoginPage() {
                           onChange={handleImageUpload}
                           className="hidden"
                         />
-                        <div className="btn btn-primary justify-center px-6">
+                        <div className="btn btn-outline btn-hover-secondary-filled justify-center px-6">
                           {profileImage ? 'Change Photo' : 'Upload Photo'}
                         </div>
                       </label>
@@ -393,7 +395,9 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn btn-secondary w-full justify-center text-base font-semibold"
+                  className={`btn btn-outline btn-hover-secondary-filled w-full justify-center text-base font-semibold ${
+                    loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
+                  }`}
                 >
                   {loading ? 'Creating account...' : 'Create Account'}
                 </button>

@@ -238,7 +238,7 @@ export default function ProductCategoryPage() {
                       )}
                     </div>
                     <div className="flex items-center space-x-2 mt-2 sm:mt-3">
-                      <button className="btn btn-secondary flex-1 text-xs sm:text-sm font-medium gap-1 sm:gap-2 justify-center">
+                      <button className="btn btn-outline btn-hover-secondary-filled flex-1 text-xs sm:text-sm font-medium gap-1 sm:gap-2 justify-center">
                         <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
                         <span className="hidden sm:inline">Quick View</span>
                         <span className="sm:hidden">View</span>
@@ -397,7 +397,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
               {product.images.length > 0 && (
                 <button
                   onClick={toggleFullscreen}
-                  className="absolute top-4 right-4 p-2 bg-primary-700/80 hover:bg-primary-700 text-white rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
+                  className="absolute top-4 right-4 btn btn-circle btn-hover-secondary-filled opacity-0 group-hover:opacity-100"
                   aria-label="Fullscreen"
                 >
                   {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
@@ -491,7 +491,9 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             <button
               onClick={addToCart}
               disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
-              className="btn btn-secondary w-full text-lg font-semibold justify-center gap-2"
+              className={`btn btn-outline btn-hover-secondary-filled w-full text-lg font-semibold justify-center gap-2 ${
+                isAddingToCart || addedToCart || isInCart || product.stock_qty === 0 ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
+              }`}
             >
               <ShoppingCart className="w-5 h-5" />
               <span>

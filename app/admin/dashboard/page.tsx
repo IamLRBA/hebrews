@@ -230,7 +230,7 @@ export default function AdminDashboard() {
         <div className="mb-6">
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            className="btn btn-primary flex items-center space-x-2"
+            className="btn btn-outline btn-hover-secondary-filled flex items-center space-x-2"
           >
             <Plus className="w-5 h-5" />
             <span>{showAddForm ? 'Cancel' : 'Add New Product'}</span>
@@ -410,7 +410,7 @@ export default function AdminDashboard() {
                   className="w-full px-4 py-3 border rounded-lg dark:bg-neutral-700 dark:text-white"
                 />
               </div>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-outline btn-hover-secondary-filled">
                 Add Product
               </button>
             </form>

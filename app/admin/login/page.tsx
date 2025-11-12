@@ -103,7 +103,9 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-secondary w-full justify-center text-base font-semibold"
+            className={`btn btn-outline btn-hover-secondary-filled w-full justify-center text-base font-semibold ${
+              loading ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
+            }`}
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>

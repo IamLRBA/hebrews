@@ -158,7 +158,7 @@ export default function FashionServices() {
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
                     <div className="text-6xl font-bold text-primary-400">{s.number}</div>
                     <h3 className="text-3xl font-bold mt-2 text-white">{s.title}</h3>
-                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary-500/20 to-accent-500/20 text-primary-300 hover:text-white border border-primary-500/30 rounded-full px-6 py-3 transition-all duration-300 hover:bg-gradient-to-r hover:from-primary-500/30 hover:to-accent-500/30 mt-4">
+                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
                       <span>{expandedId === s.id ? 'Read Less' : 'Read More'}</span>
                       <AnimatePresence mode="wait">{expandedId === s.id ? <motion.div key="m" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}><Minus size={20} /></motion.div> : <motion.div key="p" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}><Plus size={20} /></motion.div>}</AnimatePresence>
                     </motion.button>
@@ -221,7 +221,7 @@ export default function FashionServices() {
                                         initial={{ y: 10, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{ delay: 0.15 }}
-                                        className="btn btn-secondary justify-center px-6 py-2 text-sm font-medium"
+                                        className="btn btn-outline btn-hover-secondary-filled justify-center px-6 py-2 text-sm font-medium"
                                       >
                                         View Collection
                                       </motion.div>
