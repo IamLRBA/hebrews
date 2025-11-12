@@ -9,7 +9,7 @@ export interface EmailConfig {
 
 export class EmailTemplates {
   static buyerConfirmation(order: Order): EmailConfig {
-    const subject = `Order Confirmed - ${order.id} - MysteryPieces`
+    const subject = `Order Confirmed - ${order.id} - MysticalPIECES`
     
     const html = `
 <!DOCTYPE html>
@@ -33,7 +33,7 @@ export class EmailTemplates {
   <div class="container">
     <div class="header">
       <h1>Order Confirmed! 🎉</h1>
-      <p>Thank you for shopping with MysteryPieces</p>
+      <p>Thank you for shopping with MysticalPIECES</p>
     </div>
     
     <div class="content">
@@ -91,13 +91,13 @@ export class EmailTemplates {
       
       <p>If you have any questions, please don't hesitate to contact us.</p>
       
-      <p>Thank you for choosing MysteryPieces!</p>
+      <p>Thank you for choosing MysticalPIECES!</p>
     </div>
     
     <div class="footer">
-      <p>MysteryPieces | Thrifted Fashion & Style Curators</p>
+      <p>MysticalPIECES | Mystical Thrift Fashion & Soulful Style Curation</p>
       <p>Email: jerrylarubafestus@gmail.com | Phone: +256 755 915 549</p>
-      <p>© ${new Date().getFullYear()} MysteryPieces. All rights reserved.</p>
+      <p>© ${new Date().getFullYear()} MysticalPIECES. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -105,7 +105,7 @@ export class EmailTemplates {
     `
     
     const text = `
-Order Confirmed - MysteryPieces
+Order Confirmed - MysticalPIECES
 
 Dear ${order.customer.fullName},
 
@@ -139,9 +139,9 @@ ${order.notes ? `- Notes: ${order.notes}` : ''}
 Payment: Cash on Delivery
 Delivery: Expected within 2-3 business days
 
-Thank you for choosing MysteryPieces!
+Thank you for choosing MysticalPIECES!
 
-MysteryPieces
+MysticalPIECES
 Email: jerrylarubafestus@gmail.com
 Phone: +256 755 915 549
     `
@@ -155,7 +155,7 @@ Phone: +256 755 915 549
   }
 
   static sellerNotification(order: Order): EmailConfig {
-    const subject = `New Order Received - ${order.id} - MysteryPieces`
+    const subject = `New Order Received - ${order.id} - MysticalPIECES`
     
     const html = `
 <!DOCTYPE html>
@@ -246,8 +246,8 @@ Phone: +256 755 915 549
     </div>
     
     <div class="footer">
-      <p>MysteryPieces | Admin Notification</p>
-      <p>© ${new Date().getFullYear()} MysteryPieces. All rights reserved.</p>
+      <p>MysticalPIECES | Admin Notification</p>
+      <p>© ${new Date().getFullYear()} MysticalPIECES. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -255,7 +255,7 @@ Phone: +256 755 915 549
     `
     
     const text = `
-New Order Received - MysteryPieces
+New Order Received - MysticalPIECES
 
 URGENT: A new order has been placed and requires your attention.
 

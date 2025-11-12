@@ -50,12 +50,12 @@ export default function Home() {
   useEffect(() => {
     // Check if this is the first visit
     if (typeof window !== 'undefined') {
-      const hasVisited = localStorage.getItem('mysterypieces-visited')
+      const hasVisited = localStorage.getItem('mysticalpieces-visited')
       
       if (!hasVisited) {
         // First time visitor - show loading animation
         setIsLoading(true)
-        localStorage.setItem('mysterypieces-visited', 'true')
+        localStorage.setItem('mysticalpieces-visited', 'true')
         
         const timer = setTimeout(() => {
           setIsLoading(false)
@@ -194,11 +194,11 @@ export default function Home() {
                       className="mb-8"
                     >
                       <h1 className="text-8xl md:text-8xl font-bold mb-6">
-                        <span className="text-primary-800">𝑀𝑦𝑠𝑡𝑒𝑟𝑦</span>
+                        <span className="text-primary-800">𝑀𝑦𝑠𝑡𝑖𝑐𝑎𝑙</span>
                         <span className="text-accent-600">PIΞCΞS</span>
                       </h1>
                       <p className="text-lg text-primary-600 max-w-2xl mx-auto">
-                        Curated pieces that reveal your unique story
+                        Wear the unseen future. Feel the divine in every thread.
                       </p>
                     </motion.div>
 
@@ -274,7 +274,7 @@ export default function Home() {
                       >
                         ✧
                       </motion.span>
-                      <span className="font-medium">Click the portal below to explore more products</span>
+                      <span className="font-medium">Step into the portal to explore future-forward thrift finds</span>
                       <motion.span
                         animate={{ y: [0, 5, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
@@ -294,7 +294,7 @@ export default function Home() {
                     E᙭ᑭᒪOᖇE <span className="text-accent-600">the Portals</span>
                     </h2>
                     <p className="text-xl text-primary-700 max-w-3xl mx-auto">
-                      Discover hidden treasures—each piece waiting to reveal its story
+                      Discover future-ready thrift pieces, each piece waiting to reveal its story
                     </p>
                   </motion.div>
 

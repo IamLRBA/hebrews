@@ -4,14 +4,14 @@ export default function StructuredData() {
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'MysteryPieces',
-    url: 'https://mysterypieces.com',
-    logo: 'https://mysterypieces.com/assets/images/logo.png',
-    description: 'Curated fashion pieces that reveal timeless style through sustainable practices.',
+    name: 'MysticalPIECES',
+    url: 'https://mysticalpieces.com',
+    logo: 'https://mysticalpieces.com/assets/images/logo.png',
+    description: 'Futuristic thrift fashion curated for seekers of intuitive style, conscious elegance, and modern connection.',
     sameAs: [
-      'https://www.instagram.com/mysterypieces',
-      'https://www.facebook.com/mysterypieces',
-      'https://twitter.com/mysterypieces',
+      'https://www.instagram.com/mysticalpieces',
+      'https://www.facebook.com/mysticalpieces',
+      'https://twitter.com/mysticalpieces',
     ],
     contactPoint: {
       '@type': 'ContactPoint',
@@ -23,13 +23,13 @@ export default function StructuredData() {
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'MysteryPieces',
-    url: 'https://mysterypieces.com',
+    name: 'MysticalPIECES',
+    url: 'https://mysticalpieces.com',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://mysterypieces.com/products?q={search_term_string}',
+        urlTemplate: 'https://mysticalpieces.com/products?q={search_term_string}',
       },
       'query-input': 'required name=search_term_string',
     },
@@ -38,10 +38,10 @@ export default function StructuredData() {
   const storeSchema = {
     '@context': 'https://schema.org',
     '@type': 'Store',
-    name: 'MysteryPieces',
-    image: 'https://mysterypieces.com/assets/images/og-image.jpg',
-    description: 'Curated fashion pieces that reveal timeless style through sustainable practices.',
-    url: 'https://mysterypieces.com',
+    name: 'MysticalPIECES',
+    image: 'https://mysticalpieces.com/assets/images/og-image.jpg',
+    description: 'Futuristic thrift fashion curated for seekers of intuitive style, conscious elegance, and modern connection.',
+    url: 'https://mysticalpieces.com',
     priceRange: '$$',
     address: {
       '@type': 'PostalAddress',

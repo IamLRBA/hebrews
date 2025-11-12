@@ -35,9 +35,9 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
       
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="inline-flex items-center space-x-2 bg-primary-800/20 backdrop-blur-sm hover:bg-primary-800/30 text-primary-800 px-4 py-2 rounded-full transition-colors duration-300 mb-4 border border-primary-500/20"
+        className={`btn ${isExpanded ? 'btn-secondary' : 'btn-primary'} gap-2 text-sm mb-4`}
       >
-        <span className="text-sm font-medium">
+        <span className="font-medium">
           {isExpanded ? 'Hide Statement' : 'Show Statement'}
         </span>
         {isExpanded ? (

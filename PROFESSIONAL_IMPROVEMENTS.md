@@ -1,6 +1,6 @@
 # Professional Improvements Summary
 
-This document outlines all the professional improvements made to the MysteryPieces website.
+This document outlines all the professional improvements made to the MysticalPIECES website.
 
 ## ✅ Completed Improvements
 

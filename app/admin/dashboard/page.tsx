@@ -421,7 +421,7 @@ export default function AdminDashboard() {
         <div className="mb-6">
           <button
             onClick={() => setShowRemoveForm(!showRemoveForm)}
-            className="btn bg-red-600 hover:bg-red-700 text-white flex items-center space-x-2"
+            className="btn btn-danger flex items-center space-x-2"
           >
             <Trash2 className="w-5 h-5" />
             <span>{showRemoveForm ? 'Cancel' : 'Remove Product'}</span>
@@ -476,7 +476,7 @@ export default function AdminDashboard() {
                   {removeReason && (
                     <button
                       onClick={() => handleDeleteProduct(selectedRemoveProduct.id, selectedRemoveProduct.category, selectedRemoveProduct.section, removeReason)}
-                      className="btn bg-red-600 hover:bg-red-700 text-white w-full"
+                      className="btn btn-danger w-full"
                     >
                       Remove Product
                     </button>

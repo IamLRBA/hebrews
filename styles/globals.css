@@ -258,25 +258,148 @@
 }
 
 @layer components {
-  /* Button Styles - Original Theme */
+  /* Button Styles - Mystical Future Gradient */
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    --btn-border-gradient: linear-gradient(135deg, rgba(234, 224, 200, 0.95), rgba(139, 122, 90, 0.95), rgba(69, 48, 37, 0));
+    --btn-surface: rgba(139, 122, 90, 0.08);
+    --btn-surface-hover: linear-gradient(135deg, rgba(234, 224, 200, 0.95), rgba(139, 122, 90, 0.9));
+    --btn-text-color: var(--color-accent-600);
+    --btn-text-hover: var(--color-text-inverse);
+    @apply relative inline-flex items-center justify-center px-6 py-3 rounded-full font-medium tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
+    color: var(--btn-text-color);
+    isolation: isolate;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .btn::before,
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transition: all 0.45s ease;
+    z-index: -1;
+  }
+
+  .btn::before {
+    padding: 1.5px;
+    background: var(--btn-border-gradient);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+
+  .btn::after {
+    background: var(--btn-surface);
+    z-index: -2;
+  }
+
+  .btn:hover::before,
+  .btn:focus-visible::before {
+    background-position: 100% 50%;
+  }
+
+  .btn:hover::after,
+  .btn:focus-visible::after {
+    background: var(--btn-surface-hover);
+  }
+
+  .btn:hover,
+  .btn:focus-visible {
+    color: var(--btn-text-hover);
+  }
+
+  .btn:disabled::before {
+    opacity: 0.4;
+  }
+
+  .btn:disabled::after {
+    background: rgba(96, 96, 96, 0.12);
+  }
+
+  .btn:disabled {
+    color: var(--color-neutral-400) !important;
+  }
+
+  .dark .btn {
+    --btn-text-color: var(--color-accent-200);
+    --btn-surface: rgba(255, 255, 255, 0.06);
+    --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-primary {
-    @apply border-2 border-primary-600 text-primary-600 bg-transparent rounded-full px-6 py-3 transition-all duration-300 hover:bg-primary-600 hover:text-white focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    --btn-border-gradient: linear-gradient(130deg, rgba(242, 232, 210, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
+    --btn-surface: rgba(139, 122, 90, 0.06);
+    --btn-surface-hover: linear-gradient(130deg, rgba(242, 232, 210, 0.98), rgba(139, 122, 90, 0.92));
+    --btn-text-color: var(--color-accent-700);
+    --btn-text-hover: var(--color-text-inverse);
+  }
+
+  .dark .btn-primary {
+    --btn-text-color: var(--color-accent-100);
+    --btn-surface: rgba(255, 255, 255, 0.04);
+    --btn-surface-hover: linear-gradient(130deg, rgba(234, 224, 200, 0.85), rgba(139, 122, 90, 0.9));
+    --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-secondary {
-    @apply border-2 border-primary-600 bg-primary-600 text-white rounded-full px-6 py-3 transition-all duration-300 hover:bg-transparent hover:text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    --btn-border-gradient: linear-gradient(135deg, rgba(139, 122, 90, 0.35), rgba(69, 48, 37, 0.65), rgba(234, 224, 200, 0.2));
+    --btn-surface: linear-gradient(135deg, rgba(139, 122, 90, 0.85), rgba(69, 48, 37, 0.8));
+    --btn-surface-hover: linear-gradient(135deg, rgba(139, 122, 90, 0.92), rgba(69, 48, 37, 0.88));
+    --btn-text-color: var(--color-text-inverse);
+    --btn-text-hover: var(--color-accent-50);
+  }
+
+  .dark .btn-secondary {
+    --btn-surface: linear-gradient(135deg, rgba(168, 155, 111, 0.85), rgba(111, 78, 55, 0.85));
+    --btn-surface-hover: linear-gradient(135deg, rgba(234, 224, 200, 0.9), rgba(139, 122, 90, 0.88));
+    --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-outline {
-    @apply border-2 border-primary-600 text-primary-600 bg-transparent rounded-full px-6 py-3 transition-all duration-300 hover:bg-primary-600 hover:text-white focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    --btn-border-gradient: linear-gradient(135deg, rgba(200, 188, 160, 0.95), rgba(168, 155, 111, 0.95), rgba(69, 48, 37, 0));
+    --btn-surface: transparent;
+    --btn-surface-hover: linear-gradient(135deg, rgba(200, 188, 160, 0.85), rgba(168, 155, 111, 0.8));
+    --btn-text-color: var(--color-accent-700);
+    --btn-text-hover: var(--color-text-inverse);
+  }
+
+  .dark .btn-outline {
+    --btn-text-color: var(--color-accent-100);
+    --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-ghost {
-    @apply text-primary-600 hover:bg-primary-100 focus:ring-primary-500 rounded-full px-6 py-3 transition-all duration-300;
+    --btn-border-gradient: linear-gradient(135deg, rgba(200, 188, 160, 0.45), rgba(139, 122, 90, 0.5), rgba(69, 48, 37, 0));
+    --btn-surface: transparent;
+    --btn-surface-hover: rgba(139, 122, 90, 0.15);
+    --btn-text-color: var(--color-accent-700);
+    --btn-text-hover: var(--color-accent-900);
+  }
+
+  .dark .btn-ghost {
+    --btn-text-color: var(--color-accent-100);
+    --btn-text-hover: var(--color-text-primary);
+    --btn-surface-hover: rgba(234, 224, 200, 0.18);
+  }
+
+  .btn-danger {
+    --btn-border-gradient: linear-gradient(135deg, rgba(210, 120, 90, 0.95), rgba(139, 60, 37, 0.95), rgba(50, 20, 14, 0));
+    --btn-surface: rgba(139, 60, 37, 0.12);
+    --btn-surface-hover: linear-gradient(135deg, rgba(210, 120, 90, 0.92), rgba(139, 60, 37, 0.88));
+    --btn-text-color: #6f2a16;
+    --btn-text-hover: var(--color-text-inverse);
+  }
+
+  .dark .btn-danger {
+    --btn-text-color: rgba(255, 230, 220, 0.92);
+    --btn-surface: rgba(210, 120, 90, 0.28);
+    --btn-surface-hover: linear-gradient(135deg, rgba(210, 120, 90, 0.92), rgba(139, 60, 37, 0.9));
+    --btn-text-hover: var(--color-text-primary);
   }
 
   /* Text Gradient */

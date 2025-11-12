@@ -363,11 +363,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting || cart.length === 0}
-                className={`w-full py-4 rounded-lg font-bold text-lg transition-all duration-200 ${
-                  cart.length === 0
-                    ? 'bg-gray-500 cursor-not-allowed'
-                    : 'bg-primary-500 hover:bg-primary-600 text-white'
-                }`}
+                className="btn btn-secondary w-full text-lg font-semibold justify-center"
               >
                 {isSubmitting ? 'Processing...' : 'Confirm Order'}
               </button>

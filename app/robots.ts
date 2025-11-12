@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/'],
       },
     ],
-    sitemap: 'https://mysterypieces.com/sitemap.xml',
+    sitemap: 'https://mysticalpieces.com/sitemap.xml',
   }
 }
 

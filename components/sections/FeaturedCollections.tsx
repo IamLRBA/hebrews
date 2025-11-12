@@ -307,11 +307,7 @@ export default function FeaturedCollections() {
                         disabled={isAdding || isInCart || product.stock_qty === 0}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className={`w-full py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1 transition-all duration-200 mb-3 ${
-                          isInCart || product.stock_qty === 0
-                            ? 'bg-gray-400 cursor-not-allowed text-white'
-                            : 'bg-primary-600 hover:bg-primary-700 text-white hover:shadow-lg'
-                        }`}
+                        className="btn btn-secondary w-full text-xs font-semibold justify-center gap-2 mb-3 py-2"
                       >
                         <motion.div
                           animate={isAdding ? { rotate: 360 } : {}}

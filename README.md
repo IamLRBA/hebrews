@@ -1,5 +1,5 @@
 
-# MysteryPieces - Portfolio Website
+# MysticalPIECES - Portfolio Website
 
 A stunning, interactive portfolio website showcasing five major skill categories: Architecture, Music & Poetry, Art & Design, Software Development, and Fashion.
 
@@ -311,7 +311,7 @@ For questions or support:
 
 ---
 
-**Built with ♡ by MysteryPieces**
+**Built with ♡ by MysticalPIECES**
 *Where creativity meets craftsmanship across five dimensions of human expression* 
 
 ---

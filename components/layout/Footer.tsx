@@ -21,7 +21,8 @@ export default function Footer() {
         </div>
         <div className="footer-divider"></div>
         <div className="copyright-section">
-          <p className="copyright">© {new Date().getFullYear()} MysteryPieces. All rights reserved.</p>
+          <p className="tagline">MysticalPIECES — Style that transcends the ordinary.</p>
+          <p className="copyright">© {new Date().getFullYear()} MysticalPIECES. All rights reserved.</p>
           <p className="copyright2">Designed by <a href="https://github.com/IamLRBA" target="_blank" rel="noopener noreferrer">ᒪᖇᗷᗩ</a></p>
           <div className="legal-links">
             <Link href="/privacy-policy" className="legal-link">Privacy Policy</Link>
@@ -39,6 +40,7 @@ export default function Footer() {
         .social-link:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
         .footer-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%); margin: 2rem 0; }
         .copyright-section { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+        .tagline { font-size: 1rem; color: rgba(255, 255, 255, 0.85); margin: 0; font-weight: 600; letter-spacing: 0.02em; }
         .copyright { font-size: 0.875rem; color: rgba(255, 255, 255, 0.8); margin: 0; }
         .copyright2 { font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); margin: 0; }
         .copyright2 a { color: var(--color-primary-300); text-decoration: none; transition: color 0.3s ease; }

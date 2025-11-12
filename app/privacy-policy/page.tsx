@@ -88,7 +88,7 @@ export default function PrivacyPolicy() {
             Privacy Policy
           </h1>
           <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
-            At MysteryPieces, we are committed to protecting your privacy and ensuring the security of your personal information.
+            At MysticalPIECES, we are committed to protecting your privacy and ensuring the security of your personal information.
           </p>
           <p className="text-sm text-neutral-500 mt-4">
             Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -104,7 +104,7 @@ export default function PrivacyPolicy() {
         >
           <h2 className="text-2xl font-bold text-primary-900 mb-4">Introduction</h2>
           <p className="text-neutral-700 leading-relaxed mb-4">
-            This Privacy Policy describes how MysteryPieces ("we," "us," or "our") collects, uses, and protects your personal information 
+            This Privacy Policy describes how MysticalPIECES ("we," "us," or "our") collects, uses, and protects your personal information 
             when you visit our website, use our services, or interact with us in any way.
           </p>
           <p className="text-neutral-700 leading-relaxed">
@@ -168,7 +168,7 @@ export default function PrivacyPolicy() {
         >
           <Link
             href="/"
-            className="inline-flex items-center px-6 py-3 bg-primary-600 dark:bg-primary-700 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors duration-300 font-medium"
+            className="btn btn-secondary inline-flex items-center justify-center px-8"
           >
             Return to Homepage
           </Link>

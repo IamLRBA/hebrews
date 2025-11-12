@@ -108,9 +108,10 @@ export default function AboutUs() {
         >
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-primary-600 leading-relaxed mb-6">
-              True style emerges from pieces with hidden stories. Our curated collection reveals the extraordinary 
-              within the ordinary—blending vintage elegance with contemporary sophistication. Each piece is carefully 
-              examined for its unique character and potential to become part of your personal narrative.
+              MysticalPIECES began with a vision to connect fashion and meaning—style as a mirror of the self. We roam markets and archives to uncover garments with story, quality, and design integrity. Every find is revived and refined so it feels new for the next wearer.
+            </p>
+            <p className="text-lg text-primary-600 leading-relaxed mb-6">
+              We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. Secondhand becomes forward-looking—an invitation to dress with clarity, confidence, and purpose.
             </p>
             <div className="inline-flex items-center space-x-2 bg-primary-100 px-6 py-3 rounded-full">
               <span className="text-primary-800 font-semibold">Our Core:</span>
@@ -136,7 +137,7 @@ export default function AboutUs() {
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
                   <Image
                     src="/assets/images/team/lrba.jpg"
-                    alt="LRBA - CEO and Founder of MysteryPieces"
+                    alt="LRBA - CEO and Founder of MysticalPIECES"
                     width={128}
                     height={128}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -305,23 +306,23 @@ export default function AboutUs() {
             {[
               {
                 image: "/assets/images/sections/home/values-1.jpg",
-                title: "Sustainability",
-                description: "We champion circular fashion through thoughtful curation. Every piece we discover extends its narrative while reducing waste and preserving stories embedded in quality garments."
-              },
-              {
-                image: "/assets/images/sections/home/values-2.jpg",
-                title: "Excellence",
-                description: "Uncompromising standards guide our curation. Each piece undergoes meticulous examination for condition, craftsmanship, and timeless appeal."
-              },
-              {
-                image: "/assets/images/sections/home/values-3.jpg",
-                title: "Authenticity",
-                description: "We celebrate unique stories each piece carries. Our collection reveals garments that speak to individual expression, helping you discover pieces that resonate with your authentic self."
+                title: "Intuition",
+                description: "We follow subtle cues to choose pieces that resonate now and stay relevant next season."
               },
               {
                 image: "/assets/images/sections/home/values-4.jpg",
-                title: "Collaboration",
-                description: "Your style journey is our partnership. We provide expert guidance and dedicated support as you discover pieces that reveal your unique aesthetic."
+                title: "Connection",
+                description: "Each piece links past and new wardrobes, nurturing a conscious style community."
+              },
+              {
+                image: "/assets/images/sections/home/values-3.jpg",
+                title: "Sustainability",
+                description: "We honor Earth by extending the life of quality garments and reducing fashion waste."
+              },
+              {
+                image: "/assets/images/sections/home/values-2.jpg",
+                title: "Expression",
+                description: "We champion refined self-expression, letting minimal silhouettes deliver bold identities."
               }
             ].map((value, index) => (
               <motion.div
@@ -370,18 +371,18 @@ export default function AboutUs() {
             {[
               {
                 image: "/assets/images/sections/home/missions-1.jpg",
-                title: "Discovery",
-                description: "We uncover exceptional pieces others overlook. Our curation process examines each garment for hidden potential—quality construction, timeless design, and unique character."
+                title: "Future Sourcing",
+                description: "We scout standout garments with enduring build, striking detail, and forward aesthetics."
               },
               {
                 image: "/assets/images/sections/home/missions-2.jpg",
-                title: "Recycling",
-                description: "We transform pre-loved pieces into future favorites while supporting responsible new apparel. Every curated piece contributes to a more sustainable fashion ecosystem."
+                title: "Circular Styling",
+                description: "We restore pre-loved treasures with care, making circular fashion effortless and stylish."
               },
               {
                 image: "/assets/images/sections/home/missions-3.jpg",
-                title: "Revelation",
-                description: "We help individuals discover their authentic aesthetic through thoughtfully curated selections. Our pieces serve as tools to reveal and refine your unique style narrative."
+                title: "Signature Revelation",
+                description: "We help you distill a personal look that feels intuitive, modern, and unmistakably yours."
               }
             ].map((mission, index) => (
               <motion.div
@@ -448,12 +449,12 @@ export default function AboutUs() {
               { 
                 image: "/assets/images/sections/mission/mission-icon.jpg", 
                 title: "Mission Statement", 
-                description: "To curate exceptional fashion pieces that reveal timeless style through sustainable practices. We unite carefully selected thrifted treasures with responsibly made new apparel, delivering quality, value, and authentic self-expression." 
+                description: "MysticalPIECES exists to awaken individuality and inspire mindful connection through future-minded thrift fashion." 
               },
               { 
                 image: "/assets/images/sections/mission/vision-icon.jpg", 
                 title: "Vision Statement", 
-                description: "To create a circular fashion ecosystem where conscious choices become effortless, hidden treasures are revealed, and timeless pieces transcend fleeting trends." 
+                description: "We envision a world where fashion and style speaks in intuitive, self-aware tones uniting technology, sustainability, and human-centered design." 
               }
             ].map((item, index) => (
               <MissionVisionCard key={index} item={item} index={index} />

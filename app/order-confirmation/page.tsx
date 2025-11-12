@@ -104,9 +104,9 @@ export default function OrderConfirmationPage() {
           <div className="text-center mb-8 pb-6 border-b-2 border-gray-200">
             <div className="mb-4">
               <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '0.5px' }}>
-                MysteryPieces
+                MysticalPIECES
               </h1>
-              <p className="text-gray-600 text-sm">Thrifted Fashion & Style Curators</p>
+              <p className="text-gray-600 text-sm">Mystical Thrift Fashion & Soulful Style Curators</p>
             </div>
             <div className="flex justify-between items-center text-sm text-gray-600">
               <div className="text-left">
@@ -244,12 +244,12 @@ export default function OrderConfirmationPage() {
           {/* Footer */}
           <div className="text-center pt-6 border-t-2 border-gray-200">
             <p className="text-gray-600 text-xs mb-2">
-              Thank you for shopping with MysteryPieces!
+              Thank you for shopping with MysticalPIECES!
             </p>
             <div className="text-gray-500 text-xs space-y-1">
               <p>Email: jerrylarubafestus@gmail.com</p>
               <p>Phone: +256 755 915 549</p>
-              <p className="mt-2">© {new Date().getFullYear()} MysteryPieces. All rights reserved.</p>
+              <p className="mt-2">© {new Date().getFullYear()} MysticalPIECES. All rights reserved.</p>
             </div>
           </div>
         </motion.div>

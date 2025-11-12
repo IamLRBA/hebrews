@@ -446,7 +446,7 @@ export default function CEOProfile() {
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">jerrylarubafestus@gmail.com</p>
               <a
                 href="mailto:jerrylarubafestus@gmail.com"
-                className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
+                className="btn btn-primary inline-flex items-center justify-center px-6"
               >
                 Email Me
               </a>
@@ -458,7 +458,7 @@ export default function CEOProfile() {
               <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">+256774948086</p>
               <a
                 href="tel:+256774948086"
-                className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
+                className="btn btn-primary inline-flex items-center justify-center px-6"
               >
                 Call Me
               </a>
@@ -472,7 +472,7 @@ export default function CEOProfile() {
                 href="https://wa.me/256755915549"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
+                className="btn btn-primary inline-flex items-center justify-center px-6"
               >
                 Message Me
               </a>
@@ -486,7 +486,7 @@ export default function CEOProfile() {
                 href="https://maps.google.com/?q=Kampala,Uganda"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary-600 border-2 border-primary-600 bg-transparent hover:bg-primary-600 hover:text-white transition-colors duration-300 px-4 py-2 rounded-lg"
+                className="btn btn-primary inline-flex items-center justify-center px-6"
               >
                 Find Me
                 </a>

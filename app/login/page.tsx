@@ -227,7 +227,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn btn-secondary w-full justify-center text-base font-semibold"
                 >
                   {loading ? 'Signing in...' : 'Sign In'}
                 </button>
@@ -328,7 +328,7 @@ export default function LoginPage() {
                           onChange={handleImageUpload}
                           className="hidden"
                         />
-                        <div className="px-4 py-2 bg-primary-50 dark:bg-neutral-700 hover:bg-primary-100 dark:hover:bg-neutral-600 rounded-lg transition-colors text-center text-sm font-medium text-primary-700 dark:text-primary-300">
+                        <div className="btn btn-primary justify-center px-6">
                           {profileImage ? 'Change Photo' : 'Upload Photo'}
                         </div>
                       </label>
@@ -393,7 +393,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn btn-secondary w-full justify-center text-base font-semibold"
                 >
                   {loading ? 'Creating account...' : 'Create Account'}
                 </button>

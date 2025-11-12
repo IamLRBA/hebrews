@@ -99,13 +99,13 @@ export default function AccountPromptPopup() {
                   <Link
                     href="/login"
                     onClick={handleSignUp}
-                    className="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition-colors"
+                    className="btn btn-secondary flex-1 justify-center text-base font-semibold"
                   >
                     Sign Up Now
                   </Link>
                   <button
                     onClick={handleDismiss}
-                    className="flex-1 bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-300 font-medium py-2 px-4 rounded-lg transition-colors"
+                    className="btn btn-primary flex-1 justify-center text-base font-semibold"
                   >
                     Maybe Later
                   </button>

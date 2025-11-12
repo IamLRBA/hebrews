@@ -206,14 +206,14 @@ export default function CartPage() {
 
                 <Link
                   href="/checkout"
-                  className="block w-full py-4 rounded-lg font-bold text-lg text-center bg-primary-500 hover:bg-primary-600 text-white transition-all duration-200 mb-4"
+                  className="btn btn-secondary w-full text-lg font-semibold justify-center mb-4"
                 >
                   Proceed to Checkout
                 </Link>
 
                 <Link
                   href="/sections/fashion"
-                  className="block w-full py-3 rounded-lg font-medium text-center bg-primary-800/50 hover:bg-primary-800/70 text-primary-200 transition-all duration-200"
+                  className="btn btn-primary w-full font-medium justify-center"
                 >
                   Continue Shopping
                 </Link>

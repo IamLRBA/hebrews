@@ -100,13 +100,13 @@ export default function AdminLoginPage() {
               </motion.div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-secondary w-full justify-center text-base font-semibold"
+          >
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
           </form>
         </motion.div>
       </div>

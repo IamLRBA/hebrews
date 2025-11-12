@@ -158,11 +158,7 @@ export default function ProductCategoryPage() {
               <button
                 key={section}
                 onClick={() => scrollToSection(section)}
-                className={`px-6 py-3 rounded-full transition-all duration-300 ${
-                  selectedSection === section
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-primary-800/30 text-primary-200 hover:bg-primary-800/50'
-                }`}
+                className={`btn ${selectedSection === section ? 'btn-secondary' : 'btn-primary'} text-sm sm:text-base justify-center`}
               >
                 {displayName}
               </button>
@@ -242,7 +238,7 @@ export default function ProductCategoryPage() {
                       )}
                     </div>
                     <div className="flex items-center space-x-2 mt-2 sm:mt-3">
-                      <button className="flex-1 bg-primary-500 text-white py-1.5 sm:py-2 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-medium hover:bg-primary-600 transition-colors duration-200 flex items-center justify-center space-x-1 sm:space-x-2">
+                      <button className="btn btn-secondary flex-1 text-xs sm:text-sm font-medium gap-1 sm:gap-2 justify-center">
                         <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
                         <span className="hidden sm:inline">Quick View</span>
                         <span className="sm:hidden">View</span>
@@ -495,11 +491,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             <button
               onClick={addToCart}
               disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
-              className={`w-full py-4 rounded-lg font-bold text-lg flex items-center justify-center space-x-2 transition-all duration-200 ${
-                product.stock_qty === 0 || addedToCart || isInCart
-                  ? 'bg-gray-500 cursor-not-allowed'
-                  : 'bg-primary-500 hover:bg-primary-600 text-white'
-              }`}
+              className="btn btn-secondary w-full text-lg font-semibold justify-center gap-2"
             >
               <ShoppingCart className="w-5 h-5" />
               <span>

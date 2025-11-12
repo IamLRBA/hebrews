@@ -221,7 +221,7 @@ export default function FashionServices() {
                                         initial={{ y: 10, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{ delay: 0.15 }}
-                                        className="px-4 py-2 bg-primary-500 text-white rounded-full text-sm font-medium"
+                                        className="btn btn-secondary justify-center px-6 py-2 text-sm font-medium"
                                       >
                                         View Collection
                                       </motion.div>

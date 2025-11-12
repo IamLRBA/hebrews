@@ -283,7 +283,7 @@ export default function FashionVideoSection() {
                       setSelectedVideo({ ...selectedVideo, src: '' })
                       setTimeout(() => setSelectedVideo({ ...selectedVideo, src: currentSrc }), 100)
                     }}
-                    className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors"
+                    className="btn btn-secondary justify-center"
                   >
                     Retry
                   </button>

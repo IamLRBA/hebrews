@@ -319,7 +319,7 @@ export default function AccountPage() {
                         onChange={(e) => setReviewText(e.target.value)}
                         rows={4}
                         className="w-full px-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-800 dark:text-white"
-                        placeholder="Share your experience with MysteryPieces..."
+                        placeholder="Share your experience with MysticalPIECES..."
                         required
                       />
                     </div>
@@ -429,7 +429,7 @@ export default function AccountPage() {
                         onChange={handleImageUpload}
                         className="hidden"
                       />
-                      <div className="w-full px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors text-center">
+                      <div className="btn btn-primary w-full justify-center">
                         {profileImage ? 'Change Photo' : 'Upload Photo'}
                       </div>
                     </label>
@@ -445,13 +445,13 @@ export default function AccountPage() {
                         setProfileImage(user.profileImage || '')
                         setProfileImageFile(null)
                       }}
-                      className="flex-1 px-6 py-3 bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 text-neutral-700 dark:text-neutral-300 font-medium rounded-lg transition-colors"
+                      className="btn btn-primary flex-1 justify-center"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleSaveProfile}
-                      className="flex-1 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors"
+                      className="btn btn-secondary flex-1 justify-center"
                     >
                       Save Changes
                     </button>

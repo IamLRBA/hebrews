@@ -12,32 +12,32 @@ import BackToTop from '@/components/ui/BackToTop'
 import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
 
 export const metadata: Metadata = {
-  title: 'MysteryPieces - Curated Fashion & Style Curators',
-  description: 'Discover hidden treasures in fashion. We curate exceptional pieces that reveal timeless style through sustainable practices.',
-  keywords: 'thrifted fashion, vintage clothing, sustainable style, fashion curation, unique finds, style consultation, wardrobe styling, fashion shopping',
-  authors: [{ name: 'LRBA', url: 'https://mysterypieces.com' }],
-  creator: 'MysteryPieces',
-  publisher: 'MysteryPieces',
+  title: 'MysticalPIECES — Future-Facing Thrift Fashion',
+  description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
+  keywords: 'futuristic thrift fashion, modern vintage clothing, conscious style, sustainable fashion, intuitive wardrobe, future-forward thrift, curated fashion pieces',
+  authors: [{ name: 'LRBA', url: 'https://mysticalpieces.com' }],
+  creator: 'MysticalPIECES',
+  publisher: 'MysticalPIECES',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://mysterypieces.com'),
+  metadataBase: new URL('https://mysticalpieces.com'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'MysteryPieces - Curated Fashion & Style Curators',
-    description: 'Discover hidden treasures in fashion. We curate exceptional pieces that reveal timeless style through sustainable practices.',
-    url: 'https://mysterypieces.com',
-    siteName: 'MysteryPieces',
+    title: 'MysticalPIECES — Future-Facing Thrift Fashion',
+    description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
+    url: 'https://mysticalpieces.com',
+    siteName: 'MysticalPIECES',
     images: [
       {
         url: '/assets/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'MysteryPieces',
+        alt: 'MysticalPIECES',
       },
     ],
     locale: 'en_US',
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MysteryPieces - Curated Fashion & Style Curators',
-    description: 'Discover hidden treasures in fashion. We curate exceptional pieces that reveal timeless style through sustainable practices.',
+    title: 'MysticalPIECES — Future-Facing Thrift Fashion',
+    description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
     images: ['/assets/images/og-image.jpg'],
   },
   robots: {
