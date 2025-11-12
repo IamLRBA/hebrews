@@ -347,7 +347,7 @@
   }
 
   .btn-secondary {
-    --btn-border-gradient: linear-gradient(135deg, rgba(139, 122, 90, 0.35), rgba(69, 48, 37, 0.65), rgba(234, 224, 200, 0.2));
+    --btn-border-gradient: linear-gradient(135deg, rgba(139, 122, 90, 0.35), rgba(69, 48, 37, 0.65), rgba(234, 224, 200, 0));
     --btn-surface: linear-gradient(135deg, rgba(139, 122, 90, 0.85), rgba(69, 48, 37, 0.8));
     --btn-surface-hover: linear-gradient(135deg, rgba(139, 122, 90, 0.92), rgba(69, 48, 37, 0.88));
     --btn-text-color: var(--color-text-inverse);
@@ -437,7 +437,7 @@
   .btn-outline.btn-hover-secondary-filled:focus-visible,
   .btn-circle.btn-hover-secondary-filled:hover,
   .btn-circle.btn-hover-secondary-filled:focus-visible {
-    --btn-border-gradient: linear-gradient(135deg, rgba(139, 122, 90, 0.35), rgba(69, 48, 37, 0.65), rgba(234, 224, 200, 0.2));
+    --btn-border-gradient: linear-gradient(135deg, rgba(139, 122, 90, 0.35), rgba(69, 48, 37, 0.65), rgba(234, 224, 200, 0));
     --btn-surface-hover: linear-gradient(135deg, rgba(139, 122, 90, 0.85), rgba(69, 48, 37, 0.8));
     --btn-text-hover: var(--color-text-inverse);
   }
@@ -448,13 +448,13 @@
   .dark .btn-outline.btn-hover-secondary-filled:focus-visible,
   .dark .btn-circle.btn-hover-secondary-filled:hover,
   .dark .btn-circle.btn-hover-secondary-filled:focus-visible {
-    --btn-border-gradient: linear-gradient(135deg, rgba(168, 155, 111, 0.4), rgba(111, 78, 55, 0.7), rgba(234, 224, 200, 0.25));
+    --btn-border-gradient: linear-gradient(135deg, rgba(168, 155, 111, 0.4), rgba(111, 78, 55, 0.7), rgba(234, 224, 200, 0));
     --btn-surface-hover: linear-gradient(135deg, rgba(168, 155, 111, 0.8), rgba(111, 78, 55, 0.78));
     --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-circle {
-    --btn-border-gradient: linear-gradient(135deg, rgba(200, 188, 160, 0.4), rgba(168, 155, 111, 0.4), rgba(69, 48, 37, 0.05));
+    --btn-border-gradient: linear-gradient(135deg, rgba(200, 188, 160, 0.4), rgba(168, 155, 111, 0.4), rgba(69, 48, 37, 0));
     --btn-surface: rgba(139, 122, 90, 0.08);
     --btn-surface-hover: rgba(139, 122, 90, 0.12);
     --btn-text-color: var(--color-text-inverse);
