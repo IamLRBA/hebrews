@@ -305,9 +305,11 @@ export default function FeaturedCollections() {
                       <motion.button
                         onClick={() => handleAddToCart(product)}
                         disabled={isAdding || isInCart || product.stock_qty === 0}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="btn btn-secondary w-full text-xs font-semibold justify-center gap-2 mb-3 py-2"
+                        whileHover={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 1.02 } : undefined}
+                        whileTap={!(isAdding || isInCart || product.stock_qty === 0) ? { scale: 0.98 } : undefined}
+                        className={`btn btn-outline btn-hover-secondary-filled w-full text-xs font-semibold justify-center gap-2 mb-3 py-2 ${
+                          isInCart || product.stock_qty === 0 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
+                        }`}
                       >
                         <motion.div
                           animate={isAdding ? { rotate: 360 } : {}}
@@ -326,10 +328,10 @@ export default function FeaturedCollections() {
                         </span>
                       </motion.button>
 
-                      <motion.div>
+                      <motion.div className="flex justify-center">
                         <Link
                           href={`/products/${categorySlug}`}
-                          className="group/view-collection mt-2 text-center text-xs text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 font-medium flex items-center justify-center space-x-1 transition-all duration-200 rounded-lg px-2 py-1 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+                          className="btn btn-outline btn-hover-secondary-filled group/view-collection mt-2 text-xs font-semibold gap-1 px-4 py-2"
                         >
                           <span>View Collection</span>
                           <motion.span

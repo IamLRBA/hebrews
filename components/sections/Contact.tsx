@@ -63,7 +63,9 @@ export default function Contact() {
                   <Icon className="w-8 h-8 text-primary-600 mx-auto mb-3" />
                   <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">{info.title}</h4>
                   <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">{info.subtitle}</p>
-                  <button onClick={info.action} className="btn btn-outline">{info.buttonText}</button>
+                  <button onClick={info.action} className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6">
+                    {info.buttonText}
+                  </button>
                 </div>
               </motion.div>
             )
@@ -110,7 +112,11 @@ export default function Contact() {
                 </div>
               </div>
               <div className="text-center">
-                <button type="submit" disabled={isSubmitting} className={`btn btn-outline text-lg px-8 py-4 inline-flex items-center space-x-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`btn btn-outline btn-hover-secondary-filled text-lg px-8 py-4 inline-flex items-center space-x-2 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
                   {isSubmitting ? (<><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div><span>Sending...</span></>) : (
                     <>
                       {contactMethod === 'email' ? (<><Mail className="w-5 h-5" /><span>Send Email</span></>) : (<><IconBrandWhatsapp className="w-5 h-5" /><span>Send Message</span></>)}

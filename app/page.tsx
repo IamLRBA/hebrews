@@ -210,13 +210,13 @@ export default function Home() {
                     >
                       <button 
                         onClick={() => scrollToSection('portals-section')}
-                        className="btn btn-primary text-lg px-8 py-4"
+                        className="btn btn-primary btn-hover-secondary-filled text-lg px-8 py-4"
                       >
                         E᙭ᑭᒪOᖇE Oᑌᖇ ᗯOᖇK
                       </button>
                       <button 
                         onClick={() => scrollToSection('contact-section')}
-                        className="btn btn-secondary text-lg px-8 py-4"
+                        className="btn btn-secondary btn-hover-primary-outline text-lg px-8 py-4"
                       >
                         GET Iᑎ TOᑌᑕᕼ
                       </button>
