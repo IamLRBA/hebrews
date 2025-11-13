@@ -263,7 +263,10 @@ export default function ShopPage() {
           className="max-w-6xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
-            <span className="text-primary-400">ᔕᕼOᑭ</span> Philosophy
+            <span className="text-primary-400">ᔕᕼOᑭᑭIᑎG
+
+
+            </span> Philosophy
           </h2>
           
           <div className="space-y-16 flex flex-col items-center">
@@ -464,7 +467,7 @@ export default function ShopPage() {
           className="text-center max-w-4xl mx-auto"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            Ready to <span className="text-primary-400">Shop</span> Your Style?
+            Ready to <span className="text-primary-400">ᔕᕼOᑭ</span> Your Style?
           </h2>
           <p className="text-xl text-primary-300 mb-8">
             Browse our collection of thrifted treasures and fresh finds to create your perfect look.
