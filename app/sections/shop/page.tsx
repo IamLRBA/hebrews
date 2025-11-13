@@ -278,16 +278,15 @@ export default function ShopPage() {
               <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
                 <img 
                   src="/assets/images/sections/fashion/philosophy-1.jpg" 
-                  alt="Self-Expression" 
+                  alt="Mysticism" 
                   className="w-24 h-24 object-cover rounded-xl"
                 />
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-400 mb-4">01</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Sustainable Style</h3>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Mysticism</h3>
                 <p className="text-primary-200 text-lg max-w-md">
-                  Every thrifted piece has a story, and every new find adds to yours. 
-                  We believe in fashion that's both beautiful and responsible.
+                  There is a hidden, deeper reality beyond the visible world. In a realm of intuition and inner knowing, find meaning in what others might overlook.
                 </p>
               </div>
             </motion.div>
@@ -303,16 +302,15 @@ export default function ShopPage() {
               <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-8">
                 <img 
                   src="/assets/images/sections/fashion/philosophy-2.jpg" 
-                  alt="Confidence" 
+                  alt="Sustainability" 
                   className="w-24 h-24 object-cover rounded-xl"
                 />
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-300 mb-4">02</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Unique Finds</h3>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Sustainability</h3>
                 <p className="text-primary-200 text-lg max-w-md">
-                  From vintage treasures to contemporary pieces, we curate collections 
-                  that help you stand out with pieces that can't be found everywhere.
+                  Care for the Earth by choosing what lasts and reduce waste. Honor the resources we have and understand that every choice leaves an imprint on our shared world.
                 </p>
               </div>
             </motion.div>
@@ -328,16 +326,15 @@ export default function ShopPage() {
               <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-8">
                 <img 
                   src="/assets/images/sections/fashion/philosophy-3.jpg" 
-                  alt="Individuality" 
+                  alt="Self-Discovery" 
                   className="w-24 h-24 object-cover rounded-xl"
                 />
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-200 mb-4">03</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Personal Style</h3>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Self-Discovery</h3>
                 <p className="text-primary-200 text-lg max-w-md">
-                  Whether you love classic vintage or modern minimalism, we help you 
-                  discover and develop your authentic style through carefully selected pieces.
+                  Understand who you truly are; your essence, your values, and what resonates with your spirit. Evolve with pieces that help you see yourself more clearly.
                 </p>
               </div>
             </motion.div>
