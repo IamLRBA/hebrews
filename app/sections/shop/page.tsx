@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
-import { HiMiniShoppingBag } from 'react-icons/hi2'
+import { HiMiniShoppingBag, HiOutlineShoppingBag } from 'react-icons/hi2'
 import FashionVideoSection from '@/components/sections/FashionVideoSection'
 import FashionServices from '@/components/sections/FashionServices'
 
@@ -220,8 +220,8 @@ export default function ShopPage() {
             transition={{ duration: 1 }}
             className="text-8xl md:text-8xl font-bold mb-6"
           >
-            <span className="inline-flex items-center justify-center gap-4">
-              <HiMiniShoppingBag className="w-14 h-14 text-primary-200 drop-shadow-lg" aria-hidden="true" />
+            <span className="inline-flex items-center justify-center gap-6">
+              <HiOutlineShoppingBag className="w-40 h-40 text-primary-200 drop-shadow-lg" aria-hidden="true" />
               <span className="text-gradient">ᔕᕼOᑭ</span>
             </span>
           </motion.h1>
