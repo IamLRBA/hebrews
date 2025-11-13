@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ShoppingCart, Heart, X, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ShoppingCart, XCircle, Expand, Minimize, ChevronLeft, ChevronRight } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import { ProductManager } from '@/lib/products'
 import { AuthManager } from '@/lib/auth'
@@ -89,7 +89,7 @@ export default function ProductCategoryPage() {
   }
 
   const sections = Object.keys(categoryData.subcategories)
-  const productsBySection = Object.entries(categoryData.subcategories)
+  const productsBySection = Object.entries(categoryData.subcategories) as [string, Product[]][]
 
   const openProductModal = (product: Product) => {
     setSelectedProduct(product)
@@ -185,7 +185,7 @@ export default function ProductCategoryPage() {
               ).join(' ')}
             </h2>
             
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+            <div className="grid gap-4 md:gap-6 lg:gap-8 justify-items-center [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
               {products.map((product: Product, index: number) => (
                 <motion.div
                   key={product.id}
@@ -193,11 +193,11 @@ export default function ProductCategoryPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 hover:shadow-xl transition-all duration-300 group cursor-pointer"
+                  className="w-full max-w-xs bg-primary-800/30 rounded-xl overflow-hidden border border-primary-500/30 hover:shadow-xl transition-all duration-300 group cursor-pointer"
                   onClick={() => openProductModal(product)}
                 >
                   {/* Product Image */}
-                  <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 bg-primary-900/20 overflow-hidden">
+                  <div className="relative h-36 sm:h-44 md:h-52 lg:h-56 bg-primary-900/20 overflow-hidden">
                     <img
                       src={product.images[0] || '/assets/images/placeholder.jpg'}
                       alt={product.name}
@@ -211,16 +211,6 @@ export default function ProductCategoryPage() {
                     <div className="absolute top-2 left-2 px-3 py-1 bg-primary-500/90 text-white text-xs font-semibold rounded-full">
                       {product.condition}
                     </div>
-                    {/* Stock Badge */}
-                    {product.stock_qty > 0 ? (
-                      <div className="absolute top-2 right-2 px-3 py-1 bg-green-500/90 text-white text-xs font-semibold rounded-full">
-                        In Stock
-                      </div>
-                    ) : (
-                      <div className="absolute top-2 right-2 px-3 py-1 bg-red-500/90 text-white text-xs font-semibold rounded-full">
-                        Out of Stock
-                      </div>
-                    )}
                   </div>
 
                   {/* Product Info */}
@@ -337,19 +327,14 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
     }
   }
 
-  const toggleFullscreen = () => {
-    if (!isFullscreen) {
-      setIsFullscreen(true)
-    } else {
-      setIsFullscreen(false)
-    }
-  }
+  const openFullscreen = () => setIsFullscreen(true)
+  const closeFullscreen = () => setIsFullscreen(false)
 
   // Handle ESC key to exit fullscreen
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isFullscreen) {
-        setIsFullscreen(false)
+        closeFullscreen()
       }
     }
     window.addEventListener('keydown', handleEsc)
@@ -361,69 +346,93 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 sm:p-4"
       onClick={onClose}
     >
       <style jsx>{`
-        .thumbnail-scroll::-webkit-scrollbar {
-          display: none;
+        .modal-scroll::-webkit-scrollbar {
+          width: 6px;
+        }
+        .modal-scroll::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.25);
+          border-radius: 9999px;
+        }
+        .modal-scroll::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 9999px;
+        }
+        .thumbnail-row::-webkit-scrollbar {
+          height: 6px;
+        }
+        .thumbnail-row::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.25);
+          border-radius: 9999px;
         }
       `}</style>
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
+        initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
+        exit={{ scale: 0.95, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-primary-800 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="relative w-full max-w-md sm:max-w-3xl md:max-w-5xl bg-primary-800/95 rounded-2xl shadow-2xl overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh] modal-scroll"
+        style={{ scrollbarWidth: 'thin' }}
       >
         {/* Close Button */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ rotate: 180, scale: 0.95 }}
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-primary-700/50 hover:bg-primary-700 text-white transition-colors duration-200"
+          className="sticky top-4 right-4 z-20 ml-auto mb-4 p-2 text-white/80 hover:text-white transition-colors duration-200 w-fit"
           aria-label="Close modal"
         >
-          <X className="w-6 h-6" />
-        </button>
-        
-        <div className="grid md:grid-cols-2 gap-8 p-8">
+          <XCircle className="w-6 h-6" />
+        </motion.button>
+
+        <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8">
           {/* Image Gallery */}
-          <div className="space-y-4">
-            <div className="relative h-96 bg-primary-900/20 rounded-lg overflow-hidden group">
+          <div className="flex-shrink-0 flex flex-col space-y-4">
+            <div className="relative h-72 sm:h-80 md:h-[24rem] bg-primary-900/20 rounded-lg overflow-hidden group">
               <img
                 src={product.images[currentImageIndex] || '/assets/images/placeholder.jpg'}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
               {product.images.length > 0 && (
-                <button
-                  onClick={toggleFullscreen}
-                  className="absolute top-4 right-4 btn btn-circle btn-hover-secondary-filled opacity-0 group-hover:opacity-100"
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={isFullscreen ? closeFullscreen : openFullscreen}
+                  className="absolute top-4 right-4 p-2 text-white/80 hover:text-white opacity-0 group-hover:opacity-100 transition-all"
                   aria-label="Fullscreen"
                 >
-                  {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
-                </button>
+                  {isFullscreen ? <Minimize className="w-5 h-5" /> : <Expand className="w-5 h-5" />}
+                </motion.button>
               )}
             </div>
             {product.images.length > 1 && (
-              <div className="relative">
+              <div className="relative pt-4 sm:pt-3">
                 {product.images.length > 4 && (
-                  <button
-                    onClick={() => scrollThumbnails('left')}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1 bg-primary-700/80 hover:bg-primary-700 text-white rounded-l-lg transition-all duration-200"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => scrollThumbnails('left')}
+                      className="p-1 text-white/80 hover:text-white transition-all duration-200"
+                    >
+                      <span className="text-lg font-medium inline-block">⟸</span>
+                    </motion.button>
+                  </div>
                 )}
                 <div
                   ref={thumbnailRef}
-                  className="flex gap-2 overflow-x-auto scroll-smooth thumbnail-scroll"
-                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                  className="thumbnail-row flex gap-2 md:gap-3 overflow-x-auto scroll-smooth pb-3"
+                  style={{ scrollbarWidth: 'thin' }}
                 >
                   {product.images.map((img, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 h-20 w-20 rounded overflow-hidden border-2 transition-all duration-200 ${
+                      className={`flex-shrink-0 h-16 w-16 sm:h-20 sm:w-20 md:h-[5.5rem] md:w-[5.5rem] rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                         currentImageIndex === index ? 'border-primary-500 scale-105' : 'border-transparent hover:border-primary-300'
                       }`}
                     >
@@ -432,74 +441,84 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   ))}
                 </div>
                 {product.images.length > 4 && (
-                  <button
-                    onClick={() => scrollThumbnails('right')}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1 bg-primary-700/80 hover:bg-primary-700 text-white rounded-r-lg transition-all duration-200"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => scrollThumbnails('right')}
+                      className="p-1 text-white/80 hover:text-white transition-all duration-200"
+                    >
+                      <span className="text-lg font-medium inline-block">⟹</span>
+                    </motion.button>
+                  </div>
                 )}
               </div>
             )}
           </div>
 
           {/* Product Details */}
-          <div className="space-y-6">
-            <div>
-              <p className="text-primary-300 text-sm mb-1">{product.brand} • {product.sku}</p>
-              <h2 className="text-3xl font-bold text-white mb-2">{product.name}</h2>
-              <div className="flex items-center space-x-2 mb-4">
-                <span className="text-3xl font-bold text-primary-400">
-                  UGX {product.price_ugx.toLocaleString()}
-                </span>
-                {product.original_price && (
-                  <span className="text-lg text-primary-400/50 line-through">
-                    UGX {product.original_price.toLocaleString()}
+          <div className="flex flex-col">
+            <div className="space-y-4">
+              <div>
+                <p className="text-primary-300 text-sm mb-1">{product.brand} • {product.sku}</p>
+                <h2 className="text-3xl font-bold text-white mb-1">{product.name}</h2>
+                <div className="flex items-center flex-wrap gap-2 mb-3">
+                  <span className="text-3xl font-bold text-primary-400">
+                    UGX {product.price_ugx.toLocaleString()}
                   </span>
-                )}
+                  {product.original_price && (
+                    <span className="text-lg text-primary-400/50 line-through">
+                      UGX {product.original_price.toLocaleString()}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="px-3 py-1 bg-primary-500/30 text-primary-200 text-sm rounded-full">
+                    {product.condition}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="px-3 py-1 bg-primary-500/30 text-primary-200 text-sm rounded-full">
-                  {product.condition}
-                </span>
-              </div>
+
+              <p className="text-primary-200 leading-relaxed">{product.description}</p>
+
+              {/* Size Display */}
+              {(productSize || productColor) && (
+                <div className="flex flex-wrap items-center gap-4 text-primary-200">
+                  {productSize && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">Size:</span>
+                      <span className="px-3 py-1 rounded-lg bg-primary-700/30">
+                        {productSize}
+                      </span>
+                    </div>
+                  )}
+                  {productColor && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">Color:</span>
+                      <span className="px-3 py-1 rounded-lg bg-primary-700/30">
+                        {productColor}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-            <p className="text-primary-200 leading-relaxed">{product.description}</p>
-
-            {/* Size Display */}
-            {productSize && (
-              <div>
-                <label className="block text-primary-200 font-medium mb-2">Size</label>
-                <div className="px-4 py-2 rounded-lg bg-primary-700/30 text-primary-200 inline-block">
-                  {productSize}
-                </div>
-              </div>
-            )}
-
-            {/* Color Display */}
-            {productColor && (
-              <div>
-                <label className="block text-primary-200 font-medium mb-2">Color</label>
-                <div className="px-4 py-2 rounded-lg bg-primary-700/30 text-primary-200 inline-block">
-                  {productColor}
-                </div>
-              </div>
-            )}
-
             {/* Add to Cart Button */}
-            <button
-              onClick={addToCart}
-              disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
-              className={`btn btn-outline btn-hover-secondary-filled w-full text-lg font-semibold justify-center gap-2 ${
-                isAddingToCart || addedToCart || isInCart || product.stock_qty === 0 ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
-              }`}
-            >
-              <ShoppingCart className="w-5 h-5" />
-              <span>
-                {isAddingToCart ? 'Adding...' : (addedToCart || isInCart) ? 'Already in Cart' : product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
-              </span>
-            </button>
+            <div className="pt-5 mt-5 border-t border-primary-600/40">
+              <button
+                onClick={addToCart}
+                disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}
+                className={`btn btn-outline btn-hover-secondary-filled w-full text-lg font-semibold justify-center gap-2 ${
+                  isAddingToCart || addedToCart || isInCart || product.stock_qty === 0 ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''
+                }`}
+              >
+                <ShoppingCart className="w-5 h-5" />
+                <span>
+                  {isAddingToCart ? 'Adding...' : (addedToCart || isInCart) ? 'Already in Cart' : product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -512,14 +531,19 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black z-[60] flex items-center justify-center p-4"
-            onClick={toggleFullscreen}
+            onClick={closeFullscreen}
           >
-            <button
-              onClick={toggleFullscreen}
-              className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-200 z-10"
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                e.stopPropagation()
+                closeFullscreen()
+              }}
+              className="absolute top-4 right-4 p-2 text-white/80 hover:text-white transition-all duration-200 z-10"
             >
-              <Minimize2 className="w-6 h-6" />
-            </button>
+              <Minimize className="w-6 h-6" />
+            </motion.button>
             <motion.img
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
