@@ -381,20 +381,20 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         exit={{ scale: 0.95, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-md sm:max-w-3xl md:max-w-5xl bg-primary-800/95 rounded-2xl shadow-2xl overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh] modal-scroll"
-        style={{ scrollbarWidth: 'thin' }}
+        style={{ scrollbarWidth: 'thin', border: '1px solid rgba(255, 255, 255, 0.2)' }}
       >
         {/* Close Button */}
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ rotate: 180, scale: 0.95 }}
           onClick={onClose}
-          className="sticky top-3 right-4 z-20 ml-auto mb-4 p-2 text-white/80 hover:text-white transition-colors duration-200 w-fit"
+          className="absolute top-0.2 right-0 z-20 p-2 text-white/80 hover:text-white transition-colors duration-200 w-fit"
           aria-label="Close modal"
         >
           <X className="w-6 h-6" />
         </motion.button>
 
-        <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8">
+        <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-10 pt-10 sm:pt-8 md:pt-6 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
           {/* Image Gallery */}
           <div className="flex-shrink-0 flex flex-col space-y-4">
             <div className="relative h-72 sm:h-80 md:h-[24rem] bg-primary-900/20 rounded-lg overflow-hidden group">
