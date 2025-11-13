@@ -362,10 +362,16 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           border-radius: 9999px;
         }
         .thumbnail-row::-webkit-scrollbar {
-          height: 6px;
+          height: 4px;
+          border-radius: 9999px;
         }
         .thumbnail-row::-webkit-scrollbar-thumb {
           background: rgba(255, 255, 255, 0.25);
+          border-radius: 9999px;
+          border: none;
+        }
+        .thumbnail-row::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
           border-radius: 9999px;
         }
       `}</style>
@@ -410,7 +416,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
               )}
             </div>
             {product.images.length > 1 && (
-              <div className="relative pt-4 sm:pt-3">
+              <div className="relative pt-2 sm:pt-2 overflow-visible">
                 {product.images.length > 4 && (
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
                     <motion.button
@@ -425,7 +431,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 )}
                 <div
                   ref={thumbnailRef}
-                  className="thumbnail-row flex gap-2 md:gap-3 overflow-x-auto scroll-smooth pb-3"
+                  className="thumbnail-row flex items-center gap-2 md:gap-3 overflow-x-auto scroll-smooth py-3"
                   style={{ scrollbarWidth: 'thin' }}
                 >
                   {product.images.map((img, index) => (
