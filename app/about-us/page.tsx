@@ -26,10 +26,10 @@ export default function AboutUsPage() {
               Dive into our portal and feel future-forward thrift fashion in motion.
             </p>
             <Link
-              href="/sections/fashion"
+              href="/sections/shop"
               className="btn btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 group"
             >
-              <span>VᎥᎬᏔ ᎢᎻᎬ FᗩᔕᕼIOᑎ ᑭOᖇTᗩᒪ</span>
+              <span>VᎥᎬᏔ ᎢᎻᎬ ᔕᕼOᑭ ᑭOᖇTᗩᒪ</span>
               <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
             </Link>
           </motion.div>

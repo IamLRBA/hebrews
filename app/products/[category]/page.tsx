@@ -117,12 +117,12 @@ export default function ProductCategoryPage() {
         animate={{ opacity: 1, x: 0 }}
         className="fixed top-20 left-8 z-50"
       >
-        <Link href="/sections/fashion" className="group">
+        <Link href="/sections/shop" className="group">
           <div className="flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300">
             <motion.span whileHover={{ x: -5 }} transition={{ duration: 0.2 }} className="text-lg font-medium">
               ⟸
             </motion.span>
-            <span className="text-sm font-medium">Back to Fashion</span>
+            <span className="text-sm font-medium">Back to Shop</span>
           </div>
         </Link>
       </motion.div>

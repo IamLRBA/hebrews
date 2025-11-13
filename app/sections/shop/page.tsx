@@ -4,10 +4,11 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
+import { HiMiniShoppingBag } from 'react-icons/hi2'
 import FashionVideoSection from '@/components/sections/FashionVideoSection'
 import FashionServices from '@/components/sections/FashionServices'
 
-export default function FashionPage() {
+export default function ShopPage() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -219,7 +220,10 @@ export default function FashionPage() {
             transition={{ duration: 1 }}
             className="text-8xl md:text-8xl font-bold mb-6"
           >
-            <span className="text-gradient">✃ ᖴᗩᔕᕼIOᑎ</span>
+            <span className="inline-flex items-center justify-center gap-4">
+              <HiMiniShoppingBag className="w-14 h-14 text-primary-200 drop-shadow-lg" aria-hidden="true" />
+              <span className="text-gradient">ᔕᕼOᑭ</span>
+            </span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -227,7 +231,7 @@ export default function FashionPage() {
             transition={{ duration: 1, delay: 0.3 }}
             className="text-2xl md:text-3xl text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed"
           >
-            "Where thrifted treasures meet fresh fashion finds"
+            "Where thrifted treasures meet fresh style finds"
           </motion.p>
           <motion.div
             initial={{ opacity: 0 }}
@@ -249,7 +253,7 @@ export default function FashionPage() {
         </div>
       </section>
 
-      {/* Fashion Philosophy Section */}
+      {/* Shop Philosophy Section */}
       <section className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -259,7 +263,7 @@ export default function FashionPage() {
           className="max-w-6xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
-            <span className="text-primary-400">ᖴᗩᔕᕼIOᑎ</span> Philosophy
+            <span className="text-primary-400">ᔕᕼOᑭ</span> Philosophy
           </h2>
           
           <div className="space-y-16 flex flex-col items-center">
@@ -437,7 +441,7 @@ export default function FashionPage() {
         </motion.div>
       </section>
 
-      {/* Fashion Video Gallery Section */}
+      {/* Shop Video Gallery Section */}
       <section className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -447,7 +451,7 @@ export default function FashionPage() {
           className="max-w-7xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-400">ᖴᗩᔕᕼIOᑎ</span> Video Gallery
+            <span className="text-primary-400">ᔕᕼOᑭ</span> Video Gallery
           </h2>
           <FashionVideoSection />
         </motion.div>

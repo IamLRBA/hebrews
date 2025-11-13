@@ -15,7 +15,7 @@ const shortcuts: Shortcut[] = [
   { key: 'cart', description: 'Open Cart', keys: ['C'] },
   { key: 'search', description: 'Open Search', keys: ['/', 'S'] },
   { key: 'about', description: 'About Us', keys: ['A'] },
-  { key: 'fashion', description: 'Fashion Portal', keys: ['F'] },
+  { key: 'shop', description: 'Shop Portal', keys: ['F'] },
   { key: 'settings', description: 'Settings / Account', keys: ['G'] },
   { key: 'top', description: 'Scroll to Top', keys: ['T'] },
   { key: 'bottom', description: 'Scroll to Bottom', keys: ['B'] },
@@ -103,7 +103,7 @@ export default function KeyboardShortcuts() {
         case 'f':
           if (!e.ctrlKey && !e.metaKey) {
             e.preventDefault()
-            window.location.href = '/sections/fashion'
+            window.location.href = '/sections/shop'
           }
           break
         case 'g':

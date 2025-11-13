@@ -53,7 +53,7 @@ const portals = [
     color: 'from-rose-500/20 to-fuchsia-500/20',
     borderColor: 'border-rose-500/30',
     hoverEffect: 'cloth',
-    path: '/sections/fashion'
+    path: '/sections/shop'
   }
 ]
 

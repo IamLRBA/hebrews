@@ -5,10 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { HiMenu, HiX, HiSearch } from 'react-icons/hi'
-import {
-  HiOutlineUserCircle,
-  HiUserCircle,
-} from 'react-icons/hi2'
+import { HiOutlineUserCircle, HiUserCircle, HiOutlineShoppingBag, HiMiniShoppingBag } from 'react-icons/hi2'
 import { ShoppingCart } from 'lucide-react'
 import SettingsDropdown from '@/components/ui/SettingsDropdown'
 import { CartManager } from '@/lib/cart'
@@ -48,7 +45,7 @@ const navigation = [
 ]
 
 const portalItems = [
-  { name: 'Fashion', href: '/sections/fashion', outlineIcon: TargetOutlineIcon, solidIcon: TargetSolidIcon },
+  { name: 'Shop', href: '/sections/shop', outlineIcon: HiOutlineShoppingBag, solidIcon: HiMiniShoppingBag },
 ]
 
 // Helper function to get all products from JSON and ProductManager
