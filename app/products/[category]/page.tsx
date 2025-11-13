@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ShoppingCart, XCircle, Expand, Minimize, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ShoppingCart, X, Maximize2, Minimize, ChevronLeft, ChevronRight } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import { ProductManager } from '@/lib/products'
 import { AuthManager } from '@/lib/auth'
@@ -388,10 +388,10 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           whileHover={{ scale: 1.1 }}
           whileTap={{ rotate: 180, scale: 0.95 }}
           onClick={onClose}
-          className="sticky top-4 right-4 z-20 ml-auto mb-4 p-2 text-white/80 hover:text-white transition-colors duration-200 w-fit"
+          className="sticky top-3 right-4 z-20 ml-auto mb-4 p-2 text-white/80 hover:text-white transition-colors duration-200 w-fit"
           aria-label="Close modal"
         >
-          <XCircle className="w-6 h-6" />
+          <X className="w-6 h-6" />
         </motion.button>
 
         <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8">
@@ -411,7 +411,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   className="absolute top-4 right-4 p-2 text-white/80 hover:text-white opacity-0 group-hover:opacity-100 transition-all"
                   aria-label="Fullscreen"
                 >
-                  {isFullscreen ? <Minimize className="w-5 h-5" /> : <Expand className="w-5 h-5" />}
+                  {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
                 </motion.button>
               )}
             </div>
@@ -431,7 +431,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                 )}
                 <div
                   ref={thumbnailRef}
-                  className="thumbnail-row flex items-center gap-2 md:gap-3 overflow-x-auto scroll-smooth py-3"
+                  className="thumbnail-row flex items-center justify-center md:justify-start gap-2 md:gap-3 overflow-x-auto scroll-smooth py-3 px-2 md:px-0"
                   style={{ scrollbarWidth: 'thin' }}
                 >
                   {product.images.map((img, index) => (
