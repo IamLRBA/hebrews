@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import MissionVisionCard from './MissionVisionCard'
+import AnimatedImageBannerAboutUs from './AnimatedImageBannerAboutUs'
 import { 
   Building2, 
   Music, 
@@ -98,6 +99,19 @@ export default function AboutUs() {
           </p>
         </motion.div>
 
+        {/* Animated Image Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="relative w-full py-8 md:py-12 overflow-hidden mb-16"
+        >
+          <div className="container-custom relative z-10">
+            <AnimatedImageBannerAboutUs />
+          </div>
+        </motion.div>
+
         {/* Company Description */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -108,10 +122,10 @@ export default function AboutUs() {
         >
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-primary-600 leading-relaxed mb-6">
-              MysticalPIECES began with a vision to connect fashion and meaning—style as a mirror of the self. We roam markets and archives to uncover garments with story, quality, and design integrity. Every find is revived and refined so it feels new for the next wearer.
+              MysticalPIECES began with a vision to connect fashion and style as a mirror of the self. We roam markets and archives to uncover pieces with story, quality, and design integrity.
             </p>
             <p className="text-lg text-primary-600 leading-relaxed mb-6">
-              We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. Secondhand becomes forward-looking—an invitation to dress with clarity, confidence, and purpose.
+              We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. We are an invitation to dress with clarity, confidence, and purpose.
             </p>
             <div className="inline-flex items-center space-x-2 bg-primary-100 px-6 py-3 rounded-full">
               <span className="text-primary-800 font-semibold">Our Core:</span>
