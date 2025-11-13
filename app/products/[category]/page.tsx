@@ -388,7 +388,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           whileHover={{ scale: 1.1 }}
           whileTap={{ rotate: 180, scale: 0.95 }}
           onClick={onClose}
-          className="absolute top-0.2 right-0 z-20 p-2 text-white/80 hover:text-white transition-colors duration-200 w-fit"
+          className="absolute top-0.2 right-1 z-20 p-2 text-white/80 hover:text-white transition-colors duration-200 w-fit"
           aria-label="Close modal"
         >
           <X className="w-6 h-6" />
