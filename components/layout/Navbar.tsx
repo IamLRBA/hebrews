@@ -239,9 +239,9 @@ export default function Navbar() {
             <div className="flex items-center space-x-8">
               <Link href="/" className="flex items-center space-x-2 group">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-white font-bold text-lg">M</span>
+                  <span className="text-white font-light text-lg">M</span>
                 </div>
-                <span className="text-xl font-bold text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300">MysticalPIECES</span>
+                <span className="text-xl font-light text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300">MysticalPIECES</span>
               </Link>
               <div className="hidden lg:flex items-center space-x-8">
                 {navigation.filter(item => item.name === 'Home').map((item) => {
@@ -250,7 +250,7 @@ export default function Navbar() {
                   return (
                     <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700' : 'text-neutral-600 hover:text-primary-700'}`}>
                       <Icon className="w-4 h-4 transition-colors" />
-                      <span className="font-medium">{item.name}</span>
+                      <span className="font-light">{item.name}</span>
                       {active ? (
                         <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
                       ) : (
@@ -266,7 +266,7 @@ export default function Navbar() {
                       const PortalIcon = portalActive ? TargetSolidIcon : TargetOutlineIcon
                       return <PortalIcon className="w-4 h-4 transition-colors" />
                     })()}
-                    <span className="font-medium">Portals</span>
+                    <span className="font-light">Portals</span>
                     <span className="text-sm">⇓</span>
                     {portalItems.some(item => isActive(item.href)) ? (
                       <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
@@ -284,7 +284,7 @@ export default function Navbar() {
                             return (
                               <Link key={item.name} href={item.href} className={`flex items-center space-x-3 px-4 py-3 hover:bg-primary-50 transition-all duration-200 ${active ? 'text-primary-700 bg-primary-50' : 'text-neutral-600'}`}>
                                 <Icon className="w-4 h-4 transition-colors" />
-                                <span className="font-medium">{item.name}</span>
+                                <span className="font-light">{item.name}</span>
                               </Link>
                             )
                           })}
@@ -299,7 +299,7 @@ export default function Navbar() {
                   return (
                     <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700' : 'text-neutral-600 hover:text-primary-700'}`}>
                       <Icon className="w-4 h-4 transition-colors" />
-                      <span className="font-medium">{item.name}</span>
+                      <span className="font-light">{item.name}</span>
                       {active ? (
                         <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
                       ) : (
@@ -346,7 +346,7 @@ export default function Navbar() {
               <Link href="/cart" className="relative p-2 text-neutral-600 hover:text-primary-700 transition-all duration-200">
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-light rounded-full w-5 h-5 flex items-center justify-center">
                     {cartCount > 99 ? '99+' : cartCount}
                   </motion.span>
                 )}
@@ -440,7 +440,7 @@ export default function Navbar() {
                         }`}>
                           <Icon className="w-4 h-4 transition-colors" />
                         </div>
-                        <span className={`font-medium flex-1 ${active ? 'text-primary-800 dark:text-primary-200' : ''}`}>{item.name}</span>
+                        <span className={`font-light flex-1 ${active ? 'text-primary-800 dark:text-primary-200' : ''}`}>{item.name}</span>
                         {active && (
                           <motion.div 
                             layoutId="mobileActiveIndicator"
@@ -474,7 +474,7 @@ export default function Navbar() {
                           <div className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 group-hover:bg-primary-100 dark:group-hover:bg-primary-800/50 transition-colors duration-200">
                             <PortalIcon className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
                           </div>
-                          <span className="font-medium">Portals</span>
+                          <span className="font-light">Portals</span>
                         </div>
                         <motion.span 
                           animate={{ rotate: isPortalsOpen ? 180 : 0 }}
@@ -511,7 +511,7 @@ export default function Navbar() {
                                 }`}
                               >
                                 <Icon className={`w-4 h-4 transition-colors ${active ? 'text-primary-600 dark:text-primary-400' : ''}`} />
-                                <span className={`font-medium text-sm ${active ? 'text-primary-800 dark:text-primary-200' : ''}`}>{item.name}</span>
+                                <span className={`font-light text-sm ${active ? 'text-primary-800 dark:text-primary-200' : ''}`}>{item.name}</span>
                               </Link>
                             )
                           })}
@@ -530,7 +530,7 @@ export default function Navbar() {
                     <div className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 group-hover:bg-primary-100 dark:group-hover:bg-primary-800/50 transition-colors duration-200">
                       <HiSearch className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
                     </div>
-                    <span className="font-medium flex-1 text-left">Search</span>
+                    <span className="font-light flex-1 text-left">Search</span>
                   </button>
                   {isSearchOpen && (
                     <form onSubmit={handleSearchSubmit} className="navbar-search-form mt-2 inline-flex items-center w-full">
@@ -573,12 +573,12 @@ export default function Navbar() {
                     <div className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 group-hover:bg-primary-100 dark:group-hover:bg-primary-800/50 transition-colors duration-200">
                       <ShoppingCart className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
                     </div>
-                    <span className="font-medium flex-1">Cart</span>
+                    <span className="font-light flex-1">Cart</span>
                     {cartCount > 0 && (
                       <motion.span 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="bg-gradient-to-br from-primary-600 to-primary-700 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center shadow-lg"
+                        className="bg-gradient-to-br from-primary-600 to-primary-700 text-white text-xs font-light rounded-full w-7 h-7 flex items-center justify-center shadow-lg"
                       >
                         {cartCount > 99 ? '99+' : cartCount}
                       </motion.span>

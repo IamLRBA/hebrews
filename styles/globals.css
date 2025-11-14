@@ -205,45 +205,59 @@
   /* Typography */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-family-display);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-light);
     line-height: var(--leading-tight);
     color: var(--color-text-primary);
   }
 
   h1 {
     font-size: var(--text-5xl);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-light);
   }
 
   h2 {
     font-size: var(--text-4xl);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-light);
   }
 
   h3 {
     font-size: var(--text-3xl);
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-light);
   }
 
   h4 {
     font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-light);
   }
 
   h5 {
     font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-light);
   }
 
   h6 {
     font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-light);
   }
 
   p {
     font-size: var(--text-base);
     line-height: var(--leading-relaxed);
     color: var(--color-text-secondary);
+  }
+
+  strong,
+  b {
+    font-weight: var(--font-weight-light);
+  }
+
+  .font-black,
+  .font-extrabold,
+  .font-bold,
+  .font-semibold,
+  .font-medium,
+  .font-normal {
+    font-weight: var(--font-weight-light) !important;
   }
 
   a {
@@ -265,11 +279,12 @@
     --btn-surface-hover: linear-gradient(135deg, rgba(234, 224, 200, 0.95), rgba(139, 122, 90, 0.9));
     --btn-text-color: var(--color-accent-600);
     --btn-text-hover: var(--color-text-inverse);
-    @apply relative inline-flex items-center justify-center px-6 py-3 rounded-full font-medium tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply relative inline-flex items-center justify-center px-6 py-3 rounded-full tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
     color: var(--btn-text-color);
     isolation: isolate;
     overflow: hidden;
     z-index: 0;
+    font-weight: var(--font-weight-light);
   }
 
   .btn::before,
