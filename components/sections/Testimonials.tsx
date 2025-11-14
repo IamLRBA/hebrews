@@ -115,7 +115,6 @@ export default function Testimonials() {
       <div className="container-custom relative z-10">
         <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-16 text-center">TEᔕTIᗰOᑎIᗩᒪᔕ</motion.h2>
         <div className="slider-container relative">
-          <button className="nav-button prev absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100" onClick={handlePrev}>⟸</button>
           <motion.div className="slider-track flex" animate={{ x: sliderPosition }} transition={{ type: "tween", ease: "linear" }} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)} style={{ gap: `${gap}px` }}>
             {duplicatedTestimonials.map((testimonial, index) => (
               <motion.div key={`${testimonial.id}-${index}`} className="testimonial-card flex-shrink-0" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} viewport={{ once: true }} whileHover={{ scale: 1.05 }} onClick={() => setSelectedTestimonial(testimonial)} style={{ width: `${cardWidth}px` }}>
@@ -146,11 +145,20 @@ export default function Testimonials() {
               </motion.div>
             ))}
           </motion.div>
-          <button className="nav-button next absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100" onClick={handleNext}>⟹</button>
         </div>
-        <div className="mobile-nav-buttons flex justify-center mt-8 space-x-4 lg:hidden">
-          <button className="mobile-nav-button w-12 h-12 bg-primary-600 dark:bg-primary-700 text-white rounded-full flex items-center justify-center hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors duration-200" onClick={handlePrev}>⟸</button>
-          <button className="mobile-nav-button w-12 h-12 bg-primary-600 dark:bg-primary-700 text-white rounded-full flex items-center justify-center hover:bg-primary-700 dark:hover:bg-primary-600 transition-colors duration-200" onClick={handleNext}>⟹</button>
+        <div className="mobile-nav-buttons flex justify-center mt-8 space-x-4">
+          <button
+            className="nav-button w-12 h-12 btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
+            onClick={handlePrev}
+          >
+            ⟸
+          </button>
+          <button
+            className="nav-button w-12 h-12 btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
+            onClick={handleNext}
+          >
+            ⟹
+          </button>
         </div>
         <AnimatePresence>
           {selectedTestimonial && (
