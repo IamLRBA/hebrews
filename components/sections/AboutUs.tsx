@@ -130,7 +130,12 @@ export default function AboutUs() {
             </p>
             <div className="inline-flex items-center space-x-2 bg-primary-100 px-6 py-3 rounded-full">
               <span className="text-primary-800 font-semibold">Our Core:</span>
-              <span className="text-accent-600 font-bold italic">"Hidden treasures reveal a timeless style"</span>
+              <span
+                className="text-accent-600 font-bold text-2xl md:text-3xl leading-snug"
+                style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
+              >
+                Hidden treasures reveal a timeless style
+              </span>
             </div>
           </div>
         </motion.div>
