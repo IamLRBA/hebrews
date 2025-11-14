@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import MissionVisionCard from './MissionVisionCard'
+import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import AnimatedImageBannerAboutUs from './AnimatedImageBannerAboutUs'
 import { 
   Building2, 
@@ -122,7 +123,7 @@ export default function AboutUs() {
         >
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-primary-600 leading-relaxed mb-6">
-              MysticalPIECES began with a vision to connect fashion and style as a mirror of the self. We roam markets and archives to uncover pieces with story, quality, and design integrity.
+              <MysticalPiecesWord /> began with a vision to connect fashion and style as a mirror of the self. We roam markets and archives to uncover pieces with story, quality, and design integrity.
             </p>
             <p className="text-lg text-primary-600 leading-relaxed mb-6">
               We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. We are an invitation to dress with clarity, confidence, and purpose.
@@ -463,7 +464,11 @@ export default function AboutUs() {
               { 
                 image: "/assets/images/sections/mission/mission-icon.jpg", 
                 title: "Mission Statement", 
-                description: "MysticalPIECES exists to awaken individuality and inspire mindful connection through future-minded thrift fashion." 
+                description: (
+                  <>
+                    <MysticalPiecesWord /> exists to awaken individuality and inspire mindful connection through future-minded thrift fashion.
+                  </>
+                ) 
               },
               { 
                 image: "/assets/images/sections/mission/vision-icon.jpg", 

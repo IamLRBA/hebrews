@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { Plus, Minus } from 'lucide-react'
 
@@ -8,7 +8,7 @@ interface MissionVisionCardProps {
   item: {
     image: string
     title: string
-    description: string
+    description: React.ReactNode
   }
   index: number
 }

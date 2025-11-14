@@ -14,6 +14,7 @@ import Stats from '@/components/sections/Stats'
 import Testimonials from '@/components/sections/Testimonials'
 import Contact from '@/components/sections/Contact'
 import AnimatedImageBanner from '@/components/sections/AnimatedImageBanner'
+import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -193,13 +194,12 @@ export default function Home() {
                       transition={{ duration: 0.8, delay: 0.2 }}
                       className="mb-8"
                     >
-                      <h1 className="text-8xl md:text-8xl font-bold mb-6">
-                        <span className="text-primary-800">𝑀𝑦𝑠𝑡𝑖𝑐𝑎𝑙</span>
-                        <span className="text-accent-600">PIΞCΞS</span>
+                      <h1 className="text-8xl md:text-8xl font-light mb-6">
+                        <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
                       </h1>
                       <p className="text-lg text-primary-600 max-w-2xl mx-auto">
                         Wear the unseen future. Feel the divine in every thread.
-                      </p>
+                      </p>Wear the unseen future. Feel the divine in every thread.
                     </motion.div>
 
                     <motion.div

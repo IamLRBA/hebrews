@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { FileText, CheckCircle, AlertCircle, Scale, Users, Shield } from 'lucide-react'
 import Link from 'next/link'
+import MysticalPiecesWord, { renderWithMysticalPieces } from '@/components/ui/MysticalPiecesWord'
 
 export default function TermsConditions() {
   const sections = [
@@ -40,7 +41,7 @@ export default function TermsConditions() {
       icon: Scale,
       title: 'Limitations',
       content: [
-        'In no event shall MysticalPIECES be liable for any damages',
+        <>In no event shall <MysticalPiecesWord /> be liable for any damages</>,
         'This includes direct, indirect, incidental, or consequential damages',
         'Our liability is limited to the maximum extent permitted by law',
         'Some jurisdictions do not allow limitations on liability'
@@ -53,7 +54,7 @@ export default function TermsConditions() {
         'These terms are governed by the laws of Uganda',
         'Any disputes will be resolved in the courts of Uganda',
         'If any provision is found to be unenforceable, the remaining provisions remain in effect',
-        'These terms constitute the entire agreement between you and MysticalPIECES'
+        <>These terms constitute the entire agreement between you and <MysticalPiecesWord /></>
       ]
     }
   ]
@@ -104,7 +105,7 @@ export default function TermsConditions() {
         >
           <h2 className="text-2xl font-bold text-primary-900 mb-4">Introduction</h2>
           <p className="text-neutral-700 leading-relaxed mb-4">
-            These terms and conditions govern your use of the MysticalPIECES website and services. 
+            These terms and conditions govern your use of the <MysticalPiecesWord /> website and services. 
             By using our website, you accept these terms and conditions in full.
           </p>
           <p className="text-neutral-700 leading-relaxed">
@@ -132,7 +133,9 @@ export default function TermsConditions() {
                 {section.content.map((item, itemIndex) => (
                   <li key={itemIndex} className="flex items-start">
                     <div className="w-2 h-2 bg-primary-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <span className="text-neutral-700 leading-relaxed">{item}</span>
+                    <span className="text-neutral-700 leading-relaxed">
+                      {renderWithMysticalPieces(item, `terms-section-${index}-${itemIndex}`)}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -151,7 +154,7 @@ export default function TermsConditions() {
           <div className="space-y-4 text-neutral-700">
             <p>
               <strong>Intellectual Property:</strong> All content on this website, including text, graphics, logos, and software, 
-              is the property of MysticalPIECES and is protected by copyright laws.
+              is the property of <MysticalPiecesWord /> and is protected by copyright laws.
             </p>
             <p>
               <strong>Privacy:</strong> Your privacy is important to us. Please review our Privacy Policy, which also governs 

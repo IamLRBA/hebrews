@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Star } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
+import { renderWithMysticalPieces } from '@/components/ui/MysticalPiecesWord'
 
 interface Testimonial {
   id: number | string
@@ -124,7 +125,9 @@ export default function Testimonials() {
                       <svg className="w-3 h-3 text-primary-600 dark:text-primary-300" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
                     </div>
                   </div>
-                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-xs leading-snug mb-2 flex-grow line-clamp-4">"{testimonial.text}"</p>
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-xs leading-snug mb-2 flex-grow line-clamp-4">
+                    &ldquo;{renderWithMysticalPieces(testimonial.text, `card-${testimonial.id}-${index}`)}&rdquo;
+                  </p>
                   <div className="stars flex justify-center mb-2">{renderStars(testimonial.rating)}</div>
                   <div className="testimonial-author">
                     <div className="author-image w-8 h-8 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-sm mx-auto mb-1">
@@ -157,7 +160,9 @@ export default function Testimonials() {
                   <X />
                 </button>
                 <div className="testimonial-content">
-                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-lg leading-relaxed mb-6">"{selectedTestimonial.fullText}"</p>
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-lg leading-relaxed mb-6">
+                    &ldquo;{renderWithMysticalPieces(selectedTestimonial.fullText, `modal-${selectedTestimonial.id}`)}&rdquo;
+                  </p>
                   <div className="stars flex justify-center mb-6">{renderStars(selectedTestimonial.rating)}</div>
                 </div>
                 <div className="testimonial-author">

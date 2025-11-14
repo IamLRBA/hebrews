@@ -260,6 +260,33 @@
     font-weight: var(--font-weight-light) !important;
   }
 
+  .mysticalpieces-word {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
+    letter-spacing: 0.02em;
+  }
+
+  .mysticalpieces-word__m {
+    font-family: 'Mrs Saint Delafield', 'MuseoModerno', cursive;
+    font-weight: 400;
+    font-size: inherit;
+    line-height: 1;
+  }
+
+  .mysticalpieces-word__p {
+    font-family: 'Uncial Antiqua', 'MuseoModerno', serif;
+    font-weight: 400;
+    font-size: inherit;
+    line-height: 1;
+    margin-left: -0.02em;
+  }
+
+  .mysticalpieces-word__space {
+    display: inline-block;
+    width: 0.25em;
+  }
+
   a {
     color: var(--color-text-accent);
     text-decoration: none;
