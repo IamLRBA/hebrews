@@ -37,28 +37,28 @@ export default function CEOProfile() {
   const skills = [
     {
       category: '⾕ ᗩᖇᑕᕼITEᑕTᑌᖇE',
-      description: 'Design building plans and provide renders using ArchiCAD and Lumion. Modern, glassy, solid, open, linear designs with earthy colors.',
-      details: 'Started architectural school in 2021, learned from tutorials and experimentation. Creates "out of this world" designs that merge with surroundings.'
+      description: 'Composes living structures in ArchiCAD and Lumion that focus on merging sustainability and beauty with poised modern forms washed in earth tones.',
+      details: 'Entered architecture school in 2021 and kept learning through night-long tutorials and experiments, crafting “out of this world” concepts that still lean into their landscapes.'
     },
     {
       category: 'ᗰᑌֆIᑕ ᗩᑎᗪ ᑭOETᖇY 𝄞',
-      description: 'Acapella singing since 2015-2018, mastered all voices. Writes poetry, rap verses, and songs with meaningful, interconnected lyrics.',
-      details: 'Influenced by J.Cole, Kendrick Lamar, Eminem, UK rappers like Santan Dave, Aitch, and Skepta. Uses melodic rap flows and emo melodic trap beats.'
+      description: 'Shapes harmonies with an acapella-trained voice and pens verses where each lyric loops back to purpose, rap cadence, and story.',
+      details: 'Since 2015 the pen has been guided by J. Cole, Kendrick, Eminem, and UK minds like Santan Dave, Aitch, and Skepta—melding melodic rap and emo trap textures into layered narratives.'
     },
     {
       category: '☯ ᗩᖇT ᗩᑎᗪ ᗪEᔕIGᑎ',
-      description: 'Drawing since childhood, took Fine-Art as major subject. Creates digital and physical art, sculptures, portraits, furniture, and house decor.',
-      details: 'Developed unique spatial awareness and ability to see things differently. Practices "Jerry-Rig" - doing the most with available resources.'
+      description: 'A Fine-Art foundation nurtured since childhood now flows through digital canvases, sculpture, bespoke furniture, and décor concepts.',
+      details: 'Trains an instinctive spatial awareness and a “Jerry-rig” discipline—seeing new angles, improvising with whatever is at hand, and bending materials into poetic form.'
     },
     {
       category: 'ᔕOᖴTᗯᗩᖇE ᗪEᐯEᒪOᑭᗰEᑎT ⚛',
-      description: 'Started coding in September last year, self-taught in HTML, CSS, JavaScript, Java, React and other frameworks.',
-      details: 'Specializes in front-end development, UI/UX design, and some back-end projects. Creates personal apps and sites.'
+      description: 'Since September, 2024, code became another atelier. Self-taught in HTML, CSS, JavaScript, Java, React, and allied frameworks.',
+      details: 'Focus stays on expressive front-end work, thoughtful UI/UX, and select back-end explorations, building personal products that feel crafted, not just coded.'
     },
     {
       category: '✃ ᖴᗩᔕᕼIOᑎ',
-      description: 'Sees fashion as art form, dresses according to mood and occasion. Excellent at accessorizing and proportioning outfits.',
-      details: 'Not limited to any style - classy, gentle, retro vintage, modern, sports, or street-wear. Modifies and creates new designs.'
+      description: 'Treats dressing as a gallery—curating silhouettes by mood, obsessing over proportion, and finishing every look with deliberate accessories.',
+      details: 'Moves fluidly from gentle classics to retro vintage, modern tailoring, sports, and streetwear, often editing or inventing garments to match the moment.'
     }
   ]
 
@@ -128,7 +128,7 @@ export default function CEOProfile() {
       </motion.div>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center">
+      <section className="relative min-h-screen flex items-center justify-center pt-28 md:pt-36">
         <motion.div
           style={{ y, opacity, scale }}
           className="text-center z-20 px-4"
