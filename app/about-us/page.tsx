@@ -29,8 +29,8 @@ export default function AboutUsPage() {
               href="/sections/shop"
               className="btn btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 group"
             >
-              <span>VᎥᎬᏔ ᎢᎻᎬ ᔕᕼOᑭ ᑭOᖇTᗩᒪ</span>
-              <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+              <span>view the ᔕᕼOᑭ portal</span>
+              <span className="transform group-hover:translate-x-1 transition-transform duration-300 text-2xl leading-none">⟹</span>
             </Link>
           </motion.div>
         </div>
