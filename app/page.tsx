@@ -195,35 +195,33 @@ export default function Home() {
                       transition={{ duration: 0.8, delay: 0.2 }}
                       className="mb-8"
                     >
-                      <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-0">
-                        <LogoMark animated size={280} />
-                        <h1 className="text-6xl md:text-7xl font-light leading-tight mt-2">
-                          <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
-                        </h1>
-                        <p className="text-lg text-primary-600 max-w-2xl mt-3">
-                          Wear the unseen future. Feel the divine in every thread.
-                        </p>
+                        <div className="max-w-6xl mx-auto w-full flex flex-col md:flex-row items-center text-center md:text-left gap-4 md:gap-10 md:justify-center px-4 md:px-8">
+                          <div className="w-full md:w-auto flex justify-center md:justify-start md:pl--8">
+                            <LogoMark animated size={340} className="md:-mt-4" />
+                          </div>
+                          <div className="flex flex-col items-center md:items-start gap-1 w-full max-w-2xl md:pr-6">
+                            <h1 className="text-6xl md:text-7xl font-light leading-tight">
+                              <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
+                            </h1>
+                            <p className="text-lg text-primary-600 max-w-2xl text-center md:text-left">
+                              Wear the unseen future. Feel the divine in every thread.
+                            </p>
+                          <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center mt-4">
+                            <button 
+                              onClick={() => scrollToSection('portals-section')}
+                              className="btn btn-primary btn-hover-secondary-filled text-lg px-8 py-4"
+                            >
+                              E᙭ᑭᒪOᖇE Oᑌᖇ ᗯOᖇK
+                            </button>
+                            <button 
+                              onClick={() => scrollToSection('contact-section')}
+                              className="btn btn-secondary btn-hover-primary-outline text-lg px-8 py-4"
+                            >
+                              GET Iᑎ TOᑌᑕᕼ
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.4 }}
-                      className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-                    >
-                      <button 
-                        onClick={() => scrollToSection('portals-section')}
-                        className="btn btn-primary btn-hover-secondary-filled text-lg px-8 py-4"
-                      >
-                        E᙭ᑭᒪOᖇE Oᑌᖇ ᗯOᖇK
-                      </button>
-                      <button 
-                        onClick={() => scrollToSection('contact-section')}
-                        className="btn btn-secondary btn-hover-primary-outline text-lg px-8 py-4"
-                      >
-                        GET Iᑎ TOᑌᑕᕼ
-                      </button>
                     </motion.div>
                   </motion.div>
                 </div>

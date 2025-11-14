@@ -49,7 +49,7 @@ export default function Footer() {
         .social-link:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.4); color: white; transform: translateY(-2px); }
         .footer-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%); margin: 2rem 0; }
         .copyright-section { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-        .footer-logo { margin-bottom: 0.5rem; }
+        .footer-logo { margin-bottom: 0.5rem; display: flex; justify-content: center; }
         .tagline { font-size: 1rem; color: var(--color-primary-300); margin: 0; font-weight: var(--font-weight-light); letter-spacing: 0.02em; }
         .copyright { font-size: 0.875rem; color: var(--color-primary-300); margin: 0; }
         .copyright2 { font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); margin: 0; }
