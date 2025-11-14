@@ -199,10 +199,11 @@ export default function Home() {
                           <div className="w-full md:w-auto flex justify-center md:justify-start md:pl--8">
                             <LogoMark animated size={340} className="md:-mt-4" />
                           </div>
-                          <div className="flex flex-col items-center md:items-start gap-1 w-full max-w-2xl md:pr-6">
+                          <div className="flex flex-col items-center md:items-start gap-3 w-full max-w-2xl md:pr-6">
                             <h1 className="text-6xl md:text-7xl font-light leading-tight">
                               <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
                             </h1>
+                            <div className="hero-divider w-20 h-2 bg-primary-400/80 rounded-full" />
                             <p className="text-lg text-primary-600 max-w-2xl text-center md:text-left">
                               Wear the unseen future. Feel the divine in every thread.
                             </p>

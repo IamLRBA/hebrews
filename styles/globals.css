@@ -560,6 +560,12 @@
     animation: logoFloat 8s ease-in-out infinite;
   }
 
+.hero-divider {
+  display: inline-block;
+  border-radius: 9999px;
+  animation: heroDividerSlide 4s ease-in-out infinite;
+}
+
   .portal-card::before {
     /* stylelint-disable-next-line property-no-unknown */
     content: '';
@@ -772,6 +778,18 @@
   }
   100% {
     transform: translateY(-6px);
+  }
+}
+
+@keyframes heroDividerSlide {
+  0% {
+    transform: translateX(-20px);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+  100% {
+    transform: translateX(-20px);
   }
 }
 
