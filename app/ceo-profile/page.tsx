@@ -374,7 +374,7 @@ export default function CEOProfile() {
               }
             `}</style>
             {/* Main Image */}
-            <div className="relative mb-8 group">
+            <div className="relative mb-8 group p-1 rounded-2xl border border-white/60 dark:border-white/30" style={{ borderWidth: '1px' }}>
               <img
                 src={galleryImages[currentImageIndex]}
                 alt={`CEO Image ${currentImageIndex + 1}`}
