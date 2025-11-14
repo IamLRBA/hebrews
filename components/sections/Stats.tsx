@@ -15,7 +15,7 @@ const statsData = [
   { icon: Users, number: 500, suffix: "+", label: "Happy Customers", description: "Satisfied fashion enthusiasts", color: "from-primary-400 to-primary-600" },
   { icon: Award, number: 1200, suffix: "+", label: "Items Sold", description: "Unique thrifted & new pieces", color: "from-accent-400 to-accent-600" },
   { icon: Clock, number: 3, suffix: "+", label: "Years Curating", description: "Fashion expertise & style", color: "from-primary-500 to-primary-700" },
-  { icon: Star, number: 98, suffix: "%", label: "Customer Satisfaction", description: "Exceeding expectations", color: "from-accent-500 to-accent-700" },
+  { icon: Star, number: 98, suffix: "%", label: "Client Satisfaction", description: "Exceeding expectations", color: "from-accent-500 to-accent-700" },
 ]
 
 const AnimatedCounter = ({ target, suffix = "", duration = 2000, triggerAnimation = false }: { target: number, suffix?: string, duration?: number, triggerAnimation?: boolean }) => {

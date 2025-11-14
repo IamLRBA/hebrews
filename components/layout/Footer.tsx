@@ -29,7 +29,7 @@ export default function Footer() {
           <Link href="/" className="tagline text-3xl md:text-5xl leading-tight inline-block hover:opacity-90 transition-opacity">
             <MysticalPiecesWord /> 
           </Link>
-          <p className="tagline text-1xl md:text-2xl">
+          <p className="tagline text-1xl md:text-2xl font-light">
             Style that transcends the ordinary.
           </p>
           <p className="copyright">

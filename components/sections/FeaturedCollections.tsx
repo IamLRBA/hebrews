@@ -164,7 +164,7 @@ export default function FeaturedCollections() {
             Featured <span className="text-accent-600">Collections</span>
           </h2>
           <p className="text-xl text-primary-700 max-w-3xl mx-auto mb-6">
-            Carefully curated selections—each piece chosen for its unique story
+            Carefully curated selections. Each piece chosen for its unique story
           </p>
         </motion.div>
 

@@ -345,7 +345,7 @@ export default function ShopPage() {
         </motion.div>
       </section>
 
-      {/* ⏣ Our Services */}
+      {/* ⏣ Our PRODUCTS */}
       <FashionServices />
 
       {/* Moodboard Section */}

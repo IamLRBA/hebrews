@@ -51,7 +51,7 @@ export default function Contact() {
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="section-title">
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span></h2>
-          <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">Have questions about our fashion collection? Need styling advice? We're here to help you find the perfect pieces for your wardrobe.</p>
+          <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">Any questions about our fashion collection? Need styling advice? Contact us and we're here to help you find answers.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
