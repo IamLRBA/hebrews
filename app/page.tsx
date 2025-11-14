@@ -199,7 +199,7 @@ export default function Home() {
                       </h1>
                       <p className="text-lg text-primary-600 max-w-2xl mx-auto">
                         Wear the unseen future. Feel the divine in every thread.
-                      </p>Wear the unseen future. Feel the divine in every thread.
+                      </p>
                     </motion.div>
 
                     <motion.div

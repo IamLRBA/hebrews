@@ -17,7 +17,13 @@ export default function MysticalPiecesWord({ className, mysticalClassName, piece
     <span className={classes}>
       <span className={mysticalClasses}>Mystical</span>
       <span className="mysticalpieces-word__space">&nbsp;</span>
-      <span className={piecesClasses}>PIECES</span>
+      <span className={piecesClasses}>
+        PIECE
+        <span className="mysticalpieces-word__s">
+          S
+          <span className="mysticalpieces-word__symbol" aria-hidden="true">®</span>
+        </span>
+      </span>
     </span>
   )
 }
