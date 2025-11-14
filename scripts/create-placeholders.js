@@ -62,7 +62,7 @@ function createSVGPlaceholder(category, productIndex, width = 400, height = 400)
 }
 
 function createPlaceholderImages() {
-  const baseDir = path.join(__dirname, '../public/assets/images/services/fashion');
+  const baseDir = path.join(__dirname, '../public/assets/images/products-sections/fashion');
   
   Object.entries(services).forEach(([category, products]) => {
     const categoryDir = path.join(baseDir, category);

@@ -1,11 +1,11 @@
-# Service Thumbnail Images Guide
+# Product Thumbnail Images Guide
 
 ## Overview
-This directory contains all thumbnail images for the "⏣ Our Services" sections across all 5 portal pages. Each service has 4 thumbnail images that appear in the dropdown description when users click "Read More".
+This directory contains all thumbnail images for the "⏣ Our Products" sections across all 5 portal pages. Each product category has 4 thumbnail images that appear in the dropdown description when users click "Read More".
 
 ## Folder Structure
 ```
-public/assets/images/services/
+public/assets/images/products-sections/
 ├── architecture/           # Architecture Portal (24 thumbnails)
 │   ├── architectural-design/
 │   │   ├── thumb1.jpg
@@ -62,7 +62,7 @@ public/assets/images/services/
 3. Keep the same filenames and format
 4. Ensure images are optimized for web (compressed but high quality)
 
-## Services by Portal
+## Products by Portal
 
 ### Architecture Portal
 1. **Architectural Design** - Custom building designs

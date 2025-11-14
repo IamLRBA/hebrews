@@ -192,7 +192,7 @@
       }
     },
     "coats": {
-      "title": "Coats",
+      "title": "OuterWear",
       "description": "Stylish outerwear to keep you warm and fashionable.",
       "subcategories": {
         "sweater": [
@@ -278,7 +278,7 @@
       }
     },
     "pants-and-shorts": {
-      "title": "Pants and Shorts",
+      "title": "Bottoms",
       "description": "Complete your look with our selection of pants and shorts.",
       "subcategories": {
         "gentle": [
@@ -364,7 +364,7 @@
       }
     },
     "footwear": {
-      "title": "Footwear",
+      "title": "FootWear",
       "description": "Step out in style with our curated footwear collection.",
       "subcategories": {
         "gentle": [

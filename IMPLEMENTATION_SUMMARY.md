@@ -14,9 +14,9 @@ All 6 services renamed with new product categories:
 
 **Shirts** → Gentle, Checked, Textured, Denim  
 **Tees** → Plain, Graphic, Collared, Sporty  
-**Coats** → Sweater, Hoodie, Coat, Jacket  
-**Pants & Shorts** → Gentle, Denim, Cargo, Sporty  
-**Footwear** → Gentle, Sneakers, Sandals, Boots  
+**OuterWear** → Sweater, Hoodie, Coat, Jacket  
+**Bottoms** → Gentle, Denim, Cargo, Sporty  
+**FootWear** → Gentle, Sneakers, Sandals, Boots  
 **Accessories** → Rings & Necklaces, Shades & Glasses, Bracelets & Watches, Decor
 
 Each with:
@@ -67,8 +67,8 @@ Each with:
 
 ## 📁 Where to Place Your Images
 
-### Service Thumbnails
-Place in: `public/assets/images/services/fashion/[category]/thumb[1-4].jpg`
+### Product Showcase Thumbnails
+Place in: `public/assets/images/products-sections/fashion/[category]/thumb[1-4].jpg`
 
 ```
 shirts/thumb1.jpg (Gentle)
@@ -139,13 +139,13 @@ See `public/assets/images/products/README.md` for full structure.
 - `lib/emails/templates.ts`
 - `data/products.json`
 - `scripts/create-placeholders.js`
-- `public/assets/images/services/fashion/README.md`
+- `public/assets/images/products-sections/README.md`
 - `public/assets/images/products/README.md`
 
 ### Modified Files
 - `app/page.tsx` (removed About Us section)
 - `components/Navbar.tsx` (added About Us link)
-- `sections/FashionServices.tsx` (product categories + links)
+- `sections/FashionProducts.tsx` (product categories + links)
 - `styles/globals.css` (added text-gradient)
 
 ## 🎨 Features Included

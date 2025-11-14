@@ -9,7 +9,7 @@ interface ProductSubcategory {
   slug: string
 }
 
-interface Service { 
+interface Product { 
   id: number
   number: string
   title: string
@@ -23,13 +23,13 @@ interface Service {
   }
 }
 
-const services: Service[] = [
+const products: Product[] = [
   { 
     id: 1, 
     number: '01', 
     title: 'Shirts', 
     description: 'Discover our collection of elegant and versatile shirts, from classic button-downs to modern casual styles that complement any wardrobe.', 
-    image: '/assets/images/services/fashion/personal-styling.jpg',
+    image: '/assets/images/products-sections/fashion/personal-styling.jpg',
     slug: 'shirts',
     subcategories: [
       { name: 'Gentle', slug: 'gentle' },
@@ -47,7 +47,7 @@ const services: Service[] = [
     number: '02', 
     title: 'Tees', 
     description: 'Comfortable and stylish t-shirts in various designs, materials, and fits perfect for everyday wear or casual outings.', 
-    image: '/assets/images/services/fashion/wardrobe-consultation.jpg',
+    image: '/assets/images/products-sections/fashion/wardrobe-consultation.jpg',
     slug: 'tees',
     subcategories: [
       { name: 'Plain', slug: 'plain' },
@@ -63,9 +63,9 @@ const services: Service[] = [
   { 
     id: 3, 
     number: '03', 
-    title: 'Coats', 
+    title: 'OuterWear', 
     description: 'Stylish outerwear to keep you warm and fashionable, from classic trench coats to modern jackets for all seasons.', 
-    image: '/assets/images/services/fashion/event-styling.jpg',
+    image: '/assets/images/products-sections/fashion/event-styling.jpg',
     slug: 'coats',
     subcategories: [
       { name: 'Sweater', slug: 'sweater' },
@@ -81,9 +81,9 @@ const services: Service[] = [
   { 
     id: 4, 
     number: '04', 
-    title: 'Pants and Shorts', 
+    title: 'Bottoms', 
     description: 'Complete your look with our selection of pants and shorts, ranging from formal trousers to relaxed casual styles.', 
-    image: '/assets/images/services/fashion/shopping-assistance.jpg',
+    image: '/assets/images/products-sections/fashion/shopping-assistance.jpg',
     slug: 'pants-and-shorts',
     subcategories: [
       { name: 'Gentle', slug: 'gentle' },
@@ -99,9 +99,9 @@ const services: Service[] = [
   { 
     id: 5, 
     number: '05', 
-    title: 'Footwear', 
+    title: 'FootWear', 
     description: 'Step out in style with our curated footwear collection including sneakers, boots, and more for every occasion.', 
-    image: '/assets/images/services/fashion/style-education.jpg',
+    image: '/assets/images/products-sections/fashion/style-education.jpg',
     slug: 'footwear',
     subcategories: [
       { name: 'Gentle', slug: 'gentle' },
@@ -110,8 +110,8 @@ const services: Service[] = [
       { name: 'Boots', slug: 'boots' }
     ],
     quote: {
-      text: 'Walk like you have a destination and shoes that can take you there.',
-      author: 'Manolo Blahnik'
+      text: 'Sneakers aren’t just utilitarian, they\'re borderline art objects.',
+      author: 'Virgil Abloh'
     }
   },
   { 
@@ -119,7 +119,7 @@ const services: Service[] = [
     number: '06', 
     title: 'Accessories', 
     description: 'Add the perfect finishing touches with our range of accessories including bags, belts, and other essential styling elements.', 
-    image: '/assets/images/services/fashion/virtual-styling.jpg',
+    image: '/assets/images/products-sections/fashion/virtual-styling.jpg',
     slug: 'accessories',
     subcategories: [
       { name: 'Rings & Necklaces', slug: 'rings-necklaces' },
@@ -134,7 +134,7 @@ const services: Service[] = [
   }
 ]
 
-export default function FashionServices() {
+export default function FashionProducts() {
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [hoveredThumbnail, setHoveredThumbnail] = useState<{serviceId: number, thumbIndex: number} | null>(null)
   
@@ -143,9 +143,9 @@ export default function FashionServices() {
   return (
     <section className="py-20 px-4">
       <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} viewport={{ once: true }} className="max-w-7xl mx-auto">
-        <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">⏣ Our <span className="text-primary-400">Services</span></h2>
+        <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">⏣ Our <span className="text-primary-400">Products</span></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto px-8">
-          {services.map((s, i) => { 
+          {products.map((s, i) => { 
             const isRight = i % 2 === 1
             return (
               <motion.div key={s.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className={`flex flex-col ${isRight ? 'items-end' : 'items-start'}`}>
@@ -186,12 +186,12 @@ export default function FashionServices() {
                               >
                                 <div className="bg-primary-900/20 rounded-lg h-48 w-48 flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg hover:shadow-none transition-all duration-300 cursor-pointer group">
                             <img 
-                              src={`/assets/images/services/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
+                              src={`/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
                               alt={`${subcategory.name} - ${s.title}`}
                               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement
-                                target.src = `/assets/images/services/fashion/${s.slug}/thumb${thumbIndex}.svg`
+                                target.src = `/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.svg`
                               }}
                             />
                                   <div className="hidden text-primary-400 text-sm items-center justify-center w-full h-full">

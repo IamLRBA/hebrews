@@ -45,9 +45,9 @@ export default function FeaturedCollections() {
         const categories = [
           { slug: 'shirts', name: 'Shirts' },
           { slug: 'tees', name: 'Tees' },
-          { slug: 'coats', name: 'Coats' },
-          { slug: 'pants-and-shorts', name: 'Pants & Shorts' },
-          { slug: 'footwear', name: 'Footwear' },
+          { slug: 'coats', name: 'OuterWear' },
+          { slug: 'pants-and-shorts', name: 'Bottoms' },
+          { slug: 'footwear', name: 'FootWear' },
           { slug: 'accessories', name: 'Accessories' }
         ]
 

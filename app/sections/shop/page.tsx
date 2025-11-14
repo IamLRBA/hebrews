@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
 import { HiMiniShoppingBag, HiOutlineShoppingBag } from 'react-icons/hi2'
 import FashionVideoSection from '@/components/sections/FashionVideoSection'
-import FashionServices from '@/components/sections/FashionServices'
+import FashionProducts from '@/components/sections/FashionProducts'
 
 export default function ShopPage() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -346,7 +346,7 @@ export default function ShopPage() {
       </section>
 
       {/* ⏣ Our PRODUCTS */}
-      <FashionServices />
+      <FashionProducts />
 
       {/* Moodboard Section */}
       <section className="py-20 px-4">

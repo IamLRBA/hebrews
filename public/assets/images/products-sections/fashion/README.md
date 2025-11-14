@@ -1,10 +1,10 @@
-# Fashion Service Images
+# Fashion Product Images
 
 ## Folder Structure
 
 Place your actual product images in the following folders:
 
-### Service Thumbnails (4 images per service)
+### Product Thumbnails (4 images per category)
 
 - `shirts/thumb1.jpg` - Gentle
 - `shirts/thumb2.jpg` - Checked  
@@ -47,7 +47,7 @@ Place your actual product images in the following folders:
 
 Currently using SVG placeholder images. These will automatically be replaced when you add your JPG images with the same filenames.
 
-### Main Service Images
+### Main Product Images
 
 Also update these main service banner images in the parent directory:
 
