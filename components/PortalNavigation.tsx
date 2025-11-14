@@ -10,7 +10,6 @@ const portals = [
   {
     id: 1,
     title: "ᔕᕼOᑭ",
-    subtitle: "Curated Style Portal",
     image: "/assets/images/sections/portals/fashion.jpg",
     href: "/sections/shop"
   }
@@ -124,20 +123,15 @@ export default function PortalNavigation() {
 
               {/* Content */}
               <div className="relative z-30 flex flex-col items-center text-center">
-                <HiMiniShoppingBag className="w-14 h-14 text-white drop-shadow-lg mb-3 transition-colors duration-300 group-hover:text-gray-200" aria-hidden="true" />
+                <HiMiniShoppingBag className="w-14 h-14 text-white drop-shadow-lg mb-3 transition-opacity duration-300 opacity-0 group-hover:opacity-100" aria-hidden="true" />
 
                 {/* Title */}
                 <h3 className="text-3xl font-bold text-white mb-2 transition-colors duration-300 text-center drop-shadow-lg shadow-2xl group-hover:text-gray-200">
                   {portal.title}
                 </h3>
 
-                {/* Subtitle */}
-                <p className="text-lg font-medium text-white/90 mb-4 transition-colors duration-300 text-center leading-tight drop-shadow-lg shadow-2xl group-hover:text-gray-200">
-                  {portal.subtitle}
-                </p>
-
                 {/* Explore Portal Button - Hidden by default, shown on hover */}
-                <div className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                <div className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 mb-2">
                   <div className={`btn btn-outline inline-flex items-center space-x-2 group-hover:scale-105 transition-transform duration-300 shadow-2xl ${
                     portal.id === 3 || portal.id === 5 
                       ? 'bg-gray-900/20 border-gray-900/30 text-gray-900 hover:bg-gray-900/30' 
