@@ -9,6 +9,7 @@ import { HiOutlineUserCircle, HiUserCircle, HiOutlineShoppingBag, HiMiniShopping
 import { ShoppingCart } from 'lucide-react'
 import SettingsDropdown from '@/components/ui/SettingsDropdown'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import LogoMark from '@/components/ui/LogoMark'
 import { CartManager } from '@/lib/cart'
 import { ProductManager, type Product } from '@/lib/products'
 
@@ -239,9 +240,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 relative">
             <div className="flex items-center space-x-8">
               <Link href="/" className="flex items-center space-x-2 group">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-white font-light text-lg">M</span>
-                </div>
+                <LogoMark size={48} className="shrink-0 transition-transform duration-300 group-hover:scale-110" />
                 <MysticalPiecesWord className="text-xl text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300" />
               </Link>
               <div className="hidden lg:flex items-center space-x-8">

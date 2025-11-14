@@ -14,6 +14,7 @@ import Stats from '@/components/sections/Stats'
 import Testimonials from '@/components/sections/Testimonials'
 import Contact from '@/components/sections/Contact'
 import AnimatedImageBanner from '@/components/sections/AnimatedImageBanner'
+import LogoMark from '@/components/ui/LogoMark'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 
 export default function Home() {
@@ -192,12 +193,13 @@ export default function Home() {
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.8, delay: 0.2 }}
-                      className="mb-8"
+                      className="mb-8 flex flex-col md:flex-row items-center justify-center gap-6"
                     >
-                      <h1 className="text-8xl md:text-8xl font-light mb-6">
+                      <h1 className="text-6xl md:text-7xl lg:text-8xl font-light text-center md:text-left">
                         <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
                       </h1>
-                      <p className="text-lg text-primary-600 max-w-2xl mx-auto">
+                      <LogoMark animated size={140} className="hidden sm:flex md:ml-4" />
+                      <p className="text-lg text-primary-600 max-w-2xl mx-auto md:ml-6 md:text-left md:max-w-md">
                         Wear the unseen future. Feel the divine in every thread.
                       </p>
                     </motion.div>

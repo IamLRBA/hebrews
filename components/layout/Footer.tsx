@@ -23,7 +23,10 @@ export default function Footer() {
         <div className="footer-divider"></div>
         <div className="copyright-section">
           <p className="tagline">
-            <MysticalPiecesWord /> — Style that transcends the ordinary.
+            <MysticalPiecesWord /> 
+          </p>
+          <p className="tagline">
+            Style that transcends the ordinary.
           </p>
           <p className="copyright">
             © {new Date().getFullYear()} <MysticalPiecesWord />. All rights reserved.
