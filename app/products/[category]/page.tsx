@@ -109,6 +109,91 @@ export default function ProductCategoryPage() {
     }
   }
 
+  // Get category-specific animation config (opening transitions only)
+  const getCategoryConfig = () => {
+    const configs: Record<string, { 
+      titleAnimation: any,
+      descriptionAnimation: any
+    }> = {
+      'shirts': {
+        titleAnimation: {
+          initial: { opacity: 0, x: -100 },
+          animate: { opacity: 1, x: 0 },
+          transition: { duration: 0.8, delay: 0.2 }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.8, delay: 0.4 }
+        }
+      },
+      'tees': {
+        titleAnimation: {
+          initial: { opacity: 0, scale: 0.8 },
+          animate: { opacity: 1, scale: 1 },
+          transition: { duration: 0.7, delay: 0.15, type: 'spring' }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, x: 50 },
+          animate: { opacity: 1, x: 0 },
+          transition: { duration: 0.7, delay: 0.3 }
+        }
+      },
+      'coats': {
+        titleAnimation: {
+          initial: { opacity: 0, y: 50 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.8, delay: 0.25, type: 'spring' }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, scale: 0.9 },
+          animate: { opacity: 1, scale: 1 },
+          transition: { duration: 0.7, delay: 0.45 }
+        }
+      },
+      'pants-and-shorts': {
+        titleAnimation: {
+          initial: { opacity: 0, x: 100 },
+          animate: { opacity: 1, x: 0 },
+          transition: { duration: 0.75, delay: 0.2, type: 'spring' }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, y: -20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.7, delay: 0.35 }
+        }
+      },
+      'footwear': {
+        titleAnimation: {
+          initial: { opacity: 0, y: -30, scale: 0.9 },
+          animate: { opacity: 1, y: 0, scale: 1 },
+          transition: { duration: 0.8, delay: 0.3, type: 'spring' }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, x: -30 },
+          animate: { opacity: 1, x: 0 },
+          transition: { duration: 0.7, delay: 0.5 }
+        }
+      },
+      'accessories': {
+        titleAnimation: {
+          initial: { opacity: 0, scale: 0.5, rotate: -10 },
+          animate: { opacity: 1, scale: 1, rotate: 0 },
+          transition: { duration: 0.9, delay: 0.2, type: 'spring', bounce: 0.4 }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, rotateX: 90 },
+          animate: { opacity: 1, rotateX: 0 },
+          transition: { duration: 0.8, delay: 0.4 }
+        }
+      }
+    }
+    return configs[category] || configs['shirts']
+  }
+
+  const categoryConfig = getCategoryConfig()
+  const { titleAnimation, descriptionAnimation } = categoryConfig
+
   return (
     <div className="min-h-screen bg-unified relative overflow-hidden pt-24">
       {/* Navigation Back */}
@@ -128,19 +213,26 @@ export default function ProductCategoryPage() {
       </motion.div>
 
       {/* Hero Section */}
-      <section className="text-center py-20 px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className="text-6xl md:text-7xl font-bold mb-6">
-            <span className="text-gradient">{categoryData.title}</span>
-          </h1>
-          <p className="text-xl text-primary-200 max-w-3xl mx-auto mb-12">
+      <section className="relative text-center py-16 md:py-24 px-4 overflow-hidden">
+        <div className="relative max-w-6xl mx-auto">
+          {/* Title */}
+          <motion.h1
+            {...titleAnimation}
+            className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 md:mb-8 tracking-tight"
+          >
+            <span className="bg-gradient-to-r from-primary-800 via-primary-600 to-primary-800 dark:from-primary-200 dark:via-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
+              {categoryData.title.toUpperCase()}
+            </span>
+          </motion.h1>
+
+          {/* Description */}
+          <motion.p
+            {...descriptionAnimation}
+            className="text-lg md:text-xl text-primary-600 dark:text-primary-300 max-w-3xl mx-auto mb-12 font-light leading-relaxed"
+          >
             {categoryData.description}
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
 
         {/* Section Navigation */}
         <motion.div
