@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { SOCIAL_LINKS } from '@/lib/constants/social'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+import LogoMark from '@/components/ui/LogoMark'
 
 export default function Footer() {
   return (
@@ -22,11 +23,11 @@ export default function Footer() {
         </div>
         <div className="footer-divider"></div>
         <div className="copyright-section">
+          <div className="footer-logo">
+            <LogoMark size={96} />
+          </div>
           <p className="tagline">
-            <MysticalPiecesWord /> 
-          </p>
-          <p className="tagline">
-            Style that transcends the ordinary.
+            <MysticalPiecesWord /> — Style that transcends the ordinary.
           </p>
           <p className="copyright">
             © {new Date().getFullYear()} <MysticalPiecesWord />. All rights reserved.
@@ -48,6 +49,7 @@ export default function Footer() {
         .social-link:hover { background: rgba(255, 255, 255, 0.2); border-color: rgba(255, 255, 255, 0.4); color: white; transform: translateY(-2px); }
         .footer-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%); margin: 2rem 0; }
         .copyright-section { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+        .footer-logo { margin-bottom: 0.5rem; }
         .tagline { font-size: 1rem; color: var(--color-primary-300); margin: 0; font-weight: var(--font-weight-light); letter-spacing: 0.02em; }
         .copyright { font-size: 0.875rem; color: var(--color-primary-300); margin: 0; }
         .copyright2 { font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); margin: 0; }

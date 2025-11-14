@@ -193,13 +193,15 @@ export default function Home() {
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.8, delay: 0.2 }}
-                      className="mb-8 flex flex-col md:flex-row items-center justify-center gap-6"
+                      className="mb-8"
                     >
-                      <h1 className="text-6xl md:text-7xl lg:text-8xl font-light text-center md:text-left">
-                        <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
-                      </h1>
-                      <LogoMark animated size={140} className="hidden sm:flex md:ml-4" />
-                      <p className="text-lg text-primary-600 max-w-2xl mx-auto md:ml-6 md:text-left md:max-w-md">
+                      <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                        <h1 className="text-6xl md:text-7xl lg:text-8xl font-light text-center md:text-left">
+                          <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
+                        </h1>
+                        <LogoMark animated size={140} className="flex md:ml-4" />
+                      </div>
+                      <p className="text-lg text-primary-600 max-w-2xl mx-auto mt-4">
                         Wear the unseen future. Feel the divine in every thread.
                       </p>
                     </motion.div>
