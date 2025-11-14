@@ -470,7 +470,7 @@ export default function ShopPage() {
             Ready to <span className="text-primary-400">ᔕᕼOᑭ</span> Your Style?
           </h2>
           <p className="text-xl text-primary-300 mb-8">
-            Browse our collection of thrifted treasures and fresh finds to create your perfect look.
+            Explore our collection of thrifted treasures and for any questions, contact us!
           </p>
           <Link href="/#contact-section">
             <motion.button
@@ -478,7 +478,7 @@ export default function ShopPage() {
               whileTap={{ scale: 0.95 }}
               className="btn btn-outline btn-hover-secondary-filled text-lg px-8 py-4"
             >
-              Browse Collection
+              Contact Us
             </motion.button>
           </Link>
         </motion.div>

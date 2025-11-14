@@ -7,7 +7,7 @@ import { IconBrandWhatsapp } from '@tabler/icons-react'
 
 const contactInfo = [
   { title: 'EᗰᗩIᒪ', subtitle: 'jerrylarubafestus@gmail.com', icon: Mail, buttonText: 'Email Us', action: () => window.open('mailto:jerrylarubafestus@gmail.com', '_blank'), color: 'from-primary-500 to-primary-600' },
-  { title: 'ᑭᕼOᑎEᔕ', subtitle: '+256 774 948 086 & +256 755 915 549', icon: Phone, buttonText: 'Call Us', action: () => { const numbers = ['+256774948086', '+256755915549']; const selected = window.confirm(`Choose a number to call:\n1. ${numbers[0]}\n2. ${numbers[1]}`); if (selected !== null) { const number = numbers[selected ? 1 : 0]; window.open(`tel:${number}`, '_blank') } }, color: 'from-accent-500 to-accent-600' },
+  { title: 'ᑭᕼOᑎE', subtitle: '+256 774 948 086', icon: Phone, buttonText: 'Call Us', action: () => { const numbers = ['+256774948086', '+256755915549']; const selected = window.confirm(`Choose a number to call:\n1. ${numbers[0]}\n2. ${numbers[1]}`); if (selected !== null) { const number = numbers[selected ? 1 : 0]; window.open(`tel:${number}`, '_blank') } }, color: 'from-accent-500 to-accent-600' },
   { title: 'ᗯᕼᗩTᔕᗩᑭᑭ', subtitle: '+256 755 915 549', icon: IconBrandWhatsapp, buttonText: 'Message Us', action: () => window.open('https://wa.me/256755915549', '_blank'), color: 'from-accent-500 to-accent-600' },
   { title: 'ᒪOᑕᗩTIOᑎ', subtitle: 'Kampala, Uganda', icon: MapPin, buttonText: 'Find Us', action: () => window.open('https://maps.google.com/?q=Kampala,Uganda', '_blank'), color: 'from-primary-500 to-primary-600' },
 ]
