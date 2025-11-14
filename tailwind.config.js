@@ -52,8 +52,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        primary: ['Inter', 'sans-serif'],
-        display: ['Inter', 'sans-serif'],
+        primary: ['MuseoModerno', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['MuseoModerno', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       animation: {
