@@ -336,7 +336,7 @@ export default function CEOProfile() {
       <EducationalJourney />
 
       {/* Gallery Section */}
-      <section className="py-20 px-4">
+      <section className="py-36 px-4 mt-12">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
