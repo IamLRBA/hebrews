@@ -129,9 +129,9 @@ export default function Testimonials() {
                   </p>
                   <div className="stars flex justify-center mb-2">{renderStars(testimonial.rating)}</div>
                   <div className="testimonial-author">
-                    <div className="author-image w-8 h-8 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-sm mx-auto mb-1">
+                    <div className="author-image w-8 h-8 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-sm mx-auto mb-1 overflow-hidden">
                       {testimonial.image ? (
-                        <img src={testimonial.image} alt={testimonial.author} className="w-full h-full rounded-full object-cover" />
+                        <img src={testimonial.image} alt={testimonial.author} className="w-full h-full rounded-full object-cover grayscale" />
                       ) : (
                         testimonial.author.split(' ').map((n: string) => n[0]).join('')
                       )}
@@ -174,9 +174,9 @@ export default function Testimonials() {
                   <div className="stars flex justify-center mb-6">{renderStars(selectedTestimonial.rating)}</div>
                 </div>
                 <div className="testimonial-author">
-                  <div className="author-image w-16 h-16 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-xl mx-auto mb-4">
+                  <div className="author-image w-16 h-16 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-xl mx-auto mb-4 overflow-hidden">
                     {selectedTestimonial.image ? (
-                      <img src={selectedTestimonial.image} alt={selectedTestimonial.author} className="w-full h-full rounded-full object-cover" />
+                      <img src={selectedTestimonial.image} alt={selectedTestimonial.author} className="w-full h-full rounded-full object-cover grayscale" />
                     ) : (
                       selectedTestimonial.author.split(' ').map((n: string) => n[0]).join('')
                     )}
