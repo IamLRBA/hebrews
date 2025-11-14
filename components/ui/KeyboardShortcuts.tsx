@@ -23,6 +23,7 @@ const shortcuts: Shortcut[] = [
 
 export default function KeyboardShortcuts() {
   const [isOpen, setIsOpen] = useState(false)
+  const [showTooltip, setShowTooltip] = useState(false)
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -154,7 +155,22 @@ export default function KeyboardShortcuts() {
           delay: 0.1
         }}
         className="fixed bottom-8 left-8 z-50"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
+        <AnimatePresence>
+          {showTooltip && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-primary-900 dark:bg-primary-100 text-primary-50 dark:text-primary-900 text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none border border-primary-400/40"
+            >
+              Keyboard Shortcuts
+              <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-primary-900 dark:border-r-primary-100"></div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <motion.button
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}

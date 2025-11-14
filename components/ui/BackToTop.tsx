@@ -51,10 +51,10 @@ export default function BackToTop() {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none"
+                className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-primary-900 dark:bg-primary-100 text-primary-50 dark:text-primary-900 text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none border border-primary-400/40"
               >
                 Back to Top
-                <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-neutral-900 dark:border-l-neutral-100"></div>
+                <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-primary-900 dark:border-l-primary-100"></div>
               </motion.div>
             )}
           </AnimatePresence>
