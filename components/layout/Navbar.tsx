@@ -239,7 +239,7 @@ export default function Navbar() {
         <div className="container-custom">
           <div className="flex items-center justify-between h-16 relative">
             <div className="flex items-center space-x-8">
-              <Link href="/" className="flex items-center space-x-2 group">
+              <Link href="/" className="flex items-center gap-1.5 group">
                 <LogoMark size={48} className="shrink-0 transition-transform duration-300 group-hover:scale-110" />
                 <MysticalPiecesWord className="text-xl text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300" />
               </Link>

@@ -24,7 +24,7 @@ export default function Footer() {
         <div className="footer-divider"></div>
         <div className="copyright-section">
           <div className="footer-logo">
-            <LogoMark size={96} />
+            <LogoMark size={140} />
           </div>
           <p className="tagline">
             <MysticalPiecesWord /> — Style that transcends the ordinary.
