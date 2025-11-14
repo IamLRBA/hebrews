@@ -23,13 +23,13 @@ export default function Footer() {
         </div>
         <div className="footer-divider"></div>
         <div className="copyright-section">
-          <div className="footer-logo">
-            <LogoMark size={140} />
-          </div>
-          <p className="tagline">
+          <Link href="/" className="footer-logo group">
+            <LogoMark size={140} className="transition-transform duration-300 group-hover:scale-110" />
+          </Link>
+          <Link href="/" className="tagline text-3xl md:text-5xl leading-tight inline-block hover:opacity-90 transition-opacity">
             <MysticalPiecesWord /> 
-          </p>
-          <p className="tagline">
+          </Link>
+          <p className="tagline text-1xl md:text-2xl">
             Style that transcends the ordinary.
           </p>
           <p className="copyright">
