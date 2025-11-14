@@ -196,7 +196,7 @@ export default function Home() {
                       className="mb-8"
                     >
                       <div className="max-w-4xl mx-auto flex flex-col items-center text-center gap-4">
-                        <LogoMark animated size={200} className="md:-mb-16" />
+                        <LogoMark animated size={220} className="md:-mb-16 md:scale-[0.91]" />
                         <div className="flex flex-col items-center gap-2 w-full">
                           <h1 className="text-6xl md:text-7xl font-light leading-tight mb-1">
                             <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
@@ -230,7 +230,7 @@ export default function Home() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.5 }}
-                  className="absolute bottom-8 md:bottom-4 left-1/2 transform -translate-x-1/2"
+                  className="absolute bottom-8 md:bottom-1 left-1/2 transform -translate-x-1/2"
                 >
                   <motion.div
                     animate={{ y: [0, 10, 0] }}
