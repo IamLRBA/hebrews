@@ -200,10 +200,10 @@ export default function Home() {
                             <LogoMark animated size={340} className="md:-mt-4" />
                           </div>
                           <div className="flex flex-col items-center md:items-start gap-3 w-full max-w-2xl md:pr-6">
-                            <h1 className="text-6xl md:text-7xl font-light leading-tight">
+                            <h1 className="text-6xl md:text-7xl font-light leading-tight mb-1">
                               <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
                             </h1>
-                            <div className="hero-divider w-20 h-2 bg-primary-400/80 rounded-full" />
+                            <div className="hero-divider w-20 h-1 bg-primary-400/80 rounded-full md:self-start md:ml-20" />
                             <p className="text-lg text-primary-600 max-w-2xl text-center md:text-left">
                               Wear the unseen future. Feel the divine in every thread.
                             </p>
