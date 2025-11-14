@@ -266,7 +266,7 @@ export default function Navbar() {
                       const PortalIcon = portalActive ? TargetSolidIcon : TargetOutlineIcon
                       return <PortalIcon className="w-4 h-4 transition-colors" />
                     })()}
-                    <span className="font-light">Portals</span>
+                    <span className="font-light">Portal</span>
                     <span className="text-sm">⇓</span>
                     {portalItems.some(item => isActive(item.href)) ? (
                       <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
@@ -457,7 +457,7 @@ export default function Navbar() {
                 {/* Divider */}
                 <div className="w-full h-px bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-600 to-transparent my-4"></div>
 
-                {/* Portals Section */}
+                {/* Portal Section */}
                 <div className="space-y-1">
                   {/*
                     Determine if any portal item is active to style icon accordingly.
@@ -474,7 +474,7 @@ export default function Navbar() {
                           <div className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 group-hover:bg-primary-100 dark:group-hover:bg-primary-800/50 transition-colors duration-200">
                             <PortalIcon className="w-4 h-4 text-neutral-600 dark:text-neutral-400 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
                           </div>
-                          <span className="font-light">Portals</span>
+                          <span className="font-light">Portal</span>
                         </div>
                         <motion.span 
                           animate={{ rotate: isPortalsOpen ? 180 : 0 }}
