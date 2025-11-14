@@ -29,6 +29,7 @@ export default function CEOProfile() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const galleryThumbnailRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
@@ -89,6 +90,15 @@ export default function CEOProfile() {
 
   const closeImageModal = () => {
     setSelectedImage(null)
+  }
+
+  const scrollGalleryThumbnails = (direction: 'left' | 'right') => {
+    if (galleryThumbnailRef.current) {
+      galleryThumbnailRef.current.scrollBy({
+        left: direction === 'left' ? -180 : 180,
+        behavior: 'smooth'
+      })
+    }
   }
 
   // Scroll-based animations
@@ -349,8 +359,22 @@ export default function CEOProfile() {
           </h2>
           
           <div className="relative flex flex-col items-center">
+            <style jsx>{`
+              .gallery-thumbnail-row::-webkit-scrollbar {
+                height: 4px;
+                border-radius: 9999px;
+              }
+              .gallery-thumbnail-row::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 9999px;
+              }
+              .gallery-thumbnail-row::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 9999px;
+              }
+            `}</style>
             {/* Main Image */}
-            <div className="relative mb-8">
+            <div className="relative mb-8 group">
               <img
                 src={galleryImages[currentImageIndex]}
                 alt={`CEO Image ${currentImageIndex + 1}`}
@@ -359,28 +383,81 @@ export default function CEOProfile() {
               />
               
               {/* Fullscreen Button */}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => openImageModal(currentImageIndex)}
-                className="absolute top-4 right-4 w-10 h-10 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100 transition-all duration-300 hover:scale-110 shadow-lg"
+                className="absolute top-4 right-4 p-2 text-white/80 hover:text-white opacity-0 group-hover:opacity-100 transition-all duration-200"
+                aria-label="Expand photo"
               >
-                <Maximize2 className="w-5 h-5" />
-              </button>
+                <Maximize2 className="w-6 h-6" />
+              </motion.button>
             </div>
             
             {/* Navigation Arrows */}
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
             >
               <span className="text-2xl">⟸</span>
             </button>
             
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 btn btn-circle btn-hover-secondary-filled shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center group backdrop-blur-sm text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100"
             >
               <span className="text-2xl">⟹</span>
             </button>
+
+            {/* Thumbnails */}
+            {galleryImages.length > 1 && (
+              <div className="relative w-full max-w-3xl mt-6">
+                {galleryImages.length > 4 && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => scrollGalleryThumbnails('left')}
+                      className="p-1 text-primary-100 hover:text-white transition-colors duration-200"
+                      aria-label="Scroll thumbnails left"
+                    >
+                      <span className="text-xl">⟸</span>
+                    </motion.button>
+                  </div>
+                )}
+                <div
+                  ref={galleryThumbnailRef}
+                  className="gallery-thumbnail-row flex items-center justify-center gap-2 md:gap-3 overflow-x-auto scroll-smooth py-3 px-4"
+                  style={{ scrollbarWidth: 'thin' }}
+                >
+                  {galleryImages.map((img, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`flex-shrink-0 h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden border-2 transition-all duration-200 ${
+                        currentImageIndex === index ? 'border-primary-400 scale-105' : 'border-transparent hover:border-primary-300'
+                      }`}
+                      aria-label={`View photo ${index + 1}`}
+                    >
+                      <img src={img} alt={`CEO Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+                {galleryImages.length > 4 && (
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => scrollGalleryThumbnails('right')}
+                      className="p-1 text-primary-100 hover:text-white transition-colors duration-200"
+                      aria-label="Scroll thumbnails right"
+                    >
+                      <span className="text-xl">⟹</span>
+                    </motion.button>
+                  </div>
+                )}
+              </div>
+            )}
             
             {/* Dots Indicator */}
             <div className="flex justify-center space-x-3">
@@ -511,12 +588,14 @@ export default function CEOProfile() {
               className="relative flex items-center justify-center w-full h-full p-8"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
+              <motion.button
+                whileTap={{ rotate: 360, scale: 0.9 }}
                 onClick={closeImageModal}
-                className="absolute top-4 right-4 w-10 h-10 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100 transition-all duration-300 hover:scale-110 shadow-lg z-10"
+                className="absolute top-6 right-6 text-white/80 hover:text-white transition-all duration-200 z-10"
+                aria-label="Close photo"
               >
-                <X className="w-5 h-5" />
-              </button>
+                <X className="w-7 h-7" />
+              </motion.button>
               
               <img
                 src={galleryImages[selectedImage]}
