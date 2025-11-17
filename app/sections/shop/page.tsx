@@ -311,9 +311,9 @@ export default function ShopPage() {
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-300 mb-4">02</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Sustainability</h3>
+                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Anarchism</h3>
                 <p className="text-primary-200 text-lg max-w-md">
-                  Care for the Earth by choosing what lasts and reduce waste. Honor the resources we have and understand that every choice leaves an imprint on our shared world.
+                Every item you choose can be your act of shaping your own path. Select pieces that challenge the ordinary-fashion norm. 
                 </p>
               </div>
             </motion.div>
@@ -337,7 +337,7 @@ export default function ShopPage() {
                 <div className="text-6xl font-bold text-primary-200 mb-4">03</div>
                 <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Self-Discovery</h3>
                 <p className="text-primary-200 text-lg max-w-md">
-                  Understand who you truly are; your essence, your values, and what resonates with your spirit. Evolve with pieces that help you see yourself more clearly.
+                Evolve with pieces that help you see yourself more clearly; your essence, your values, and what resonates with your spirit. 
                 </p>
               </div>
             </motion.div>

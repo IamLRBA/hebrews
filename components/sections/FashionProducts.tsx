@@ -29,7 +29,7 @@ const products: Product[] = [
     number: '01', 
     title: 'Shirts', 
     description: 'Discover our collection of elegant and versatile shirts, from classic button-downs to modern casual styles that complement any wardrobe.', 
-    image: '/assets/images/products-sections/fashion/personal-styling.jpg',
+    image: '/assets/images/products-sections/fashion/shirts.jpg',
     slug: 'shirts',
     subcategories: [
       { name: 'Gentle', slug: 'gentle' },
@@ -47,7 +47,7 @@ const products: Product[] = [
     number: '02', 
     title: 'Tees', 
     description: 'Comfortable and stylish t-shirts in various designs, materials, and fits perfect for everyday wear or casual outings.', 
-    image: '/assets/images/products-sections/fashion/wardrobe-consultation.jpg',
+    image: '/assets/images/products-sections/fashion/tees.jpg',
     slug: 'tees',
     subcategories: [
       { name: 'Plain', slug: 'plain' },
@@ -65,7 +65,7 @@ const products: Product[] = [
     number: '03', 
     title: 'OuterWear', 
     description: 'Stylish outerwear to keep you warm and fashionable, from classic trench coats to modern jackets for all seasons.', 
-    image: '/assets/images/products-sections/fashion/event-styling.jpg',
+    image: '/assets/images/products-sections/fashion/outerwear.jpg',
     slug: 'coats',
     subcategories: [
       { name: 'Sweater', slug: 'sweater' },
@@ -83,7 +83,7 @@ const products: Product[] = [
     number: '04', 
     title: 'Bottoms', 
     description: 'Complete your look with our selection of pants and shorts, ranging from formal trousers to relaxed casual styles.', 
-    image: '/assets/images/products-sections/fashion/shopping-assistance.jpg',
+    image: '/assets/images/products-sections/fashion/bottoms.jpg',
     slug: 'pants-and-shorts',
     subcategories: [
       { name: 'Gentle', slug: 'gentle' },
@@ -101,7 +101,7 @@ const products: Product[] = [
     number: '05', 
     title: 'FootWear', 
     description: 'Step out in style with our curated footwear collection including sneakers, boots, and more for every occasion.', 
-    image: '/assets/images/products-sections/fashion/style-education.jpg',
+    image: '/assets/images/products-sections/fashion/footwear.jpg',
     slug: 'footwear',
     subcategories: [
       { name: 'Gentle', slug: 'gentle' },
@@ -119,7 +119,7 @@ const products: Product[] = [
     number: '06', 
     title: 'Accessories', 
     description: 'Add the perfect finishing touches with our range of accessories including bags, belts, and other essential styling elements.', 
-    image: '/assets/images/products-sections/fashion/virtual-styling.jpg',
+    image: '/assets/images/products-sections/fashion/accessories.jpg',
     slug: 'accessories',
     subcategories: [
       { name: 'Rings & Necklaces', slug: 'rings-necklaces' },

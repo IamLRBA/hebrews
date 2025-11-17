@@ -105,6 +105,7 @@
     line-height: var(--leading-normal);
     font-weight: var(--font-weight-thin);
     -webkit-font-smoothing: antialiased;
+    /* stylelint-disable-next-line property-no-unknown */
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
@@ -852,12 +853,12 @@
   transition: all var(--transition-base);
 }
 
-.audio-scrollbar::-webkit-scrollbar-thumb:hover {
+.audio-scrollbar:hover::-webkit-scrollbar-thumb {
   background: rgba(250, 204, 21, 0.5);
   background-clip: content-box;
 }
 
-.audio-scrollbar::-webkit-scrollbar-thumb:active {
+.audio-scrollbar:active::-webkit-scrollbar-thumb {
   background: rgba(250, 204, 21, 0.7);
   background-clip: content-box;
 }
@@ -890,12 +891,12 @@
   transition: all var(--transition-base);
 }
 
-.horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
+.horizontal-scrollbar:hover::-webkit-scrollbar-thumb {
   background: rgba(185, 149, 74, 0.45);
   background-clip: content-box;
 }
 
-.horizontal-scrollbar::-webkit-scrollbar-thumb:active {
+.horizontal-scrollbar:active::-webkit-scrollbar-thumb {
   background: rgba(185, 149, 74, 0.65);
   background-clip: content-box;
 }
@@ -924,12 +925,12 @@
   transition: all var(--transition-base);
 }
 
-.modal-scrollbar::-webkit-scrollbar-thumb:hover {
+.modal-scrollbar:hover::-webkit-scrollbar-thumb {
   background: rgba(185, 149, 74, 0.4);
   background-clip: content-box;
 }
 
-.modal-scrollbar::-webkit-scrollbar-thumb:active {
+.modal-scrollbar:active::-webkit-scrollbar-thumb {
   background: rgba(185, 149, 74, 0.6);
   background-clip: content-box;
 }
