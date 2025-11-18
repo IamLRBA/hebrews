@@ -154,7 +154,7 @@ export default function FashionProducts() {
               <motion.div key={s.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className={`flex flex-col ${isRight ? 'items-end' : 'items-start'}`}>
                 <div className={`flex flex-col space-y-6 ${isRight ? 'items-end' : 'items-start'}`}>
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
-                    <div className="text-6xl font-bold text-neutral-800 dark:text-primary-300">{s.number}</div>
+                    <div className="text-6xl font-bold text-neutral-700 dark:text-primary-400">{s.number}</div>
                     <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50">{s.title}</h3>
                   </motion.div>
                   <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl w-[352px] h-[352px] aspect-square flex-shrink-0 flex items-center justify-center p-4">
@@ -238,13 +238,13 @@ export default function FashionProducts() {
                         </div>
                         
                         {/* Quote Section */}
-                        <div className="mt-8 pt-8 border-t border-primary-500/20">
+                        <div className="mt-2 pt-4 border-t border-primary-500/20">
                           <blockquote className="text-center">
                             <Quote className="w-8 h-8 mx-auto mb-4 text-primary-400/50" />
                             <p className="text-neutral-700 dark:text-primary-400 italic text-lg md:text-xl mb-3">
                               {s.quote.text}
                             </p>
-                            <footer className="text-neutral-800 dark:text-primary-300 text-sm font-medium">
+                            <footer className="text-neutral-700 dark:text-primary-300 text-sm font-medium !bg-transparent !border-0 inline-block">
                               — {s.quote.author}
                             </footer>
                           </blockquote>
