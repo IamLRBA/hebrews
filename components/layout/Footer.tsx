@@ -8,7 +8,7 @@ import LogoMark from '@/components/ui/LogoMark'
 
 export default function Footer() {
   return (
-    <footer className="footer relative bg-gradient-to-b from-primary-100 to-primary-200 dark:bg-gradient-to-br dark:from-neutral-800 dark:to-neutral-900 text-neutral-850 dark:text-white overflow-hidden border-t border-primary-700/30 dark:border-neutral-700">
+    <footer className="footer relative bg-gradient-to-b from-primary-100 to-primary-200 text-neutral-850 dark:text-white overflow-hidden border-t border-primary-700/30 dark:border-neutral-700">
       <div className="footer-wave"></div>
       <div className="footer-content container-custom relative z-10">
         <div className="social-links">
@@ -45,6 +45,11 @@ export default function Footer() {
       </div>
       <style jsx>{`
         .footer { position: relative; }
+      `}</style>
+      <style jsx global>{`
+        .dark .footer { 
+          background: linear-gradient(to bottom, #191919, #252525) !important;
+        }
         .footer-wave { position: absolute; top: -10px; left: 0; width: 100%; height: 20px; background: linear-gradient(135deg, transparent 0%, transparent 30%, var(--color-primary-300) 30%, var(--color-primary-300) 35%, transparent 35%, transparent 65%, var(--color-primary-300) 65%, var(--color-primary-300) 70%, transparent 70%, transparent 100%); background-size: 40px 20px; }
         .footer-content { padding: 3rem 0 2rem; text-align: center; }
         .social-links { display: flex; justify-content: center; align-items: center; gap: 1.5rem; margin-bottom: 2rem; }

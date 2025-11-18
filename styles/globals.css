@@ -1035,7 +1035,8 @@
 
 /* Dark mode footer styles */
 .dark footer {
-  @apply bg-neutral-800 border-neutral-700;
+  @apply border-neutral-700;
+  background: linear-gradient(to bottom, #191919, #252525) !important;
 }
 
 .dark footer h3 {
