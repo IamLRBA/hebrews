@@ -153,14 +153,16 @@ export default function FashionProducts() {
             return (
               <motion.div key={s.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className={`flex flex-col ${isRight ? 'items-end' : 'items-start'}`}>
                 <div className={`flex flex-col space-y-6 ${isRight ? 'items-end' : 'items-start'}`}>
+                  <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
+                    <div className="text-6xl font-bold text-neutral-800 dark:text-primary-300">{s.number}</div>
+                    <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50">{s.title}</h3>
+                  </motion.div>
                   <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl w-[352px] h-[352px] aspect-square flex-shrink-0 flex items-center justify-center p-4">
                     <div className="bg-primary-900/20 rounded-xl w-full h-full aspect-square flex-shrink-0 flex items-center justify-center overflow-hidden">
                       <img src={s.image} alt={s.title} className="max-w-full max-h-full object-contain" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = 'none'; const f = (t.parentElement?.nextElementSibling as HTMLElement); if (f) f.style.display = 'flex' }} />
                     </div>
                   </div>
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
-                    <div className="text-6xl font-bold text-neutral-800 dark:text-primary-300">{s.number}</div>
-                    <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50">{s.title}</h3>
                     <p className="text-neutral-700 dark:text-primary-300 leading-relaxed mt-2 max-w-md">{s.description}</p>
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
                       <span>{expandedId === s.id ? 'Minimize Categories' : 'Select Categories'}</span>
