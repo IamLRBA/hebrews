@@ -508,8 +508,8 @@ export default function FashionVideoSection() {
                     </div>
                     
                     <div className="mt-2">
-                      <h4 className="text-white text-sm font-medium truncate">{video.title}</h4>
-                      <p className="text-primary-300 text-xs truncate">{video.description}</p>
+                      <h4 className="text-neutral-850 dark:text-white text-sm font-medium truncate">{video.title}</h4>
+                      <p className="text-neutral-700 dark:text-primary-300 text-xs truncate">{video.description}</p>
                     </div>
                   </motion.div>
                 </SwiperSlide>
