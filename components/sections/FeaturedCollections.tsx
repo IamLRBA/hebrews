@@ -144,7 +144,7 @@ export default function FeaturedCollections() {
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 200, damping: 10 }}
-            className="inline-flex items-center space-x-2 text-primary-600 mb-4"
+            className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 mb-4"
           >
             <motion.div
               animate={{ rotate: [0, 360] }}
@@ -160,10 +160,10 @@ export default function FeaturedCollections() {
               <Sparkles className="w-6 h-6" />
             </motion.div>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-primary-800 mb-4">
-            Featured <span className="text-accent-600">Collections</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-4">
+            Featured <span className="text-accent-600 dark:text-accent-400">Collections</span>
           </h2>
-          <p className="text-xl text-primary-700 max-w-3xl mx-auto mb-6">
+          <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto mb-6">
             Carefully curated selections. Each piece chosen for its unique story
           </p>
         </motion.div>
@@ -218,7 +218,7 @@ export default function FeaturedCollections() {
                     >
                       <motion.span
                         whileHover={{ scale: 1.1 }}
-                        className="px-2.5 py-1 bg-primary-600/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full shadow-lg"
+                        className="px-2.5 py-1 bg-primary-600/90 backdrop-blur-sm text-neutral-850 dark:text-white text-xs font-semibold rounded-full shadow-lg"
                       >
                         {categoryName}
                       </motion.span>
@@ -260,7 +260,7 @@ export default function FeaturedCollections() {
                             whileInView={{ scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
-                            className="absolute bottom-3 right-3 px-2 py-1 bg-accent-500 text-white text-xs font-bold rounded-full shadow-lg"
+                            className="absolute bottom-3 right-3 px-2 py-1 bg-accent-500 text-neutral-850 dark:text-white text-xs font-bold rounded-full shadow-lg"
                           >
                             {Math.round(((product.original_price! - product.price_ugx) / product.original_price!) * 100)}% OFF
                           </motion.div>
@@ -275,11 +275,11 @@ export default function FeaturedCollections() {
                           transition={{ duration: 0.2 }}
                           className="mb-1"
                         >
-                          <p className="text-primary-500 dark:text-primary-300 text-xs font-medium mb-0.5 line-clamp-1">{product.brand}</p>
-                          <h3 className="text-sm sm:text-base font-bold text-primary-900 dark:text-primary-100 mb-0.5 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors leading-tight">
+                          <p className="text-neutral-700 dark:text-primary-300 text-xs font-medium mb-0.5 line-clamp-1">{product.brand}</p>
+                          <h3 className="text-sm sm:text-base font-bold text-neutral-850 dark:text-primary-100 mb-0.5 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors leading-tight">
                             {product.name}
                           </h3>
-                          <p className="text-primary-400 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.sku}</p>
+                          <p className="text-neutral-600 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.sku}</p>
                         </motion.div>
                       </Link>
 
@@ -291,11 +291,11 @@ export default function FeaturedCollections() {
                           transition={{ delay: index * 0.1 + 0.6 }}
                           className="flex items-baseline space-x-1 flex-wrap"
                         >
-                          <span className="text-base sm:text-lg font-bold text-primary-700 dark:text-primary-200">
+                          <span className="text-base sm:text-lg font-bold text-neutral-800 dark:text-primary-200">
                             UGX {product.price_ugx.toLocaleString()}
                           </span>
                           {hasDiscount && (
-                            <span className="text-xs text-primary-400 dark:text-primary-500 line-through">
+                            <span className="text-xs text-neutral-600 dark:text-primary-500 line-through">
                               UGX {product.original_price!.toLocaleString()}
                             </span>
                           )}
@@ -360,7 +360,7 @@ export default function FeaturedCollections() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-primary-600">Loading featured collections...</p>
+            <p className="text-primary-600 dark:text-primary-300">Loading featured collections...</p>
           </div>
         )}
       </div>

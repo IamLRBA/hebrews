@@ -92,10 +92,10 @@ export default function AboutUs() {
           className="section-title"
           style={{ y: titleY, scale: titleScale }}
         >
-          <h2 className="text-5xl md:text-5xl font-bold text-primary-800 mb-6">
-          ᗩᗷOᑌT <span className="text-accent-600">Us</span>
+          <h2 className="text-5xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
+          ᗩᗷOᑌT <span className="text-accent-600 dark:text-accent-100">Us</span>
           </h2>
-          <p className="text-xl text-primary-700 max-w-3xl mx-auto">
+          <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
             We discover hidden treasures in fashion aimed at unveiling unique pieces that reveal your authentic style.
           </p>
         </motion.div>
@@ -122,16 +122,16 @@ export default function AboutUs() {
           className="text-center mb-16"
         >
           <div className="max-w-4xl mx-auto">
-            <p className="text-lg text-primary-600 leading-relaxed mb-6">
+            <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
               <MysticalPiecesWord /> began with a vision to connect fashion and style as a mirror of the self. We roam markets and archives to uncover pieces with story, quality, and design integrity.
             </p>
-            <p className="text-lg text-primary-600 leading-relaxed mb-6">
+            <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
               We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. We are an invitation to dress with clarity, confidence, and purpose.
             </p>
-            <div className="inline-flex items-center space-x-2 bg-primary-100 px-6 py-3 rounded-full">
-              <span className="text-primary-800 font-semibold">Our Core:</span>
+            <div className="inline-flex items-center space-x-2 bg-primary-100 dark:bg-primary-900/30 px-6 py-3 rounded-full">
+              <span className="text-primary-800 dark:text-primary-100 font-semibold">Our Core:</span>
               <span
-                className="text-accent-600 font-bold text-2xl md:text-3xl leading-snug"
+                className="text-accent-600 dark:text-accent-400 font-bold text-2xl md:text-3xl leading-snug"
                 style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
               >
                 Hidden treasures reveal a timeless style
@@ -148,7 +148,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-center mb-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 mb-8">ᗰEET Oᑌᖇ ᑕEO</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-8">ᗰEET Oᑌᖇ ᑕEO</h3>
           
           <div className="max-w-2xl mx-auto">
             <div className="relative group">
@@ -173,8 +173,8 @@ export default function AboutUs() {
                   />
                 </div>
                 
-                <h4 className="text-2xl font-bold text-primary-800 mb-2">ᒪᖇᗷᗩ</h4>
-                <p className="text-lg text-primary-700 mb-6">CEO & Founder</p>
+                <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-2">ᒪᖇᗷᗩ</h4>
+                <p className="text-lg text-primary-700 dark:text-primary-300 mb-6">CEO & Founder</p>
                 
                 <Link 
                   href="/ceo-profile"
@@ -195,7 +195,7 @@ export default function AboutUs() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <h3 className="text-3xl font-bold text-primary-800 mb-12 text-center">Oᑌᖇ TEᗩᗰ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Oᑌᖇ TEᗩᗰ</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
@@ -231,8 +231,8 @@ export default function AboutUs() {
                   
                   {/* Member Info - Always Visible */}
                   <div className="text-center mb-4">
-                    <h4 className="text-xl font-bold text-primary-800 mb-2">{member.name}</h4>
-                    <p className="text-primary-600 font-medium">{member.position}</p>
+                    <h4 className="text-xl font-bold text-primary-800 dark:text-primary-100 mb-2">{member.name}</h4>
+                    <p className="text-primary-600 dark:text-primary-300 font-medium">{member.position}</p>
                   </div>
                   
                   {/* Description - Hidden by default, shown on hover */}
@@ -245,7 +245,7 @@ export default function AboutUs() {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <p className="text-primary-600 text-sm leading-relaxed mb-4">
+                    <p className="text-primary-600 dark:text-primary-300 text-sm leading-relaxed mb-4">
                       {member.description}
                     </p>
                   </motion.div>
@@ -265,7 +265,7 @@ export default function AboutUs() {
                         href={member.social.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-200 transition-colors duration-200"
+                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
                       >
                         <Linkedin className="w-4 h-4" />
                       </a>
@@ -273,7 +273,7 @@ export default function AboutUs() {
                         href={member.social.instagram}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-200 transition-colors duration-200"
+                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
                       >
                         <Instagram className="w-4 h-4" />
                       </a>
@@ -281,7 +281,7 @@ export default function AboutUs() {
                         href={member.social.x}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-200 transition-colors duration-200"
+                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
                       >
                         <IconBrandX className="w-4 h-4" />
                       </a>
@@ -289,13 +289,13 @@ export default function AboutUs() {
                         href={`https://wa.me/${member.social.whatsapp}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-200 transition-colors duration-200"
+                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
                       >
                         <IconBrandWhatsapp className="w-4 h-4" />
                       </a>
                       <a
                         href={`mailto:${member.social.email}`}
-                        className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 hover:bg-primary-200 transition-colors duration-200"
+                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
                       >
                         <Mail className="w-4 h-4" />
                       </a>
@@ -320,7 +320,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 mb-12 text-center">Oᑌᖇ ᐯᗩᒪᑌEᔕ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Oᑌᖇ ᐯᗩᒪᑌEᔕ</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 px-8 md:px-12 lg:px-16">
             {[
@@ -364,11 +364,11 @@ export default function AboutUs() {
                   />
                 </div>
                 <div className={`${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
-                  <div className={`text-6xl font-bold text-primary-400 mb-4 ${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
+                  <div className={`text-6xl font-bold text-primary-400 dark:text-primary-300 mb-4 ${index % 2 === 0 ? 'text-left' : 'text-right'}`}>
                     0{index + 1}
                   </div>
-                  <h4 className="text-2xl font-bold text-primary-800 mb-4">{value.title}</h4>
-                  <p className="text-primary-600 text-base leading-relaxed">
+                  <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4">{value.title}</h4>
+                  <p className="text-primary-600 dark:text-primary-300 text-base leading-relaxed">
                     {value.description}
                   </p>
                 </div>
@@ -385,7 +385,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 1.0 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 mb-12 text-center">Oᑌᖇ ᗰIᔕᔕIOᑎᔕ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Oᑌᖇ ᗰIᔕᔕIOᑎᔕ</h3>
           
           <div className="space-y-16 flex flex-col items-center max-w-4xl mx-auto">
             {[
@@ -436,11 +436,11 @@ export default function AboutUs() {
                       ? 'text-left'
                       : 'text-right'
                   }`}>
-                    <div className={`text-6xl font-bold text-primary-400 mb-4 ${
+                    <div className={`text-6xl font-bold text-primary-400 dark:text-primary-300 mb-4 ${
                       index % 2 === 0 ? '' : 'text-right'
                     }`}>0{index + 1}</div>
-                    <h4 className="text-3xl font-bold text-primary-800 mb-2">{mission.title}</h4>
-                    <p className={`text-primary-600 text-lg ${
+                    <h4 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-2">{mission.title}</h4>
+                    <p className={`text-primary-600 dark:text-primary-300 text-lg ${
                       index % 2 === 0 
                         ? 'max-w-md'
                         : 'max-w-md ml-auto'
@@ -462,7 +462,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 1.2 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 mb-12 text-center">ᗰIᔕᔕIOᑎ & ᐯIᔕIOᑎ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">ᗰIᔕᔕIOᑎ & ᐯIᔕIOᑎ</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {[

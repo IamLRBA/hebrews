@@ -202,7 +202,7 @@ export default function FashionVideoSection() {
         className="max-w-7xl mx-auto"
       >
         <h2 className="text-4xl md:text-4xl font-bold text-center mb-16">
-        <span className="text-primary-500">↻ ◁ |</span><span className="text-primary-950">| ▷ ↺</span>
+        <span className="text-primary-500">↻ ◁ |</span><span className="text-neutral-700 dark:text-primary-300">| ▷ ↺</span>
         </h2>
         
         <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">

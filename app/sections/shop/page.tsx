@@ -196,7 +196,7 @@ export default function ShopPage() {
         className="fixed top-20 left-8 z-50"
       >
         <Link href="/" className="group">
-          <div className="flex items-center space-x-2 text-primary-300 hover:text-primary-900 transition-colors duration-300">
+          <div className="flex items-center space-x-2 text-neutral-700 dark:text-primary-300 hover:text-neutral-850 dark:hover:text-primary-900 transition-colors duration-300">
             <motion.div
               whileHover={{ x: -5 }}
               transition={{ duration: 0.2 }}
@@ -221,7 +221,7 @@ export default function ShopPage() {
             className="text-8xl md:text-8xl font-bold mb-6"
           >
             <span className="inline-flex items-center justify-center gap-6">
-              <HiOutlineShoppingBag className="w-40 h-40 text-primary-200 drop-shadow-lg" aria-hidden="true" />
+              <HiOutlineShoppingBag className="w-40 h-40 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
               <span className="text-gradient">ᔕᕼOᑭ</span>
             </span>
           </motion.h1>
@@ -229,7 +229,7 @@ export default function ShopPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="text-2xl md:text-3xl text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed"
+            className="text-2xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed"
           >
             "Where thrifted treasures meet fresh style finds"
           </motion.p>
@@ -237,7 +237,7 @@ export default function ShopPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="text-lg text-primary-300 max-w-3xl mx-auto"
+            className="text-lg text-neutral-700 dark:text-primary-100 max-w-3xl mx-auto"
           >
             Discover unique pieces that blend vintage charm with contemporary style. 
             From carefully curated thrifted gems to fresh new arrivals, we help you 
@@ -263,10 +263,8 @@ export default function ShopPage() {
           className="max-w-6xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
-            <span className="text-primary-400">ᔕᕼOᑭᑭIᑎG
-
-
-            </span> Philosophy
+            <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭᑭIᑎG</span>{' '}
+            <span className="text-neutral-700 dark:text-primary-300">Philosophy</span>
           </h2>
           
           <div className="space-y-16 flex flex-col items-center">
@@ -286,9 +284,9 @@ export default function ShopPage() {
                 />
               </div>
               <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-400 mb-4">01</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Mysticism</h3>
-                <p className="text-primary-200 text-lg max-w-md">
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4">01</div>
+                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Mysticism</h3>
+                <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
                   There is a hidden, deeper reality beyond the visible world. In a realm of intuition and inner knowing, find meaning in what others might overlook.
                 </p>
               </div>
@@ -310,9 +308,9 @@ export default function ShopPage() {
                 />
               </div>
               <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-300 mb-4">02</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Anarchism</h3>
-                <p className="text-primary-200 text-lg max-w-md">
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4">02</div>
+                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Anarchism</h3>
+                <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
                 Every item you choose can be your act of shaping your own path. Select pieces that challenge the ordinary-fashion norm. 
                 </p>
               </div>
@@ -334,9 +332,9 @@ export default function ShopPage() {
                 />
               </div>
               <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-200 mb-4">03</div>
-                <h3 className="text-3xl font-bold mb-2 text-white dark:text-neutral-100">Self-Discovery</h3>
-                <p className="text-primary-200 text-lg max-w-md">
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4">03</div>
+                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Self-Discovery</h3>
+                <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
                 Evolve with pieces that help you see yourself more clearly; your essence, your values, and what resonates with your spirit. 
                 </p>
               </div>
@@ -358,17 +356,16 @@ export default function ShopPage() {
           className="max-w-6xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-400">ᗰOOᗪᗷOᗩᖇᗪ
-
-            </span> Inspiration
+            <span className="text-primary-500 dark:text-primary-100">ᗰOOᗪᗷOᗩᖇᗪ</span>{' '}
+            <span className="text-neutral-700 dark:text-primary-300">Inspiration</span>
           </h2>
           
           <div className="glass-effect p-8 rounded-2xl">
             <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold mb-4 text-white dark:text-neutral-100">
+              <h3 className="text-3xl font-bold mb-4 text-neutral-850 dark:text-primary-50">
                 Visual Inspiration
               </h3>
-              <p className="text-primary-200">
+              <p className="text-neutral-700 dark:text-primary-300">
                 Curated collections that capture different moods and aesthetics
               </p>
             </div>
@@ -429,7 +426,7 @@ export default function ShopPage() {
               
               {/* Mood Description */}
               <div className="text-center">
-                <p className="text-primary-300 text-sm">
+                <p className="text-neutral-700 dark:text-primary-300 text-sm">
                   {selectedMood === 'inspiration' && 'Creative sparks and artistic vision'}
                   {selectedMood === 'elegance' && 'Sophisticated luxury and refined beauty'}
                   {selectedMood === 'urban' && 'City vibes and contemporary culture'}
@@ -451,7 +448,8 @@ export default function ShopPage() {
           className="max-w-7xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-400">ᔕᕼOᑭ</span> Video Gallery
+            <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭ</span>{' '}
+            <span className="text-neutral-700 dark:text-primary-300">Video Gallery</span>{' '}
           </h2>
           <FashionVideoSection />
         </motion.div>
@@ -467,9 +465,11 @@ export default function ShopPage() {
           className="text-center max-w-4xl mx-auto"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            Ready to <span className="text-primary-400">ᔕᕼOᑭ</span> Your Style?
+            <span className="text-neutral-700 dark:text-primary-300">Ready to</span>{' '}
+            <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭ</span>{' '}
+            <span className="text-neutral-700 dark:text-primary-300">Your Style?</span>
           </h2>
-          <p className="text-xl text-primary-300 mb-8">
+          <p className="text-xl text-neutral-700 dark:text-primary-300 mb-8">
             Explore our collection of thrifted treasures and for any questions, contact us!
           </p>
           <Link href="/#contact-section">

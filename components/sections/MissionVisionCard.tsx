@@ -31,7 +31,7 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
           className="w-24 h-24 object-cover rounded-xl"
         />
       </div>
-      <h4 className="text-2xl font-bold text-primary-800 mb-4">{item.title}</h4>
+      <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4">{item.title}</h4>
       
       <button
         onClick={() => setIsExpanded(!isExpanded)}
@@ -56,7 +56,7 @@ export default function MissionVisionCard({ item, index }: MissionVisionCardProp
         transition={{ duration: 0.3 }}
         className="overflow-hidden"
       >
-        <p className="text-primary-600 text-base leading-relaxed">
+        <p className="text-primary-600 dark:text-primary-300 text-base leading-relaxed">
           {item.description}
         </p>
       </motion.div>

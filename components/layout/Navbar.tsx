@@ -248,7 +248,7 @@ export default function Navbar() {
                   const active = isActive(item.href)
                   const Icon = active ? item.solidIcon : item.outlineIcon
                   return (
-                    <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700' : 'text-neutral-600 hover:text-primary-700'}`}>
+                    <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
                       <Icon className="w-4 h-4 transition-colors" />
                       <span className="font-light">{item.name}</span>
                       {active ? (
@@ -260,7 +260,7 @@ export default function Navbar() {
                   )
                 })}
                 <div className="relative">
-                  <button onClick={() => setIsPortalsOpen(!isPortalsOpen)} onMouseEnter={() => setIsPortalsOpen(true)} onMouseLeave={() => setIsPortalsOpen(false)} className={`flex items-center space-x-2 px-3 py-2 transition-all duration-300 group relative ${portalItems.some(item => isActive(item.href)) ? 'text-primary-700' : 'text-neutral-600 hover:text-primary-700'}`}>
+                  <button onClick={() => setIsPortalsOpen(!isPortalsOpen)} onMouseEnter={() => setIsPortalsOpen(true)} onMouseLeave={() => setIsPortalsOpen(false)} className={`flex items-center space-x-2 px-3 py-2 transition-all duration-300 group relative ${portalItems.some(item => isActive(item.href)) ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
                     {(() => {
                       const portalActive = portalItems.some(item => isActive(item.href))
                       const PortalIcon = portalActive ? TargetSolidIcon : TargetOutlineIcon
@@ -282,7 +282,7 @@ export default function Navbar() {
                             const active = isActive(item.href)
                             const Icon = active ? item.solidIcon : item.outlineIcon
                             return (
-                              <Link key={item.name} href={item.href} className={`flex items-center space-x-3 px-4 py-3 hover:bg-primary-50 transition-all duration-200 ${active ? 'text-primary-700 bg-primary-50' : 'text-neutral-600'}`}>
+                              <Link key={item.name} href={item.href} className={`flex items-center space-x-3 px-4 py-3 hover:bg-primary-50 dark:hover:bg-primary-900/50 transition-all duration-200 ${active ? 'text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-900/30' : 'text-neutral-600 dark:text-neutral-400'}`}>
                                 <Icon className="w-4 h-4 transition-colors" />
                                 <span className="font-light">{item.name}</span>
                               </Link>
@@ -297,7 +297,7 @@ export default function Navbar() {
                   const active = isActive(item.href)
                   const Icon = active ? item.solidIcon : item.outlineIcon
                   return (
-                    <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700' : 'text-neutral-600 hover:text-primary-700'}`}>
+                    <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
                       <Icon className="w-4 h-4 transition-colors" />
                       <span className="font-light">{item.name}</span>
                       {active ? (
@@ -313,14 +313,14 @@ export default function Navbar() {
 
             <div className="hidden lg:flex items-center space-x-8">
               <div className="relative" ref={searchRef}>
-                <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="p-2 text-neutral-600 hover:text-primary-700 transition-all duration-200" type={isSearchOpen ? 'submit' : 'button'}>
+                <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200" type={isSearchOpen ? 'submit' : 'button'}>
                   <HiSearch className="w-5 h-5" />
                 </button>
                 {isSearchOpen && (
                   <form onSubmit={handleSearchSubmit} className="navbar-search-form inline-flex items-center">
                     <div className="search-input-wrapper">
                       {isSearchOpen && (
-                        <button type="button" onClick={clearSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 p-1 text-neutral-500 hover:text-neutral-700 transition-colors duration-200">
+                        <button type="button" onClick={clearSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 p-1 text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors duration-200">
                           <HiX className="w-4 h-4" />
                         </button>
                       )}
@@ -343,10 +343,10 @@ export default function Navbar() {
                   </form>
                 )}
               </div>
-              <Link href="/cart" className="relative p-2 text-neutral-600 hover:text-primary-700 transition-all duration-200">
+              <Link href="/cart" className="relative p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200">
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs font-light rounded-full w-5 h-5 flex items-center justify-center">
+                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -top-1 -right-1 bg-primary-600 dark:bg-primary-500 text-neutral-850 dark:text-primary-50 text-xs font-light rounded-full w-5 h-5 flex items-center justify-center">
                     {cartCount > 99 ? '99+' : cartCount}
                   </motion.span>
                 )}
@@ -354,7 +354,7 @@ export default function Navbar() {
               <SettingsDropdown />
             </div>
 
-            <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden absolute right-0 p-2 text-neutral-600 hover:text-primary-700 transition-colors duration-200 relative w-10 h-10 flex items-center justify-center">
+            <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden absolute right-0 p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-200 relative w-10 h-10 flex items-center justify-center">
               <div className="relative w-6 h-5 flex flex-col justify-between">
                 <motion.span
                   animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
@@ -578,7 +578,7 @@ export default function Navbar() {
                       <motion.span 
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="bg-gradient-to-br from-primary-600 to-primary-700 text-white text-xs font-light rounded-full w-7 h-7 flex items-center justify-center shadow-lg"
+                        className="bg-gradient-to-br from-primary-600 to-primary-700 text-neutral-850 dark:text-white text-xs font-light rounded-full w-7 h-7 flex items-center justify-center shadow-lg"
                       >
                         {cartCount > 99 ? '99+' : cartCount}
                       </motion.span>

@@ -48,8 +48,8 @@ export default function OrderConfirmationPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-unified">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Order Not Found</h1>
-          <p className="text-primary-300 mb-8">We couldn't find an order with that ID.</p>
+          <h1 className="text-4xl font-bold text-neutral-850 dark:text-primary-50 mb-4">Order Not Found</h1>
+          <p className="text-primary-300 dark:text-primary-400 mb-8">We couldn't find an order with that ID.</p>
           <Link href="/products/shirts" className="btn btn-primary">
             Continue Shopping
           </Link>
@@ -69,7 +69,7 @@ export default function OrderConfirmationPage() {
           className="flex justify-center mb-8 print:hidden"
         >
           <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center">
-            <CheckCircle className="w-12 h-12 text-white" />
+            <CheckCircle className="w-12 h-12 text-neutral-850 dark:text-white" />
           </div>
         </motion.div>
 
@@ -80,10 +80,10 @@ export default function OrderConfirmationPage() {
           transition={{ delay: 0.2 }}
           className="text-center mb-12 print:mb-8"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 print:text-gray-900">
+          <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-4 print:text-gray-900">
             Order Confirmed!
           </h1>
-          <p className="text-xl text-primary-200 print:text-gray-600">
+          <p className="text-xl text-primary-200 dark:text-primary-300 print:text-gray-600">
             Thank you for your order. We've received your order and will process it shortly.
           </p>
         </motion.div>

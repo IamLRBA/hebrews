@@ -143,7 +143,10 @@ export default function FashionProducts() {
   return (
     <section className="py-20 px-4">
       <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} viewport={{ once: true }} className="max-w-7xl mx-auto">
-        <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">⏣ Our <span className="text-primary-400">Products</span></h2>
+        <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
+          <span className="text-primary-500 dark:text-primary-100">⏣ Our</span>{' '}
+          <span className="text-neutral-700 dark:text-primary-300"> Products</span>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto px-8">
           {products.map((s, i) => { 
             const isRight = i % 2 === 1
@@ -156,8 +159,8 @@ export default function FashionProducts() {
                     </div>
                   </div>
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
-                    <div className="text-6xl font-bold text-primary-400">{s.number}</div>
-                    <h3 className="text-3xl font-bold mt-2 text-white">{s.title}</h3>
+                    <div className="text-6xl font-bold text-neutral-800 dark:text-primary-300">{s.number}</div>
+                    <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50">{s.title}</h3>
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
                       <span>{expandedId === s.id ? 'Show Less' : 'Show More'}</span>
                       <AnimatePresence mode="wait">{expandedId === s.id ? <motion.div key="m" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}><Minus size={20} /></motion.div> : <motion.div key="p" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}><Plus size={20} /></motion.div>}</AnimatePresence>
@@ -167,8 +170,8 @@ export default function FashionProducts() {
                 <AnimatePresence>
                   {expandedId === s.id && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
-                      <div className="bg-primary-800/30 rounded-xl p-6 border border-primary-500/20">
-                        <p className="text-primary-200 leading-relaxed mb-6 text-center">{s.description}</p>
+                      <div className="bg-primary-800/30 dark:bg-primary-900/40 rounded-xl p-6 border border-primary-500/20 dark:border-primary-400/30">
+                        <p className="text-neutral-700 dark:text-primary-300 leading-relaxed mb-6 text-center">{s.description}</p>
                         
                         {/* Thumbnail Images */}
                         <div className="grid grid-cols-2 gap-4 justify-items-center">
@@ -194,7 +197,7 @@ export default function FashionProducts() {
                                 target.src = `/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.svg`
                               }}
                             />
-                                  <div className="hidden text-primary-400 text-sm items-center justify-center w-full h-full">
+                                  <div className="hidden text-neutral-800 dark:text-primary-400 text-sm items-center justify-center w-full h-full">
                                     {subcategory.name}
                                   </div>
                                 </div>
@@ -213,7 +216,7 @@ export default function FashionProducts() {
                                         initial={{ y: 10, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{ delay: 0.1 }}
-                                        className="text-white font-bold text-lg"
+                                        className="text-neutral-850 dark:text-white font-bold text-lg"
                                       >
                                         {subcategory.name}
                                       </motion.span>
@@ -237,10 +240,10 @@ export default function FashionProducts() {
                         <div className="mt-8 pt-8 border-t border-primary-500/20">
                           <blockquote className="text-center">
                             <Quote className="w-8 h-8 mx-auto mb-4 text-primary-400/50" />
-                            <p className="text-primary-300 italic text-lg md:text-xl mb-3">
+                            <p className="text-neutral-700 dark:text-primary-400 italic text-lg md:text-xl mb-3">
                               {s.quote.text}
                             </p>
-                            <footer className="text-primary-400 text-sm font-medium">
+                            <footer className="text-neutral-800 dark:text-primary-300 text-sm font-medium">
                               — {s.quote.author}
                             </footer>
                           </blockquote>

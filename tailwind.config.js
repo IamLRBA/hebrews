@@ -27,16 +27,17 @@ module.exports = {
         },
         neutral: {
           50: '#FEFEFE',   /* Pure White */
-          100: '#F8F8F8', /* Off White */
+          100: '#F8F8F8',  /* Off White */
           200: '#F0F0F0',  /* Light Gray */
           300: '#E0E0E0',  /* Light Gray */
           400: '#C0C0C0',  /* Medium Gray */
           500: '#808080',  /* Gray */
           600: '#606060',  /* Dark Gray */
-          700: '#404040',   /* Darker Gray */
-          800: '#252525',  /* Deep Charcoal variant */
-          900: '#262424',  /* Deep Charcoal */
-          950: '#1B1B1B',  /* Almost Black */
+          700: '#404040',  /* Darker Gray */
+          800: '#252525',  /* Charcoal-2 */
+          850: '#262424',  /* Deep Charcoal */
+          900: '#1B1B1B',  /* Charcoal-3 */
+          950: '#191919',  /* Charcoal-4 */
         },
         accent: {
           50: '#F5F0E8',    /* Light Coffee Cream */

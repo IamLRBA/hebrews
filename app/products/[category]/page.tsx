@@ -203,7 +203,7 @@ export default function ProductCategoryPage() {
         className="fixed top-20 left-8 z-50"
       >
         <Link href="/sections/shop" className="group">
-          <div className="flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300">
+          <div className="flex items-center space-x-2 text-primary-300 dark:text-primary-400 hover:text-primary-100 dark:hover:text-primary-200 transition-colors duration-300">
             <motion.span whileHover={{ x: -5 }} transition={{ duration: 0.2 }} className="text-lg font-medium">
               ⟸
             </motion.span>
@@ -300,21 +300,21 @@ export default function ProductCategoryPage() {
                       }}
                     />
                     {/* Condition Badge */}
-                    <div className="absolute top-2 left-2 px-3 py-1 bg-primary-500/90 text-white text-xs font-semibold rounded-full">
+                    <div className="absolute top-2 left-2 px-3 py-1 bg-primary-500/90 text-neutral-850 dark:text-white text-xs font-semibold rounded-full">
                       {product.condition}
                     </div>
                   </div>
 
                   {/* Product Info */}
                   <div className="p-2 sm:p-3 md:p-4">
-                    <p className="text-primary-300 text-xs sm:text-sm mb-1 line-clamp-1">{product.brand}</p>
-                    <h3 className="text-sm sm:text-base md:text-lg font-bold text-white mb-1 sm:mb-2 line-clamp-2">{product.name}</h3>
+                    <p className="text-primary-300 dark:text-primary-400 text-xs sm:text-sm mb-1 line-clamp-1">{product.brand}</p>
+                    <h3 className="text-sm sm:text-base md:text-lg font-bold text-neutral-850 dark:text-primary-50 mb-1 sm:mb-2 line-clamp-2">{product.name}</h3>
                     <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 flex-wrap">
-                      <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary-400">
+                      <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary-400 dark:text-primary-300">
                         UGX {product.price_ugx.toLocaleString()}
                       </span>
                       {product.original_price && (
-                        <span className="text-xs sm:text-sm text-primary-400/50 line-through">
+                        <span className="text-xs sm:text-sm text-primary-400/50 dark:text-primary-500/50 line-through">
                           UGX {product.original_price.toLocaleString()}
                         </span>
                       )}
@@ -515,7 +515,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => scrollThumbnails('left')}
-                      className="p-1 text-white/80 hover:text-white transition-all duration-200"
+                      className="p-1 text-neutral-850/80 dark:text-white/80 hover:text-neutral-850 dark:hover:text-white transition-all duration-200"
                     >
                       <span className="text-lg font-medium inline-block">⟸</span>
                     </motion.button>
@@ -544,7 +544,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => scrollThumbnails('right')}
-                      className="p-1 text-white/80 hover:text-white transition-all duration-200"
+                      className="p-1 text-neutral-850/80 dark:text-white/80 hover:text-neutral-850 dark:hover:text-white transition-all duration-200"
                     >
                       <span className="text-lg font-medium inline-block">⟹</span>
                     </motion.button>
@@ -558,30 +558,30 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           <div className="flex flex-col">
             <div className="space-y-4">
               <div>
-                <p className="text-primary-300 text-sm mb-1">{product.brand} • {product.sku}</p>
-                <h2 className="text-3xl font-bold text-white mb-1">{product.name}</h2>
+                <p className="text-primary-300 dark:text-primary-400 text-sm mb-1">{product.brand} • {product.sku}</p>
+                <h2 className="text-3xl font-bold text-neutral-850 dark:text-primary-50 mb-1">{product.name}</h2>
                 <div className="flex items-center flex-wrap gap-2 mb-3">
-                  <span className="text-3xl font-bold text-primary-400">
+                  <span className="text-3xl font-bold text-primary-400 dark:text-primary-300">
                     UGX {product.price_ugx.toLocaleString()}
                   </span>
                   {product.original_price && (
-                    <span className="text-lg text-primary-400/50 line-through">
+                    <span className="text-lg text-primary-400/50 dark:text-primary-500/50 line-through">
                       UGX {product.original_price.toLocaleString()}
                     </span>
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="px-3 py-1 bg-primary-500/30 text-primary-200 text-sm rounded-full">
+                  <span className="px-3 py-1 bg-primary-500/30 dark:bg-primary-600/30 text-primary-200 dark:text-primary-300 text-sm rounded-full">
                     {product.condition}
                   </span>
                 </div>
               </div>
 
-              <p className="text-primary-200 leading-relaxed">{product.description}</p>
+              <p className="text-primary-200 dark:text-primary-300 leading-relaxed">{product.description}</p>
 
               {/* Size Display */}
               {(productSize || productColor) && (
-                <div className="flex flex-wrap items-center gap-4 text-primary-200">
+                <div className="flex flex-wrap items-center gap-4 text-primary-200 dark:text-primary-300">
                   {productSize && (
                     <div className="flex items-center gap-2">
                       <span className="font-medium">Size:</span>

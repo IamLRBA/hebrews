@@ -199,10 +199,10 @@ export default function Home() {
                         <LogoMark animated size={220} className="md:-mb-16 md:scale-[0.91]" />
                         <div className="flex flex-col items-center gap-2 w-full">
                           <h1 className="text-6xl md:text-7xl font-light leading-tight mb-1">
-                            <MysticalPiecesWord mysticalClassName="text-primary-800" piecesClassName="text-accent-600" />
+                            <MysticalPiecesWord mysticalClassName="text-primary-800 dark:text-primary-100" piecesClassName="text-accent-600 dark:text-accent-400" />
                           </h1>
-                          <div className="hero-divider w-20 h-1 bg-primary-400/80 rounded-full" />
-                          <p className="text-lg text-primary-600 max-w-2xl">
+                          <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full" />
+                          <p className="text-lg text-primary-600 dark:text-primary-300 max-w-2xl">
                             Wear the unseen future. Feel the divine in every thread.
                           </p>
                         </div>
@@ -235,12 +235,12 @@ export default function Home() {
                   <motion.div
                     animate={{ y: [0, 10, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-6 h-10 border-2 border-primary-600 rounded-full flex justify-center"
+                    className="w-6 h-10 border-2 border-primary-600 dark:border-primary-400 rounded-full flex justify-center"
                   >
                     <motion.div
                       animate={{ y: [0, 12, 0] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className="w-1 h-3 bg-primary-600 rounded-full mt-2"
+                      className="w-1 h-3 bg-primary-600 dark:bg-primary-400 rounded-full mt-2"
                     />
                   </motion.div>
                 </motion.div>
@@ -291,10 +291,10 @@ export default function Home() {
                     transition={{ duration: 0.8, delay: 0.3 }}
                     className="section-title"
                   >
-                    <h2 className="text-4xl md:text-5xl font-bold text-primary-800 mb-6">
-                    EᑎTEᖇ <span className="text-accent-600">the Portal</span>
+                    <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
+                    EᑎTEᖇ <span className="text-accent-600 dark:text-accent-400">the Portal</span>
                     </h2>
-                    <p className="text-xl text-primary-700 max-w-3xl mx-auto">
+                    <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
                       Discover future-ready thrift pieces, each piece waiting to reveal its story
                     </p>
                   </motion.div>

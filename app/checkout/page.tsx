@@ -139,12 +139,12 @@ export default function CheckoutPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-300 hover:text-primary-100 transition-colors duration-300 mb-6">
+          <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-300 dark:text-primary-400 hover:text-primary-100 dark:hover:text-primary-200 transition-colors duration-300 mb-6">
             <span className="text-lg font-medium">⟸</span>
             <span className="text-sm font-medium">Back to Shopping</span>
           </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">Checkout</h1>
-          <p className="text-primary-200">Complete your order with secure checkout</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">Checkout</h1>
+          <p className="text-primary-200 dark:text-primary-300">Complete your order with secure checkout</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -156,12 +156,12 @@ export default function CheckoutPage() {
               transition={{ delay: 0.1 }}
               className="bg-primary-800/30 rounded-xl border border-primary-500/30 p-8"
             >
-              <h2 className="text-2xl font-bold text-white mb-6">Order Details</h2>
+              <h2 className="text-2xl font-bold text-neutral-850 dark:text-primary-50 mb-6">Order Details</h2>
               
               {cart.length === 0 ? (
                 <div className="text-center py-12">
-                  <ShoppingCart className="w-16 h-16 mx-auto text-primary-400/50 mb-4" />
-                  <p className="text-primary-300 text-lg">Your cart is empty</p>
+                  <ShoppingCart className="w-16 h-16 mx-auto text-primary-400/50 dark:text-primary-500/50 mb-4" />
+                  <p className="text-primary-300 dark:text-primary-400 text-lg">Your cart is empty</p>
                   <Link href="/products/shirts" className="mt-4 inline-block btn btn-primary">
                     Start Shopping
                   </Link>
@@ -174,14 +174,14 @@ export default function CheckoutPage() {
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-white font-medium">{item.name}</h3>
-                        <p className="text-primary-300 text-sm">{item.sku}</p>
-                        {item.size && <p className="text-primary-400 text-sm">Size: {item.size}</p>}
-                        {item.color && <p className="text-primary-400 text-sm">Color: {item.color}</p>}
-                        <p className="text-primary-200 text-sm">Qty: {item.quantity}</p>
+                        <h3 className="text-neutral-850 dark:text-primary-50 font-medium">{item.name}</h3>
+                        <p className="text-primary-300 dark:text-primary-400 text-sm">{item.sku}</p>
+                        {item.size && <p className="text-primary-400 dark:text-primary-300 text-sm">Size: {item.size}</p>}
+                        {item.color && <p className="text-primary-400 dark:text-primary-300 text-sm">Color: {item.color}</p>}
+                        <p className="text-primary-200 dark:text-primary-300 text-sm">Qty: {item.quantity}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-white font-bold">
+                        <p className="text-neutral-850 dark:text-primary-50 font-bold">
                           UGX {(item.price * item.quantity).toLocaleString()}
                         </p>
                       </div>
@@ -199,19 +199,19 @@ export default function CheckoutPage() {
               onSubmit={handleSubmit}
               className="mt-8 bg-primary-800/30 rounded-xl border border-primary-500/30 p-8"
             >
-              <h2 className="text-2xl font-bold text-white mb-6">Customer Information</h2>
+              <h2 className="text-2xl font-bold text-neutral-850 dark:text-primary-50 mb-6">Customer Information</h2>
               
               <div className="space-y-6">
                 {/* Full Name */}
                 <div>
-                  <label className="block text-primary-200 font-medium mb-2">
+                  <label className="block text-primary-200 dark:text-primary-300 font-medium mb-2">
                     Full Name <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-3 bg-primary-900/30 dark:bg-primary-800/30 border border-primary-600/30 dark:border-primary-500/30 rounded-lg text-neutral-850 dark:text-white placeholder-primary-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Enter your full name"
                   />
                   {errors.fullName && <p className="mt-1 text-red-400 text-sm">{errors.fullName}</p>}
@@ -219,14 +219,14 @@ export default function CheckoutPage() {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-primary-200 font-medium mb-2">
+                  <label className="block text-primary-200 dark:text-primary-300 font-medium mb-2">
                     Email <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-3 bg-primary-900/30 dark:bg-primary-800/30 border border-primary-600/30 dark:border-primary-500/30 rounded-lg text-neutral-850 dark:text-white placeholder-primary-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="your.email@example.com"
                   />
                   {errors.email && <p className="mt-1 text-red-400 text-sm">{errors.email}</p>}
@@ -234,14 +234,14 @@ export default function CheckoutPage() {
 
                 {/* Phone */}
                 <div>
-                  <label className="block text-primary-200 font-medium mb-2">
+                  <label className="block text-primary-200 dark:text-primary-300 font-medium mb-2">
                     Phone Number <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-3 bg-primary-900/30 dark:bg-primary-800/30 border border-primary-600/30 dark:border-primary-500/30 rounded-lg text-neutral-850 dark:text-white placeholder-primary-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="+256 700 000 000"
                   />
                   {errors.phone && <p className="mt-1 text-red-400 text-sm">{errors.phone}</p>}
@@ -249,14 +249,14 @@ export default function CheckoutPage() {
 
                 {/* Street Address */}
                 <div>
-                  <label className="block text-primary-200 font-medium mb-2">
+                  <label className="block text-primary-200 dark:text-primary-300 font-medium mb-2">
                     Street Address <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.street}
                     onChange={(e) => setFormData({ ...formData, street: e.target.value })}
-                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-3 bg-primary-900/30 dark:bg-primary-800/30 border border-primary-600/30 dark:border-primary-500/30 rounded-lg text-neutral-850 dark:text-white placeholder-primary-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Street, Building, House Number"
                   />
                   {errors.street && <p className="mt-1 text-red-400 text-sm">{errors.street}</p>}
@@ -264,14 +264,14 @@ export default function CheckoutPage() {
 
                 {/* City/Area */}
                 <div>
-                  <label className="block text-primary-200 font-medium mb-2">
+                  <label className="block text-primary-200 dark:text-primary-300 font-medium mb-2">
                     City / Area <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-4 py-3 bg-primary-900/30 border border-primary-600/30 rounded-lg text-white placeholder-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-3 bg-primary-900/30 dark:bg-primary-800/30 border border-primary-600/30 dark:border-primary-500/30 rounded-lg text-neutral-850 dark:text-white placeholder-primary-400 dark:placeholder-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
                     placeholder="Kampala, Mukono, etc."
                   />
                   {errors.city && <p className="mt-1 text-red-400 text-sm">{errors.city}</p>}
@@ -293,12 +293,12 @@ export default function CheckoutPage() {
                         className="w-4 h-4 text-primary-500"
                       />
                       <div className="flex-1">
-                        <p className="text-white font-medium">Kampala (Free Delivery)</p>
-                        <p className="text-primary-300 text-sm">Delivery within Kampala city limits</p>
+                        <p className="text-neutral-850 dark:text-white font-medium">Kampala (Free Delivery)</p>
+                        <p className="text-primary-300 dark:text-primary-400 text-sm">Delivery within Kampala city limits</p>
                       </div>
                     </label>
                     
-                    <label className="flex items-center space-x-3 p-4 bg-primary-900/30 border border-primary-600/30 rounded-lg cursor-pointer hover:bg-primary-900/50 transition-colors">
+                    <label className="flex items-center space-x-3 p-4 bg-primary-900/30 dark:bg-primary-800/30 border border-primary-600/30 dark:border-primary-500/30 rounded-lg cursor-pointer hover:bg-primary-900/50 dark:hover:bg-primary-800/50 transition-colors">
                       <input
                         type="radio"
                         name="delivery"
@@ -308,8 +308,8 @@ export default function CheckoutPage() {
                         className="w-4 h-4 text-primary-500"
                       />
                       <div className="flex-1">
-                        <p className="text-white font-medium">Outside Kampala</p>
-                        <p className="text-primary-300 text-sm">Transport fee: UGX {deliveryFee.toLocaleString()}</p>
+                        <p className="text-neutral-850 dark:text-primary-50 font-medium">Outside Kampala</p>
+                        <p className="text-primary-300 dark:text-primary-400 text-sm">Transport fee: UGX {deliveryFee.toLocaleString()}</p>
                       </div>
                     </label>
                   </div>
@@ -317,7 +317,7 @@ export default function CheckoutPage() {
 
                 {/* Notes */}
                 <div>
-                  <label className="block text-primary-200 font-medium mb-2">
+                  <label className="block text-primary-200 dark:text-primary-300 font-medium mb-2">
                     Additional Notes (Optional)
                   </label>
                   <textarea
@@ -340,22 +340,22 @@ export default function CheckoutPage() {
               transition={{ delay: 0.3 }}
               className="sticky top-24 bg-primary-800/30 rounded-xl border border-primary-500/30 p-6"
             >
-              <h2 className="text-xl font-bold text-white mb-4">Order Summary</h2>
+              <h2 className="text-xl font-bold text-neutral-850 dark:text-primary-50 mb-4">Order Summary</h2>
               
-              <div className="space-y-4 pb-4 border-b border-primary-700/50">
-                <div className="flex justify-between text-primary-200">
+              <div className="space-y-4 pb-4 border-b border-primary-700/50 dark:border-primary-600/50">
+                <div className="flex justify-between text-primary-200 dark:text-primary-300">
                   <span>Subtotal</span>
                   <span>UGX {subtotal.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-primary-200">
+                <div className="flex justify-between text-primary-200 dark:text-primary-300">
                   <span>Delivery</span>
                   <span>{deliveryFee === 0 ? 'Free' : `UGX ${deliveryFee.toLocaleString()}`}</span>
                 </div>
               </div>
               
               <div className="flex justify-between items-center py-4">
-                <span className="text-xl font-bold text-white">Total</span>
-                <span className="text-2xl font-bold text-primary-400">
+                <span className="text-xl font-bold text-neutral-850 dark:text-primary-50">Total</span>
+                <span className="text-2xl font-bold text-primary-400 dark:text-primary-300">
                   UGX {total.toLocaleString()}
                 </span>
               </div>
@@ -368,7 +368,7 @@ export default function CheckoutPage() {
                 {isSubmitting ? 'Processing...' : 'Confirm Order'}
               </button>
 
-              <p className="text-primary-300 text-sm text-center mt-4">
+              <p className="text-primary-300 dark:text-primary-400 text-sm text-center mt-4">
                 ✓ Pay on Delivery Available
               </p>
             </motion.div>

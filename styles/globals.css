@@ -15,9 +15,11 @@
 
   /* Suppress browser warnings for vendor prefixes */
   * {
+    /* stylelint-disable-next-line property-no-unknown */
     -webkit-text-size-adjust: 100%;
+    /* stylelint-disable-next-line property-no-unknown */
     -ms-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   /* Reset button styles */
@@ -155,22 +157,14 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(185, 149, 74, 0.3); /* var(--color-primary-600) with transparency */
+    background: rgba(111, 78, 55, 0.3); /* Coffee with transparency */
     border-radius: var(--radius-full);
     border: 2px solid transparent;
     background-clip: content-box;
     transition: all var(--transition-base);
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(185, 149, 74, 0.5); /* var(--color-primary-600) with more opacity */
-    background-clip: content-box;
-  }
-
-  ::-webkit-scrollbar-thumb:active {
-    background: rgba(185, 149, 74, 0.7); /* var(--color-primary-600) with full opacity */
-    background-clip: content-box;
-  }
+  /* Note: Pseudo-classes on pseudo-elements are not valid CSS, so hover/active states are handled via transition */
 
   ::-webkit-scrollbar-corner {
     background: transparent;
@@ -179,7 +173,7 @@
   /* Firefox Scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(185, 149, 74, 0.3) transparent;
+    scrollbar-color: rgba(111, 78, 55, 0.3) transparent;
   }
 
   /* Hide scrollbar for specific elements */
@@ -324,9 +318,9 @@
 @layer components {
   /* Button Styles - Mystical Future Gradient */
   .btn {
-    --btn-border-gradient: linear-gradient(135deg, rgba(234, 224, 200, 0.95), rgba(139, 122, 90, 0.95), rgba(69, 48, 37, 0));
-    --btn-surface: rgba(139, 122, 90, 0.08);
-    --btn-surface-hover: linear-gradient(135deg, rgba(234, 224, 200, 0.95), rgba(139, 122, 90, 0.9));
+    --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.95), rgba(111, 78, 55, 0.95), rgba(90, 62, 45, 0));
+    --btn-surface: rgba(111, 78, 55, 0.08);
+    --btn-surface-hover: linear-gradient(135deg, rgba(238, 229, 218, 0.95), rgba(111, 78, 55, 0.9));
     --btn-text-color: var(--color-accent-600);
     --btn-text-hover: var(--color-text-inverse);
     @apply relative inline-flex items-center justify-center px-6 py-3 rounded-full tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-400 disabled:cursor-not-allowed disabled:opacity-60;
@@ -397,9 +391,9 @@
   }
 
   .btn-primary {
-    --btn-border-gradient: linear-gradient(130deg, rgba(242, 232, 210, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
-    --btn-surface: rgba(139, 122, 90, 0.06);
-    --btn-surface-hover: linear-gradient(130deg, rgba(242, 232, 210, 0.98), rgba(139, 122, 90, 0.92));
+    --btn-border-gradient: linear-gradient(130deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
+    --btn-surface: rgba(111, 78, 55, 0.06);
+    --btn-surface-hover: linear-gradient(130deg, rgba(238, 229, 218, 0.98), rgba(111, 78, 55, 0.92));
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-text-inverse);
   }
@@ -407,28 +401,28 @@
   .dark .btn-primary {
     --btn-text-color: var(--color-accent-100);
     --btn-surface: rgba(255, 255, 255, 0.04);
-    --btn-surface-hover: linear-gradient(130deg, rgba(234, 224, 200, 0.85), rgba(139, 122, 90, 0.9));
+    --btn-surface-hover: linear-gradient(130deg, rgba(238, 229, 218, 0.85), rgba(111, 78, 55, 0.9));
     --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-secondary {
-    --btn-border-gradient: linear-gradient(135deg, rgba(139, 122, 90, 0.35), rgba(69, 48, 37, 0.65), rgba(234, 224, 200, 0));
-    --btn-surface: linear-gradient(135deg, rgba(139, 122, 90, 0.85), rgba(69, 48, 37, 0.8));
-    --btn-surface-hover: linear-gradient(135deg, rgba(139, 122, 90, 0.92), rgba(69, 48, 37, 0.88));
+    --btn-border-gradient: linear-gradient(135deg, rgba(111, 78, 55, 0.35), rgba(90, 62, 45, 0.65), rgba(238, 229, 218, 0));
+    --btn-surface: linear-gradient(135deg, rgba(111, 78, 55, 0.85), rgba(90, 62, 45, 0.8));
+    --btn-surface-hover: linear-gradient(135deg, rgba(111, 78, 55, 0.92), rgba(90, 62, 45, 0.88));
     --btn-text-color: var(--color-text-inverse);
     --btn-text-hover: var(--color-accent-50);
   }
 
   .dark .btn-secondary {
     --btn-surface: linear-gradient(135deg, rgba(168, 155, 111, 0.85), rgba(111, 78, 55, 0.85));
-    --btn-surface-hover: linear-gradient(135deg, rgba(234, 224, 200, 0.9), rgba(139, 122, 90, 0.88));
+    --btn-surface-hover: linear-gradient(135deg, rgba(238, 229, 218, 0.9), rgba(111, 78, 55, 0.88));
     --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-outline {
-    --btn-border-gradient: linear-gradient(135deg, rgba(200, 188, 160, 0.95), rgba(168, 155, 111, 0.95), rgba(69, 48, 37, 0));
+    --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
     --btn-surface: transparent;
-    --btn-surface-hover: linear-gradient(135deg, rgba(200, 188, 160, 0.85), rgba(168, 155, 111, 0.8));
+    --btn-surface-hover: linear-gradient(135deg, rgba(238, 229, 218, 0.85), rgba(111, 78, 55, 0.8));
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-text-inverse);
   }
@@ -439,9 +433,9 @@
   }
 
   .btn-outline-reverse {
-    --btn-border-gradient: linear-gradient(315deg, rgba(200, 188, 160, 0.95), rgba(168, 155, 111, 0.95), rgba(69, 48, 37, 0));
+    --btn-border-gradient: linear-gradient(315deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
     --btn-surface: transparent;
-    --btn-surface-hover: linear-gradient(315deg, rgba(200, 188, 160, 0.85), rgba(168, 155, 111, 0.8));
+    --btn-surface-hover: linear-gradient(315deg, rgba(238, 229, 218, 0.85), rgba(111, 78, 55, 0.8));
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-text-inverse);
   }
@@ -452,9 +446,9 @@
   }
 
   .btn-ghost {
-    --btn-border-gradient: linear-gradient(135deg, rgba(200, 188, 160, 0.45), rgba(139, 122, 90, 0.5), rgba(69, 48, 37, 0));
+    --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.45), rgba(111, 78, 55, 0.5), rgba(90, 62, 45, 0));
     --btn-surface: transparent;
-    --btn-surface-hover: rgba(139, 122, 90, 0.15);
+    --btn-surface-hover: rgba(111, 78, 55, 0.15);
     --btn-text-color: var(--color-accent-700);
     --btn-text-hover: var(--color-accent-900);
   }
@@ -462,7 +456,7 @@
   .dark .btn-ghost {
     --btn-text-color: var(--color-accent-100);
     --btn-text-hover: var(--color-text-primary);
-    --btn-surface-hover: rgba(234, 224, 200, 0.18);
+    --btn-surface-hover: rgba(238, 229, 218, 0.18);
   }
 
   .btn-danger {
@@ -482,15 +476,15 @@
 
   .btn-secondary.btn-hover-primary-outline:hover,
   .btn-secondary.btn-hover-primary-outline:focus-visible {
-    --btn-border-gradient: linear-gradient(130deg, rgba(242, 232, 210, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
-    --btn-surface-hover: rgba(139, 122, 90, 0.06);
+    --btn-border-gradient: linear-gradient(130deg, rgba(238, 229, 218, 0.95), rgba(168, 155, 111, 0.95), rgba(111, 78, 55, 0));
+    --btn-surface-hover: rgba(111, 78, 55, 0.06);
     --btn-text-hover: var(--color-accent-700);
-    --btn-surface: rgba(139, 122, 90, 0.08);
+    --btn-surface: rgba(111, 78, 55, 0.08);
   }
 
   .dark .btn-secondary.btn-hover-primary-outline:hover,
   .dark .btn-secondary.btn-hover-primary-outline:focus-visible {
-    --btn-border-gradient: linear-gradient(130deg, rgba(242, 232, 210, 0.9), rgba(168, 155, 111, 0.9), rgba(111, 78, 55, 0));
+    --btn-border-gradient: linear-gradient(130deg, rgba(238, 229, 218, 0.9), rgba(168, 155, 111, 0.9), rgba(111, 78, 55, 0));
     --btn-surface-hover: rgba(255, 255, 255, 0.04);
     --btn-text-hover: var(--color-accent-100);
     --btn-surface: rgba(255, 255, 255, 0.06);
@@ -502,8 +496,8 @@
   .btn-outline.btn-hover-secondary-filled:focus-visible,
   .btn-circle.btn-hover-secondary-filled:hover,
   .btn-circle.btn-hover-secondary-filled:focus-visible {
-    --btn-border-gradient: linear-gradient(135deg, rgba(139, 122, 90, 0.35), rgba(69, 48, 37, 0.65), rgba(234, 224, 200, 0));
-    --btn-surface-hover: linear-gradient(135deg, rgba(139, 122, 90, 0.85), rgba(69, 48, 37, 0.8));
+    --btn-border-gradient: linear-gradient(135deg, rgba(111, 78, 55, 0.35), rgba(90, 62, 45, 0.65), rgba(238, 229, 218, 0));
+    --btn-surface-hover: linear-gradient(135deg, rgba(111, 78, 55, 0.85), rgba(90, 62, 45, 0.8));
     --btn-text-hover: var(--color-text-inverse);
   }
 
@@ -513,15 +507,15 @@
   .dark .btn-outline.btn-hover-secondary-filled:focus-visible,
   .dark .btn-circle.btn-hover-secondary-filled:hover,
   .dark .btn-circle.btn-hover-secondary-filled:focus-visible {
-    --btn-border-gradient: linear-gradient(135deg, rgba(168, 155, 111, 0.4), rgba(111, 78, 55, 0.7), rgba(234, 224, 200, 0));
+    --btn-border-gradient: linear-gradient(135deg, rgba(168, 155, 111, 0.4), rgba(111, 78, 55, 0.7), rgba(238, 229, 218, 0));
     --btn-surface-hover: linear-gradient(135deg, rgba(168, 155, 111, 0.8), rgba(111, 78, 55, 0.78));
     --btn-text-hover: var(--color-text-primary);
   }
 
   .btn-circle {
-    --btn-border-gradient: linear-gradient(135deg, rgba(200, 188, 160, 0.4), rgba(168, 155, 111, 0.4), rgba(69, 48, 37, 0));
-    --btn-surface: rgba(139, 122, 90, 0.08);
-    --btn-surface-hover: rgba(139, 122, 90, 0.12);
+    --btn-border-gradient: linear-gradient(135deg, rgba(238, 229, 218, 0.4), rgba(168, 155, 111, 0.4), rgba(111, 78, 55, 0));
+    --btn-surface: rgba(111, 78, 55, 0.08);
+    --btn-surface-hover: rgba(111, 78, 55, 0.12);
     --btn-text-color: var(--color-text-inverse);
     --btn-text-hover: var(--color-text-inverse);
     @apply rounded-full p-2.5;
@@ -846,7 +840,7 @@
 }
 
 .audio-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(250, 204, 21, 0.3); /* var(--color-accent-400) with transparency */
+  background: rgba(111, 78, 55, 0.3); /* Coffee with transparency */
   border-radius: var(--radius-full);
   border: 2px solid transparent;
   background-clip: content-box;
@@ -854,12 +848,12 @@
 }
 
 .audio-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(250, 204, 21, 0.5);
+  background: rgba(111, 78, 55, 0.5);
   background-clip: content-box;
 }
 
 .audio-scrollbar:active::-webkit-scrollbar-thumb {
-  background: rgba(250, 204, 21, 0.7);
+  background: rgba(111, 78, 55, 0.7);
   background-clip: content-box;
 }
 
@@ -869,7 +863,7 @@
 
 .audio-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(250, 204, 21, 0.3) transparent;
+  scrollbar-color: rgba(111, 78, 55, 0.3) transparent;
 }
 
 /* Horizontal Scrollbar Styles */
@@ -884,7 +878,7 @@
 }
 
 .horizontal-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(185, 149, 74, 0.25);
+  background: rgba(111, 78, 55, 0.25); /* Coffee with transparency */
   border-radius: var(--radius-full);
   border: 1.5px solid transparent;
   background-clip: content-box;
@@ -892,18 +886,18 @@
 }
 
 .horizontal-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(185, 149, 74, 0.45);
+  background: rgba(111, 78, 55, 0.45);
   background-clip: content-box;
 }
 
 .horizontal-scrollbar:active::-webkit-scrollbar-thumb {
-  background: rgba(185, 149, 74, 0.65);
+  background: rgba(111, 78, 55, 0.65);
   background-clip: content-box;
 }
 
 .horizontal-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(185, 149, 74, 0.25) transparent;
+  scrollbar-color: rgba(111, 78, 55, 0.25) transparent;
 }
 
 /* Modal/Overlay Scrollbar Styles */
@@ -918,7 +912,7 @@
 }
 
 .modal-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(185, 149, 74, 0.2);
+  background: rgba(111, 78, 55, 0.2); /* Coffee with transparency */
   border-radius: var(--radius-full);
   border: 2px solid transparent;
   background-clip: content-box;
@@ -926,12 +920,12 @@
 }
 
 .modal-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(185, 149, 74, 0.4);
+  background: rgba(111, 78, 55, 0.4);
   background-clip: content-box;
 }
 
 .modal-scrollbar:active::-webkit-scrollbar-thumb {
-  background: rgba(185, 149, 74, 0.6);
+  background: rgba(111, 78, 55, 0.6);
   background-clip: content-box;
 }
 
@@ -941,31 +935,14 @@
 
 .modal-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(185, 149, 74, 0.2) transparent;
+  scrollbar-color: rgba(111, 78, 55, 0.2) transparent;
 }
 
 
 
 /* Dark Mode Styles */
-.dark {
-  /* Dark mode color overrides */
-  --color-bg-primary: var(--color-neutral-900);
-  --color-bg-secondary: var(--color-neutral-800);
-  --color-bg-tertiary: var(--color-neutral-700);
-  --color-bg-card: var(--color-neutral-800);
-  
-  --color-text-primary: var(--color-neutral-50);
-  --color-text-secondary: var(--color-neutral-300);
-  --color-text-tertiary: var(--color-neutral-400);
-  --color-text-inverse: var(--color-neutral-900);
-  
-  --color-border-primary: var(--color-neutral-700);
-  --color-border-secondary: var(--color-neutral-600);
-  
-  --color-shadow-light: rgba(0, 0, 0, 0.3);
-  --color-shadow-medium: rgba(0, 0, 0, 0.4);
-  --color-shadow-heavy: rgba(0, 0, 0, 0.6);
-}
+/* Note: Main dark mode color variables are defined in variables.css */
+/* This section provides component-specific dark mode overrides */
 
 /* Dark mode specific component styles */
 .dark .card {
@@ -1026,7 +1003,7 @@
 /* Dark mode backdrop blur for navbar */
 /* Using attribute selector to avoid issues with Tailwind's slash in class names */
 .dark nav[class*="bg-white"] {
-  @apply bg-neutral-900/95;
+  @apply bg-neutral-950/95;
 }
 
 /* Dark mode selection */
@@ -1044,12 +1021,12 @@
 
 /* Dark mode body and main content styles */
 .dark body {
-  background-color: var(--color-neutral-950);
-  color: var(--color-neutral-100);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
 }
 
 .dark main {
-  background-color: var(--color-neutral-950);
+  background-color: var(--color-bg-primary);
 }
 
 .dark .section {

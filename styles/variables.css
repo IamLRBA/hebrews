@@ -15,16 +15,17 @@
 
   /* Neutral Colors - Charcoal to White */
   --color-neutral-50: #FEFEFE;   /* Pure White */
-  --color-neutral-100: #F8F8F8; /* Off White */
-  --color-neutral-200: #F0F0F0;  /* Light Gray */
-  --color-neutral-300: #E0E0E0;  /* Light Gray */
-  --color-neutral-400: #C0C0C0;  /* Medium Gray */
-  --color-neutral-500: #808080;  /* Gray */
-  --color-neutral-600: #606060;  /* Dark Gray */
+  --color-neutral-100: #F8F8F8;   /* Off White */
+  --color-neutral-200: #F0F0F0;   /* Light Gray */
+  --color-neutral-300: #E0E0E0;   /* Light Gray */
+  --color-neutral-400: #C0C0C0;   /* Medium Gray */
+  --color-neutral-500: #808080;   /* Gray */
+  --color-neutral-600: #606060;   /* Dark Gray */
   --color-neutral-700: #404040;   /* Darker Gray */
-  --color-neutral-800: #252525;  /* Deep Charcoal variant */
-  --color-neutral-900: #262424;  /* Deep Charcoal */
-  --color-neutral-950: #1B1B1B;  /* Almost Black */
+  --color-neutral-800: #252525;   /* Charcoal-2 */
+  --color-neutral-850: #262424;   /* Deep Charcoal */
+  --color-neutral-900: #1B1B1B;   /* Charcoal-3 */
+  --color-neutral-950: #191919;  /* Charcoal-4 */
 
   /* Accent Colors - Coffee variations */
   --color-accent-50: #F5F0E8;    /* Light Coffee Cream */
@@ -40,14 +41,14 @@
 
   /* Text Colors - Light Mode */
   --color-text-primary: #262424;     /* Deep Charcoal */
-  --color-text-secondary: #252525;   /* Deep Charcoal variant */
+  --color-text-secondary: #252525;   /* Charcoal-2 */
   --color-text-tertiary: #404040;    /* Dark Gray */
   --color-text-inverse: #FEFEFE;     /* Pure White */
   --color-text-accent: #6F4E37;      /* Coffee */
 
   /* Background Colors - Light Mode */
   --color-bg-primary: #FEFEFE;       /* Pure White */
-  --color-bg-secondary: #EFE9E0;    /* Soft Ivory */
+  --color-bg-secondary: #EEE5DA;      /* Light Almond */
   --color-bg-tertiary: #EAE0C8;      /* Pearl */
   --color-bg-card: #F8F8F8;          /* Off White */
   --color-bg-overlay: rgba(38, 36, 36, 0.8); /* Deep Charcoal overlay */
@@ -180,28 +181,28 @@
 }
 
 /* Dark Mode Color Variables */
-[data-theme="dark"] {
-  /* Text Colors - Dark Mode */
+.dark {
+  /* Text Colors - Dark Mode (Symmetry: Light 900 -> Dark 100) */
   --color-text-primary: #FEFEFE;       /* Pure White */
-  --color-text-secondary: #F8F8F8;    /* Off White */
-  --color-text-tertiary: #C0C0C0;     /* Medium Gray */
+  --color-text-secondary: #F8F8F8;     /* Off White */
+  --color-text-tertiary: #C0C0C0;      /* Medium Gray */
   --color-text-inverse: #262424;       /* Deep Charcoal */
-  --color-text-accent: #C2B280;        /* Ecru */
+  --color-text-accent: #EEE5DA;        /* Light Almond */
 
-  /* Background Colors - Dark Mode */
-  --color-bg-primary: #1B1B1B;        /* Almost Black */
-  --color-bg-secondary: #252525;       /* Deep Charcoal variant */
-  --color-bg-tertiary: #30221C;        /* Darkest Coffee */
-  --color-bg-card: #262424;            /* Deep Charcoal */
-  --color-bg-overlay: rgba(254, 254, 254, 0.8); /* White overlay */
+  /* Background Colors - Dark Mode (Symmetry: Light 50 -> Dark 950) */
+  --color-bg-primary: #191919;         /* Charcoal-4 */
+  --color-bg-secondary: #1B1B1B;       /* Charcoal-3 */
+  --color-bg-tertiary: #252525;       /* Charcoal-2 */
+  --color-bg-card: #262424;           /* Deep Charcoal */
+  --color-bg-overlay: rgba(25, 25, 25, 0.9); /* Charcoal-4 overlay */
 
   /* Border Colors - Dark Mode */
   --color-border-primary: #404040;     /* Darker Gray */
-  --color-border-secondary: #5A3E2D;   /* Dark Coffee */
-  --color-border-accent: #C2B280;       /* Ecru */
+  --color-border-secondary: #5A3E2D;  /* Dark Coffee */
+  --color-border-accent: #EEE5DA;     /* Light Almond */
 
   /* Shadow Colors - Dark Mode */
-  --color-shadow-light: rgba(254, 254, 254, 0.05);
-  --color-shadow-medium: rgba(254, 254, 254, 0.1);
-  --color-shadow-heavy: rgba(254, 254, 254, 0.2);
+  --color-shadow-light: rgba(0, 0, 0, 0.3);
+  --color-shadow-medium: rgba(0, 0, 0, 0.5);
+  --color-shadow-heavy: rgba(0, 0, 0, 0.7);
 }

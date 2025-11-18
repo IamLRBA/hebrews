@@ -19,10 +19,10 @@ export default function AboutUsPage() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-primary-800 mb-6">
-              E᙭ᑭᒪOᖇE <span className="text-accent-600">the Portal</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">
+              E᙭ᑭᒪOᖇE <span className="text-accent-600 dark:text-accent-400">the Portal</span>
             </h2>
-            <p className="text-xl text-primary-700 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto mb-8">
               Dive into our portal and feel future-forward thrift fashion in motion.
             </p>
             <Link

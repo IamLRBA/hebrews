@@ -40,7 +40,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     root.classList.remove('light', 'dark')
     root.classList.add(activeTheme)
     const metaThemeColor = document.querySelector('meta[name="theme-color"]')
-    if (metaThemeColor) metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#1B1B1B' : '#FEFEFE')
+    if (metaThemeColor) metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#191919' : '#FEFEFE')
     localStorage.setItem('fusioncraft-theme', theme)
   }, [theme, mounted])
 

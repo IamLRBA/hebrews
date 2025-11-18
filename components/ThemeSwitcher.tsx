@@ -32,7 +32,7 @@ export default function ThemeSwitcher() {
     // Update meta theme-color
     const metaThemeColor = document.querySelector('meta[name="theme-color"]')
     if (metaThemeColor) {
-      metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#1B1B1B' : '#FEFEFE')
+      metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#191919' : '#FEFEFE')
     }
 
     localStorage.setItem('fusioncraft-theme', theme)
