@@ -14,12 +14,11 @@
   }
 
   /* Suppress browser warnings for vendor prefixes */
-  * {
+  html {
     /* stylelint-disable-next-line property-no-unknown */
     -webkit-text-size-adjust: 100%;
     /* stylelint-disable-next-line property-no-unknown */
     -ms-text-size-adjust: 100%;
-    text-size-adjust: 100%;
   }
 
   /* Reset button styles */
@@ -192,10 +191,6 @@
     /* Ensure proper box-sizing */
     box-sizing: border-box;
   }
-
-  /* Browser compatibility fixes */
-
-
 
   /* Typography */
   h1, h2, h3, h4, h5, h6 {

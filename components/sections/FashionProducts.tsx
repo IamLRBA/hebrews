@@ -152,17 +152,18 @@ export default function FashionProducts() {
             const isRight = i % 2 === 1
             return (
               <motion.div key={s.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className={`flex flex-col ${isRight ? 'items-end' : 'items-start'}`}>
-                <div className="flex flex-col space-y-6">
-                  <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-4">
-                    <div className="bg-primary-900/20 rounded-xl w-[320px] h-[320px] flex items-center justify-center overflow-hidden">
+                <div className={`flex flex-col space-y-6 ${isRight ? 'items-end' : 'items-start'}`}>
+                  <div className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl w-[352px] h-[352px] aspect-square flex-shrink-0 flex items-center justify-center p-4">
+                    <div className="bg-primary-900/20 rounded-xl w-full h-full aspect-square flex-shrink-0 flex items-center justify-center overflow-hidden">
                       <img src={s.image} alt={s.title} className="max-w-full max-h-full object-contain" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = 'none'; const f = (t.parentElement?.nextElementSibling as HTMLElement); if (f) f.style.display = 'flex' }} />
                     </div>
                   </div>
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
                     <div className="text-6xl font-bold text-neutral-800 dark:text-primary-300">{s.number}</div>
                     <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50">{s.title}</h3>
+                    <p className="text-neutral-700 dark:text-primary-300 leading-relaxed mt-2 max-w-md">{s.description}</p>
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
-                      <span>{expandedId === s.id ? 'Show Less' : 'Show More'}</span>
+                      <span>{expandedId === s.id ? 'Minimize Categories' : 'Select Categories'}</span>
                       <AnimatePresence mode="wait">{expandedId === s.id ? <motion.div key="m" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}><Minus size={20} /></motion.div> : <motion.div key="p" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}><Plus size={20} /></motion.div>}</AnimatePresence>
                     </motion.button>
                   </motion.div>
@@ -171,8 +172,6 @@ export default function FashionProducts() {
                   {expandedId === s.id && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
                       <div className="bg-primary-800/30 dark:bg-primary-900/40 rounded-xl p-6 border border-primary-500/20 dark:border-primary-400/30">
-                        <p className="text-neutral-700 dark:text-primary-300 leading-relaxed mb-6 text-center">{s.description}</p>
-                        
                         {/* Thumbnail Images */}
                         <div className="grid grid-cols-2 gap-4 justify-items-center">
                           {[1, 2, 3, 4].map((thumbIndex) => {
