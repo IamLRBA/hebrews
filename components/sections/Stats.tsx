@@ -103,8 +103,7 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
       transition={{ duration: 0.8, delay: index * 0.1, type: "spring", stiffness: 100 }}
       className="relative group"
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-800/30 dark:to-accent-800/30 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-      <div className="relative bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 border border-primary-500/30 dark:border-primary-500/40">
+      <div className="relative bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl dark:hover:shadow-lg transition-all duration-500 transform hover:-translate-y-1 border border-primary-500/30 dark:border-primary-500/40">
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={isInView ? { scale: 1, rotate: 0 } : {}}
