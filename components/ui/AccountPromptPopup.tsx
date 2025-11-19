@@ -73,7 +73,7 @@ export default function AccountPromptPopup() {
           >
             <button
               onClick={handleDismiss}
-              className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+              className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600 dark:text-neutral-300 dark:hover:text-neutral-200 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -85,13 +85,13 @@ export default function AccountPromptPopup() {
               
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
-                  <AlertCircle className="w-5 h-5 text-primary-600" />
-                  <h3 className="text-lg font-bold text-primary-800 dark:text-primary-100">
+                  <AlertCircle className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                  <h3 className="text-lg font-bold text-primary-800 dark:text-neutral-100">
                     Create an Account
                   </h3>
                 </div>
                 
-                <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">
+                <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-4">
                   Sign up to save your information, track orders, write reviews, and get personalized recommendations!
                 </p>
                 

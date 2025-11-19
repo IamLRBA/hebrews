@@ -71,9 +71,24 @@ export default function SettingsDropdown() {
     setIsThemeOpen(false)
   }
 
+  const handleToggle = () => {
+    const newIsOpen = !isOpen
+    setIsOpen(newIsOpen)
+    // Spin clockwise when opening, counter-clockwise when closing
+    setRotation(prev => prev + (newIsOpen ? 360 : -360))
+  }
+
+  const handleClose = () => {
+    if (isOpen) {
+      setIsOpen(false)
+      // Spin counter-clockwise when closing
+      setRotation(prev => prev - 360)
+    }
+  }
+
   const handleLogout = () => {
     AuthManager.logout()
-    setIsOpen(false)
+    handleClose()
     router.push('/')
   }
 
@@ -90,12 +105,7 @@ export default function SettingsDropdown() {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => {
-          const newIsOpen = !isOpen
-          setIsOpen(newIsOpen)
-          // Spin clockwise when opening, counter-clockwise when closing
-          setRotation(prev => prev + (newIsOpen ? 360 : -360))
-        }}
+        onClick={handleToggle}
         className="w-10 h-10 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center"
         aria-label="Settings"
         aria-expanded={isOpen}
@@ -118,7 +128,7 @@ export default function SettingsDropdown() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-40"
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
             />
             
             <motion.div
@@ -126,17 +136,17 @@ export default function SettingsDropdown() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 top-12 w-64 bg-white dark:bg-primary-800 rounded-xl shadow-xl border border-gray-200 dark:border-primary-700 z-50 overflow-hidden"
+              className="absolute right-0 top-12 w-64 bg-white dark:bg-neutral-800 rounded-xl shadow-xl border border-gray-200 dark:border-neutral-700 z-50 overflow-hidden"
             >
               {/* Theme Section */}
               <div className="p-2">
                 <button
                   onClick={() => setIsThemeOpen(!isThemeOpen)}
-                  className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-primary-300 hover:bg-gray-50 dark:hover:bg-primary-700/50 transition-colors"
+                  className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors"
                 >
                   <Palette className="w-5 h-5" />
                   <span className="font-medium">Theme</span>
-                  <span className="ml-auto text-xs text-gray-500">{theme.charAt(0).toUpperCase() + theme.slice(1)}</span>
+                  <span className="ml-auto text-xs text-gray-500 dark:text-neutral-400">{theme.charAt(0).toUpperCase() + theme.slice(1)}</span>
                 </button>
 
                 <AnimatePresence>
@@ -160,8 +170,8 @@ export default function SettingsDropdown() {
                               onClick={() => handleThemeChange(themeOption.value)}
                               className={`w-full flex items-center space-x-2 p-2 rounded-lg transition-all ${
                                 isActive 
-                                  ? 'bg-primary-100 dark:bg-primary-700 text-primary-700 dark:text-primary-300' 
-                                  : 'text-gray-600 dark:text-primary-400 hover:bg-gray-50 dark:hover:bg-primary-700/50'
+                                  ? 'bg-primary-100 dark:bg-primary-700 text-primary-700 dark:text-primary-200' 
+                                  : 'text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700/50'
                               }`}
                             >
                               <Icon className="w-4 h-4" />
@@ -182,7 +192,7 @@ export default function SettingsDropdown() {
                 </AnimatePresence>
               </div>
 
-              <div className="border-t border-gray-200 dark:border-primary-700"></div>
+              <div className="border-t border-gray-200 dark:border-neutral-700"></div>
 
               {/* Account Section */}
               <div className="p-2">
@@ -190,10 +200,10 @@ export default function SettingsDropdown() {
                   <>
                     <button
                       onClick={() => {
-                        setIsOpen(false)
+                        handleClose()
                         router.push('/account')
                       }}
-                      className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-primary-300 hover:bg-gray-50 dark:hover:bg-primary-700/50 transition-colors"
+                      className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors"
                     >
                       <User className="w-5 h-5" />
                       <span className="font-medium">Account</span>
@@ -209,10 +219,10 @@ export default function SettingsDropdown() {
                 ) : (
                   <button
                     onClick={() => {
-                      setIsOpen(false)
+                      handleClose()
                       router.push('/login')
                     }}
-                    className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-primary-300 hover:bg-gray-50 dark:hover:bg-primary-700/50 transition-colors"
+                    className="w-full flex items-center space-x-3 p-3 rounded-lg text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-700/50 transition-colors"
                   >
                     <User className="w-5 h-5" />
                     <span className="font-medium">Login / Sign Up</span>
