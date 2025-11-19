@@ -163,18 +163,18 @@ export default function Testimonials() {
         <AnimatePresence>
           {selectedTestimonial && (
             <motion.div className="modal fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedTestimonial(null)}>
-              <motion.div className="modal-content bg-white dark:bg-neutral-800 rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()}>
+              <motion.div className="modal-content bg-white dark:bg-neutral-800 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()}>
                 <button className="close-button absolute top-4 right-4 w-8 h-8 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:text-primary-600 dark:hover:text-primary-300" onClick={() => setSelectedTestimonial(null)}>
                   <X />
                 </button>
                 <div className="testimonial-content">
-                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-lg leading-relaxed mb-6">
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-base leading-relaxed mb-4">
                     &ldquo;{renderWithMysticalPieces(selectedTestimonial.fullText, `modal-${selectedTestimonial.id}`)}&rdquo;
                   </p>
-                  <div className="stars flex justify-center mb-6">{renderStars(selectedTestimonial.rating)}</div>
+                  <div className="stars flex justify-center mb-4">{renderStars(selectedTestimonial.rating)}</div>
                 </div>
                 <div className="testimonial-author">
-                  <div className="author-image w-16 h-16 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-xl mx-auto mb-4 overflow-hidden">
+                  <div className="author-image w-12 h-12 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-base mx-auto mb-2 overflow-hidden">
                     {selectedTestimonial.image ? (
                       <img src={selectedTestimonial.image} alt={selectedTestimonial.author} className="w-full h-full rounded-full object-cover grayscale" />
                     ) : (
@@ -182,8 +182,8 @@ export default function Testimonials() {
                     )}
                   </div>
                   <div className="author-info text-center">
-                    <h4 className="author-name text-primary-800 dark:text-primary-100 font-bold text-xl">{selectedTestimonial.author}</h4>
-                    <p className="author-role text-primary-600 dark:text-primary-300 text-lg">{selectedTestimonial.company}</p>
+                    <h4 className="author-name text-primary-800 dark:text-primary-100 font-semibold text-base mb-0.5">{selectedTestimonial.author}</h4>
+                    <p className="author-role text-primary-600 dark:text-primary-300 text-sm">{selectedTestimonial.company}</p>
                   </div>
                 </div>
               </motion.div>

@@ -15,6 +15,7 @@ export default function SettingsDropdown() {
   const [theme, setTheme] = useState<Theme>('system')
   const [mounted, setMounted] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [rotation, setRotation] = useState(0)
   const router = useRouter()
 
   useEffect(() => {
@@ -89,12 +90,24 @@ export default function SettingsDropdown() {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 text-neutral-600 hover:text-primary-700 transition-all duration-200 flex items-center justify-center"
+        onClick={() => {
+          const newIsOpen = !isOpen
+          setIsOpen(newIsOpen)
+          // Spin clockwise when opening, counter-clockwise when closing
+          setRotation(prev => prev + (newIsOpen ? 360 : -360))
+        }}
+        className="w-10 h-10 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center"
         aria-label="Settings"
         aria-expanded={isOpen}
       >
-        <Settings className="w-5 h-5" />
+        <motion.div
+          animate={{ rotate: rotation }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="flex items-center justify-center w-5 h-5"
+          style={{ transformOrigin: 'center center' }}
+        >
+          <Settings className="w-5 h-5" />
+        </motion.div>
       </motion.button>
 
       <AnimatePresence>
