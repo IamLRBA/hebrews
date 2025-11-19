@@ -78,6 +78,7 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@100;200;300;400;500;600;700;800;900&family=Mrs+Saint+Delafield&family=Zen+Dots&display=swap"
           rel="stylesheet"
+          referrerPolicy="no-referrer-when-downgrade"
         />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

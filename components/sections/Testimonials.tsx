@@ -30,8 +30,19 @@ export default function Testimonials() {
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null)
   const [isPaused, setIsPaused] = useState(false)
   const [sliderPosition, setSliderPosition] = useState(0)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const cardWidth = 280
   const gap = 32
+
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'))
+    }
+    checkDarkMode()
+    const observer = new MutationObserver(checkDarkMode)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     // Load user reviews and merge with default testimonials
@@ -162,8 +173,17 @@ export default function Testimonials() {
         </div>
         <AnimatePresence>
           {selectedTestimonial && (
-            <motion.div className="modal fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedTestimonial(null)}>
-              <motion.div className="modal-content bg-white dark:bg-neutral-800 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()}>
+            <motion.div 
+              className="modal fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-4" 
+              style={{
+                backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.5)'
+              }}
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              onClick={() => setSelectedTestimonial(null)}
+            >
+              <motion.div className="modal-content bg-white dark:bg-[#191919] rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto modal-scrollbar relative" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()}>
                 <button className="close-button absolute top-4 right-4 w-8 h-8 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-full flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:text-primary-600 dark:hover:text-primary-300" onClick={() => setSelectedTestimonial(null)}>
                   <X />
                 </button>
@@ -191,6 +211,15 @@ export default function Testimonials() {
           )}
         </AnimatePresence>
       </div>
+      <style jsx>{`
+        :global(.dark .modal-content) {
+          background-color: #191919 !important;
+        }
+        :global(.dark .modal) {
+          background-color: rgba(0, 0, 0, 0.3) !important;
+          backdrop-filter: blur(4px);
+        }
+      `}</style>
     </section>
   )
 }
