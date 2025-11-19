@@ -15,39 +15,40 @@ const companies = [
 
 export default function Companies() {
   const [isHovered, setIsHovered] = useState(false)
-  const [sliderPosition, setSliderPosition] = useState(0)
+  const cardWidth = 100
+  const gap = 40
+  const cardDistance = cardWidth + gap
+  const totalDistance = companies.length * cardDistance
+  // Start at negative position so cards can slide from left to right seamlessly
+  const [sliderPosition, setSliderPosition] = useState(-totalDistance)
   const [scrollSpeed] = useState(2.5)
   const [isResetting, setIsResetting] = useState(false)
   const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
-  const cardWidth = 100
-  const gap = 40
 
   useEffect(() => {
     // Pause if hovered
     if (isHovered || companies.length === 0) return
     const interval = setInterval(() => {
       setSliderPosition(prev => {
-        const cardDistance = cardWidth + gap
-        const totalDistance = companies.length * cardDistance
-        // Move left by scrollSpeed pixels per frame
-        const newPosition = prev - scrollSpeed
+        // Move right by scrollSpeed pixels per frame
+        const newPosition = prev + scrollSpeed
         // Reset seamlessly when we've scrolled through exactly one complete set
         // Since companies are triple-duplicated, we reset to start of second set
         // The reset is seamless because the second set is identical to the first
-        if (Math.abs(newPosition) >= totalDistance) {
+        if (newPosition >= 0) {
           // Mark that we're resetting for instant transition
           setIsResetting(true)
-          // Reset to 0 (start of second identical set)
+          // Reset to -totalDistance (start of second identical set)
           // The instant transition ensures no visible jump
           setTimeout(() => setIsResetting(false), 0)
-          return 0
+          return -totalDistance
         }
         return newPosition
       })
     }, 10)
     return () => clearInterval(interval)
-  }, [isHovered, scrollSpeed, cardWidth, gap])
+  }, [isHovered, scrollSpeed, totalDistance])
 
   // Triple-duplicate companies for seamless infinite scrolling
   // When we scroll through one set and reset, the buffer ensures no visible jump
