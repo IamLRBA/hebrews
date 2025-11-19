@@ -392,17 +392,17 @@ export default function AboutUs() {
               {
                 image: "/assets/images/sections/home/missions-1.jpg",
                 title: "Future Sourcing",
-                description: "We scout standout garments with enduring build, striking detail, and forward aesthetics."
+                description: "To scout standout garments with enduring build, striking detail, and forward aesthetics."
               },
               {
                 image: "/assets/images/sections/home/missions-2.jpg",
                 title: "Circular Styling",
-                description: "We restore pre-loved treasures with care, making circular fashion effortless and stylish."
+                description: "To restore pre-loved treasures with care, making circular fashion effortless and stylish."
               },
               {
                 image: "/assets/images/sections/home/missions-3.jpg",
                 title: "Signature Revelation",
-                description: "We help you distill a personal look that feels intuitive, modern, and unmistakably yours."
+                description: "To help you distill a personal look that feels intuitive, modern, and unmistakably yours."
               }
             ].map((mission, index) => (
               <motion.div

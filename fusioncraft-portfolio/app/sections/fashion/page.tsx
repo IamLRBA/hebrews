@@ -31,7 +31,7 @@ export default function FashionPage() {
             >
               ←
             </motion.div>
-            <span className="text-sm font-medium">Back to Portals</span>
+            <span className="text-sm font-medium">Back to Portal</span>
           </div>
         </Link>
       </motion.div>
