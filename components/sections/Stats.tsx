@@ -180,7 +180,7 @@ export default function Stats() {
         <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 1.2, type: "spring", stiffness: 100 }} className="text-center mt-16">
           <div className="inline-flex items-center space-x-4 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40">
             <Heart className="w-6 h-6 text-primary-600 dark:text-primary-300 animate-pulse" />
-            <span className="text-primary-800 dark:text-accent-300 font-semibold">Trusted by creative professionals worldwide</span>
+            <span className="text-primary-600 dark:text-primary-300 font-semibold">Trusted by creative professionals nationwide</span>
             <Target className="w-6 h-6 text-accent-600 dark:text-accent-300 animate-pulse delay-1000" />
           </div>
         </motion.div>
