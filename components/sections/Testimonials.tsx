@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Star } from 'lucide-react'
 import { AuthManager } from '@/lib/auth'
@@ -28,11 +28,17 @@ const defaultTestimonials: Testimonial[] = [
 export default function Testimonials() {
   const [testimonialsData, setTestimonialsData] = useState<Testimonial[]>(defaultTestimonials)
   const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null)
-  const [isPaused, setIsPaused] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isManuallyPaused, setIsManuallyPaused] = useState(false)
   const [sliderPosition, setSliderPosition] = useState(0)
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const cardWidth = 280
-  const gap = 32
+  const [scrollSpeed, setScrollSpeed] = useState(1) // Base speed multiplier
+  const [isResetting, setIsResetting] = useState(false)
+  const [containerWidth, setContainerWidth] = useState(0)
+  const sliderRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const cardWidth = 350
+  const gap = 5
 
   useEffect(() => {
     const checkDarkMode = () => {
@@ -92,50 +98,135 @@ export default function Testimonials() {
   }, [])
 
   useEffect(() => {
-    if (isPaused || testimonialsData.length === 0) return
+    // Pause if manually paused OR hovered
+    if (isManuallyPaused || isHovered || testimonialsData.length === 0) return
     const interval = setInterval(() => {
       setSliderPosition(prev => {
-        if (Math.abs(prev) >= testimonialsData.length * (cardWidth + gap)) return 0
-        return prev - 1
+        const cardDistance = cardWidth + gap
+        const totalDistance = testimonialsData.length * cardDistance
+        // Move left by scrollSpeed pixels per frame
+        const newPosition = prev - scrollSpeed
+        // Reset seamlessly when we've scrolled through exactly one complete set
+        // Since testimonials are triple-duplicated, we reset to start of second set
+        // The reset is seamless because the second set is identical to the first
+        if (Math.abs(newPosition) >= totalDistance) {
+          // Mark that we're resetting for instant transition
+          setIsResetting(true)
+          // Reset to 0 (start of second identical set)
+          // The instant transition ensures no visible jump
+          setTimeout(() => setIsResetting(false), 0)
+          return 0
+        }
+        return newPosition
       })
-    }, 15)
+    }, 10)
     return () => clearInterval(interval)
-  }, [isPaused, testimonialsData.length])
+  }, [isManuallyPaused, isHovered, testimonialsData.length, scrollSpeed, cardWidth, gap])
 
   const handlePrev = () => {
+    // Pause automatic sliding when clicking Back
+    setIsManuallyPaused(true)
+    // Optionally move back one card
     setSliderPosition(prev => {
-      const newPosition = prev + (cardWidth + gap)
-      return newPosition > 0 ? -((testimonialsData.length - 1) * (cardWidth + gap)) : newPosition
+      const cardDistance = cardWidth + gap
+      const totalDistance = testimonialsData.length * cardDistance
+      const newPosition = prev + cardDistance
+      // If we go past 0, wrap to the end of the first set
+      return newPosition > 0 ? -(totalDistance - cardDistance) : newPosition
     })
   }
+  
   const handleNext = () => {
+    // Increase scroll speed when clicking Forward
+    setScrollSpeed(prev => Math.min(prev + 0.5, 5)) // Cap at 5x speed
+    // Also move forward one card
     setSliderPosition(prev => {
-      const newPosition = prev - (cardWidth + gap)
-      return Math.abs(newPosition) >= testimonialsData.length * (cardWidth + gap) ? 0 : newPosition
+      const cardDistance = cardWidth + gap
+      const totalDistance = testimonialsData.length * cardDistance
+      const newPosition = prev - cardDistance
+      // Reset seamlessly when we've scrolled through one set
+      return Math.abs(newPosition) >= totalDistance ? 0 : newPosition
     })
+    // Resume automatic sliding if it was manually paused
+    setIsManuallyPaused(false)
   }
 
   const renderStars = (rating: number) => Array.from({ length: 5 }, (_, i) => (
     <Star key={i} size={12} className={i < rating ? "text-accent-500 fill-accent-500" : "text-gray-300"} />
   ))
 
-  const duplicatedTestimonials = [...testimonialsData, ...testimonialsData]
+  // Triple-duplicate testimonials for seamless infinite scrolling
+  // When we scroll through one set and reset, the buffer ensures no visible jump
+  const duplicatedTestimonials = [...testimonialsData, ...testimonialsData, ...testimonialsData]
+
+  // Effect to measure container width
+  useEffect(() => {
+    const updateContainerWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth)
+      }
+    }
+    updateContainerWidth()
+    window.addEventListener('resize', updateContainerWidth)
+    return () => window.removeEventListener('resize', updateContainerWidth)
+  }, [])
+
+  // Calculate scale based on position relative to center
+  const getCardScale = (index: number) => {
+    if (containerWidth === 0) return 1
+    
+    const cardDistance = cardWidth + gap
+    // Calculate the center X position of the card
+    const cardCenterX = sliderPosition + (index * cardDistance) + (cardWidth / 2)
+    const containerCenterX = containerWidth / 2
+    const distanceFromCenter = Math.abs(cardCenterX - containerCenterX)
+    
+    // Maximum distance for scaling effect (half container width + some buffer)
+    const maxDistance = containerWidth / 2.5
+    
+    // Calculate scale: 0.7 at edges (smaller), 1.0 at center (current size is max)
+    const normalizedDistance = Math.min(distanceFromCenter / maxDistance, 1)
+    const scale = 0.7 + (0.3 * (1 - normalizedDistance))
+    
+    return scale
+  }
 
   return (
     <section className="section relative overflow-hidden">
       <div className="container-custom relative z-10">
         <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }} className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-16 text-center">TEᔕTIᗰOᑎIᗩᒪᔕ</motion.h2>
-        <div className="slider-container relative">
-          <motion.div className="slider-track flex" animate={{ x: sliderPosition }} transition={{ type: "tween", ease: "linear" }} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)} style={{ gap: `${gap}px` }}>
-            {duplicatedTestimonials.map((testimonial, index) => (
-              <motion.div key={`${testimonial.id}-${index}`} className="testimonial-card flex-shrink-0" initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} viewport={{ once: true }} whileHover={{ scale: 1.05 }} onClick={() => setSelectedTestimonial(testimonial)} style={{ width: `${cardWidth}px` }}>
+        <div className="slider-container relative" ref={containerRef}>
+          <motion.div 
+            ref={sliderRef}
+            className="slider-track flex" 
+            animate={{ x: sliderPosition }} 
+            transition={isResetting ? { duration: 0 } : { type: "tween", ease: "linear", duration: 0 }} 
+            onMouseEnter={() => setIsHovered(true)} 
+            onMouseLeave={() => setIsHovered(false)} 
+            style={{ gap: `${gap}px` }}
+          >
+            {duplicatedTestimonials.map((testimonial, index) => {
+              const cardScale = getCardScale(index)
+              return (
+                <motion.div 
+                  key={`${testimonial.id}-${index}`} 
+                  className="testimonial-card flex-shrink-0" 
+                  initial={{ opacity: 0, scale: 0.9 }} 
+                  whileInView={{ opacity: 1 }} 
+                  viewport={{ once: true }} 
+                  whileHover={{ scale: cardScale * 1.05 }} 
+                  animate={{ scale: cardScale }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  onClick={() => setSelectedTestimonial(testimonial)} 
+                  style={{ width: `${cardWidth}px` }}
+                >
                 <div className="testimonial-content bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl p-3 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105 border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
                   <div className="flex justify-center mb-1.5">
                     <div className="w-6 h-6 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center">
                       <svg className="w-3 h-3 text-primary-600 dark:text-primary-300" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
                     </div>
                   </div>
-                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-xs leading-snug mb-2 flex-grow line-clamp-4">
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-xs leading-snug mb-2 flex-grow line-clamp-4 text-center">
                     &ldquo;{renderWithMysticalPieces(testimonial.text, `card-${testimonial.id}-${index}`)}&rdquo;
                   </p>
                   <div className="stars flex justify-center mb-2">{renderStars(testimonial.rating)}</div>
@@ -153,8 +244,9 @@ export default function Testimonials() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              )
+            })}
           </motion.div>
         </div>
         <div className="mobile-nav-buttons flex justify-center mt-8 space-x-4">
@@ -188,7 +280,7 @@ export default function Testimonials() {
                   <X />
                 </button>
                 <div className="testimonial-content">
-                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-base leading-relaxed mb-4">
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-base leading-relaxed mb-4 text-center">
                     &ldquo;{renderWithMysticalPieces(selectedTestimonial.fullText, `modal-${selectedTestimonial.id}`)}&rdquo;
                   </p>
                   <div className="stars flex justify-center mb-4">{renderStars(selectedTestimonial.rating)}</div>
