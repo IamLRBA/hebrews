@@ -303,15 +303,6 @@ export default function Testimonials() {
           )}
         </AnimatePresence>
       </div>
-      <style jsx>{`
-        :global(.dark .modal-content) {
-          background-color: #191919 !important;
-        }
-        :global(.dark .modal) {
-          background-color: rgba(0, 0, 0, 0.3) !important;
-          backdrop-filter: blur(4px);
-        }
-      `}</style>
     </section>
   )
 }

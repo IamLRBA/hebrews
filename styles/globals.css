@@ -14,10 +14,13 @@
   }
 
   /* Suppress browser warnings for vendor prefixes */
+  /* These are valid vendor prefixes for cross-browser compatibility */
   html {
     /* stylelint-disable-next-line property-no-unknown */
+    /* Valid WebKit property for iOS Safari */
     -webkit-text-size-adjust: 100%;
     /* stylelint-disable-next-line property-no-unknown */
+    /* Valid IE/Edge property */
     -ms-text-size-adjust: 100%;
   }
 
@@ -30,6 +33,16 @@
     font: inherit;
     cursor: pointer;
     outline: inherit;
+    /* stylelint-disable-next-line property-no-unknown */
+    -moz-appearance: none;
+    /* stylelint-disable-next-line property-no-unknown */
+    -webkit-appearance: none;
+  }
+  
+  /* Remove Firefox inner focus border */
+  button::-moz-focus-inner {
+    border: 0;
+    padding: 0;
   }
 
   /* Accessibility - Screen Reader Only */
@@ -107,6 +120,7 @@
     font-weight: var(--font-weight-thin);
     -webkit-font-smoothing: antialiased;
     /* stylelint-disable-next-line property-no-unknown */
+    /* Valid Firefox macOS property for font smoothing */
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
@@ -1309,6 +1323,16 @@ input[type="radio"]:focus {
 /* Dark mode glass effect */
 .dark .glass {
   @apply bg-neutral-800/80 backdrop-blur-md border-neutral-700/50;
+}
+
+/* Testimonial modal styles */
+.dark .modal-content {
+  background-color: #191919 !important;
+}
+
+.dark .modal {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(4px);
 }
 
 /* Dark mode gradient backgrounds */

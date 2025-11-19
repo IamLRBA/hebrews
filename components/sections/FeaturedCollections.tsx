@@ -197,7 +197,7 @@ export default function FeaturedCollections() {
                   className="group relative min-w-[280px]"
                 >
                   <motion.div
-                    className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40 h-full flex flex-col relative"
+                    className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40 h-full flex flex-col relative"
                     whileHover={{
                       boxShadow: "0 20px 40px rgba(139, 69, 19, 0.2)"
                     }}
@@ -275,11 +275,11 @@ export default function FeaturedCollections() {
                           transition={{ duration: 0.2 }}
                           className="mb-1"
                         >
-                          <p className="text-neutral-700 dark:text-primary-300 text-xs font-medium mb-0.5 line-clamp-1">{product.brand}</p>
-                          <h3 className="text-sm sm:text-base font-bold text-neutral-850 dark:text-primary-100 mb-0.5 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors leading-tight">
+                          <p className="text-neutral-700 dark:text-primary-200 text-xs font-medium mb-0.5 line-clamp-1 group-hover:text-neutral-800 dark:group-hover:text-primary-100 transition-colors">{product.brand}</p>
+                          <h3 className="text-sm sm:text-base font-bold text-neutral-850 dark:text-primary-50 mb-0.5 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-100 transition-colors leading-tight">
                             {product.name}
                           </h3>
-                          <p className="text-neutral-600 dark:text-primary-400 text-xs mb-0.5 line-clamp-1">{product.sku}</p>
+                          <p className="text-neutral-600 dark:text-primary-300 text-xs mb-0.5 line-clamp-1 group-hover:text-neutral-700 dark:group-hover:text-primary-200 transition-colors">{product.sku}</p>
                         </motion.div>
                       </Link>
 
@@ -291,11 +291,11 @@ export default function FeaturedCollections() {
                           transition={{ delay: index * 0.1 + 0.6 }}
                           className="flex items-baseline space-x-1 flex-wrap"
                         >
-                          <span className="text-base sm:text-lg font-bold text-neutral-800 dark:text-primary-200">
+                          <span className="text-base sm:text-lg font-bold text-neutral-800 dark:text-white dark:drop-shadow-sm group-hover:text-neutral-900 dark:group-hover:text-accent-50 transition-colors">
                             UGX {product.price_ugx.toLocaleString()}
                           </span>
                           {hasDiscount && (
-                            <span className="text-xs text-neutral-600 dark:text-primary-500 line-through">
+                            <span className="text-xs text-neutral-600 dark:text-primary-400 line-through group-hover:text-neutral-700 dark:group-hover:text-primary-300 transition-colors">
                               UGX {product.original_price!.toLocaleString()}
                             </span>
                           )}
