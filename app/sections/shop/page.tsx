@@ -427,7 +427,7 @@ export default function ShopPage() {
               {/* Mood Description */}
               <div className="text-center">
                 <p className="text-neutral-700 dark:text-primary-300 text-sm">
-                  {selectedMood === 'inspiration' && 'Creative sparks and artistic vision'}
+                  {selectedMood === 'inspiration' && 'Different material surface textures'}
                   {selectedMood === 'elegance' && 'Sophisticated luxury and refined beauty'}
                   {selectedMood === 'urban' && 'City vibes and contemporary culture'}
                   {selectedMood === 'nature' && 'Organic elements and natural harmony'}
