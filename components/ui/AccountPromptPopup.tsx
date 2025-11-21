@@ -21,14 +21,14 @@ export default function AccountPromptPopup() {
     const dismissedUntil = dismissedTime ? parseInt(dismissedTime) : 0
     const isDismissed = Date.now() < dismissedUntil
     
+    let timer: NodeJS.Timeout | null = null
+    
     // Show popup if user is not logged in and hasn't dismissed recently (24 hours)
     if (!isAuthenticated && !isDismissed) {
       // Delay showing popup by 3 seconds
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setShowPopup(true)
       }, 3000)
-      
-      return () => clearTimeout(timer)
     }
 
     // Listen for auth changes
@@ -39,7 +39,14 @@ export default function AccountPromptPopup() {
     }
 
     window.addEventListener('authStateChanged', handleAuthChange)
-    return () => window.removeEventListener('authStateChanged', handleAuthChange)
+    
+    // Return a single cleanup function that handles both cases
+    return () => {
+      if (timer) {
+        clearTimeout(timer)
+      }
+      window.removeEventListener('authStateChanged', handleAuthChange)
+    }
   }, [])
 
   const handleDismiss = () => {

@@ -17,11 +17,13 @@
   /* These are valid vendor prefixes for cross-browser compatibility */
   html {
     /* stylelint-disable-next-line property-no-unknown */
-    /* Valid WebKit property for iOS Safari */
+    /* Valid WebKit property for iOS Safari - prevents text inflation on mobile */
     -webkit-text-size-adjust: 100%;
     /* stylelint-disable-next-line property-no-unknown */
     /* Valid IE/Edge property */
     -ms-text-size-adjust: 100%;
+    /* Standard property */
+    text-size-adjust: 100%;
   }
 
   /* Reset button styles */
@@ -39,7 +41,8 @@
     -webkit-appearance: none;
   }
   
-  /* Remove Firefox inner focus border */
+  /* Remove Firefox inner focus border - Firefox-specific pseudo-element */
+  /* This is intentionally Firefox-only and will show warnings in other browsers */
   button::-moz-focus-inner {
     border: 0;
     padding: 0;
@@ -120,7 +123,7 @@
     font-weight: var(--font-weight-thin);
     -webkit-font-smoothing: antialiased;
     /* stylelint-disable-next-line property-no-unknown */
-    /* Valid Firefox macOS property for font smoothing */
+    /* Valid Firefox macOS property for font smoothing - Firefox-specific */
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
