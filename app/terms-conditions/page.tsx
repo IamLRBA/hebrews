@@ -84,20 +84,7 @@ export default function TermsConditions() {
 
   return (
     <div className="min-h-screen bg-unified">
-      {/* Navigation */}
-      <nav className="bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center space-x-2 text-primary-800 hover:text-primary-600 transition-colors">
-              <span className="font-semibold">⟸</span>
-              <span className="font-semibold">Back to Home</span>
-            </Link>
-            <h1 className="text-xl font-bold text-primary-900">Terms & Conditions</h1>
-          </div>
-        </div>
-      </nav>
-
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -108,10 +95,10 @@ export default function TermsConditions() {
           <div className="w-20 h-20 mx-auto mb-6 bg-primary-100 rounded-full flex items-center justify-center">
             <FileText className="w-10 h-10 text-primary-600" />
           </div>
-          <h1 className="text-4xl font-bold text-primary-900 mb-4">
+          <h1 className="text-4xl font-bold text-primary-900 dark:text-primary-100 mb-4">
             Terms and Conditions
           </h1>
-          <p className="text-xl text-neutral-600 max-w-2xl mx-auto">
+          <p className="text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
             Please read these terms and conditions carefully before using our website and services.
           </p>
           <p className="text-sm text-neutral-500 mt-4">
@@ -126,12 +113,12 @@ export default function TermsConditions() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700 mb-8"
         >
-          <h2 className="text-2xl font-bold text-primary-900 mb-4">Introduction</h2>
-          <p className="text-neutral-700 leading-relaxed mb-4">
+          <h2 className="text-2xl font-bold text-primary-900 dark:text-primary-100 mb-4">Introduction</h2>
+          <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed mb-4">
             These terms and conditions govern your use of the <MysticalPiecesWord /> website and services. 
             By using our website, you accept these terms and conditions in full.
           </p>
-          <p className="text-neutral-700 leading-relaxed">
+          <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed">
             If you disagree with these terms and conditions or any part of them, you must not use our website or services.
           </p>
         </motion.div>
@@ -150,13 +137,13 @@ export default function TermsConditions() {
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-4">
                   <section.icon className="w-6 h-6 text-primary-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-primary-900">{section.title}</h3>
+                <h3 className="text-2xl font-bold text-primary-900 dark:text-primary-100">{section.title}</h3>
               </div>
               <ul className="space-y-3">
                 {section.content.map((item, itemIndex) => (
                   <li key={itemIndex} className="flex items-start">
                     <div className="w-2 h-2 bg-primary-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <span className="text-neutral-700 leading-relaxed">
+                    <span className="text-neutral-700 dark:text-neutral-200 leading-relaxed">
                       {renderWithMysticalPieces(item, `terms-section-${index}-${itemIndex}`)}
                     </span>
                   </li>
@@ -173,7 +160,7 @@ export default function TermsConditions() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700 mt-8"
         >
-          <h2 className="text-2xl font-bold text-primary-900 mb-4">Additional Terms</h2>
+          <h2 className="text-2xl font-bold text-primary-900 dark:text-primary-100 mb-4">Additional Terms</h2>
           <div className="space-y-4 text-neutral-700">
             <p>
               <strong>Intellectual Property:</strong> All content on this website, including text, graphics, logos, and software, 
@@ -196,11 +183,11 @@ export default function TermsConditions() {
           transition={{ duration: 0.6, delay: 1.0 }}
           className="bg-white dark:bg-neutral-800 rounded-2xl p-8 shadow-lg border border-neutral-200 dark:border-neutral-700 mt-8"
         >
-          <h2 className="text-2xl font-bold text-primary-900 mb-4">Contact Us</h2>
-          <p className="text-neutral-700 leading-relaxed mb-4">
+          <h2 className="text-2xl font-bold text-primary-900 dark:text-primary-100 mb-4">Contact Us</h2>
+          <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed mb-4">
             If you have any questions about these Terms and Conditions, please contact us:
           </p>
-          <div className="space-y-2 text-neutral-700">
+          <div className="space-y-2 text-neutral-700 dark:text-neutral-200">
             <p><strong>Email:</strong> jerrylarubafestus@gmail.com</p>
             <p><strong>Phone:</strong> +256774948086</p>
             <p><strong>Address:</strong> Kampala, Uganda</p>
