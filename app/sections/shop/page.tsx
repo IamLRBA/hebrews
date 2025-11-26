@@ -218,10 +218,10 @@ export default function ShopPage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-8xl md:text-8xl font-bold mb-6"
+            className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6"
           >
-            <span className="inline-flex items-center justify-center gap-6">
-              <HiOutlineShoppingBag className="w-40 h-40 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
+            <span className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
+              <HiOutlineShoppingBag className="w-16 h-16 sm:w-24 sm:h-24 md:w-40 md:h-40 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
               <span className="text-gradient">ᔕᕼOᑭ</span>
             </span>
           </motion.h1>
@@ -229,7 +229,7 @@ export default function ShopPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="text-2xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed"
+            className="text-base sm:text-xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed px-4"
           >
             "Where thrifted treasures meet fresh style finds"
           </motion.p>
@@ -237,7 +237,7 @@ export default function ShopPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="text-lg text-neutral-700 dark:text-primary-100 max-w-3xl mx-auto"
+            className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-primary-100 max-w-3xl mx-auto px-4"
           >
             Discover unique pieces that blend vintage charm with contemporary style. 
             From carefully curated thrifted gems to fresh new arrivals, we help you 

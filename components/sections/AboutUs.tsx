@@ -128,10 +128,10 @@ export default function AboutUs() {
             <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
               We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. We are an invitation to dress with clarity, confidence, and purpose.
             </p>
-            <div className="inline-flex items-center space-x-2 bg-primary-100 dark:bg-primary-900/30 px-6 py-3 rounded-full">
-              <span className="text-primary-800 dark:text-primary-100 font-semibold">Our Core:</span>
+            <div className="inline-flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 bg-primary-100 dark:bg-primary-900/30 px-4 sm:px-6 py-3 rounded-full">
+              <span className="text-primary-800 dark:text-primary-100 font-semibold text-sm sm:text-base">Our Core:</span>
               <span
-                className="text-accent-600 dark:text-accent-400 font-bold text-2xl md:text-3xl leading-snug"
+                className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-3xl leading-snug text-center sm:text-left"
                 style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
               >
                 Hidden treasures reveal a timeless style

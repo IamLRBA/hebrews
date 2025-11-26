@@ -170,7 +170,7 @@ export default function FeaturedCollections() {
 
         {featuredProducts.length > 0 ? (
           <div className="flex justify-center">
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 sm:gap-8 md:gap-8 lg:gap-15 max-w-7xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-8 lg:gap-15 max-w-7xl">
             {featuredProducts.map((item, index) => {
               const { product, categoryName, categorySlug } = item
               const isAdding = addingToCart === product.id
@@ -194,7 +194,7 @@ export default function FeaturedCollections() {
                     scale: 1.02,
                     transition: { duration: 0.3 }
                   }}
-                  className="group relative min-w-[280px]"
+                  className="group relative w-full sm:min-w-[280px]"
                 >
                   <motion.div
                     className="bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-neutral-800 dark:to-neutral-700 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden border border-primary-500/30 dark:border-primary-500/40 h-full flex flex-col relative"

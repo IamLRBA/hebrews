@@ -213,13 +213,13 @@ export default function CEOProfile() {
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 className="w-full max-w-4xl"
               >
-                                                   <div className={`flex flex-col items-center space-y-8 ${
+                                                   <div className={`flex flex-col space-y-8 ${
                     index % 2 === 0 
-                      ? 'flex-row space-x-12 md:flex-row md:space-x-12' // Left aligned (icon on left) - both mobile and desktop
-                      : 'flex-row-reverse space-x-reverse space-x-12 md:flex-row-reverse md:space-x-reverse md:space-x-12' // Right aligned (icon on right) - both mobile and desktop
+                      ? 'items-start' // Left aligned (staggered)
+                      : 'items-end' // Right aligned (staggered)
                   }`}>
                                        {/* Image Container */}
-                    <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
+                    <div className={`flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8 ${index % 2 === 0 ? 'self-start' : 'self-end'}`}>
                       {skill.category === '⾕ ᗩᖇᑕᕼITEᑕTᑌᖇE' && (
                         <img 
                           src="/assets/images/sections/ceo/architecture.jpg" 

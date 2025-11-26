@@ -147,7 +147,7 @@ export default function CheckoutPage() {
           <p className="text-primary-200 dark:text-primary-300">Complete your order with secure checkout</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8 max-w-full md:max-w-6xl mx-auto">
           {/* Order Summary */}
           <div className="md:col-span-2">
             <motion.div

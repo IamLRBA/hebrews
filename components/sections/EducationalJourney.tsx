@@ -231,15 +231,15 @@ export default function EducationalJourney() {
               whileHover={{ scale: 1.05 }}
               className="absolute"
               style={{
-                left: index % 2 === 0 ? '5%' : '55%',
-                top: `${(index * 20) + 10}%`,
-                transform: 'translateY(-50%)'
+                left: '50%',
+                top: index === 0 ? '5%' : index === 1 ? '35%' : index === 2 ? '65%' : '95%',
+                transform: 'translate(-50%, -50%)',
+                width: 'calc(100% - 3rem)',
+                maxWidth: '260px'
               }}
             >
               <div 
-                className={`w-64 p-4 rounded-xl shadow-lg border transition-all duration-300 hover:shadow-xl ${
-                  index % 2 === 0 ? 'mr-auto' : 'ml-auto'
-                }`}
+                className="w-full p-4 rounded-xl shadow-lg border transition-all duration-300 hover:shadow-xl"
                 style={{ 
                   backgroundColor: 'var(--color-bg-card)',
                   borderColor: 'var(--color-neutral-200)'
