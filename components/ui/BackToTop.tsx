@@ -33,12 +33,11 @@ export default function BackToTop() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20, scale: 0.8 }}
+          exit={{ opacity: 0, y: 20, scale: 0.8, transition: { duration: 0.2 } }}
           transition={{ 
             type: 'spring', 
             stiffness: 300, 
-            damping: 25,
-            exit: { duration: 0.2 }
+            damping: 25
           }}
           className="fixed bottom-8 right-8 z-50"
           onMouseEnter={() => setShowTooltip(true)}
