@@ -43,14 +43,14 @@ export default function BackToTop() {
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
-          {/* Tooltip */}
+          {/* Tooltip - Only show on hover (desktop/tablet) */}
           <AnimatePresence>
             {showTooltip && (
               <motion.div
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-primary-900 dark:bg-primary-100 text-primary-50 dark:text-primary-900 text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none border border-primary-400/40"
+                className="hidden md:block absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-primary-900 dark:bg-primary-100 text-primary-50 dark:text-primary-900 text-xs font-medium px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg pointer-events-none border border-primary-400/40"
               >
                 Back to Top
                 <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-primary-900 dark:border-l-primary-100"></div>

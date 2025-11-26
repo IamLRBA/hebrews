@@ -206,16 +206,16 @@ export default function Home() {
                             Wear the unseen future. Feel the divine in every thread.
                           </p>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <div className="flex flex-row gap-2 sm:gap-4 justify-center items-center">
                           <button 
                             onClick={() => scrollToSection('portals-section')}
-                            className="btn btn-primary btn-hover-secondary-filled text-lg px-8 py-4"
+                            className="btn btn-primary btn-hover-secondary-filled text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
                           >
                             ᗪIᐯE Iᑎ ᑎOᗯ
                           </button>
                           <button 
                             onClick={() => scrollToSection('contact-section')}
-                            className="btn btn-secondary btn-hover-primary-outline text-lg px-8 py-4"
+                            className="btn btn-secondary btn-hover-primary-outline text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
                           >
                             GET Iᑎ TOᑌᑕᕼ
                           </button>
@@ -230,7 +230,7 @@ export default function Home() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.5 }}
-                  className="absolute bottom-8 md:bottom-1 left-1/2 transform -translate-x-1/2"
+                  className="absolute bottom-2 md:bottom-1 left-1/2 transform -translate-x-1/2"
                 >
                   <motion.div
                     animate={{ y: [0, 10, 0] }}
