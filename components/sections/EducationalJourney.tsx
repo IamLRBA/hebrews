@@ -179,11 +179,11 @@ export default function EducationalJourney() {
         </div>
 
         {/* Mobile Timeline */}
-        <div className="block md:hidden relative">
+        <div className="block md:hidden relative px-4">
           <svg 
-            viewBox="0 0 400 800" 
+            viewBox="0 0 400 1200" 
             className="w-full h-auto"
-            style={{ minHeight: '800px' }}
+            style={{ minHeight: '1200px' }}
           >
             <defs>
               <linearGradient id="mobilePathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -194,7 +194,7 @@ export default function EducationalJourney() {
             
             {/* Animated Path */}
             <motion.path
-              d="M 200 50 L 200 200 L 200 350 L 200 500 L 200 650 L 200 750"
+              d="M 200 50 L 200 300 L 200 500 L 200 700 L 200 900 L 200 1100"
               fill="none"
               stroke="url(#mobilePathGradient)"
               strokeWidth="8"
@@ -213,7 +213,7 @@ export default function EducationalJourney() {
               r="8"
               fill="var(--color-accent-500)"
               filter="drop-shadow(0 0 8px var(--color-accent-500))"
-              cy={useTransform(guideDotProgress, [0, 1], [50, 750])}
+              cy={useTransform(guideDotProgress, [0, 1], [50, 1100])}
             />
           </svg>
 
@@ -229,13 +229,11 @@ export default function EducationalJourney() {
                 ease: "easeInOut"
               }}
               whileHover={{ scale: 1.05 }}
-              className="absolute"
+              className="absolute left-1/2 -translate-x-1/2"
               style={{
-                left: '50%',
-                top: index === 0 ? '5%' : index === 1 ? '35%' : index === 2 ? '65%' : '95%',
-                transform: 'translate(-50%, -50%)',
-                width: 'calc(100% - 3rem)',
-                maxWidth: '260px'
+                top: index === 0 ? '3%' : index === 1 ? '25%' : index === 2 ? '47%' : '69%',
+                width: 'calc(100% - 2rem)',
+                maxWidth: '280px'
               }}
             >
               <div 
