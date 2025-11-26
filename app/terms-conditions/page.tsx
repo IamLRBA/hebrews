@@ -1,9 +1,32 @@
 'use client'
 
+import { ReactNode } from 'react'
 import { motion } from 'framer-motion'
 import { FileText, CheckCircle, AlertCircle, Scale, Users, Shield } from 'lucide-react'
 import Link from 'next/link'
-import MysticalPiecesWord, { renderWithMysticalPieces } from '@/components/ui/MysticalPiecesWord'
+import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
+
+function renderWithMysticalPieces(content: ReactNode, keyPrefix = 'mysticalpieces'): ReactNode {
+  // If content is already a React element, return it as-is
+  if (typeof content !== 'string') {
+    return content
+  }
+
+  // If content is a string, apply mystical styling
+  const parts = content.split('MysticalPIECES')
+  const elements: ReactNode[] = []
+
+  parts.forEach((part, index) => {
+    if (part) {
+      elements.push(<span key={`${keyPrefix}-text-${index}`}>{part}</span>)
+    }
+    if (index < parts.length - 1) {
+      elements.push(<MysticalPiecesWord key={`${keyPrefix}-brand-${index}`} />)
+    }
+  })
+
+  return elements
+}
 
 export default function TermsConditions() {
   const sections = [

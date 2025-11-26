@@ -28,8 +28,14 @@ export default function MysticalPiecesWord({ className, mysticalClassName, piece
   )
 }
 
-export function renderWithMysticalPieces(text: string, keyPrefix = 'mysticalpieces'): ReactNode[] {
-  const parts = text.split('MysticalPIECES')
+export function renderWithMysticalPieces(content: ReactNode, keyPrefix = 'mysticalpieces'): ReactNode {
+  // If content is already a React element, return it as-is
+  if (typeof content !== 'string') {
+    return content
+  }
+
+  // If content is a string, apply mystical styling
+  const parts = content.split('MysticalPIECES')
   const elements: ReactNode[] = []
 
   parts.forEach((part, index) => {
