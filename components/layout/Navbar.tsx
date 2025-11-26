@@ -238,79 +238,83 @@ export default function Navbar() {
       <motion.nav initial={{ y: -100 }} animate={{ y: 0 }} className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md shadow-lg border-b border-neutral-200 dark:border-neutral-700' : 'bg-transparent'}`}>
         <div className="container-custom">
           <div className="flex items-center justify-between h-16 relative">
-            <div className="flex items-center space-x-8">
+            {/* Left side - Logo */}
+            <div className="flex items-center">
               <Link href="/" className="flex items-center gap-1.5 group">
                 <LogoMark size={48} className="shrink-0 transition-transform duration-300 group-hover:scale-110" />
                 <MysticalPiecesWord className="text-xl text-primary-800 dark:text-primary-100 group-hover:text-primary-900 dark:group-hover:text-primary-200 transition-colors duration-300" />
               </Link>
-              <div className="hidden lg:flex items-center space-x-8">
-                {navigation.filter(item => item.name === 'Home').map((item) => {
-                  const active = isActive(item.href)
-                  const Icon = active ? item.solidIcon : item.outlineIcon
-                  return (
-                    <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
-                      <Icon className="w-4 h-4 transition-colors" />
-                      <span className="font-light">{item.name}</span>
-                      {active ? (
-                        <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
-                      ) : (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-                      )}
-                    </Link>
-                  )
-                })}
-                <div className="relative">
-                  <button onClick={() => setIsPortalsOpen(!isPortalsOpen)} onMouseEnter={() => setIsPortalsOpen(true)} onMouseLeave={() => setIsPortalsOpen(false)} className={`flex items-center space-x-2 px-3 py-2 transition-all duration-300 group relative ${portalItems.some(item => isActive(item.href)) ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
-                    {(() => {
-                      const portalActive = portalItems.some(item => isActive(item.href))
-                      const PortalIcon = portalActive ? TargetSolidIcon : TargetOutlineIcon
-                      return <PortalIcon className="w-4 h-4 transition-colors" />
-                    })()}
-                    <span className="font-light">Portal</span>
-                    <span className="text-sm">⇓</span>
-                    {portalItems.some(item => isActive(item.href)) ? (
+            </div>
+
+            {/* Center - Navigation Links (Home, Portal, About Us) */}
+            <div className="hidden lg:flex items-center space-x-4 absolute left-1/2 -translate-x-1/2">
+              {navigation.filter(item => item.name === 'Home').map((item) => {
+                const active = isActive(item.href)
+                const Icon = active ? item.solidIcon : item.outlineIcon
+                return (
+                  <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
+                    <Icon className="w-4 h-4 transition-colors" />
+                    <span className="font-light">{item.name}</span>
+                    {active ? (
                       <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
                     ) : (
                       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                     )}
-                  </button>
-                  <AnimatePresence>
-                    {isPortalsOpen && (
-                      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onMouseEnter={() => setIsPortalsOpen(true)} onMouseLeave={() => setIsPortalsOpen(false)} className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-neutral-800 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 z-50">
-                        <div className="py-2">
-                          {portalItems.map((item) => {
-                            const active = isActive(item.href)
-                            const Icon = active ? item.solidIcon : item.outlineIcon
-                            return (
-                              <Link key={item.name} href={item.href} className={`flex items-center space-x-3 px-4 py-3 hover:bg-primary-50 dark:hover:bg-neutral-700/50 transition-all duration-200 ${active ? 'text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-neutral-700/30' : 'text-neutral-600 dark:text-neutral-300'}`}>
-                                <Icon className="w-4 h-4 transition-colors" />
-                                <span className="font-light">{item.name}</span>
-                              </Link>
-                            )
-                          })}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-                {navigation.filter(item => item.name === 'About Us').map((item) => {
-                  const active = isActive(item.href)
-                  const Icon = active ? item.solidIcon : item.outlineIcon
-                  return (
-                    <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
-                      <Icon className="w-4 h-4 transition-colors" />
-                      <span className="font-light">{item.name}</span>
-                      {active ? (
-                        <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
-                      ) : (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-                      )}
-                    </Link>
-                  )
-                })}
+                  </Link>
+                )
+              })}
+              <div className="relative">
+                <button onClick={() => setIsPortalsOpen(!isPortalsOpen)} onMouseEnter={() => setIsPortalsOpen(true)} onMouseLeave={() => setIsPortalsOpen(false)} className={`flex items-center space-x-2 px-3 py-2 transition-all duration-300 group relative ${portalItems.some(item => isActive(item.href)) ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
+                  {(() => {
+                    const portalActive = portalItems.some(item => isActive(item.href))
+                    const PortalIcon = portalActive ? TargetSolidIcon : TargetOutlineIcon
+                    return <PortalIcon className="w-4 h-4 transition-colors" />
+                  })()}
+                  <span className="font-light">Portal</span>
+                  <span className="text-sm">⇓</span>
+                  {portalItems.some(item => isActive(item.href)) ? (
+                    <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
+                  ) : (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                  )}
+                </button>
+                <AnimatePresence>
+                  {isPortalsOpen && (
+                    <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} onMouseEnter={() => setIsPortalsOpen(true)} onMouseLeave={() => setIsPortalsOpen(false)} className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-neutral-800 rounded-lg shadow-xl border border-neutral-200 dark:border-neutral-700 z-50">
+                      <div className="py-2">
+                        {portalItems.map((item) => {
+                          const active = isActive(item.href)
+                          const Icon = active ? item.solidIcon : item.outlineIcon
+                          return (
+                            <Link key={item.name} href={item.href} className={`flex items-center space-x-3 px-4 py-3 hover:bg-primary-50 dark:hover:bg-neutral-700/50 transition-all duration-200 ${active ? 'text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-neutral-700/30' : 'text-neutral-600 dark:text-neutral-300'}`}>
+                              <Icon className="w-4 h-4 transition-colors" />
+                              <span className="font-light">{item.name}</span>
+                            </Link>
+                          )
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+              {navigation.filter(item => item.name === 'About Us').map((item) => {
+                const active = isActive(item.href)
+                const Icon = active ? item.solidIcon : item.outlineIcon
+                return (
+                  <Link key={item.name} href={item.href} className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-300 group relative ${active ? 'text-primary-700 dark:text-primary-300' : 'text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300'}`}>
+                    <Icon className="w-4 h-4 transition-colors" />
+                    <span className="font-light">{item.name}</span>
+                    {active ? (
+                      <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full" initial={false} transition={{ type: 'spring', stiffness: 500, damping: 30 }} />
+                    ) : (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                    )}
+                  </Link>
+                )
+              })}
             </div>
 
+            {/* Right side - Search, Cart, Settings */}
             <div className="hidden lg:flex items-center space-x-8">
               <div className="relative" ref={searchRef}>
                 <button onClick={isSearchOpen ? handleSearchSubmit : toggleSearch} className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200" type={isSearchOpen ? 'submit' : 'button'}>
