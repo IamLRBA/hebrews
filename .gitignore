@@ -25,6 +25,11 @@ dist/
 *.swp
 *.swo
 
+# Temporary files
+temp_*.tsx
+temp_*.ts
+temp_*.js
+
 # OS
 .DS_Store
 Thumbs.db
