@@ -21,7 +21,7 @@ export default function Companies() {
   const totalDistance = companies.length * cardDistance
   // Start at negative position so cards can slide from left to right seamlessly
   const [sliderPosition, setSliderPosition] = useState(-totalDistance)
-  const [scrollSpeed] = useState(2.5)
+  const [scrollSpeed] = useState(1) // Reduced from 2.5 to 1 for reasonable speed
   const [isResetting, setIsResetting] = useState(false)
   const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
