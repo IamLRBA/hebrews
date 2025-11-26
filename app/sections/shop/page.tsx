@@ -218,10 +218,10 @@ export default function ShopPage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6"
+            className="text-8xl sm:text-6xl md:text-8xl font-bold mb-6"
           >
             <span className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
-              <HiOutlineShoppingBag className="w-16 h-16 sm:w-24 sm:h-24 md:w-40 md:h-40 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
+              <HiOutlineShoppingBag className="w-32 h-32 sm:w-24 sm:h-24 md:w-40 md:h-40 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
               <span className="text-gradient">ᔕᕼOᑭ</span>
             </span>
           </motion.h1>

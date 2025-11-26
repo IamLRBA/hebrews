@@ -19,7 +19,7 @@ import {
   ExternalLink,
   Zap
 } from 'lucide-react'
-import { IconBrandWhatsapp, IconBrandX } from '@tabler/icons-react'
+import { IconBrandWhatsapp, IconBrandX, IconBrandTiktok } from '@tabler/icons-react'
 
 const teamMembers = [
   {
@@ -60,7 +60,7 @@ const teamMembers = [
     image: "/assets/images/team/dingwa.jpg",
     hoverImage: "/assets/images/team/dingwa-hover.jpg",
     social: {
-      linkedin: "https://linkedin.com/in/elenapetrov",
+      tiktok: "https://www.tiktok.com/@iamlrba?_t=ZM-8yRqigzltXK&_r=1",
       instagram: "https://instagram.com/elenapetrov",
       x: "https://x.com/elenapetrov",
       whatsapp: "+1234567890",
@@ -261,14 +261,25 @@ export default function AboutUs() {
                     className="overflow-hidden"
                   >
                     <div className="flex justify-center space-x-3 pt-4 border-t border-primary-100">
-                      <a
-                        href={member.social.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
-                      >
-                        <Linkedin className="w-4 h-4" />
-                      </a>
+                      {member.social.tiktok ? (
+                        <a
+                          href={member.social.tiktok}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
+                        >
+                          <IconBrandTiktok className="w-4 h-4" />
+                        </a>
+                      ) : (
+                        <a
+                          href={member.social.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-8 h-8 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
+                        >
+                          <Linkedin className="w-4 h-4" />
+                        </a>
+                      )}
                       <a
                         href={member.social.instagram}
                         target="_blank"

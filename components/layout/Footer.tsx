@@ -26,7 +26,7 @@ export default function Footer() {
           <Link href="/" className="footer-logo group">
             <LogoMark size={140} className="transition-transform duration-300 group-hover:scale-110" />
           </Link>
-          <Link href="/" className="tagline text-[8rem] md:text-[18rem] lg:text-[24rem] leading-tight inline-block hover:opacity-90 transition-opacity">
+          <Link href="/" className="tagline brand-name leading-tight inline-block hover:opacity-90 transition-opacity">
             <MysticalPiecesWord /> 
           </Link>
           <p className="tagline text-1xl md:text-2xl font-light">
@@ -61,7 +61,14 @@ export default function Footer() {
         .dark .footer-divider { background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%); }
         .copyright-section { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
         .footer-logo { margin-bottom: 0.5rem; display: flex; justify-content: center; }
-        .tagline { font-size: 1rem; color: var(--color-primary-700); margin: 0; font-weight: var(--font-weight-light); letter-spacing: 0.02em; }
+        .tagline { color: var(--color-primary-700); margin: 0; font-weight: var(--font-weight-light); letter-spacing: 0.02em; }
+        .tagline.brand-name { font-size: 2.3rem !important; }
+        @media (min-width: 768px) {
+          .tagline.brand-name { font-size: 3.3rem !important; }
+        }
+        @media (min-width: 1024px) {
+          .tagline.brand-name { font-size: 4.3rem !important; }
+        }
         .dark .tagline { color: var(--color-primary-300); }
         .copyright { font-size: 0.875rem; color: var(--color-primary-700); margin: 0; }
         .dark .copyright { color: var(--color-primary-300); }

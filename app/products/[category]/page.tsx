@@ -194,6 +194,42 @@ export default function ProductCategoryPage() {
   const categoryConfig = getCategoryConfig()
   const { titleAnimation, descriptionAnimation } = categoryConfig
 
+  // Helper function to get main product image based on category
+  const getMainProductImage = (categorySlug: string): string => {
+    const imageMap: Record<string, string> = {
+      'shirts': '/assets/images/products-sections/fashion/shirts.jpg',
+      'tees': '/assets/images/products-sections/fashion/tees.jpg',
+      'coats': '/assets/images/products-sections/fashion/outerwear.jpg',
+      'pants-and-shorts': '/assets/images/products-sections/fashion/bottoms.jpg',
+      'footwear': '/assets/images/products-sections/fashion/footwear.jpg',
+      'accessories': '/assets/images/products-sections/fashion/accessories.jpg'
+    }
+    
+    return imageMap[categorySlug] || '/assets/images/placeholder.jpg'
+  }
+
+  // Helper function to get subcategory image based on category and section
+  const getSubcategoryImage = (categorySlug: string, sectionSlug: string): string => {
+    // Map of category slugs to their subcategories in order
+    const subcategoryMaps: Record<string, string[]> = {
+      'shirts': ['gentle', 'checked', 'textured', 'denim'],
+      'tees': ['plain', 'graphic', 'collared', 'sporty'],
+      'coats': ['sweater', 'hoodie', 'coat', 'jacket'],
+      'pants-and-shorts': ['gentle', 'denim', 'cargo', 'sporty'],
+      'footwear': ['gentle', 'sneakers', 'sandals', 'boots'],
+      'accessories': ['rings-necklaces', 'shades-glasses', 'bracelets-watches', 'decor']
+    }
+    
+    const subcategories = subcategoryMaps[categorySlug] || []
+    const thumbIndex = subcategories.indexOf(sectionSlug) + 1
+    
+    if (thumbIndex > 0) {
+      return `/assets/images/products-sections/fashion/${categorySlug}/thumb${thumbIndex}.jpg`
+    }
+    
+    return '/assets/images/placeholder.jpg'
+  }
+
   return (
     <div className="min-h-screen bg-unified relative overflow-hidden pt-24">
       {/* Navigation Back */}
@@ -202,7 +238,7 @@ export default function ProductCategoryPage() {
         animate={{ opacity: 1, x: 0 }}
         className="fixed top-20 left-8 z-50"
       >
-        <Link href="/sections/shop" className="group">
+        <Link href="/sections/shop#our-products" className="group">
           <div className="flex items-center space-x-2 text-primary-300 dark:text-primary-400 hover:text-primary-100 dark:hover:text-primary-200 transition-colors duration-300">
             <motion.span whileHover={{ x: -5 }} transition={{ duration: 0.2 }} className="text-lg font-medium">
               ⟸
@@ -215,15 +251,36 @@ export default function ProductCategoryPage() {
       {/* Hero Section */}
       <section className="relative text-center py-16 md:py-24 px-4 overflow-hidden">
         <div className="relative max-w-6xl mx-auto">
-          {/* Title */}
-          <motion.h1
-            {...titleAnimation}
-            className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 md:mb-8 tracking-tight"
+          {/* Main Product Image and Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-6 md:mb-8"
           >
-            <span className="bg-gradient-to-r from-primary-800 via-primary-600 to-primary-800 dark:from-primary-200 dark:via-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
-              {categoryData.title.toUpperCase()}
-            </span>
-          </motion.h1>
+            {/* Main Product Image */}
+            <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-6 sm:p-8">
+              <img 
+                src={getMainProductImage(category)}
+                alt={`${categoryData.title} - Main Product Image`}
+                className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 object-cover rounded-xl"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.src = '/assets/images/placeholder.jpg'
+                }}
+              />
+            </div>
+
+            {/* Title */}
+            <motion.h1
+              {...titleAnimation}
+              className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight"
+            >
+              <span className="bg-gradient-to-r from-primary-800 via-primary-600 to-primary-800 dark:from-primary-200 dark:via-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
+                {categoryData.title.toUpperCase()}
+              </span>
+            </motion.h1>
+          </motion.div>
 
           {/* Description */}
           <motion.p
@@ -271,6 +328,27 @@ export default function ProductCategoryPage() {
             transition={{ duration: 0.8 }}
             className="mb-32"
           >
+            {/* Subcategory Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="flex justify-center mb-8"
+            >
+              <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-6 sm:p-8">
+                <img 
+                  src={getSubcategoryImage(category, section)}
+                  alt={`${section} - ${categoryData.title}`}
+                  className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.src = `/assets/images/products-sections/fashion/${category}/thumb${(sections.indexOf(section) % 4) + 1}.svg`
+                  }}
+                />
+              </div>
+            </motion.div>
+            
             <h2 className="text-4xl font-bold text-center mb-12 capitalize">
               {section.split('-').map(word => 
                 word.charAt(0).toUpperCase() + word.slice(1)

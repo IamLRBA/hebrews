@@ -141,7 +141,7 @@ export default function FashionProducts() {
   const toggle = (id: number) => setExpandedId(expandedId === id ? null : id)
   
   return (
-    <section className="py-20 px-4">
+    <section id="our-products" className="py-20 px-4">
       <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} viewport={{ once: true }} className="max-w-7xl mx-auto">
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
           <span className="text-primary-500 dark:text-primary-100">⏣ Our</span>{' '}
@@ -153,15 +153,15 @@ export default function FashionProducts() {
             return (
               <motion.div key={s.id} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: i * 0.1 }} viewport={{ once: true }} className={`flex flex-col ${isRight ? 'items-end' : 'items-start'}`}>
                 <div className={`flex flex-col space-y-6 ${isRight ? 'items-end' : 'items-start'}`}>
-                  <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
+                  <Link href={`/products/${s.slug}`} className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'} group cursor-pointer`}>
                     <div className="text-6xl font-bold text-neutral-700 dark:text-primary-400">{s.number}</div>
-                    <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50">{s.title}</h3>
-                  </motion.div>
-                  <div className={`bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[352px] md:h-[352px] aspect-square flex-shrink-0 flex items-center justify-center p-4 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'}`}>
+                    <h3 className="text-3xl font-bold mt-2 text-primary-900 dark:text-primary-50 group-hover:text-primary-600 dark:group-hover:text-primary-300 transition-colors duration-300">{s.title}</h3>
+                  </Link>
+                  <Link href={`/products/${s.slug}`} className={`bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[352px] md:h-[352px] aspect-square flex-shrink-0 flex items-center justify-center p-4 ${isRight ? 'ml-auto md:ml-0' : 'mr-auto md:mr-0'} group cursor-pointer hover:shadow-2xl hover:scale-[1.02] transition-all duration-300`}>
                     <div className="bg-primary-900/20 rounded-xl w-full h-full aspect-square flex-shrink-0 flex items-center justify-center overflow-hidden">
-                      <img src={s.image} alt={s.title} className="max-w-full max-h-full object-contain" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = 'none'; const f = (t.parentElement?.nextElementSibling as HTMLElement); if (f) f.style.display = 'flex' }} />
+                      <img src={s.image} alt={s.title} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300" onError={(e) => { const t = e.target as HTMLImageElement; t.style.display = 'none'; const f = (t.parentElement?.nextElementSibling as HTMLElement); if (f) f.style.display = 'flex' }} />
                     </div>
-                  </div>
+                  </Link>
                   <motion.div className={`flex flex-col ${isRight ? 'text-right items-end' : 'text-left items-start'}`}>
                     <p className="text-neutral-700 dark:text-primary-300 leading-relaxed mt-2 max-w-md">{s.description}</p>
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => toggle(s.id)} className="btn btn-outline btn-hover-secondary-filled inline-flex items-center gap-2 text-sm font-medium px-5 py-2.5 mt-4">
@@ -173,7 +173,7 @@ export default function FashionProducts() {
                 <AnimatePresence>
                   {expandedId === s.id && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
-                      <div className="bg-primary-800/30 dark:bg-primary-900/40 rounded-xl p-6 border border-primary-500/20 dark:border-primary-400/30">
+                      <div className="bg-primary-800/30 dark:bg-primary-900/40 rounded-xl p-3 sm:p-6 border border-primary-500/20 dark:border-primary-400/30">
                         {/* Thumbnail Images */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4 justify-items-center">
                           {[1, 2, 3, 4].map((thumbIndex) => {
@@ -188,7 +188,7 @@ export default function FashionProducts() {
                                 onMouseEnter={() => setHoveredThumbnail({ serviceId: s.id, thumbIndex })}
                                 onMouseLeave={() => setHoveredThumbnail(null)}
                               >
-                                <div className="bg-primary-900/20 rounded-lg h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg hover:shadow-none transition-all duration-300 cursor-pointer group">
+                                <div className="bg-primary-900/20 rounded-lg h-24 w-24 sm:h-40 sm:w-40 md:h-48 md:w-48 flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg hover:shadow-none transition-all duration-300 cursor-pointer group">
                             <img 
                               src={`/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
                               alt={`${subcategory.name} - ${s.title}`}
@@ -217,7 +217,7 @@ export default function FashionProducts() {
                                         initial={{ y: 10, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{ delay: 0.1 }}
-                                        className="text-neutral-850 dark:text-white font-bold text-sm sm:text-base md:text-lg"
+                                        className="text-neutral-850 dark:text-white font-bold text-xs sm:text-base md:text-lg"
                                       >
                                         {subcategory.name}
                                       </motion.span>
@@ -225,7 +225,7 @@ export default function FashionProducts() {
                                         initial={{ y: 10, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{ delay: 0.15 }}
-                                        className="btn btn-outline btn-hover-secondary-filled justify-center px-4 py-1.5 md:px-6 md:py-2 text-xs md:text-sm font-medium"
+                                        className="btn btn-outline btn-hover-secondary-filled flex items-center justify-center text-center px-3 py-1 md:px-6 md:py-2 text-xs md:text-sm font-medium"
                                       >
                                         View Collection
                                       </motion.div>
@@ -239,14 +239,16 @@ export default function FashionProducts() {
                         
                         {/* Quote Section */}
                         <div className="mt-2 pt-4 border-t border-primary-500/20">
-                          <blockquote className="text-center">
+                          <blockquote className="text-center max-w-full sm:max-w-md md:max-w-lg mx-auto">
                             <Quote className="w-8 h-8 mx-auto mb-4 text-primary-400/50" />
                             <p className="text-neutral-700 dark:text-primary-400 italic text-lg md:text-xl mb-3">
                               {s.quote.text}
                             </p>
-                            <footer className="text-neutral-700 dark:text-primary-300 text-sm font-medium !bg-transparent !border-0 inline-block">
+                            <span 
+                              className="text-neutral-700 dark:text-primary-300 text-sm font-medium inline-block"
+                            >
                               — {s.quote.author}
-                            </footer>
+                            </span>
                           </blockquote>
                         </div>
                       </div>
