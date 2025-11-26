@@ -37,8 +37,27 @@ export default function Testimonials() {
   const [containerWidth, setContainerWidth] = useState(0)
   const sliderRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const cardWidth = 350
+  const [cardWidth, setCardWidth] = useState(350)
   const gap = 5
+
+  // Set responsive card width - larger on mobile and desktop
+  useEffect(() => {
+    const updateCardWidth = () => {
+      if (window.innerWidth < 640) {
+        // Mobile: larger cards (85% of viewport width minus padding)
+        setCardWidth(Math.min(window.innerWidth * 0.85, 380))
+      } else if (window.innerWidth < 1024) {
+        // Tablet: medium size
+        setCardWidth(380)
+      } else {
+        // Desktop: larger cards
+        setCardWidth(420)
+      }
+    }
+    updateCardWidth()
+    window.addEventListener('resize', updateCardWidth)
+    return () => window.removeEventListener('resize', updateCardWidth)
+  }, [])
 
   useEffect(() => {
     const checkDarkMode = () => {
@@ -220,18 +239,18 @@ export default function Testimonials() {
                   onClick={() => setSelectedTestimonial(testimonial)} 
                   style={{ width: `${cardWidth}px` }}
                 >
-                <div className="testimonial-content bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl p-3 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105 border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
-                  <div className="flex justify-center mb-1.5">
-                    <div className="w-6 h-6 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center">
-                      <svg className="w-3 h-3 text-primary-600 dark:text-primary-300" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                <div className="testimonial-content bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 rounded-2xl p-4 sm:p-3 lg:p-5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col hover:scale-105 border border-primary-500/30 dark:border-primary-500/40 backdrop-blur-sm">
+                  <div className="flex justify-center mb-2 sm:mb-1.5 lg:mb-2">
+                    <div className="w-8 h-8 sm:w-6 sm:h-6 lg:w-7 lg:h-7 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 text-primary-600 dark:text-primary-300" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
                     </div>
                   </div>
-                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-xs leading-snug mb-2 flex-grow line-clamp-4 text-center">
+                  <p className="testimonial-text text-primary-700 dark:text-primary-200 text-sm sm:text-xs lg:text-sm leading-snug mb-3 sm:mb-2 lg:mb-3 flex-grow line-clamp-4 text-center">
                     &ldquo;{renderWithMysticalPieces(testimonial.text, `card-${testimonial.id}-${index}`)}&rdquo;
                   </p>
-                  <div className="stars flex justify-center mb-2">{renderStars(testimonial.rating)}</div>
+                  <div className="stars flex justify-center mb-3 sm:mb-2 lg:mb-3">{renderStars(testimonial.rating)}</div>
                   <div className="testimonial-author">
-                    <div className="author-image w-8 h-8 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-sm mx-auto mb-1 overflow-hidden">
+                    <div className="author-image w-10 h-10 sm:w-8 sm:h-8 lg:w-9 lg:h-9 bg-primary-200 dark:bg-primary-700 rounded-full flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-base sm:text-sm lg:text-base mx-auto mb-2 sm:mb-1 lg:mb-2 overflow-hidden">
                       {testimonial.image ? (
                         <img src={testimonial.image} alt={testimonial.author} className="w-full h-full rounded-full object-cover grayscale" />
                       ) : (
@@ -239,8 +258,8 @@ export default function Testimonials() {
                       )}
                     </div>
                     <div className="author-info text-center">
-                      <h4 className="author-name text-primary-800 dark:text-primary-100 font-semibold text-xs">{testimonial.author}</h4>
-                      <p className="author-role text-primary-600 dark:text-primary-300 text-xs">{testimonial.company}</p>
+                      <h4 className="author-name text-primary-800 dark:text-primary-100 font-semibold text-sm sm:text-xs lg:text-sm">{testimonial.author}</h4>
+                      <p className="author-role text-primary-600 dark:text-primary-300 text-xs sm:text-xs lg:text-xs">{testimonial.company}</p>
                     </div>
                   </div>
                 </div>
