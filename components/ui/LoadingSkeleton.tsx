@@ -6,7 +6,7 @@ interface LoadingSkeletonProps {
   className?: string
   width?: string
   height?: string
-  rounded?: 'sm' | 'md' | 'lg' | 'full'
+  rounded?: 'none' | 'sm' | 'md' | 'lg' | 'full'
 }
 
 export default function LoadingSkeleton({ 
@@ -16,6 +16,7 @@ export default function LoadingSkeleton({
   rounded = 'md'
 }: LoadingSkeletonProps) {
   const roundedClasses = {
+    none: 'rounded-none',
     sm: 'rounded-sm',
     md: 'rounded-md',
     lg: 'rounded-lg',
