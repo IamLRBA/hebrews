@@ -191,9 +191,9 @@ export default function EducationalJourney() {
               </linearGradient>
             </defs>
             
-            {/* Animated Path */}
+            {/* Animated Path - moved to left side */}
             <motion.path
-              d="M 200 50 L 200 350 L 200 650 L 200 950 L 200 1250 L 200 1350"
+              d="M 15 15 L 15 350 L 15 650 L 15 950 L 15 1250 L 15 1350"
               fill="none"
               stroke="url(#mobilePathGradient)"
               strokeWidth="8"
@@ -206,13 +206,13 @@ export default function EducationalJourney() {
               transition={{ duration: 2, ease: "easeInOut" }}
             />
 
-            {/* Animated Guide Dot */}
+            {/* Animated Guide Dot - moved to left side */}
             <motion.circle
-              cx="200"
+              cx="25"
               r="8"
               fill="var(--color-accent-500)"
               filter="drop-shadow(0 0 8px var(--color-accent-500))"
-              cy={useTransform(guideDotProgress, [0, 1], [50, 1350])}
+              cy={useTransform(guideDotProgress, [0, 1], [25, 1350])}
             />
           </svg>
 
@@ -228,10 +228,11 @@ export default function EducationalJourney() {
                 ease: "easeInOut"
               }}
               whileHover={{ scale: 1.05 }}
-              className="absolute left-1/2 -translate-x-1/2"
+              className="absolute"
               style={{
+                left: '50px',
                 top: index === 0 ? '5%' : index === 1 ? '28%' : index === 2 ? '51%' : '74%',
-                width: 'calc(100% - 3rem)',
+                width: 'calc(100% - 4.5rem)',
                 maxWidth: '320px',
                 zIndex: education.length - index
               }}
