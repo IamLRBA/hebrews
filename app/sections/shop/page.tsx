@@ -29,6 +29,10 @@ export default function ShopPage() {
   // Moodboard state
   const [selectedMood, setSelectedMood] = useState('inspiration')
   const [moodboardImages, setMoodboardImages] = useState<Array<{icon: string, name: string, image: string}>>([])
+  const [displayedImages, setDisplayedImages] = useState<Array<{icon: string, name: string, image: string}>>([])
+  const [pendingMoodChange, setPendingMoodChange] = useState<Array<{icon: string, name: string, image: string}> | null>(null)
+  const [imageUpdateQueue, setImageUpdateQueue] = useState<number[]>([])
+  const [isUpdatingImages, setIsUpdatingImages] = useState(false)
 
   const looks = [
     {
@@ -178,12 +182,64 @@ export default function ShopPage() {
   }
 
   const changeMood = (mood: string) => {
+    if (mood === selectedMood || isUpdatingImages) return // Prevent multiple clicks during update
+    
+    const newImages = moodboardData[mood as keyof typeof moodboardData]
     setSelectedMood(mood)
-    setMoodboardImages(moodboardData[mood as keyof typeof moodboardData])
+    setMoodboardImages(newImages)
+    
+    // Generate random order for image updates
+    const indices = Array.from({ length: newImages.length }, (_, i) => i)
+    // Fisher-Yates shuffle for random order
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]]
+    }
+    
+    setPendingMoodChange(newImages)
+    setImageUpdateQueue(indices)
+    setIsUpdatingImages(true)
   }
 
+  // Handle staggered image updates
   useEffect(() => {
-    setMoodboardImages(moodboardData.inspiration)
+    if (!isUpdatingImages || imageUpdateQueue.length === 0 || !pendingMoodChange) {
+      // Clean up when done
+      if (isUpdatingImages && imageUpdateQueue.length === 0 && pendingMoodChange) {
+        setIsUpdatingImages(false)
+        setPendingMoodChange(null)
+      }
+      return
+    }
+
+    const indexToUpdate = imageUpdateQueue[0]
+    const remainingQueue = imageUpdateQueue.slice(1)
+    
+    // Random delay between 100ms and 300ms for each image update
+    const delay = Math.random() * 200 + 100
+    const timeoutId = setTimeout(() => {
+      setDisplayedImages((prev) => {
+        const updated = [...prev]
+        updated[indexToUpdate] = pendingMoodChange[indexToUpdate]
+        return updated
+      })
+      
+      setImageUpdateQueue(remainingQueue)
+      
+      // If this was the last image, clean up
+      if (remainingQueue.length === 0) {
+        setIsUpdatingImages(false)
+        setPendingMoodChange(null)
+      }
+    }, delay)
+
+    return () => clearTimeout(timeoutId)
+  }, [imageUpdateQueue, isUpdatingImages, pendingMoodChange])
+
+  useEffect(() => {
+    const initialImages = moodboardData.inspiration
+    setMoodboardImages(initialImages)
+    setDisplayedImages(initialImages)
   }, [])
 
   return (
@@ -378,11 +434,12 @@ export default function ShopPage() {
                   <button
                     key={mood}
                     onClick={() => changeMood(mood)}
+                    disabled={isUpdatingImages}
                     className={`btn transition-all duration-300 capitalize px-5 py-2 ${
                       selectedMood === mood
                         ? 'btn-secondary'
                         : 'btn-outline btn-hover-secondary-filled'
-                    }`}
+                    } ${isUpdatingImages ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {mood}
                   </button>
@@ -391,26 +448,33 @@ export default function ShopPage() {
               
               {/* Moodboard Grid */}
               <div className="grid grid-cols-4 gap-4">
-                {moodboardImages.map((item, index) => (
+                {displayedImages.map((item, index) => (
                   <motion.div
-                    key={index}
+                    key={`${selectedMood}-${index}-${item.image}`}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    transition={{ duration: 0.5 }}
                     whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="aspect-square bg-gradient-to-br from-primary-700/30 to-accent-700/30 rounded-xl border border-primary-500/30 flex items-center justify-center cursor-pointer group hover:shadow-lg transition-all duration-300 overflow-hidden"
+                    className="aspect-square bg-gradient-to-br from-primary-700/30 to-accent-700/30 rounded-xl border border-primary-500/30 flex items-center justify-center cursor-pointer group hover:shadow-lg transition-all duration-300 overflow-hidden relative"
                   >
-                    <img 
-                      src={item.image} 
-                      alt={item.name} 
-                      className="w-full h-full object-cover rounded-lg group-hover:scale-125 transition-transform duration-300"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        const fallback = target.nextElementSibling as HTMLElement;
-                        if (fallback) fallback.style.display = 'flex';
-                      }}
-                    />
+                    <AnimatePresence mode="sync">
+                      <motion.img
+                        key={`${selectedMood}-${index}-${item.image}`}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        src={item.image} 
+                        alt={item.name} 
+                        className="w-full h-full object-cover rounded-lg group-hover:scale-125 transition-transform duration-300 absolute inset-0"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                    </AnimatePresence>
                     {/* Fallback Placeholder */}
                     <div 
                       className="w-full h-full flex items-center justify-center"

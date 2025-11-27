@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { ShoppingCart, X, Maximize2, Minimize, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ShoppingCart, X, Maximize2, Minimize, ChevronLeft, ChevronRight, Quote } from 'lucide-react'
 import { CartManager, type CartItem } from '@/lib/cart'
 import { ProductManager } from '@/lib/products'
 import { AuthManager } from '@/lib/auth'
@@ -230,8 +230,40 @@ export default function ProductCategoryPage() {
     return '/assets/images/placeholder.jpg'
   }
 
+  // Helper function to get quote for each category
+  const getCategoryQuote = (categorySlug: string): { text: string; author: string } => {
+    const quotes: Record<string, { text: string; author: string }> = {
+      'shirts': {
+        text: 'A shirt that fits well is worth more than one that costs a fortune.',
+        author: 'Tommy Hilfiger'
+      },
+      'tees': {
+        text: 'Less is more when you\'re wearing the right t-shirt.',
+        author: 'Ralph Lauren'
+      },
+      'coats': {
+        text: 'A coat should keep you warm, but a great coat should make you feel like you can conquer the world.',
+        author: 'Coco Chanel'
+      },
+      'pants-and-shorts': {
+        text: 'The right pair of pants can make you feel confident and ready to take on anything.',
+        author: 'Karl Lagerfeld'
+      },
+      'footwear': {
+        text: 'Sneakers aren\'t just utilitarian, they\'re borderline art objects.',
+        author: 'Virgil Abloh'
+      },
+      'accessories': {
+        text: 'Accessories are like vitamins to fashion – they enhance the outfit.',
+        author: 'Anna Dello Russo'
+      }
+    }
+    
+    return quotes[categorySlug] || { text: '', author: '' }
+  }
+
   return (
-    <div className="min-h-screen bg-unified relative overflow-hidden pt-24">
+    <div className="min-h-screen bg-unified relative overflow-hidden pt-20">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -249,14 +281,14 @@ export default function ProductCategoryPage() {
       </motion.div>
 
       {/* Hero Section */}
-      <section className="relative text-center py-16 md:py-24 px-4 overflow-hidden">
+      <section className="relative text-center pt-8 pb-12 md:pt-12 md:pb-20 px-4 overflow-hidden">
         <div className="relative max-w-6xl mx-auto">
           {/* Main Product Image and Title */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-6 md:mb-8"
+            className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-4 md:mb-6"
           >
             {/* Main Product Image */}
             <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-6 sm:p-8">
@@ -274,7 +306,11 @@ export default function ProductCategoryPage() {
             {/* Title */}
             <motion.h1
               {...titleAnimation}
-              className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight"
+              className={`font-bold tracking-tight ${
+                category === 'coats' || category === 'accessories'
+                  ? 'text-5xl sm:text-5xl md:text-7xl lg:text-8xl'
+                  : 'text-6xl md:text-7xl lg:text-8xl'
+              }`}
             >
               <span className="bg-gradient-to-r from-primary-800 via-primary-600 to-primary-800 dark:from-primary-200 dark:via-primary-400 dark:to-primary-200 bg-clip-text text-transparent">
                 {categoryData.title.toUpperCase()}
@@ -282,38 +318,49 @@ export default function ProductCategoryPage() {
             </motion.h1>
           </motion.div>
 
-          {/* Description */}
-          <motion.p
+          {/* Quote */}
+          <motion.div
             {...descriptionAnimation}
-            className="text-lg md:text-xl text-primary-600 dark:text-primary-300 max-w-3xl mx-auto mb-12 font-light leading-relaxed"
+            className="text-lg md:text-xl text-primary-600 dark:text-primary-300 max-w-[95%] sm:max-w-2xl md:max-w-4xl mx-auto mb-6 md:mb-8 font-light leading-relaxed"
           >
-            {categoryData.description}
-          </motion.p>
-        </div>
+            {(() => {
+              const quote = getCategoryQuote(category)
+              return quote.text ? (
+                <blockquote className="flex flex-col md:flex-row items-center md:items-start gap-4">
+                  <Quote className="w-6 h-6 md:w-8 md:h-8 md:mt-1 flex-shrink-0 text-primary-400/50 dark:text-primary-500/50 order-1 md:order-none" />
+                  <div className="flex-1 order-2 md:order-none">
+                    <p className="mb-3 italic text-lg md:text-xl">&ldquo;{quote.text}&rdquo;</p>
+                    <p className="text-base md:text-lg">— {quote.author}</p>
+                  </div>
+                </blockquote>
+              ) : null
+            })()}
+          </motion.div>
 
-        {/* Section Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto"
-        >
-          {sections.map((section) => {
-            const displayName = section.split('-').map(word => 
-              word.charAt(0).toUpperCase() + word.slice(1)
-            ).join(' ')
-            
-            return (
-              <button
-                key={section}
-                onClick={() => scrollToSection(section)}
-                className={`btn ${selectedSection === section ? 'btn-secondary' : 'btn-primary'} text-sm sm:text-base justify-center`}
-              >
-                {displayName}
-              </button>
-            )
-          })}
-        </motion.div>
+          {/* Section Navigation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto"
+          >
+            {sections.map((section) => {
+              const displayName = section.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+              ).join(' ')
+              
+              return (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className={`btn ${selectedSection === section ? 'btn-secondary' : 'btn-primary'} text-sm sm:text-base justify-center`}
+                >
+                  {displayName}
+                </button>
+              )
+            })}
+          </motion.div>
+        </div>
       </section>
 
       {/* Products Grid by Section */}
