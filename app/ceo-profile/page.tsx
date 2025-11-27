@@ -124,16 +124,14 @@ export default function CEOProfile() {
         transition={{ duration: 0.8 }}
         className="fixed top-20 left-8 z-50"
       >
-        <Link href="/" className="group">
-          <div className="flex items-center space-x-2 text-primary-300 hover:text-primary-700 transition-colors duration-300">
-            <motion.div
-              whileHover={{ x: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <span className="text-2xl text-primary-700">⟸</span>
-            </motion.div>
-            <span className="text-sm font-medium">Back to Portfolio</span>
-          </div>
+        <Link href="/about-us" className="group flex items-center space-x-2">
+          <motion.div
+            whileHover={{ x: -5 }}
+            transition={{ duration: 0.2 }}
+          >
+            <span className="text-2xl text-primary-600 dark:text-primary-300 group-hover:text-primary-800 dark:group-hover:text-primary-100 transition-colors duration-300">⟸</span>
+          </motion.div>
+          <span className="text-sm font-medium text-primary-600 dark:text-primary-300 group-hover:text-primary-800 dark:group-hover:text-primary-100 transition-colors duration-300">Back to About Us</span>
         </Link>
       </motion.div>
 
