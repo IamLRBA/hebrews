@@ -132,7 +132,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-unified pt-24 pb-20">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -147,14 +147,14 @@ export default function CheckoutPage() {
           <p className="text-primary-200 dark:text-primary-300">Complete your order with secure checkout</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-full md:max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-4 md:gap-8 max-w-full md:max-w-6xl mx-auto">
           {/* Order Summary */}
           <div className="md:col-span-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-primary-800/30 rounded-xl border border-primary-500/30 p-8"
+              className="bg-primary-800/30 rounded-xl border border-primary-500/30 p-4 sm:p-6 md:p-8"
             >
               <h2 className="text-2xl font-bold text-neutral-850 dark:text-primary-50 mb-6">Order Details</h2>
               
@@ -169,19 +169,19 @@ export default function CheckoutPage() {
               ) : (
                 <div className="space-y-4">
                   {cart.map((item, index) => (
-                    <div key={index} className="flex items-start space-x-4 pb-4 border-b border-primary-700/50">
-                      <div className="w-20 h-20 bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
+                    <div key={index} className="flex items-start space-x-3 sm:space-x-4 pb-4 border-b border-primary-700/50">
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary-900/20 rounded-lg overflow-hidden flex-shrink-0">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-neutral-850 dark:text-primary-50 font-medium">{item.name}</h3>
-                        <p className="text-primary-300 dark:text-primary-400 text-sm">{item.sku}</p>
-                        {item.size && <p className="text-primary-400 dark:text-primary-300 text-sm">Size: {item.size}</p>}
-                        {item.color && <p className="text-primary-400 dark:text-primary-300 text-sm">Color: {item.color}</p>}
-                        <p className="text-primary-200 dark:text-primary-300 text-sm">Qty: {item.quantity}</p>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-neutral-850 dark:text-primary-50 font-medium text-sm sm:text-base truncate">{item.name}</h3>
+                        <p className="text-primary-300 dark:text-primary-400 text-xs sm:text-sm truncate">{item.sku}</p>
+                        {item.size && <p className="text-primary-400 dark:text-primary-300 text-xs sm:text-sm">Size: {item.size}</p>}
+                        {item.color && <p className="text-primary-400 dark:text-primary-300 text-xs sm:text-sm">Color: {item.color}</p>}
+                        <p className="text-primary-200 dark:text-primary-300 text-xs sm:text-sm">Qty: {item.quantity}</p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-neutral-850 dark:text-primary-50 font-bold">
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-neutral-850 dark:text-primary-50 font-bold text-sm sm:text-base">
                           UGX {(item.price * item.quantity).toLocaleString()}
                         </p>
                       </div>
@@ -338,7 +338,7 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="sticky top-24 bg-primary-800/30 rounded-xl border border-primary-500/30 p-6"
+              className="sticky top-24 bg-primary-800/30 rounded-xl border border-primary-500/30 p-4 sm:p-6"
             >
               <h2 className="text-xl font-bold text-neutral-850 dark:text-primary-50 mb-4">Order Summary</h2>
               

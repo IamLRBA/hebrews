@@ -326,8 +326,8 @@ export default function ProductCategoryPage() {
             {(() => {
               const quote = getCategoryQuote(category)
               return quote.text ? (
-                <blockquote className="flex flex-col md:flex-row items-center md:items-start gap-4">
-                  <Quote className="w-6 h-6 md:w-8 md:h-8 md:mt-1 flex-shrink-0 text-primary-400/50 dark:text-primary-500/50 order-1 md:order-none" />
+                <blockquote className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-1">
+                  <Quote className="w-6 h-6 md:w-8 md:h-8 md:mt-3 flex-shrink-0 text-primary-400/50 dark:text-primary-500/50 order-1 md:order-none" />
                   <div className="flex-1 order-2 md:order-none">
                     <p className="mb-3 italic text-lg md:text-xl">&ldquo;{quote.text}&rdquo;</p>
                     <p className="text-base md:text-lg">— {quote.author}</p>
