@@ -330,18 +330,21 @@ export default function ShopPage() {
               viewport={{ once: true }}
               className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
             >
-              <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
-                <img 
-                  src="/assets/images/sections/fashion/philosophy-1.jpg" 
-                  alt="Mysticism" 
-                  className="w-24 h-24 object-cover rounded-xl"
-                />
+              <div className="flex flex-col items-center md:block">
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">01</div>
+                <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
+                  <img 
+                    src="/assets/images/sections/fashion/philosophy-1.jpg" 
+                    alt="Mysticism" 
+                    className="w-24 h-24 object-cover rounded-xl"
+                  />
+                </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4">01</div>
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">01</div>
                 <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Mysticism</h3>
                 <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                  There is a hidden, deeper reality beyond the visible world. In a realm of intuition and inner knowing, find meaning in what others might overlook.
+                  There is a deeper reality beyond the visible world. Find meaning in what others might overlook.
                 </p>
               </div>
             </motion.div>
@@ -354,18 +357,21 @@ export default function ShopPage() {
               viewport={{ once: true }}
               className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
             >
-              <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-8">
-                <img 
-                  src="/assets/images/sections/fashion/philosophy-2.jpg" 
-                  alt="Sustainability" 
-                  className="w-24 h-24 object-cover rounded-xl"
-                />
+              <div className="flex flex-col items-center md:block">
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">02</div>
+                <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-8">
+                  <img 
+                    src="/assets/images/sections/fashion/philosophy-2.jpg" 
+                    alt="Sustainability" 
+                    className="w-24 h-24 object-cover rounded-xl"
+                  />
+                </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4">02</div>
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">02</div>
                 <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Anarchism</h3>
                 <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                Every item you choose can be your act of shaping your own path. Select pieces that challenge the ordinary-fashion norm. 
+                Every item you choose can be you shaping your own path and challenging the ordinary-fashion norm. 
                 </p>
               </div>
             </motion.div>
@@ -378,18 +384,21 @@ export default function ShopPage() {
               viewport={{ once: true }}
               className="flex flex-col md:flex-row items-center space-y-8 md:space-y-0 md:space-x-12"
             >
-              <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-8">
-                <img 
-                  src="/assets/images/sections/fashion/philosophy-3.jpg" 
-                  alt="Self-Discovery" 
-                  className="w-24 h-24 object-cover rounded-xl"
-                />
+              <div className="flex flex-col items-center md:block">
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">03</div>
+                <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-8">
+                  <img 
+                    src="/assets/images/sections/fashion/philosophy-3.jpg" 
+                    alt="Self-Discovery" 
+                    className="w-24 h-24 object-cover rounded-xl"
+                  />
+                </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
-                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4">03</div>
+                <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">03</div>
                 <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Self-Discovery</h3>
                 <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                Evolve with pieces that help you see yourself more clearly; your essence, your values, and what resonates with your spirit. 
+                Evolve with pieces that resonate with your spirit and also help you see yourself more clearly. 
                 </p>
               </div>
             </motion.div>
@@ -445,7 +454,7 @@ export default function ShopPage() {
               </div>
               
               {/* Moodboard Grid */}
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-4 px-4 md:px-0">
                 {displayedImages.map((item, index) => (
                   <motion.div
                     key={`${selectedMood}-${index}-${item.image}`}

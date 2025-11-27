@@ -288,7 +288,7 @@ export default function ProductCategoryPage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-4 md:mb-6"
+            className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-1 md:mb-6"
           >
             {/* Main Product Image */}
             <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-6 sm:p-8">
@@ -321,7 +321,7 @@ export default function ProductCategoryPage() {
           {/* Quote */}
           <motion.div
             {...descriptionAnimation}
-            className="text-lg md:text-xl text-primary-600 dark:text-primary-300 max-w-[95%] sm:max-w-2xl md:max-w-4xl mx-auto mb-6 md:mb-8 font-light leading-relaxed"
+            className="text-lg md:text-xl text-primary-600 dark:text-primary-300 max-w-[99%] sm:max-w-2xl md:max-w-4xl mx-auto -mt-2 md:mt-0 mb-6 md:mb-8 font-light leading-relaxed"
           >
             {(() => {
               const quote = getCategoryQuote(category)
