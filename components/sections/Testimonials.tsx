@@ -44,8 +44,8 @@ export default function Testimonials() {
   useEffect(() => {
     const updateCardWidth = () => {
       if (window.innerWidth < 640) {
-        // Mobile: larger cards (85% of viewport width minus padding)
-        setCardWidth(Math.min(window.innerWidth * 0.85, 380))
+        // Mobile: larger cards (90% of viewport width, max 420px)
+        setCardWidth(Math.min(window.innerWidth * 0.9, 420))
       } else if (window.innerWidth < 1024) {
         // Tablet: medium size
         setCardWidth(380)

@@ -287,7 +287,7 @@ export default function ShopPage() {
             transition={{ duration: 1, delay: 0.3 }}
             className="text-base sm:text-xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed px-4"
           >
-            "Where thrifted treasures meet fresh style finds"
+            "Build a wardrobe that Is authentically yours"
           </motion.p>
           <motion.div
             initial={{ opacity: 0 }}
@@ -295,9 +295,7 @@ export default function ShopPage() {
             transition={{ duration: 1, delay: 0.6 }}
             className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-primary-100 max-w-3xl mx-auto px-4"
           >
-            Discover unique pieces that blend vintage charm with contemporary style. 
-            From carefully curated thrifted gems to fresh new arrivals, we help you 
-            build a wardrobe that's authentically yours.
+            Understand our philosophy and continue to discover unique pieces, from vintage gems to contemporary styles.
           </motion.div>
         </motion.div>
 
