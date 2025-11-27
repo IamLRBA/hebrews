@@ -41,8 +41,8 @@ export default function OrderConfirmationPage() {
       })
 
       // Validate customer email and phone
-      const customerEmail = order.customerInfo?.email || ''
-      const customerPhone = order.customerInfo?.phone || ''
+      const customerEmail = order.customer?.email || ''
+      const customerPhone = order.customer?.phone || ''
 
       // Send customer email with receipt if email is valid
       if (customerEmail && isValidEmail(customerEmail)) {
