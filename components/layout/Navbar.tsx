@@ -397,7 +397,7 @@ export default function Navbar() {
               animate={{ x: 0 }} 
               exit={{ x: '100%' }} 
               transition={{ type: 'spring', stiffness: 300, damping: 30 }} 
-              className="fixed top-0 right-0 h-[70vh] w-80 bg-white dark:bg-neutral-800 shadow-2xl z-50 lg:hidden rounded-l-2xl overflow-y-auto"
+              className="fixed top-0 right-0 h-[95vh] w-80 bg-white dark:bg-neutral-800 shadow-2xl z-50 lg:hidden rounded-l-2xl overflow-y-auto"
             >
               {/* Close Button */}
               <div className="sticky top-0 z-10 bg-white dark:bg-neutral-800 px-6 py-4 flex justify-end">
