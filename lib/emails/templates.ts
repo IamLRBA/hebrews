@@ -13,7 +13,7 @@ export interface EmailConfig {
 }
 
 export class EmailTemplates {
-  static buyerConfirmation(order: Order): EmailConfig {
+  static buyerConfirmation(order: Order, receiptImage?: string): EmailConfig {
     const subject = `Order Confirmed - ${order.id} - MysticalPIECES`
     
     const html = `
@@ -151,12 +151,23 @@ Email: jerrylarubafestus@gmail.com
 Phone: +256 755 915 549
     `
     
-    return {
+    const emailConfig: EmailConfig = {
       to: order.customer.email,
       subject,
       html: html.trim(),
       text: text.trim()
     }
+
+    // Add receipt attachment if provided
+    if (receiptImage) {
+      emailConfig.attachment = {
+        filename: `receipt-${order.id}.png`,
+        content: receiptImage, // Already base64 encoded from generateReceiptImage
+        type: 'image/png'
+      }
+    }
+
+    return emailConfig
   }
 
   static sellerNotification(order: Order): EmailConfig {

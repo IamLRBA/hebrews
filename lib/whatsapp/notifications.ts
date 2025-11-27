@@ -36,7 +36,7 @@ export class WhatsAppNotifications {
   /**
    * Generate WhatsApp message for customer order confirmation
    */
-  static customerConfirmation(order: Order): WhatsAppConfig {
+  static customerConfirmation(order: Order, receiptImage?: string): WhatsAppConfig {
     const itemsText = order.items.map((item, index) => {
       return `${index + 1}. ${item.name}${item.size ? ` (Size: ${item.size})` : ''}${item.color ? ` - ${item.color}` : ''}\n   Qty: ${item.quantity} × UGX ${item.price.toLocaleString()} = UGX ${(item.price * item.quantity).toLocaleString()}`
     }).join('\n\n')
