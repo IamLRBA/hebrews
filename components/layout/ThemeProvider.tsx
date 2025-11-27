@@ -25,23 +25,36 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // Set mounted flag and load theme from localStorage only after mount
     setMounted(true)
-    const savedTheme = localStorage.getItem('fusioncraft-theme') as Theme
-    if (savedTheme) {
-      setTheme(savedTheme)
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('fusioncraft-theme') as Theme
+      if (savedTheme) {
+        setTheme(savedTheme)
+      }
     }
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
+    // Only apply theme changes after mount to prevent hydration mismatch
+    if (!mounted || typeof window === 'undefined') return
+    
     const root = document.documentElement
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     const activeTheme = theme === 'system' ? systemTheme : theme
-    root.classList.remove('light', 'dark')
-    root.classList.add(activeTheme)
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]')
-    if (metaThemeColor) metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#191919' : '#FEFEFE')
-    localStorage.setItem('fusioncraft-theme', theme)
+    
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      root.classList.remove('light', 'dark')
+      root.classList.add(activeTheme)
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', activeTheme === 'dark' ? '#191919' : '#FEFEFE')
+      }
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('fusioncraft-theme', theme)
+      }
+    })
   }, [theme, mounted])
 
   useEffect(() => {

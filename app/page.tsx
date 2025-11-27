@@ -50,28 +50,29 @@ export default function Home() {
   const testimonialsScale = useTransform(testimonialsScrollY, [0, 0.5, 1], [1, 1.05, 1])
 
   useEffect(() => {
-    // Check if this is the first visit
-    if (typeof window !== 'undefined') {
-      const hasVisited = localStorage.getItem('mysticalpieces-visited')
+    // Always start with same state on server and client to prevent hydration mismatch
+    // Check localStorage only after mount
+    if (typeof window === 'undefined') {
+      setIsLoading(false)
+      setShowPortals(true)
+      return
+    }
+    
+    const hasVisited = localStorage.getItem('mysticalpieces-visited')
+    
+    if (!hasVisited) {
+      // First time visitor - show loading animation
+      setIsLoading(true)
+      localStorage.setItem('mysticalpieces-visited', 'true')
       
-      if (!hasVisited) {
-        // First time visitor - show loading animation
-        setIsLoading(true)
-        localStorage.setItem('mysticalpieces-visited', 'true')
-        
-        const timer = setTimeout(() => {
-          setIsLoading(false)
-          setTimeout(() => setShowPortals(true), 1000)
-        }, 3000)
-
-        return () => clearTimeout(timer)
-      } else {
-        // Returning visitor - skip loading animation
+      const timer = setTimeout(() => {
         setIsLoading(false)
-        setShowPortals(true)
-      }
+        setTimeout(() => setShowPortals(true), 1000)
+      }, 3000)
+
+      return () => clearTimeout(timer)
     } else {
-      // Server-side rendering - don't show loading
+      // Returning visitor - skip loading animation
       setIsLoading(false)
       setShowPortals(true)
     }

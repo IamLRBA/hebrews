@@ -142,7 +142,12 @@ const StatCard = ({ stat, index }: { stat: any, index: number }) => {
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0 }}
-              animate={isInView ? { opacity: [0, 1, 0], scale: [0, 1, 0], x: [0, Math.random() * 100 - 50], y: [0, Math.random() * 100 - 50] } : {}}
+              animate={isInView ? { 
+                opacity: [0, 1, 0], 
+                scale: [0, 1, 0], 
+                x: [0, (i * 17 + index * 23) % 100 - 50], 
+                y: [0, (i * 13 + index * 19) % 100 - 50] 
+              } : {}}
               transition={{ duration: 2, delay: index * 0.1 + 1 + i * 0.3, repeat: Infinity, repeatDelay: 3 }}
               className="absolute w-2 h-2 bg-gradient-to-r from-primary-400 to-accent-400 rounded-full"
               style={{ left: `${20 + i * 30}%`, top: `${20 + i * 20}%` }}

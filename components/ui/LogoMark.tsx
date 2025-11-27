@@ -14,13 +14,14 @@ const DARK_LOGO_SRC = '/assets/images/branding/logo-dark.svg'
 
 export default function LogoMark({ className, animated = false, size = 120 }: LogoMarkProps) {
   const { theme, mounted } = useTheme()
+  // Always start with 'light' to match server render - prevents hydration mismatch
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
   const [imageError, setImageError] = useState(false)
   const [logoLoaded, setLogoLoaded] = useState(false)
   const imgRef = useRef<HTMLImageElement>(null)
   const retryCountRef = useRef(0)
 
-  // Function to determine current theme from DOM
+  // Function to determine current theme from DOM - only called client-side after mount
   const getCurrentTheme = (): 'light' | 'dark' => {
     if (typeof window === 'undefined') return 'light'
     const root = document.documentElement
@@ -62,12 +63,7 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
   }, [])
 
   useEffect(() => {
-    // Set initial theme immediately for SSR/hydration
-    if (typeof window !== 'undefined') {
-      const initialTheme = getCurrentTheme()
-      setResolvedTheme(initialTheme)
-    }
-    
+    // Only update theme after component is mounted to prevent hydration mismatch
     if (!mounted) return
     
     // Determine theme based on user preference
@@ -176,7 +172,7 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
     >
       <img
         ref={imgRef}
-        key={`${currentLogo}-${resolvedTheme}`}
+        key={mounted ? `logo-${resolvedTheme}` : 'logo-ssr'}
         src={currentLogo}
         alt="Mystical PIECES® logo"
         width={size}
