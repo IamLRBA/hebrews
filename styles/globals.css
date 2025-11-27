@@ -16,14 +16,18 @@
   /* Suppress browser warnings for vendor prefixes */
   /* These are valid vendor prefixes for cross-browser compatibility */
   html {
-    /* stylelint-disable-next-line property-no-unknown */
     /* Valid WebKit property for iOS Safari - prevents text inflation on mobile */
     -webkit-text-size-adjust: 100%;
-    /* stylelint-disable-next-line property-no-unknown */
     /* Valid IE/Edge property */
     -ms-text-size-adjust: 100%;
-    /* Standard property */
-    text-size-adjust: 100%;
+    /* Standard property - wrapped in @supports for browsers that support it */
+  }
+  
+  /* Only apply standard text-size-adjust if supported */
+  @supports (text-size-adjust: 100%) {
+    html {
+      text-size-adjust: 100%;
+    }
   }
 
   /* Reset button styles */
@@ -42,7 +46,7 @@
   }
   
   /* Remove Firefox inner focus border - Firefox-specific pseudo-element */
-  /* This is intentionally Firefox-only and will show warnings in other browsers */
+  /* Note: Non-Firefox browsers will show a warning for this, which is expected */
   button::-moz-focus-inner {
     border: 0;
     padding: 0;
@@ -122,8 +126,7 @@
     line-height: var(--leading-normal);
     font-weight: var(--font-weight-thin);
     -webkit-font-smoothing: antialiased;
-    /* stylelint-disable-next-line property-no-unknown */
-    /* Valid Firefox macOS property for font smoothing - Firefox-specific */
+    /* Note: Non-Firefox browsers will show a warning for -moz-osx-font-smoothing, which is expected */
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
