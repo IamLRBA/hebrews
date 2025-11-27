@@ -31,7 +31,7 @@ export default function OrderConfirmationPage() {
 
   // Send order notifications (email and WhatsApp)
   const sendOrderNotifications = async () => {
-    if (!order || notificationsSent) return
+    if (!order || notificationsSent || !receiptRef.current) return
 
     try {
       // Generate receipt image
