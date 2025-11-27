@@ -5,6 +5,11 @@ export interface EmailConfig {
   subject: string
   html: string
   text: string
+  attachment?: {
+    filename: string
+    content: string // base64 encoded content
+    type: string // MIME type
+  }
 }
 
 export class EmailTemplates {

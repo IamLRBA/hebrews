@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
+    "@sendgrid/mail": "^8.1.6",
     "@tabler/icons-react": "^3.35.0",
     "framer-motion": "latest",
     "gsap": "latest",
@@ -24,7 +25,8 @@
     "react-player": "^3.3.2",
     "swiper": "^11.2.10",
     "tailwindcss": "^3.4.17",
-    "three": "latest"
+    "three": "latest",
+    "twilio": "^5.10.6"
   },
   "devDependencies": {
     "@types/node": "latest",

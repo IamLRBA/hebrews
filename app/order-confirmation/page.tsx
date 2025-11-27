@@ -5,14 +5,30 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { CheckCircle, Download, Home, Package } from 'lucide-react'
 import { OrderManager, type Order } from '@/lib/cart'
-import { downloadReceipt } from '@/lib/utils/receipt-generator'
+import { downloadReceipt, generateReceiptImage } from '@/lib/utils/receipt-generator'
+import { EmailTemplates } from '@/lib/emails/templates'
+import { WhatsAppNotifications } from '@/lib/whatsapp/notifications'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 
 export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<Order | null>(null)
   const [orderId, setOrderId] = useState<string>('')
   const [isDownloading, setIsDownloading] = useState(false)
+  const [notificationsSent, setNotificationsSent] = useState(false)
   const receiptRef = useRef<HTMLDivElement>(null)
+
+  // Validate email format
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  // Validate phone number format (basic check)
+  const isValidPhone = (phone: string): boolean => {
+    const phoneRegex = /^[\d\s\+\-\(\)]{10,}$/
+    return phoneRegex.test(phone.replace(/\s/g, ''))
+  }
+
 
   useEffect(() => {
     // Get order ID from URL params
@@ -26,6 +42,18 @@ export default function OrderConfirmationPage() {
       }
     }
   }, [])
+
+  // Send notifications when order and receipt are ready
+  useEffect(() => {
+    if (order && receiptRef.current && !notificationsSent) {
+      // Small delay to ensure receipt is fully rendered
+      const timer = setTimeout(() => {
+        sendOrderNotifications()
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order, notificationsSent])
 
   const handleDownloadReceipt = async () => {
     if (!receiptRef.current || !order) return
@@ -83,9 +111,14 @@ export default function OrderConfirmationPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-4 print:text-gray-900">
             Order Confirmed!
           </h1>
-          <p className="text-xl text-primary-200 dark:text-primary-300 print:text-gray-600">
+          <p className="text-xl text-primary-200 dark:text-primary-300 print:text-gray-600 mb-2">
             Thank you for your order. We've received your order and will process it shortly.
           </p>
+          {notificationsSent && (
+            <p className="text-sm text-green-600 dark:text-green-400 mt-2">
+              ✓ Confirmation email and WhatsApp sent to your contact details
+            </p>
+          )}
         </motion.div>
 
         {/* Order Receipt */}

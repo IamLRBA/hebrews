@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-// This is a placeholder API route for sending WhatsApp messages
-// In production, integrate with your WhatsApp service provider:
-// - Twilio WhatsApp API
-// - WhatsApp Business API
-// - Green API
-// - ChatAPI
-// etc.
-
 export async function POST(request: NextRequest) {
   try {
     const { phone, message } = await request.json()
@@ -19,57 +11,67 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // TODO: Implement actual WhatsApp sending
-    // Example with Twilio:
-    /*
+    // Check if Twilio is configured
+    if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !process.env.TWILIO_WHATSAPP_NUMBER) {
+      console.warn('Twilio credentials not configured. WhatsApp message will be logged only.')
+      console.log('WhatsApp message details:', {
+        to: phone,
+        messagePreview: message.substring(0, 100) + '...'
+      })
+      return NextResponse.json({ 
+        success: true, 
+        message: 'WhatsApp message logged (Twilio not configured)' 
+      })
+    }
+
+    // Import Twilio
     const twilio = require('twilio')
     const client = twilio(
       process.env.TWILIO_ACCOUNT_SID,
       process.env.TWILIO_AUTH_TOKEN
     )
     
-    await client.messages.create({
-      from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
-      to: `whatsapp:${phone}`,
+    // Format phone number (ensure it starts with whatsapp:)
+    const fromNumber = process.env.TWILIO_WHATSAPP_NUMBER.startsWith('whatsapp:')
+      ? process.env.TWILIO_WHATSAPP_NUMBER
+      : `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`
+    
+    const toNumber = phone.startsWith('whatsapp:')
+      ? phone
+      : `whatsapp:${phone}`
+    
+    // Send WhatsApp message via Twilio
+    const result = await client.messages.create({
+      from: fromNumber,
+      to: toNumber,
       body: message
     })
-    */
     
-    // Example with WhatsApp Business API:
-    /*
-    const response = await fetch(
-      `https://graph.facebook.com/v18.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          messaging_product: 'whatsapp',
-          to: phone,
-          type: 'text',
-          text: { body: message }
-        })
-      }
-    )
-    
-    if (!response.ok) {
-      throw new Error('Failed to send WhatsApp message')
-    }
-    */
-    
-    // For now, just log and return success
-    console.log('WhatsApp message sent:', {
+    console.log('WhatsApp message sent successfully:', {
       to: phone,
-      messagePreview: message.substring(0, 100) + '...'
+      messageSid: result.sid,
+      status: result.status
     })
     
-    return NextResponse.json({ success: true, message: 'WhatsApp message sent successfully' })
-  } catch (error) {
+    return NextResponse.json({ 
+      success: true, 
+      message: 'WhatsApp message sent successfully',
+      messageSid: result.sid
+    })
+  } catch (error: any) {
     console.error('Error sending WhatsApp message:', error)
+    
+    // Provide more detailed error information
+    const errorMessage = error.message || 'Failed to send WhatsApp message'
+    const errorCode = error.code || error.status
+    
     return NextResponse.json(
-      { success: false, error: 'Failed to send WhatsApp message' },
+      { 
+        success: false, 
+        error: errorMessage,
+        code: errorCode,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
       { status: 500 }
     )
   }
