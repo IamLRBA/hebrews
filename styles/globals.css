@@ -1402,41 +1402,8 @@ input[type="radio"]:focus {
 }
 
 /* ================================
-   Swiper Custom Styles - Arrows & Pagination
+   Swiper Custom Styles - Pagination
    ================================ */
-
-/* Navigation arrows */
-.video-swiper .swiper-button-prev,
-.video-swiper .swiper-button-next {
-  color: var(--color-primary-600) !important; /* base color */
-  width: 30px;
-  height: 30px;
-  margin-top: -55px !important; /* slightly extend arrows upwards */
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.video-swiper .swiper-button-prev:hover,
-.video-swiper .swiper-button-next:hover {
-  color: var(--color-primary-50) !important;
-  transform: scale(1.2);
-}
-
-/* Override default arrows using ::after */
-.video-swiper .swiper-button-prev::after {
-  content: '⟸' !important; /* custom left arrow */
-  font-size: 40px !important;
-  font-weight: bold;
-  color: var(--color-primary-300) !important;
-  margin-left: 10px !important;
-}
-
-.video-swiper .swiper-button-next::after {
-  content: '⟹' !important; /* custom right arrow */
-  font-size: 40px !important;
-  font-weight: bold;
-  color: var(--color-primary-300) !important;
-  margin-right: 10px !important;
-}
 
 /* Pagination dots */
 .video-swiper .swiper-pagination {
