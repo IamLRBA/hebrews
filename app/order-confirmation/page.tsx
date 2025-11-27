@@ -29,6 +29,82 @@ export default function OrderConfirmationPage() {
     return phoneRegex.test(phone.replace(/\s/g, ''))
   }
 
+  // Send order notifications (email and WhatsApp)
+  const sendOrderNotifications = async () => {
+    if (!order || notificationsSent) return
+
+    try {
+      // Generate receipt image
+      const receiptImage = await generateReceiptImage(receiptRef.current, {
+        width: 800,
+        backgroundColor: '#ffffff'
+      })
+
+      // Validate customer email and phone
+      const customerEmail = order.customerInfo?.email || ''
+      const customerPhone = order.customerInfo?.phone || ''
+
+      // Send customer email with receipt if email is valid
+      if (customerEmail && isValidEmail(customerEmail)) {
+        try {
+          const customerEmailConfig = EmailTemplates.buyerConfirmation(order, receiptImage)
+          await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(customerEmailConfig)
+          })
+          console.log('Customer email sent successfully')
+        } catch (error) {
+          console.error('Error sending customer email:', error)
+        }
+      }
+
+      // Send customer WhatsApp if phone is valid
+      if (customerPhone && isValidPhone(customerPhone)) {
+        try {
+          const customerWhatsApp = WhatsAppNotifications.customerConfirmation(order, receiptImage)
+          await fetch('/api/send-whatsapp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(customerWhatsApp)
+          })
+          console.log('Customer WhatsApp sent successfully')
+        } catch (error) {
+          console.error('Error sending customer WhatsApp:', error)
+        }
+      }
+
+      // Send admin email
+      try {
+        const adminEmailConfig = EmailTemplates.sellerNotification(order)
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(adminEmailConfig)
+        })
+        console.log('Admin email sent successfully')
+      } catch (error) {
+        console.error('Error sending admin email:', error)
+      }
+
+      // Send admin WhatsApp
+      try {
+        const adminWhatsApp = WhatsAppNotifications.businessNotification(order)
+        await fetch('/api/send-whatsapp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(adminWhatsApp)
+        })
+        console.log('Admin WhatsApp sent successfully')
+      } catch (error) {
+        console.error('Error sending admin WhatsApp:', error)
+      }
+
+      setNotificationsSent(true)
+    } catch (error) {
+      console.error('Error sending notifications:', error)
+    }
+  }
 
   useEffect(() => {
     // Get order ID from URL params
