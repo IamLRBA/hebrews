@@ -1,18 +1,19 @@
 
-# MysticalPIECES - Portfolio Website
+# MysticalPIECES - Online Thrift Store
 
-A stunning, interactive portfolio website showcasing five major skill categories: Architecture, Music & Poetry, Art & Design, Software Development, and Fashion.
+A modern, interactive e-commerce platform for curated thrift fashion. MysticalPIECES offers a unique shopping experience with carefully selected vintage and second-hand items across multiple categories.
 
 ---
 
 ## ☰ Features
 
-### ⋆✴︎⌖⋆ Interactive Elements
+### ⋆✴︎⌖⋆ E-Commerce Features
 
-- **Loading Screen Animation**: Logo assembles from fragments
-- **3D Background**: Floating geometric shapes with Three.js
-- **Portal Navigation**: 5 animated skill category cards with unique hover effects
-- **Smooth Animations**: Framer Motion powered transitions and micro-interactions
+- **Product Catalog**: Browse curated thrift fashion across multiple categories
+- **Shopping Cart**: Add items to cart with size and color selection
+- **Checkout System**: Secure checkout with delivery options
+- **Order Management**: Order confirmation with receipt generation
+- **Product Search**: Search functionality to find specific items
 - **Responsive Design**: Fully responsive across all devices
 
 ### 𓂃✍︎ Design System
@@ -24,43 +25,59 @@ A stunning, interactive portfolio website showcasing five major skill categories
 
 ### ⚛︎ Technology Stack
 
-- **Next.js 14**: App Router with TypeScript
+- **Next.js 15**: App Router with TypeScript
 - **Tailwind CSS**: Custom design system with extended utilities
 - **Framer Motion**: Smooth animations and transitions
-- **Three.js/React Three Fiber**: 3D graphics and effects
-- **GSAP**: Advanced scroll-based animations (when needed)
+- **Email Integration**: Automated email notifications (SendGrid/SMTP)
+- **WhatsApp Integration**: Order notifications via WhatsApp (Green API)
+- **Local Storage**: Cart and user preferences management
 
 ---
 
 ## 🗀 Project Structure
 
 ```
-fusioncraft-portfolio/
+mysticalpieces/
 ├── app/                          # Next.js App Router
 │   ├── layout.tsx               # Root layout
-│   ├── page.tsx                 # Landing page
-│   └── sections/                # Skill category pages
-│       ├── architecture/        # Architecture section
-│       ├── music/               # Music & Poetry section
-│       ├── art/                 # Art & Design section
-│       ├── coding/              # Software Development section
-│       └── fashion/             # Fashion section
+│   ├── page.tsx                 # Home page
+│   ├── sections/
+│   │   └── shop/                # Shop portal page
+│   ├── products/
+│   │   └── [category]/          # Product category pages
+│   ├── cart/                     # Shopping cart page
+│   ├── checkout/                 # Checkout page
+│   ├── order-confirmation/       # Order confirmation page
+│   ├── about-us/                 # About Us page
+│   ├── ceo-profile/              # CEO profile page
+│   └── api/                      # API routes
+│       ├── send-email/           # Email notification API
+│       └── send-whatsapp/        # WhatsApp notification API
 ├── components/                   # Shared UI components
-│   ├── LoadingScreen.tsx        # Logo assembly animation
-│   ├── Background3D.tsx         # 3D floating shapes
-│   └── PortalNavigation.tsx     # Skill category navigation
-├── sections/                     # Section-specific components
-│   ├── Architecture3DGallery.tsx
-│   ├── BlueprintAnimation.tsx
-│   ├── AudioPlayer.tsx
-│   ├── PoetryVisualizer.tsx
-│   └── SoundWaveBackground.tsx
+│   ├── layout/                   # Layout components
+│   │   ├── Navbar.tsx           # Navigation bar
+│   │   └── Footer.tsx           # Footer
+│   ├── sections/                 # Page sections
+│   │   ├── FashionProducts.tsx  # Product showcase
+│   │   ├── FeaturedCollections.tsx
+│   │   ├── Testimonials.tsx
+│   │   └── Companies.tsx
+│   └── ui/                       # UI components
+│       ├── LogoMark.tsx
+│       ├── BackToTop.tsx
+│       └── LoadingSkeleton.tsx
+├── lib/                          # Utility libraries
+│   ├── cart.ts                  # Cart management
+│   ├── products.ts               # Product management
+│   ├── emails/                  # Email templates
+│   └── whatsapp/                # WhatsApp notifications
+├── data/                         # Data files
+│   └── products.json            # Product catalog
 ├── public/                       # Static assets
 │   └── assets/
-│       ├── images/              # Placeholder images
-│       ├── audio/               # Placeholder audio files
-│       └── videos/              # Placeholder video files
-├── styles/                       # Global styles and Tailwind config
+│       ├── images/              # Product and brand images
+│       └── videos/              # Fashion videos
+├── styles/                       # Global styles
 │   └── globals.css
 ├── tailwind.config.js           # Tailwind configuration
 ├── next.config.js               # Next.js configuration
@@ -70,37 +87,49 @@ fusioncraft-portfolio/
 
 ---
 
-## 🕸 Skill Categories
+## 🕸 Product Categories
 
-### 1. ⾕ Architecture
+### 1. Shirts
 
-- **3D Gallery**: Interactive project showcase
-- **Blueprint Animation**: Scroll-triggered transformations
-- **Philosophy**: "Designing realities that belong to tomorrow"
+- **Gentle**: Soft, comfortable shirt styles
+- **Checked**: Classic checked patterns
+- **Textured**: Textured fabric variations
+- **Denim**: Denim shirt collection
 
-### 2. 𝄞 Music & Poetry
+### 2. Tees
 
-- **Audio Player**: Interactive music player with visualizer
-- **Sound-Reactive Background**: Dynamic wave animations
-- **Poetry Visualizer**: Animated text and lyrics
+- **Plain**: Simple, versatile t-shirts
+- **Graphic**: Graphic design t-shirts
+- **Collared**: Collared t-shirt styles
+- **Sporty**: Athletic and sporty designs
 
-### 3. ☯︎ Art & Design
+### 3. Coats & Outerwear
 
-- **Interactive Canvas**: Morphing art gallery
-- **Jerry-Rig Philosophy**: Random art generator
-- **Digital/Physical Art**: Collage grid layout
+- **Sweater**: Cozy sweater collection
+- **Hoodie**: Casual hoodie styles
+- **Coat**: Classic coat designs
+- **Jacket**: Various jacket styles
 
-### 4. ⚛︎ Software Development
+### 4. Pants & Shorts
 
-- **Code Editor Interface**: Live coding environment look
-- **Interactive Demos**: Placeholder code snippets
-- **Open Source Showcase**: Project contributions
+- **Gentle**: Comfortable pant styles
+- **Denim**: Denim pants and shorts
+- **Cargo**: Cargo pant collection
+- **Sporty**: Athletic wear
 
-### 5. ✄ Fashion
+### 5. Footwear
 
-- **Lookbook Carousel**: Outfit styling showcase
-- **Style Variations**: Multiple styling approaches
-- **Moodboard Layout**: Visual inspiration boards
+- **Gentle**: Comfortable shoe styles
+- **Sneakers**: Athletic sneaker collection
+- **Sandals**: Casual sandal options
+- **Boots**: Boot styles
+
+### 6. Accessories
+
+- **Rings & Necklaces**: Jewelry collection
+- **Shades & Glasses**: Eyewear options
+- **Bracelets & Watches**: Timepieces and bracelets
+- **Decor**: Fashion decor items
 
 ---
 
@@ -115,7 +144,7 @@ fusioncraft-portfolio/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd fusioncraft-portfolio
+   cd mysticalpieces
    ```
 2. **Install dependencies**
    ```bash
@@ -140,28 +169,27 @@ npm start
 ## 𓅓 Customization
 
 
-### Replacing Placeholder Assets
+### Adding Products
 
-#### ⛶⛶⛶ Images
+#### Product Images
 
-- Replace files in `/public/assets/images/`
-- Update image paths in components
+- Add product images to `/public/assets/images/products/`
+- Organize by category and subcategory
 - Recommended formats: JPG, PNG, WebP
 - Optimize for web (compress, resize)
 
-#### ♫♪♬ Audio Files
+#### Product Data
 
-- Replace files in `/public/assets/audio/`
-- Update audio paths in `AudioPlayer.tsx`
-- Supported formats: MP3, WAV, OGG
-- Keep file sizes reasonable for web
+- Update product catalog in `/data/products.json`
+- Add product details: name, price, sizes, colors, images
+- Include product descriptions and SKU information
 
-#### ⩇⩇:⩇⩇ Video Files
+#### Fashion Videos
 
-- Replace files in `/public/assets/videos/`
-- Update video paths in components
+- Add fashion videos to `/public/assets/videos/fashion/`
+- Update video paths in `FashionVideoSection.tsx`
 - Recommended formats: MP4, WebM
-- Consider using video hosting for large files
+- Keep file sizes reasonable for web performance
 
 ### Modifying Colors and Themes
 
@@ -169,12 +197,12 @@ npm start
 - Update `styles/globals.css` for custom animations
 - Modify component-specific styling
 
-### Adding New Sections
+### Adding New Product Categories
 
-1. Create new page in `/app/sections/`
-2. Add section component in `/sections/`
-3. Update portal navigation in `PortalNavigation.tsx`
-4. Add routing and navigation
+1. Add category data to `/data/products.json`
+2. Create category images in `/public/assets/images/products-sections/fashion/`
+3. Add subcategory images for each category
+4. Update product routes in `/app/products/[category]/`
 
 ---
 
@@ -205,29 +233,26 @@ npm start
 
 ## 𑁍 Features in Detail
 
-### Loading Screen
+### Shopping Experience
 
-- Logo fragments assemble with staggered animation
-- Smooth transition to main content
-- Custom keyframe animations
+- **Product Browsing**: Browse products by category with beautiful visual layouts
+- **Product Details**: View detailed product information with multiple images
+- **Shopping Cart**: Add items to cart with size and color selection
+- **Checkout Process**: Secure checkout with customer information form
+- **Order Confirmation**: Receive order confirmation with downloadable receipt
 
-### Portal Navigation
+### Notifications
 
-- Unique hover effects for each category
-- Smooth scaling and movement
-- Interactive visual feedback
+- **Email Notifications**: Automated emails sent to customers and admins
+- **WhatsApp Notifications**: Order confirmations via WhatsApp
+- **Receipt Generation**: Automatic receipt generation with order details
 
-### 3D Background
+### User Interface
 
-- Floating geometric shapes
-- Subtle rotation and movement
-- Performance-optimized rendering
-
-### Responsive Design
-
-- Mobile-first approach
-- Adaptive layouts for all screen sizes
-- Touch-friendly interactions
+- **Dark/Light Mode**: Theme switching with persistent preferences
+- **Responsive Design**: Mobile-first approach, fully responsive
+- **Smooth Animations**: Framer Motion powered transitions
+- **Search Functionality**: Search products across the catalog
 
 ---
 
@@ -241,11 +266,11 @@ npm start
 
 ### Custom CSS Animations
 
-- Logo assembly
-- Sound waves
-- Matrix effects
-- Brush strokes
-- Wireframe drawing
+- Logo animations
+- Product card hover effects
+- Smooth page transitions
+- Loading states
+- Scroll-triggered animations
 
 ### Performance Considerations
 
@@ -259,13 +284,13 @@ npm start
 
 ### Planned Features
 
-- [ ] Blog/News section
-- [ ] Contact form integration
-- [ ] Portfolio filtering system
-- [ ] Dark/Light theme toggle
-- [ ] Multi-language support
-- [ ] Advanced 3D models
-- [ ] Real-time collaboration tools
+- [ ] User accounts and authentication
+- [ ] Product reviews and ratings
+- [ ] Wishlist functionality
+- [ ] Payment gateway integration
+- [ ] Order tracking system
+- [ ] Inventory management
+- [ ] Admin dashboard enhancements
 
 ### Technical Improvements
 
@@ -312,6 +337,6 @@ For questions or support:
 ---
 
 **Built with ♡ by MysticalPIECES**
-*Where creativity meets craftsmanship across five dimensions of human expression* 
+*Future-facing thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment* 
 
 ---
