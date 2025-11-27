@@ -107,6 +107,7 @@ export default function CEOProfile() {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8])
 
   const [expandedSkills, setExpandedSkills] = useState<{ [key: string]: boolean }>({})
+  const [showBackButton, setShowBackButton] = useState(true)
 
   const toggleSkill = (category: string) => {
     setExpandedSkills(prev => ({
@@ -115,23 +116,37 @@ export default function CEOProfile() {
     }))
   }
 
+  // Show/hide back button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      // Show button when at top (within 100px), hide when scrolled down
+      setShowBackButton(scrollTop < 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Check initial position
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <div ref={containerRef} className="min-h-screen bg-unified relative overflow-hidden">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        className="fixed top-20 left-8 z-50"
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -50 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-20 left-8 z-50 pointer-events-none"
+        style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/about-us" className="group flex items-center space-x-2">
+        <Link href="/about-us" className="group flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <motion.div
             whileHover={{ x: -5 }}
             transition={{ duration: 0.2 }}
           >
-            <span className="text-2xl text-primary-600 dark:text-primary-300 group-hover:text-primary-800 dark:group-hover:text-primary-100 transition-colors duration-300">⟸</span>
+            <span className="text-2xl">⟸</span>
           </motion.div>
-          <span className="text-sm font-medium text-primary-600 dark:text-primary-300 group-hover:text-primary-800 dark:group-hover:text-primary-100 transition-colors duration-300">Back to About Us</span>
+          <span className="text-sm font-medium">Back to About Us</span>
         </Link>
       </motion.div>
 

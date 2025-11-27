@@ -130,8 +130,35 @@ export default function CheckoutPage() {
   const deliveryFee = calculateDeliveryFee(formData.deliveryOption, formData.city)
   const total = subtotal + deliveryFee
 
+  const [showBackButton, setShowBackButton] = useState(true)
+
+  // Show/hide back button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      // Show button when at top (within 100px), hide when scrolled down
+      setShowBackButton(scrollTop < 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Check initial position
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <div className="min-h-screen bg-unified pt-24 pb-20">
+      {/* Fixed Back Button */}
+      <motion.div
+        animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-20 left-8 z-50 pointer-events-none"
+        style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
+      >
+        <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="text-lg font-medium">⟸</span>
+          <span className="text-sm font-medium">Back to Shopping</span>
+        </Link>
+      </motion.div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <motion.div
@@ -139,10 +166,6 @@ export default function CheckoutPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-300 dark:text-primary-400 hover:text-primary-100 dark:hover:text-primary-200 transition-colors duration-300 mb-6">
-            <span className="text-lg font-medium">⟸</span>
-            <span className="text-sm font-medium">Back to Shopping</span>
-          </Link>
           <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">Checkout</h1>
           <p className="text-primary-200 dark:text-primary-300">Complete your order with secure checkout</p>
         </motion.div>

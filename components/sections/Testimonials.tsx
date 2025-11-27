@@ -39,6 +39,9 @@ export default function Testimonials() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [cardWidth, setCardWidth] = useState(350)
   const gap = 5
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartPositionRef = useRef<number>(0)
 
   // Set responsive card width - larger on mobile and desktop
   useEffect(() => {
@@ -116,9 +119,63 @@ export default function Testimonials() {
     }
   }, [])
 
+  // Touch/swipe handlers for smooth continuous manual scrolling
+  const onTouchStart = (e: React.TouchEvent) => {
+    const touchX = e.targetTouches[0].clientX
+    setTouchStart(touchX)
+    dragStartPositionRef.current = sliderPosition
+    setIsDragging(true)
+    setIsManuallyPaused(true)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart || !isDragging) return
+    
+    const touchX = e.targetTouches[0].clientX
+    const deltaX = touchStart - touchX // Positive when swiping left (forward)
+    
+    // Update slider position in real-time based on finger movement
+    // This creates smooth, continuous scrolling that follows the finger
+    const newPosition = dragStartPositionRef.current - deltaX
+    const cardDistance = cardWidth + gap
+    const totalDistance = testimonialsData.length * cardDistance
+    
+    // Handle seamless looping - allow continuous scrolling in both directions
+    let finalPosition = newPosition
+    
+    // If scrolled past one complete set, reset seamlessly
+    if (Math.abs(newPosition) >= totalDistance) {
+      setIsResetting(true)
+      setTimeout(() => setIsResetting(false), 0)
+      // Calculate position within the loop
+      const remainder = Math.abs(newPosition) % totalDistance
+      finalPosition = newPosition < 0 ? -remainder : remainder
+    } else if (newPosition > 0) {
+      // If scrolled past the start (positive position), wrap to end
+      const remainder = newPosition % totalDistance
+      finalPosition = remainder - totalDistance
+    }
+    
+    setSliderPosition(finalPosition)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart) {
+      setIsDragging(false)
+      return
+    }
+    
+    setTouchStart(null)
+    setIsDragging(false)
+    // Resume auto-scroll after a short delay
+    setTimeout(() => {
+      setIsManuallyPaused(false)
+    }, 2000)
+  }
+
   useEffect(() => {
-    // Pause if manually paused OR hovered
-    if (isManuallyPaused || isHovered || testimonialsData.length === 0) return
+    // Pause if manually paused OR hovered OR dragging
+    if (isManuallyPaused || isHovered || isDragging || testimonialsData.length === 0) return
     const interval = setInterval(() => {
       setSliderPosition(prev => {
         const cardDistance = cardWidth + gap
@@ -140,7 +197,7 @@ export default function Testimonials() {
       })
     }, 10)
     return () => clearInterval(interval)
-  }, [isManuallyPaused, isHovered, testimonialsData.length, scrollSpeed, cardWidth, gap])
+  }, [isManuallyPaused, isHovered, isDragging, testimonialsData.length, scrollSpeed, cardWidth, gap])
 
   const handlePrev = () => {
     // Pause automatic sliding when clicking Back
@@ -221,8 +278,11 @@ export default function Testimonials() {
             animate={{ x: sliderPosition }} 
             transition={isResetting ? { duration: 0 } : { type: "tween", ease: "linear", duration: 0 }} 
             onMouseEnter={() => setIsHovered(true)} 
-            onMouseLeave={() => setIsHovered(false)} 
-            style={{ gap: `${gap}px` }}
+            onMouseLeave={() => setIsHovered(false)}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            style={{ gap: `${gap}px`, touchAction: 'pan-x' }}
           >
             {duplicatedTestimonials.map((testimonial, index) => {
               const cardScale = getCardScale(index)

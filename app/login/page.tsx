@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -110,13 +110,36 @@ export default function LoginPage() {
     setLoading(false)
   }
 
+  const [showBackButton, setShowBackButton] = useState(true)
+
+  // Show/hide back button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      // Show button when at top (within 100px), hide when scrolled down
+      setShowBackButton(scrollTop < 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Check initial position
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <div className="min-h-screen bg-unified flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full">
-        <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700 mb-8">
+      {/* Fixed Back Button */}
+      <motion.div
+        animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-20 left-8 z-50 pointer-events-none"
+        style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
+      >
+        <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="text-base font-medium">⟸</span>
-          <span>Back to Home</span>
+          <span className="text-sm font-medium">Back to Home</span>
         </Link>
+      </motion.div>
+      <div className="max-w-md w-full">
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

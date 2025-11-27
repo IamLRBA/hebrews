@@ -170,14 +170,36 @@ export default function AdminDashboard() {
     boughtProducts: boughtProducts.length
   }
 
+  const [showBackButton, setShowBackButton] = useState(true)
+
+  // Show/hide back button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      // Show button when at top (within 100px), hide when scrolled down
+      setShowBackButton(scrollTop < 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Check initial position
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <div className="min-h-screen bg-unified pt-24 pb-20">
       <div className="container-custom">
         <div className="flex items-center justify-between mb-8">
-          <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 hover:text-primary-700">
-            <span className="text-base font-medium">⟸</span>
-            <span>Back to Home</span>
-          </Link>
+          <motion.div
+            animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+            transition={{ duration: 0.3 }}
+            className="pointer-events-none"
+            style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
+          >
+            <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+              <span className="text-base font-medium">⟸</span>
+              <span className="text-sm font-medium">Back to Home</span>
+            </Link>
+          </motion.div>
           <button onClick={handleLogout} className="flex items-center space-x-2 text-red-600 hover:text-red-700">
             <LogOut className="w-4 h-4" />
             <span>Logout</span>

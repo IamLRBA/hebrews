@@ -9,6 +9,7 @@ import { CartManager, type CartItem } from '@/lib/cart'
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [isUpdating, setIsUpdating] = useState(false)
+  const [showBackButton, setShowBackButton] = useState(true)
 
   useEffect(() => {
     const loadCart = () => {
@@ -33,6 +34,19 @@ export default function CartPage() {
       window.removeEventListener('cartUpdated', handleCartUpdate)
       clearInterval(interval)
     }
+  }, [])
+
+  // Show/hide back button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      // Show button when at top (within 100px), hide when scrolled down
+      setShowBackButton(scrollTop < 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Check initial position
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   // Quantity update is removed since each product is a single piece
@@ -60,6 +74,18 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-unified pt-24 pb-20">
+      {/* Fixed Back Button */}
+      <motion.div
+        animate={{ opacity: showBackButton ? 1 : 0, y: showBackButton ? 0 : -20 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-20 left-8 z-50 pointer-events-none"
+        style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
+      >
+        <Link href="/sections/shop" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <span className="text-lg font-medium">⟸</span>
+          <span className="text-sm font-medium">Continue Shopping</span>
+        </Link>
+      </motion.div>
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -67,10 +93,6 @@ export default function CartPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Link href="/sections/shop" className="inline-flex items-center space-x-2 text-primary-300 dark:text-primary-400 hover:text-primary-100 dark:hover:text-primary-200 transition-colors duration-300 mb-6">
-            <span className="text-lg font-medium">⟸</span>
-            <span className="text-sm font-medium">Continue Shopping</span>
-          </Link>
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">Shopping Cart</h1>

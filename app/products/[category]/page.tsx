@@ -262,21 +262,36 @@ export default function ProductCategoryPage() {
     return quotes[categorySlug] || { text: '', author: '' }
   }
 
+  const [showBackButton, setShowBackButton] = useState(true)
+
+  // Show/hide back button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      // Show button when at top (within 100px), hide when scrolled down
+      setShowBackButton(scrollTop < 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Check initial position
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <div className="min-h-screen bg-unified relative overflow-hidden pt-20">
       {/* Navigation Back */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="fixed top-20 left-8 z-50"
+        animate={{ opacity: showBackButton ? 1 : 0, x: showBackButton ? 0 : -50 }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-20 left-8 z-50 pointer-events-none"
+        style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/sections/shop#our-products" className="group">
-          <div className="flex items-center space-x-2 text-primary-300 dark:text-primary-400 hover:text-primary-100 dark:hover:text-primary-200 transition-colors duration-300">
-            <motion.span whileHover={{ x: -5 }} transition={{ duration: 0.2 }} className="text-lg font-medium">
-              ⟸
-            </motion.span>
-            <span className="text-sm font-medium">Back to Shop</span>
-          </div>
+        <Link href="/sections/shop#our-products" className="group flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+          <motion.span whileHover={{ x: -5 }} transition={{ duration: 0.2 }} className="text-lg font-medium">
+            ⟸
+          </motion.span>
+          <span className="text-sm font-medium">Back to Shop</span>
         </Link>
       </motion.div>
 
