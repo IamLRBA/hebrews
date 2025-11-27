@@ -15,16 +15,28 @@ const companies = [
 
 export default function Companies() {
   const [isHovered, setIsHovered] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const cardWidth = 100
   const gap = 40
   const cardDistance = cardWidth + gap
   const totalDistance = companies.length * cardDistance
   // Start at negative position so cards can slide from left to right seamlessly
   const [sliderPosition, setSliderPosition] = useState(-totalDistance)
-  const [scrollSpeed] = useState(1) // Reduced from 2.5 to 1 for reasonable speed
+  const [scrollSpeed] = useState(0.7) // Reduced speed for smoother viewing
   const [isResetting, setIsResetting] = useState(false)
   const [containerWidth, setContainerWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'))
+    }
+    checkDarkMode()
+    const observer = new MutationObserver(checkDarkMode)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     // Pause if hovered
@@ -94,15 +106,24 @@ export default function Companies() {
 
   return (
     <div className="mt-16">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="slider-container relative overflow-hidden py-6"
-        style={{ minHeight: `${cardWidth * 1.25 + 24}px` }}
-        ref={containerRef}
+      <div 
+        className="relative"
+        style={{
+          borderLeft: '4px solid',
+          borderRight: '4px solid',
+          borderLeftColor: isDarkMode ? 'rgba(111, 78, 55, 0.4)' : 'rgba(139, 122, 90, 0.3)', // primary-600/40 for dark (matching container bg), primary-500/30 for light
+          borderRightColor: isDarkMode ? 'rgba(111, 78, 55, 0.4)' : 'rgba(139, 122, 90, 0.3)', // primary-600/40 for dark (matching container bg), primary-500/30 for light
+        }}
       >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="slider-container relative overflow-hidden py-6"
+          style={{ minHeight: `${cardWidth * 1.25 + 24}px` }}
+          ref={containerRef}
+        >
         <motion.div 
           className="slider-track flex items-center" 
           animate={{ x: sliderPosition }} 
@@ -147,7 +168,8 @@ export default function Companies() {
             )
           })}
         </motion.div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   )
 }

@@ -32,7 +32,7 @@ export default function Testimonials() {
   const [isManuallyPaused, setIsManuallyPaused] = useState(false)
   const [sliderPosition, setSliderPosition] = useState(0)
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [scrollSpeed, setScrollSpeed] = useState(0.5) // Base speed multiplier - reduced for reasonable speed
+  const [scrollSpeed, setScrollSpeed] = useState(0.35) // Base speed multiplier - reduced for smoother viewing
   const [isResetting, setIsResetting] = useState(false)
   const [containerWidth, setContainerWidth] = useState(0)
   const sliderRef = useRef<HTMLDivElement>(null)
