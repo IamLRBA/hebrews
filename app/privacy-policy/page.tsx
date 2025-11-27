@@ -76,7 +76,7 @@ export default function PrivacyPolicy() {
             Privacy Policy
           </h1>
           <p className="text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl mx-auto">
-            At <MysticalPiecesWord />, we are committed to protecting your privacy and ensuring the security of your personal information.
+            At <MysticalPiecesWord /> , we are committed to protecting your privacy and ensuring the security of your personal information.
           </p>
           <p className="text-sm text-neutral-500 mt-4">
             Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -92,7 +92,7 @@ export default function PrivacyPolicy() {
         >
           <h2 className="text-2xl font-bold text-primary-900 dark:text-primary-100 mb-4">Introduction</h2>
           <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed mb-4">
-            This Privacy Policy describes how <MysticalPiecesWord /> ("we," "us," or "our") collects, uses, and protects your personal information 
+            This Privacy Policy describes how <MysticalPiecesWord />  ("we," "us," or "our") collects, uses, and protects your personal information 
             when you visit our website, use our services, or interact with us in any way.
           </p>
           <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed">

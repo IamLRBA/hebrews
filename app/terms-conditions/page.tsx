@@ -64,7 +64,7 @@ export default function TermsConditions() {
       icon: Scale,
       title: 'Limitations',
       content: [
-        <>In no event shall <MysticalPiecesWord /> be liable for any damages</>,
+        <>In no event shall <MysticalPiecesWord />  be liable for any damages</>,
         'This includes direct, indirect, incidental, or consequential damages',
         'Our liability is limited to the maximum extent permitted by law',
         'Some jurisdictions do not allow limitations on liability'
@@ -115,7 +115,7 @@ export default function TermsConditions() {
         >
           <h2 className="text-2xl font-bold text-primary-900 dark:text-primary-100 mb-4">Introduction</h2>
           <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed mb-4">
-            These terms and conditions govern your use of the <MysticalPiecesWord /> website and services. 
+            These terms and conditions govern your use of the <MysticalPiecesWord />  website and services. 
             By using our website, you accept these terms and conditions in full.
           </p>
           <p className="text-neutral-700 dark:text-neutral-200 leading-relaxed">
@@ -164,7 +164,7 @@ export default function TermsConditions() {
           <div className="space-y-4 text-neutral-700">
             <p>
               <strong>Intellectual Property:</strong> All content on this website, including text, graphics, logos, and software, 
-              is the property of <MysticalPiecesWord /> and is protected by copyright laws.
+              is the property of <MysticalPiecesWord />  and is protected by copyright laws.
             </p>
             <p>
               <strong>Privacy:</strong> Your privacy is important to us. Please review our Privacy Policy, which also governs 

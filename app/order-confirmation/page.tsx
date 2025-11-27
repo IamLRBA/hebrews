@@ -95,28 +95,27 @@ export default function OrderConfirmationPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-xl shadow-2xl p-8 mx-auto max-w-2xl receipt-container"
+          className="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl p-8 mx-auto max-w-2xl receipt-container border border-neutral-200 dark:border-neutral-700"
           style={{
-            fontFamily: 'system-ui, -apple-system, sans-serif',
-            color: '#1f2937'
+            fontFamily: 'system-ui, -apple-system, sans-serif'
           }}
         >
           {/* Receipt Header */}
-          <div className="text-center mb-8 pb-6 border-b-2 border-gray-200">
+          <div className="text-center mb-8 pb-6 border-b-2 border-gray-200 dark:border-neutral-600">
             <div className="mb-4">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ letterSpacing: '0.5px' }}>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-primary-100 mb-2" style={{ letterSpacing: '0.5px' }}>
                 <MysticalPiecesWord />
               </h1>
-              <p className="text-gray-600 text-sm">Mystical Thrift Fashion & Soulful Style Curators</p>
+              <p className="text-gray-600 dark:text-primary-300 text-sm">Mystical Thrift Fashion & Soulful Style Curators</p>
             </div>
-            <div className="flex justify-between items-center text-sm text-gray-600">
+            <div className="flex justify-between items-center text-sm text-gray-600 dark:text-primary-300">
               <div className="text-left">
-                <p className="font-semibold text-gray-900">Order Receipt</p>
-                <p className="mt-1">{order.id}</p>
+                <p className="font-semibold text-gray-900 dark:text-primary-100">Order Receipt</p>
+                <p className="mt-1 dark:text-primary-300">{order.id}</p>
               </div>
               <div className="text-right">
-                <p className="font-semibold text-gray-900">Date</p>
-                <p className="mt-1">
+                <p className="font-semibold text-gray-900 dark:text-primary-100">Date</p>
+                <p className="mt-1 dark:text-primary-300">
                   {new Date(order.timestamp).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'short',
@@ -130,26 +129,26 @@ export default function OrderConfirmationPage() {
           </div>
 
           {/* Customer Information */}
-          <div className="mb-6 pb-6 border-b border-gray-200">
-            <h3 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide text-sm">
+          <div className="mb-6 pb-6 border-b border-gray-200 dark:border-neutral-600">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-primary-100 mb-3 uppercase tracking-wide text-sm">
               Customer Information
             </h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Name:</span>
-                <span className="text-gray-900 font-medium">{order.customer.fullName}</span>
+                <span className="text-gray-600 dark:text-primary-300">Name:</span>
+                <span className="text-gray-900 dark:text-primary-100 font-medium">{order.customer.fullName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Phone:</span>
-                <span className="text-gray-900 font-medium">{order.customer.phone}</span>
+                <span className="text-gray-600 dark:text-primary-300">Phone:</span>
+                <span className="text-gray-900 dark:text-primary-100 font-medium">{order.customer.phone}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Email:</span>
-                <span className="text-gray-900 font-medium text-xs">{order.customer.email}</span>
+                <span className="text-gray-600 dark:text-primary-300">Email:</span>
+                <span className="text-gray-900 dark:text-primary-100 font-medium text-xs">{order.customer.email}</span>
               </div>
-              <div className="mt-3 pt-3 border-t border-gray-100">
-                <p className="text-gray-600 text-xs mb-1">Delivery Address:</p>
-                <p className="text-gray-900 font-medium text-sm">
+              <div className="mt-3 pt-3 border-t border-gray-100 dark:border-neutral-700">
+                <p className="text-gray-600 dark:text-primary-300 text-xs mb-1">Delivery Address:</p>
+                <p className="text-gray-900 dark:text-primary-100 font-medium text-sm">
                   {order.customer.address.street}<br />
                   {order.customer.address.city}
                 </p>
@@ -159,14 +158,14 @@ export default function OrderConfirmationPage() {
 
           {/* Order Items */}
           <div className="mb-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wide text-sm">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-primary-100 mb-4 uppercase tracking-wide text-sm">
               Items Ordered
             </h3>
             <div className="space-y-4">
               {order.items.map((item, index) => (
-                <div key={index} className="flex items-start justify-between pb-4 border-b border-gray-100">
+                <div key={index} className="flex items-start justify-between pb-4 border-b border-gray-100 dark:border-neutral-700">
                   <div className="flex items-start space-x-3 flex-1">
-                    <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
+                    <div className="w-20 h-20 bg-gray-100 dark:bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 border border-gray-200 dark:border-neutral-600">
                       <img 
                         src={item.image || '/assets/images/placeholder.jpg'} 
                         alt={item.name} 
@@ -178,20 +177,20 @@ export default function OrderConfirmationPage() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-gray-900 font-semibold text-sm mb-1">{item.name}</h4>
-                      <p className="text-gray-500 text-xs mb-1">SKU: {item.sku}</p>
-                      <div className="flex flex-wrap gap-2 text-xs text-gray-600">
-                        {item.size && <span>Size: <strong>{item.size}</strong></span>}
-                        {item.color && <span>Color: <strong>{item.color}</strong></span>}
-                        <span>Qty: <strong>{item.quantity}</strong></span>
+                      <h4 className="text-gray-900 dark:text-primary-100 font-semibold text-sm mb-1">{item.name}</h4>
+                      <p className="text-gray-500 dark:text-primary-400 text-xs mb-1">SKU: {item.sku}</p>
+                      <div className="flex flex-wrap gap-2 text-xs text-gray-600 dark:text-primary-300">
+                        {item.size && <span>Size: <strong className="dark:text-primary-100">{item.size}</strong></span>}
+                        {item.color && <span>Color: <strong className="dark:text-primary-100">{item.color}</strong></span>}
+                        <span>Qty: <strong className="dark:text-primary-100">{item.quantity}</strong></span>
                       </div>
                     </div>
                   </div>
                   <div className="text-right ml-4">
-                    <p className="text-gray-900 font-bold text-base">
+                    <p className="text-gray-900 dark:text-primary-100 font-bold text-base">
                       UGX {(item.price * item.quantity).toLocaleString()}
                     </p>
-                    <p className="text-gray-500 text-xs mt-1">
+                    <p className="text-gray-500 dark:text-primary-400 text-xs mt-1">
                       UGX {item.price.toLocaleString()} each
                     </p>
                   </div>
@@ -201,22 +200,22 @@ export default function OrderConfirmationPage() {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-gray-50 rounded-lg p-5 mb-6 border border-gray-200">
+          <div className="bg-gray-50 dark:bg-neutral-700 rounded-lg p-5 mb-6 border border-gray-200 dark:border-neutral-600">
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal</span>
-                <span className="text-gray-900 font-medium">UGX {order.subtotal.toLocaleString()}</span>
+                <span className="text-gray-600 dark:text-primary-300">Subtotal</span>
+                <span className="text-gray-900 dark:text-primary-100 font-medium">UGX {order.subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Delivery Fee</span>
-                <span className="text-gray-900 font-medium">
+                <span className="text-gray-600 dark:text-primary-300">Delivery Fee</span>
+                <span className="text-gray-900 dark:text-primary-100 font-medium">
                   {order.deliveryFee === 0 ? 'Free' : `UGX ${order.deliveryFee.toLocaleString()}`}
                 </span>
               </div>
-              <div className="pt-3 border-t-2 border-gray-300 mt-3">
+              <div className="pt-3 border-t-2 border-gray-300 dark:border-neutral-500 mt-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-gray-900 uppercase tracking-wide">Total</span>
-                  <span className="text-2xl font-bold text-gray-900">
+                  <span className="text-lg font-bold text-gray-900 dark:text-primary-100 uppercase tracking-wide">Total</span>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-primary-100">
                     UGX {order.total.toLocaleString()}
                   </span>
                 </div>
@@ -226,32 +225,32 @@ export default function OrderConfirmationPage() {
 
           {/* Delivery Notes */}
           {order.notes && (
-            <div className="mb-6 pb-6 border-b border-gray-200">
-              <h3 className="text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">Special Instructions</h3>
-              <p className="text-gray-700 text-sm">{order.notes}</p>
+            <div className="mb-6 pb-6 border-b border-gray-200 dark:border-neutral-600">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-primary-100 mb-2 uppercase tracking-wide">Special Instructions</h3>
+              <p className="text-gray-700 dark:text-primary-300 text-sm">{order.notes}</p>
             </div>
           )}
 
           {/* Payment Notice */}
-          <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 text-center mb-6">
-            <p className="text-amber-900 font-semibold text-sm mb-1">
+          <div className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700 rounded-lg p-4 text-center mb-6">
+            <p className="text-amber-900 dark:text-amber-200 font-semibold text-sm mb-1">
               💳 Payment Method: Cash on Delivery
             </p>
-            <p className="text-amber-700 text-xs">
+            <p className="text-amber-700 dark:text-amber-300 text-xs">
               Expected delivery within 2-3 business days
             </p>
           </div>
 
           {/* Footer */}
-          <div className="text-center pt-6 border-t-2 border-gray-200">
-            <p className="text-gray-600 text-xs mb-2">
+          <div className="text-center pt-6 border-t-2 border-gray-200 dark:border-neutral-600">
+            <p className="text-gray-600 dark:text-primary-300 text-xs mb-2">
               Thank you for shopping with <MysticalPiecesWord />!
             </p>
-            <div className="text-gray-500 text-xs space-y-1">
+            <div className="text-gray-500 dark:text-primary-400 text-xs space-y-1">
               <p>Email: jerrylarubafestus@gmail.com</p>
               <p>Phone: +256 755 915 549</p>
               <p className="mt-2">
-                © {new Date().getFullYear()} <MysticalPiecesWord />. All rights reserved.
+                © {new Date().getFullYear()} <MysticalPiecesWord /> . All rights reserved.
               </p>
             </div>
           </div>

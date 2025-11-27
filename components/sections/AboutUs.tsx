@@ -123,7 +123,7 @@ export default function AboutUs() {
         >
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
-              <MysticalPiecesWord /> began with a vision to connect fashion and style as a mirror of the self. We roam markets and archives to uncover pieces with story, quality, and design integrity.
+              <MysticalPiecesWord />  began with a vision to connect fashion and style as a mirror of the self. We roam markets and archives to uncover pieces with story, quality, and design integrity.
             </p>
             <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
               We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. We are an invitation to dress with clarity, confidence, and purpose.
@@ -482,7 +482,7 @@ export default function AboutUs() {
                 title: "Mission Statement", 
                 description: (
                   <>
-                    <MysticalPiecesWord /> exists to awaken individuality and inspire mindful connection through future-minded thrift fashion.
+                    <MysticalPiecesWord />  exists to awaken individuality and inspire mindful connection through future-minded thrift fashion.
                   </>
                 ) 
               },

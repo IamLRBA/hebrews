@@ -33,7 +33,7 @@ export default function Footer() {
             Style that transcends the ordinary.
           </p>
           <p className="copyright">
-            © {new Date().getFullYear()} <MysticalPiecesWord />. All rights reserved.
+            © {new Date().getFullYear()} <MysticalPiecesWord /> . All rights reserved.
           </p>
           <p className="copyright2">Designed by <a href="https://github.com/IamLRBA" target="_blank" rel="noopener noreferrer">ᒪᖇᗷᗩ</a></p>
           <div className="legal-links">
