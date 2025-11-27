@@ -145,8 +145,7 @@ export default function EducationalJourney() {
                       {item.period}
                     </div>
                     <h3 
-                      className="text-lg font-semibold mb-2"
-                      style={{ color: 'var(--color-primary-900)' }}
+                      className="text-lg font-semibold mb-2 text-primary-900 dark:text-primary-100"
                     >
                       {item.level}
                     </h3>
@@ -181,9 +180,9 @@ export default function EducationalJourney() {
         {/* Mobile Timeline */}
         <div className="block md:hidden relative px-4">
           <svg 
-            viewBox="0 0 400 1200" 
+            viewBox="0 0 400 1400" 
             className="w-full h-auto"
-            style={{ minHeight: '1200px' }}
+            style={{ minHeight: '1400px' }}
           >
             <defs>
               <linearGradient id="mobilePathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -194,7 +193,7 @@ export default function EducationalJourney() {
             
             {/* Animated Path */}
             <motion.path
-              d="M 200 50 L 200 300 L 200 500 L 200 700 L 200 900 L 200 1100"
+              d="M 200 50 L 200 350 L 200 650 L 200 950 L 200 1250 L 200 1350"
               fill="none"
               stroke="url(#mobilePathGradient)"
               strokeWidth="8"
@@ -213,7 +212,7 @@ export default function EducationalJourney() {
               r="8"
               fill="var(--color-accent-500)"
               filter="drop-shadow(0 0 8px var(--color-accent-500))"
-              cy={useTransform(guideDotProgress, [0, 1], [50, 1100])}
+              cy={useTransform(guideDotProgress, [0, 1], [50, 1350])}
             />
           </svg>
 
@@ -231,9 +230,10 @@ export default function EducationalJourney() {
               whileHover={{ scale: 1.05 }}
               className="absolute left-1/2 -translate-x-1/2"
               style={{
-                top: index === 0 ? '3%' : index === 1 ? '25%' : index === 2 ? '47%' : '69%',
-                width: 'calc(100% - 2rem)',
-                maxWidth: '280px'
+                top: index === 0 ? '5%' : index === 1 ? '28%' : index === 2 ? '51%' : '74%',
+                width: 'calc(100% - 3rem)',
+                maxWidth: '320px',
+                zIndex: education.length - index
               }}
             >
               <div 
@@ -255,8 +255,7 @@ export default function EducationalJourney() {
                       {item.period}
                     </div>
                     <h3 
-                      className="text-base font-semibold mb-1"
-                      style={{ color: 'var(--color-primary-900)' }}
+                      className="text-base font-semibold mb-1 text-primary-900 dark:text-primary-100"
                     >
                       {item.level}
                     </h3>

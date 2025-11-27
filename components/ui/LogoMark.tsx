@@ -116,18 +116,25 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const img = e.currentTarget
-    // Retry loading once with a fresh request
-    if (retryCountRef.current === 0 && img) {
-      retryCountRef.current = 1
-      // Force reload by creating new image object
+    // Retry loading with cache-busting and multiple strategies
+    if (retryCountRef.current < 3 && img) {
+      retryCountRef.current += 1
+      // Try with cache-busting parameter (only on client side)
       setTimeout(() => {
-        if (imgRef.current) {
+        if (imgRef.current && typeof window !== 'undefined') {
+          const cacheBuster = `?v=${Date.now()}&retry=${retryCountRef.current}`
+          const absoluteUrl = `${window.location.origin}${currentLogo}${cacheBuster}`
           imgRef.current.src = ''
-          imgRef.current.src = currentLogo
+          // Small delay to ensure src is cleared
+          setTimeout(() => {
+            if (imgRef.current) {
+              imgRef.current.src = absoluteUrl
+            }
+          }, 50)
         }
-      }, 100)
+      }, 200 * retryCountRef.current) // Exponential backoff
     } else {
-      // After retry, show fallback only if still failing
+      // After all retries, show fallback
       setImageError(true)
     }
   }
@@ -138,15 +145,19 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
     retryCountRef.current = 0
   }
   
-  // Ensure image loads when mounted or logo changes
+  // Ensure image loads when mounted or logo changes (client-side only)
   useEffect(() => {
-    if (mounted && imgRef.current && !logoLoaded && !imageError) {
-      // Ensure image source is set
-      if (imgRef.current.src !== window.location.origin + currentLogo) {
-        imgRef.current.src = currentLogo
+    if (mounted && typeof window !== 'undefined' && imgRef.current && !logoLoaded && !imageError) {
+      // Use absolute URL to ensure proper loading across devices (only after mount)
+      const absoluteUrl = `${window.location.origin}${currentLogo}`
+      
+      // Only update if src is different
+      if (imgRef.current.src !== absoluteUrl && !imgRef.current.src.includes(currentLogo)) {
+        imgRef.current.src = absoluteUrl
       }
     }
   }, [currentLogo, mounted, logoLoaded, imageError])
+
 
   return (
     <div
@@ -180,6 +191,8 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
           display: imageError ? 'none' : 'block',
           maxWidth: '100%',
           maxHeight: '100%',
+          opacity: logoLoaded ? 1 : 0.5,
+          transition: 'opacity 0.3s ease-in-out',
         }}
         loading="eager"
         decoding="async"
