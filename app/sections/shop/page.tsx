@@ -476,7 +476,7 @@ export default function ShopPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
                     whileHover={{ scale: 1.1, rotate: 5 }}
-                    className="aspect-square bg-gradient-to-br from-primary-700/30 to-accent-700/30 rounded-xl border border-primary-500/30 flex items-center justify-center cursor-pointer group hover:shadow-lg transition-all duration-300 overflow-hidden relative"
+                    className="aspect-square bg-gradient-to-br from-primary-700/30 to-accent-700/30 rounded-xl border border-primary-500/30 flex items-center justify-center cursor-pointer group hover:shadow-xl transition-all duration-300 overflow-hidden relative"
                   >
                     <AnimatePresence mode="sync">
                       <motion.img

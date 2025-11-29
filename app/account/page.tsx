@@ -139,10 +139,10 @@ export default function AccountPage() {
 
         <div className="bg-white dark:bg-neutral-800 rounded-2xl shadow-xl overflow-hidden border border-neutral-200 dark:border-neutral-700">
           {/* Header */}
-          <div className="bg-gradient-to-r from-primary-600 to-primary-800 p-8 text-white">
+          <div className="bg-neutral-50 dark:bg-neutral-700 border-b border-neutral-200 dark:border-neutral-600 p-8">
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white/20 flex items-center justify-center text-3xl font-bold bg-white/20">
+                <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-neutral-200 dark:border-neutral-700 flex items-center justify-center text-3xl font-bold bg-neutral-100 dark:bg-neutral-700">
                   {user.profileImage ? (
                     <img
                       src={user.profileImage}
@@ -150,7 +150,7 @@ export default function AccountPage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span>{user.fullName.charAt(0).toUpperCase()}</span>
+                    <span className="text-primary-600 dark:text-primary-400">{user.fullName.charAt(0).toUpperCase()}</span>
                   )}
                 </div>
                 <button
@@ -158,15 +158,15 @@ export default function AccountPage() {
                     setShowEditProfile(true)
                     setProfileImage(user.profileImage || '')
                   }}
-                  className="absolute bottom-0 right-0 w-8 h-8 bg-primary-700 hover:bg-primary-600 rounded-full flex items-center justify-center border-2 border-white transition-colors"
+                  className="absolute bottom-0 right-0 w-8 h-8 bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-400 rounded-full flex items-center justify-center border-2 border-white dark:border-neutral-800 transition-colors shadow-md"
                   title="Edit profile picture"
                 >
-                  <Camera className="w-4 h-4" />
+                  <Camera className="w-4 h-4 text-white" />
                 </button>
               </div>
               <div className="flex-1">
-                <h1 className="text-3xl font-bold">{user.fullName}</h1>
-                <p className="text-primary-200">{user.email}</p>
+                <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{user.fullName}</h1>
+                <p className="text-neutral-600 dark:text-neutral-400">{user.email}</p>
               </div>
             </div>
           </div>
@@ -201,49 +201,59 @@ export default function AccountPage() {
             {activeTab === 'overview' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4">Account Information</h2>
+                  <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Account Information</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center space-x-3 p-4 bg-primary-50 dark:bg-neutral-700 rounded-lg">
-                      <Mail className="w-5 h-5 text-primary-600" />
+                    <div className="flex items-center space-x-3 p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                      <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                        <Mail className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                      </div>
                       <div>
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">Email</p>
-                        <p className="font-medium">{user.email}</p>
+                        <p className="font-medium text-neutral-900 dark:text-neutral-200">{user.email}</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3 p-4 bg-primary-50 dark:bg-neutral-700 rounded-lg">
-                      <Phone className="w-5 h-5 text-primary-600" />
+                    <div className="flex items-center space-x-3 p-4 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                      <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                        <Phone className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                      </div>
                       <div>
                         <p className="text-sm text-neutral-600 dark:text-neutral-400">Phone</p>
-                        <p className="font-medium">{user.phone}</p>
+                        <p className="font-medium text-neutral-900 dark:text-neutral-200">{user.phone}</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4">Quick Stats</h2>
+                  <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Quick Stats</h2>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-6 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-neutral-700 dark:to-neutral-800 rounded-lg">
-                      <Package className="w-8 h-8 text-primary-600 mb-2" />
-                      <p className="text-3xl font-bold text-primary-800">{orders.length}</p>
-                      <p className="text-sm text-primary-600">Total Orders</p>
+                    <div className="p-6 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                      <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg w-fit mb-3">
+                        <Package className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                      </div>
+                      <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{orders.length}</p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Orders</p>
                     </div>
-                    <div className="p-6 bg-gradient-to-br from-accent-100 to-accent-200 dark:from-neutral-700 dark:to-neutral-800 rounded-lg">
-                      <Star className="w-8 h-8 text-accent-600 mb-2" />
-                      <p className="text-3xl font-bold text-accent-800">{user.reviews?.length || 0}</p>
-                      <p className="text-sm text-accent-600">Reviews Written</p>
+                    <div className="p-6 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                      <div className="p-3 bg-accent-100 dark:bg-accent-900/30 rounded-lg w-fit mb-3">
+                        <Star className="w-8 h-8 text-accent-600 dark:text-accent-400" />
+                      </div>
+                      <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{user.reviews?.length || 0}</p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Reviews Written</p>
                     </div>
-                    <div className="p-6 bg-gradient-to-br from-primary-100 to-primary-200 dark:from-neutral-700 dark:to-neutral-800 rounded-lg">
-                      <Eye className="w-8 h-8 text-primary-600 mb-2" />
-                      <p className="text-3xl font-bold text-primary-800">{user.lastViewedItems?.length || 0}</p>
-                      <p className="text-sm text-primary-600">Items Viewed</p>
+                    <div className="p-6 bg-neutral-50 dark:bg-neutral-700 rounded-lg border border-neutral-200 dark:border-neutral-600 shadow-sm">
+                      <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg w-fit mb-3">
+                        <Eye className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                      </div>
+                      <p className="text-3xl font-bold text-neutral-900 dark:text-neutral-100">{user.lastViewedItems?.length || 0}</p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Items Viewed</p>
                     </div>
                   </div>
                 </div>
 
                 {user.lastViewedItems && user.lastViewedItems.length > 0 && (
                   <div>
-                    <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4">Recently Viewed</h2>
+                    <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Recently Viewed</h2>
                     <p className="text-neutral-600 dark:text-neutral-400">You've viewed {user.lastViewedItems.length} items recently</p>
                   </div>
                 )}
@@ -252,7 +262,7 @@ export default function AccountPage() {
 
             {activeTab === 'orders' && (
               <div>
-                <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-6">Order History</h2>
+                <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">Order History</h2>
                 {orders.length === 0 ? (
                   <div className="text-center py-12">
                     <Package className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
@@ -309,7 +319,7 @@ export default function AccountPage() {
             {activeTab === 'reviews' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4">Write a Review</h2>
+                  <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Write a Review</h2>
                   <form onSubmit={handleReviewSubmit} className="bg-primary-50 dark:bg-neutral-700 rounded-lg p-6">
                     <div className="mb-4">
                       <label className="block text-sm font-medium text-primary-700 dark:text-primary-300 mb-2">
@@ -352,7 +362,7 @@ export default function AccountPage() {
                 </div>
 
                 <div>
-                  <h2 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-4">Your Reviews</h2>
+                  <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">Your Reviews</h2>
                   {user.reviews && user.reviews.length > 0 ? (
                     <div className="space-y-4">
                       {user.reviews.map((review) => (
@@ -487,4 +497,5 @@ export default function AccountPage() {
     </div>
   )
 }
+
 

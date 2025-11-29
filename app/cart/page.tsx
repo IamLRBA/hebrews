@@ -140,7 +140,7 @@ export default function CartPage() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 overflow-hidden shadow-sm dark:shadow-none"
+                  className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 overflow-hidden shadow-xl dark:shadow-xl"
                 >
                   <div className="flex flex-col sm:flex-row gap-4 p-6">
                     {/* Product Image */}
@@ -204,7 +204,7 @@ export default function CartPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="sticky top-24 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-6 shadow-sm dark:shadow-none"
+                className="sticky top-24 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-6 shadow-xl dark:shadow-xl"
               >
                 <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Order Summary</h2>
                 
