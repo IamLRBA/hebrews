@@ -272,37 +272,42 @@ export default function OrderConfirmationPage() {
             </h3>
             <div className="space-y-4">
               {order.items.map((item, index) => (
-                <div key={index} className="flex items-start justify-between pb-4 border-b border-gray-100 dark:border-neutral-700">
-                  <div className="flex items-start space-x-3 flex-1">
-                    <div className="w-20 h-20 bg-gray-100 dark:bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 border border-gray-200 dark:border-neutral-600">
-                      <img 
-                        src={item.image || '/assets/images/placeholder.jpg'} 
-                        alt={item.name} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement
-                          target.src = '/assets/images/placeholder.jpg'
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-gray-900 dark:text-primary-100 font-semibold text-sm mb-1">{item.name}</h4>
-                      <p className="text-gray-500 dark:text-primary-400 text-xs mb-1">SKU: {item.sku}</p>
-                      <div className="flex flex-wrap gap-2 text-xs text-gray-600 dark:text-primary-300">
-                        {item.size && <span>Size: <strong className="dark:text-primary-100">{item.size}</strong></span>}
-                        {item.color && <span>Color: <strong className="dark:text-primary-100">{item.color}</strong></span>}
-                        <span>Qty: <strong className="dark:text-primary-100">{item.quantity}</strong></span>
+                <div key={index}>
+                  <div className="flex items-start justify-between pb-4">
+                    <div className="flex items-start space-x-3 flex-1">
+                      <div className="w-20 h-20 bg-gray-100 dark:bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 border border-gray-200 dark:border-neutral-600">
+                        <img 
+                          src={item.image || '/assets/images/placeholder.jpg'} 
+                          alt={item.name} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement
+                            target.src = '/assets/images/placeholder.jpg'
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-gray-900 dark:text-primary-100 font-semibold text-sm mb-1">{item.name}</h4>
+                        <p className="text-gray-500 dark:text-primary-400 text-xs mb-1">SKU: {item.sku}</p>
+                        <div className="flex flex-wrap gap-2 text-xs text-gray-600 dark:text-primary-300">
+                          {item.size && <span>Size: <strong className="dark:text-primary-100">{item.size}</strong></span>}
+                          {item.color && <span>Color: <strong className="dark:text-primary-100">{item.color}</strong></span>}
+                          <span>Qty: <strong className="dark:text-primary-100">{item.quantity}</strong></span>
+                        </div>
                       </div>
                     </div>
+                    <div className="text-right ml-4">
+                      <p className="text-gray-900 dark:text-primary-100 font-bold text-base">
+                        UGX {(item.price * item.quantity).toLocaleString()}
+                      </p>
+                      <p className="text-gray-500 dark:text-primary-400 text-xs mt-1">
+                        UGX {item.price.toLocaleString()} each
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right ml-4">
-                    <p className="text-gray-900 dark:text-primary-100 font-bold text-base">
-                      UGX {(item.price * item.quantity).toLocaleString()}
-                    </p>
-                    <p className="text-gray-500 dark:text-primary-400 text-xs mt-1">
-                      UGX {item.price.toLocaleString()} each
-                    </p>
-                  </div>
+                  {index < order.items.length - 1 && (
+                    <div className="w-full h-px bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-600 to-transparent my-4"></div>
+                  )}
                 </div>
               ))}
             </div>
