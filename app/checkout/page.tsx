@@ -177,7 +177,7 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 md:p-8 shadow-sm dark:shadow-none"
+              className="bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 md:p-8 shadow-xl dark:shadow-xl"
             >
               <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Order Details</h2>
               
@@ -225,7 +225,7 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               onSubmit={handleSubmit}
-              className="mt-8 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-8 shadow-sm dark:shadow-none"
+              className="mt-8 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-8 shadow-xl dark:shadow-xl"
             >
               <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-6">Customer Information</h2>
               
@@ -366,7 +366,7 @@ export default function CheckoutPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="sticky top-24 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 shadow-sm dark:shadow-none"
+              className="sticky top-24 bg-white dark:bg-primary-800/30 rounded-xl border border-neutral-200 dark:border-primary-500/30 p-4 sm:p-6 shadow-xl dark:shadow-xl"
             >
               <h2 className="text-xl font-bold text-neutral-900 dark:text-primary-50 mb-4">Order Summary</h2>
               
