@@ -57,8 +57,6 @@ export default function ThemeSwitcher() {
     setIsOpen(false)
   }
 
-  if (!mounted) return null
-
   const themes = [
     {
       value: 'light' as const,
@@ -82,21 +80,23 @@ export default function ThemeSwitcher() {
 
   return (
     <div className="relative">
-      {/* Theme Toggle Button */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center"
-        aria-label="Toggle theme"
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-      >
-        <Palette className="w-5 h-5" />
-      </motion.button>
+      {mounted ? (
+        <>
+          {/* Theme Toggle Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-10 h-10 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center"
+            aria-label="Toggle theme"
+            aria-expanded={isOpen}
+            aria-haspopup="true"
+          >
+            <Palette className="w-5 h-5" />
+          </motion.button>
 
-      {/* Theme Dropdown */}
-      <AnimatePresence>
+          {/* Theme Dropdown */}
+          <AnimatePresence>
         {isOpen && (
           <>
             {/* Backdrop */}
@@ -189,6 +189,10 @@ export default function ThemeSwitcher() {
           </>
         )}
       </AnimatePresence>
+        </>
+      ) : (
+        <div className="w-10 h-10" />
+      )}
     </div>
   )
 }

@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import '../styles/globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import { NotificationProvider } from '@/components/layout/NotificationSystem'
-import ThemeProvider from '@/components/layout/ThemeProvider'
+import Providers from '@/components/layout/Providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import StructuredData from '@/components/StructuredData'
 import SkipToContent from '@/components/ui/SkipToContent'
@@ -88,21 +87,19 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body className="antialiased" suppressHydrationWarning>
-        <ThemeProvider>
-          <NotificationProvider>
-            <ErrorBoundary>
-              <SkipToContent />
-              <Navbar />
-              <main id="main-content">
-                {children}
-              </main>
-              <Footer />
-              <AccountPromptPopup />
-              <BackToTop />
-              <KeyboardShortcuts />
-            </ErrorBoundary>
-          </NotificationProvider>
-        </ThemeProvider>
+        <Providers>
+          <ErrorBoundary>
+            <SkipToContent />
+            <Navbar />
+            <main id="main-content">
+              {children}
+            </main>
+            <Footer />
+            <AccountPromptPopup />
+            <BackToTop />
+            <KeyboardShortcuts />
+          </ErrorBoundary>
+        </Providers>
       </body>
     </html>
   )
