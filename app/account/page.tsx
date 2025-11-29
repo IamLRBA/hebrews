@@ -19,6 +19,7 @@ export default function AccountPage() {
   const [showEditProfile, setShowEditProfile] = useState(false)
   const [profileImage, setProfileImage] = useState<string>('')
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
+  const [showBackButton, setShowBackButton] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -45,6 +46,23 @@ export default function AccountPage() {
     window.addEventListener('authStateChanged', handleAuthChange)
     return () => window.removeEventListener('authStateChanged', handleAuthChange)
   }, [router])
+
+  // Show/hide back button based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      // Show button when at top (within 100px), hide when scrolled down
+      setShowBackButton(scrollTop < 100)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Check initial position
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  if (!user) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+  }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -102,25 +120,6 @@ export default function AccountPage() {
       alert('Thank you for your review! It will appear on the homepage testimonials.')
     }
   }
-
-  if (!user) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
-  }
-
-  const [showBackButton, setShowBackButton] = useState(true)
-
-  // Show/hide back button based on scroll position
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop
-      // Show button when at top (within 100px), hide when scrolled down
-      setShowBackButton(scrollTop < 100)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    handleScroll() // Check initial position
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   return (
     <div className="min-h-screen bg-unified pt-24 pb-20">

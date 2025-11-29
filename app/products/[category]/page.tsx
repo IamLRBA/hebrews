@@ -450,11 +450,11 @@ export default function ProductCategoryPage() {
                     <p className="text-primary-300 dark:text-primary-400 text-xs sm:text-sm mb-1 line-clamp-1">{product.brand}</p>
                     <h3 className="text-sm sm:text-base md:text-lg font-bold text-neutral-850 dark:text-primary-50 mb-1 sm:mb-2 line-clamp-2">{product.name}</h3>
                     <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2 flex-wrap">
-                      <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary-400 dark:text-primary-300">
+                      <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary-600 dark:text-primary-300">
                         UGX {product.price_ugx.toLocaleString()}
                       </span>
                       {product.original_price && (
-                        <span className="text-xs sm:text-sm text-primary-400/50 dark:text-primary-500/50 line-through">
+                        <span className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 line-through">
                           UGX {product.original_price.toLocaleString()}
                         </span>
                       )}
@@ -578,7 +578,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 sm:p-4"
+      className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
       onClick={onClose}
     >
       <style jsx>{`
@@ -586,25 +586,37 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           width: 6px;
         }
         .modal-scroll::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.25);
+          background: rgba(111, 78, 55, 0.3);
           border-radius: 9999px;
         }
         .modal-scroll::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(111, 78, 55, 0.1);
           border-radius: 9999px;
+        }
+        .dark .modal-scroll::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.25);
+        }
+        .dark .modal-scroll::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
         }
         .thumbnail-row::-webkit-scrollbar {
           height: 4px;
           border-radius: 9999px;
         }
         .thumbnail-row::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.25);
+          background: rgba(111, 78, 55, 0.3);
           border-radius: 9999px;
           border: none;
         }
         .thumbnail-row::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(111, 78, 55, 0.1);
           border-radius: 9999px;
+        }
+        .dark .thumbnail-row::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.25);
+        }
+        .dark .thumbnail-row::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
         }
       `}</style>
       <motion.div
@@ -612,24 +624,25 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md sm:max-w-3xl md:max-w-5xl bg-primary-800/95 rounded-2xl shadow-2xl overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh] modal-scroll"
-        style={{ scrollbarWidth: 'thin', border: '1px solid rgba(255, 255, 255, 0.2)' }}
+        className="relative w-full max-w-md sm:max-w-3xl md:max-w-5xl bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl overflow-y-auto max-h-[70vh] sm:max-h-[80vh] md:max-h-[85vh] modal-scroll border border-neutral-200 dark:border-neutral-700"
       >
         {/* Close Button */}
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ rotate: 180, scale: 0.95 }}
           onClick={onClose}
-          className="absolute top-0.2 right-1 z-20 p-2 text-white/80 hover:text-white transition-colors duration-200 w-fit"
+          className="absolute top-0.2 right-1 z-20 p-0 w-fit"
           aria-label="Close modal"
         >
-          <X className="w-6 h-6" />
+          <div className="w-8 h-8 flex items-center justify-center rounded-full border border-neutral-600 dark:border-white/80 hover:border-neutral-900 dark:hover:border-white transition-colors duration-200">
+            <X className="w-4 h-4 text-neutral-600 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white transition-colors duration-200" />
+          </div>
         </motion.button>
 
         <div className="flex flex-col md:grid md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-5 sm:gap-6 md:gap-10 pt-10 sm:pt-8 md:pt-6 px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 md:pb-8">
           {/* Image Gallery */}
           <div className="flex-shrink-0 flex flex-col space-y-4">
-            <div className="relative h-72 sm:h-80 md:h-[24rem] bg-primary-900/20 rounded-lg overflow-hidden group">
+            <div className="relative h-72 sm:h-80 md:h-[24rem] bg-neutral-100 dark:bg-primary-900/20 rounded-lg overflow-hidden group">
               <img
                 src={product.images[currentImageIndex] || '/assets/images/placeholder.jpg'}
                 alt={product.name}
@@ -640,7 +653,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={isFullscreen ? closeFullscreen : openFullscreen}
-                  className="absolute top-4 right-4 p-2 text-white/80 hover:text-white opacity-0 group-hover:opacity-100 transition-all"
+                  className="absolute top-4 right-4 p-2 text-neutral-700 dark:text-white/80 hover:text-neutral-900 dark:hover:text-white opacity-0 group-hover:opacity-100 transition-all bg-white/80 dark:bg-black/40 rounded-lg"
                   aria-label="Fullscreen"
                 >
                   {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
@@ -671,7 +684,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
                       className={`flex-shrink-0 h-16 w-16 sm:h-20 sm:w-20 md:h-[5.5rem] md:w-[5.5rem] rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                        currentImageIndex === index ? 'border-primary-500 scale-105' : 'border-transparent hover:border-primary-300'
+                        currentImageIndex === index ? 'border-primary-600 dark:border-primary-500 scale-105' : 'border-transparent hover:border-primary-400 dark:hover:border-primary-300'
                       }`}
                     >
                       <img src={img} alt={`${product.name} ${index + 1}`} className="w-full h-full object-cover" />
@@ -698,30 +711,30 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
           <div className="flex flex-col">
             <div className="space-y-4">
               <div>
-                <p className="text-primary-300 dark:text-primary-400 text-sm mb-1">{product.brand} • {product.sku}</p>
-                <h2 className="text-3xl font-bold text-neutral-850 dark:text-primary-50 mb-1">{product.name}</h2>
+                <p className="text-neutral-600 dark:text-primary-400 text-sm mb-1">{product.brand} • {product.sku}</p>
+                <h2 className="text-3xl font-bold text-neutral-900 dark:text-primary-50 mb-1">{product.name}</h2>
                 <div className="flex items-center flex-wrap gap-2 mb-3">
-                  <span className="text-3xl font-bold text-primary-400 dark:text-primary-300">
+                  <span className="text-3xl font-bold text-primary-600 dark:text-primary-300">
                     UGX {product.price_ugx.toLocaleString()}
                   </span>
                   {product.original_price && (
-                    <span className="text-lg text-primary-400/50 dark:text-primary-500/50 line-through">
+                    <span className="text-lg text-neutral-600 dark:text-neutral-400 line-through">
                       UGX {product.original_price.toLocaleString()}
                     </span>
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="px-3 py-1 bg-primary-500/30 dark:bg-primary-600/30 text-primary-200 dark:text-primary-300 text-sm rounded-full">
+                  <span className="px-3 py-1 bg-primary-100 dark:bg-primary-600/30 text-primary-700 dark:text-primary-300 text-sm rounded-full">
                     {product.condition}
                   </span>
                 </div>
               </div>
 
-              <p className="text-primary-200 dark:text-primary-300 leading-relaxed">{product.description}</p>
+              <p className="text-neutral-700 dark:text-primary-300 leading-relaxed">{product.description}</p>
 
               {/* Size Display */}
               {(productSize || productColor) && (
-                <div className="flex flex-wrap items-center gap-4 text-primary-200 dark:text-primary-300">
+                <div className="flex flex-wrap items-center gap-4 text-neutral-700 dark:text-primary-300">
                   {productSize && (
                     <div className="flex items-center gap-2">
                       <span className="font-medium">Size:</span>
@@ -733,7 +746,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
                   {productColor && (
                     <div className="flex items-center gap-2">
                       <span className="font-medium">Color:</span>
-                      <span className="px-3 py-1 rounded-lg bg-primary-700/30">
+                      <span className="px-3 py-1 rounded-lg bg-primary-100 dark:bg-neutral-700 text-primary-700 dark:text-neutral-300">
                         {productColor}
                       </span>
                     </div>
@@ -743,7 +756,7 @@ function ProductModal({ product, onClose }: { product: Product; onClose: () => v
             </div>
 
             {/* Add to Cart Button */}
-            <div className="pt-5 mt-5 border-t border-primary-600/40">
+            <div className="pt-5 mt-5 border-t border-neutral-200 dark:border-primary-600/40">
               <button
                 onClick={addToCart}
                 disabled={isAddingToCart || addedToCart || isInCart || product.stock_qty === 0}

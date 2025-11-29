@@ -92,8 +92,6 @@ export default function SettingsDropdown() {
     router.push('/')
   }
 
-  if (!mounted) return null
-
   const themes = [
     { value: 'light' as const, label: 'Light', icon: Sun, description: 'Bright and clean interface' },
     { value: 'dark' as const, label: 'Dark', icon: Moon, description: 'Easy on the eyes' },
@@ -102,25 +100,27 @@ export default function SettingsDropdown() {
 
   return (
     <div className="relative">
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleToggle}
-        className="w-10 h-10 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center"
-        aria-label="Settings"
-        aria-expanded={isOpen}
-      >
-        <motion.div
-          animate={{ rotate: rotation }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="flex items-center justify-center w-5 h-5"
-          style={{ transformOrigin: 'center center' }}
-        >
-          <Settings className="w-5 h-5" />
-        </motion.div>
-      </motion.button>
+      {mounted ? (
+        <>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleToggle}
+            className="w-10 h-10 text-neutral-600 dark:text-neutral-400 hover:text-primary-700 dark:hover:text-primary-300 transition-all duration-200 flex items-center justify-center"
+            aria-label="Settings"
+            aria-expanded={isOpen}
+          >
+            <motion.div
+              animate={{ rotate: rotation }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="flex items-center justify-center w-5 h-5"
+              style={{ transformOrigin: 'center center' }}
+            >
+              <Settings className="w-5 h-5" />
+            </motion.div>
+          </motion.button>
 
-      <AnimatePresence>
+          <AnimatePresence>
         {isOpen && (
           <>
             <motion.div
@@ -233,6 +233,10 @@ export default function SettingsDropdown() {
           </>
         )}
       </AnimatePresence>
+        </>
+      ) : (
+        <div className="w-10 h-10" />
+      )}
     </div>
   )
 }
