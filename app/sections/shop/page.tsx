@@ -526,7 +526,7 @@ export default function ShopPage() {
           className="max-w-7xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-500 dark:text-primary-100">ᔕEᖇᐯIᑕEᔕ</span>{' '}
+            <span className="text-primary-500 dark:text-primary-100">HEBREWS</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Video Gallery</span>{' '}
           </h2>
           <FashionVideoSection />
