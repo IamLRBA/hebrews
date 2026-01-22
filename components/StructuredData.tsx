@@ -2,10 +2,10 @@ export default function StructuredData() {
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'MysticalPIECES',
+    name: 'Cafe Hebrews',
     url: 'https://mysticalpieces.com',
     logo: 'https://mysticalpieces.com/assets/images/logo.png',
-    description: 'Futuristic thrift fashion curated for seekers of intuitive style, conscious elegance, and modern connection.',
+    description: 'A luxury destination cafe offering exquisite culinary experiences, artisanal beverages, and refined atmosphere where every moment is crafted with elegance and sophistication.',
     sameAs: [
       'https://www.instagram.com/mysticalpieces',
       'https://www.facebook.com/mysticalpieces',
@@ -21,7 +21,7 @@ export default function StructuredData() {
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'MysticalPIECES',
+    name: 'Cafe Hebrews',
     url: 'https://mysticalpieces.com',
     potentialAction: {
       '@type': 'SearchAction',
@@ -35,12 +35,12 @@ export default function StructuredData() {
 
   const storeSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Store',
-    name: 'MysticalPIECES',
+    '@type': 'Restaurant',
+    name: 'Cafe Hebrews',
     image: 'https://mysticalpieces.com/assets/images/og-image.jpg',
-    description: 'Futuristic thrift fashion curated for seekers of intuitive style, conscious elegance, and modern connection.',
+    description: 'A luxury destination cafe offering exquisite culinary experiences, artisanal beverages, and refined atmosphere where every moment is crafted with elegance and sophistication.',
     url: 'https://mysticalpieces.com',
-    priceRange: '$$',
+    priceRange: '$$$',
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'US',

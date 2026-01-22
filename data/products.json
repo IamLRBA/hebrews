@@ -1,540 +1,1212 @@
 {
   "products": {
-    "shirts": {
-      "title": "Shirts",
-      "description": "Discover our collection of elegant and versatile shirts, from classic button-downs to modern casual styles.",
+    "barista": {
+      "title": "Barista",
+      "description": "Discover our premium coffee and beverage selection, from expertly crafted hot drinks to refreshing cold creations. Customize with milk types and strength options.",
       "subcategories": {
-        "gentle": [
+        "hot": [
           {
-            "id": "shirt-gentle-1",
-            "name": "Classic White Shirt",
-            "brand": "FusionCRAFT",
-            "category": "shirts",
-            "section": "gentle",
-            "price_ugx": 45000,
-            "original_price": 60000,
-            "sizes": ["S", "M", "L", "XL"],
-            "colors": ["White", "Ivory"],
+            "id": "barista-hot-1",
+            "name": "Espresso",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "hot",
+            "price_ugx": 8000,
+            "original_price": 10000,
+            "sizes": ["Single", "Double"],
+            "colors": ["Standard"],
             "images": [
-              "/assets/images/products/shirts/gentle/1.jpg",
-              "/assets/images/products/shirts/gentle/1-2.jpg"
+              "/assets/images/products/barista/hot/espresso.jpg"
             ],
-            "description": "A timeless white shirt perfect for business and casual occasions. Made from premium cotton blend.",
-            "condition": "Like New",
-            "sku": "SRT-GNT-001",
-            "stock_qty": 5
+            "description": "Rich and bold espresso shot, perfect base for all coffee drinks. Choose single or double strength.",
+            "condition": "Fresh",
+            "sku": "BRT-HOT-001",
+            "stock_qty": 999
           },
           {
-            "id": "shirt-gentle-2",
-            "name": "Silk Blend Shirt",
-            "brand": "Thrifted",
-            "category": "shirts",
-            "section": "gentle",
-            "price_ugx": 55000,
-            "original_price": 80000,
-            "sizes": ["M", "L"],
-            "colors": ["Beige", "Cream"],
+            "id": "barista-hot-2",
+            "name": "Cappuccino",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "hot",
+            "price_ugx": 12000,
+            "original_price": 15000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
             "images": [
-              "/assets/images/products/shirts/gentle/2.jpg"
+              "/assets/images/products/barista/hot/cappuccino.jpg"
             ],
-            "description": "Luxurious silk blend shirt with elegant finish. Perfect for special occasions.",
-            "condition": "Good",
-            "sku": "SRT-GNT-002",
-            "stock_qty": 3
+            "description": "Classic cappuccino with perfectly steamed milk foam. Choose your preferred milk type.",
+            "condition": "Fresh",
+            "sku": "BRT-HOT-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-hot-3",
+            "name": "Latte",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "hot",
+            "price_ugx": 13000,
+            "original_price": 16000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
+            "images": [
+              "/assets/images/products/barista/hot/latte.jpg"
+            ],
+            "description": "Smooth and creamy latte with silky steamed milk. Available in multiple milk options.",
+            "condition": "Fresh",
+            "sku": "BRT-HOT-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-hot-4",
+            "name": "Americano",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "hot",
+            "price_ugx": 10000,
+            "original_price": 12000,
+            "sizes": ["Single", "Double"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/barista/hot/americano.jpg"
+            ],
+            "description": "Bold espresso with hot water. Choose single or double shot strength.",
+            "condition": "Fresh",
+            "sku": "BRT-HOT-004",
+            "stock_qty": 999
           }
         ],
-        "checked": [
+        "cold": [
           {
-            "id": "shirt-checked-1",
-            "name": "Red Check Shirt",
-            "brand": "Thrifted",
-            "category": "shirts",
-            "section": "checked",
-            "price_ugx": 35000,
-            "original_price": 50000,
-            "sizes": ["S", "M", "L"],
-            "colors": ["Red/White", "Red/Blue"],
+            "id": "barista-cold-1",
+            "name": "Iced Coffee",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "cold",
+            "price_ugx": 12000,
+            "original_price": 15000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
             "images": [
-              "/assets/images/products/shirts/checked/1.jpg"
+              "/assets/images/products/barista/cold/iced-coffee.jpg"
             ],
-            "description": "Classic checked shirt in vibrant red. Great for casual and semi-formal wear.",
-            "condition": "Like New",
-            "sku": "SRT-CHK-001",
-            "stock_qty": 7
+            "description": "Refreshing iced coffee served over ice. Perfect for warm days.",
+            "condition": "Fresh",
+            "sku": "BRT-CLD-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-cold-2",
+            "name": "Cold Brew",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "cold",
+            "price_ugx": 14000,
+            "original_price": 17000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
+            "images": [
+              "/assets/images/products/barista/cold/cold-brew.jpg"
+            ],
+            "description": "Smooth cold brew coffee, steeped for 24 hours for maximum flavor.",
+            "condition": "Fresh",
+            "sku": "BRT-CLD-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-cold-3",
+            "name": "Iced Latte",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "cold",
+            "price_ugx": 13000,
+            "original_price": 16000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
+            "images": [
+              "/assets/images/products/barista/cold/iced-latte.jpg"
+            ],
+            "description": "Creamy iced latte with your choice of milk, served over ice.",
+            "condition": "Fresh",
+            "sku": "BRT-CLD-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-cold-4",
+            "name": "Frappé",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "cold",
+            "price_ugx": 15000,
+            "original_price": 18000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
+            "images": [
+              "/assets/images/products/barista/cold/frappe.jpg"
+            ],
+            "description": "Blended coffee frappé with ice, perfect for a refreshing treat.",
+            "condition": "Fresh",
+            "sku": "BRT-CLD-004",
+            "stock_qty": 999
           }
         ],
-        "textured": [
+        "specialty": [
           {
-            "id": "shirt-textured-1",
-            "name": "Linen Textured Shirt",
-            "brand": "FusionCRAFT",
-            "category": "shirts",
-            "section": "textured",
-            "price_ugx": 40000,
-            "original_price": 60000,
-            "sizes": ["M", "L", "XL"],
-            "colors": ["Tan", "Olive"],
+            "id": "barista-specialty-1",
+            "name": "Flat White",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "specialty",
+            "price_ugx": 14000,
+            "original_price": 17000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
             "images": [
-              "/assets/images/products/shirts/textured/1.jpg"
+              "/assets/images/products/barista/specialty/flat-white.jpg"
             ],
-            "description": "Breathable linen shirt with textured finish. Perfect for warm weather.",
-            "condition": "Like New",
-            "sku": "SRT-TXT-001",
-            "stock_qty": 4
+            "description": "Rich double shot espresso with microfoam milk. Australian-style perfection.",
+            "condition": "Fresh",
+            "sku": "BRT-SPC-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-specialty-2",
+            "name": "Mocha",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "specialty",
+            "price_ugx": 15000,
+            "original_price": 18000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
+            "images": [
+              "/assets/images/products/barista/specialty/mocha.jpg"
+            ],
+            "description": "Espresso with rich chocolate and steamed milk. A decadent treat.",
+            "condition": "Fresh",
+            "sku": "BRT-SPC-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-specialty-3",
+            "name": "Macchiato",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "specialty",
+            "price_ugx": 12000,
+            "original_price": 15000,
+            "sizes": ["Single", "Double"],
+            "colors": ["Dairy", "Almond", "Soy"],
+            "images": [
+              "/assets/images/products/barista/specialty/macchiato.jpg"
+            ],
+            "description": "Espresso marked with a dollop of steamed milk foam.",
+            "condition": "Fresh",
+            "sku": "BRT-SPC-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-specialty-4",
+            "name": "Affogato",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "specialty",
+            "price_ugx": 18000,
+            "original_price": 22000,
+            "sizes": ["Standard"],
+            "colors": ["Vanilla"],
+            "images": [
+              "/assets/images/products/barista/specialty/affogato.jpg"
+            ],
+            "description": "Espresso poured over vanilla gelato. A perfect dessert coffee.",
+            "condition": "Fresh",
+            "sku": "BRT-SPC-004",
+            "stock_qty": 999
           }
         ],
-        "denim": [
+        "tea": [
           {
-            "id": "shirt-denim-1",
-            "name": "Classic Denim Shirt",
-            "brand": "Thrifted",
-            "category": "shirts",
-            "section": "denim",
-            "price_ugx": 45000,
-            "original_price": 65000,
-            "sizes": ["S", "M", "L"],
-            "colors": ["Light Blue", "Medium Blue"],
+            "id": "barista-tea-1",
+            "name": "English Breakfast Tea",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "tea",
+            "price_ugx": 8000,
+            "original_price": 10000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Standard"],
             "images": [
-              "/assets/images/products/shirts/denim/1.jpg"
+              "/assets/images/products/barista/tea/english-breakfast.jpg"
             ],
-            "description": "Durable denim shirt with timeless style. Perfect for casual outings.",
-            "condition": "Good",
-            "sku": "SRT-DNM-001",
-            "stock_qty": 6
+            "description": "Classic English breakfast tea, robust and full-bodied.",
+            "condition": "Fresh",
+            "sku": "BRT-TEA-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-tea-2",
+            "name": "Green Tea",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "tea",
+            "price_ugx": 8000,
+            "original_price": 10000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/barista/tea/green-tea.jpg"
+            ],
+            "description": "Premium green tea, light and refreshing with health benefits.",
+            "condition": "Fresh",
+            "sku": "BRT-TEA-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-tea-3",
+            "name": "Chai Latte",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "tea",
+            "price_ugx": 12000,
+            "original_price": 15000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Dairy", "Almond", "Soy"],
+            "images": [
+              "/assets/images/products/barista/tea/chai-latte.jpg"
+            ],
+            "description": "Spiced chai tea with steamed milk. Warm and comforting.",
+            "condition": "Fresh",
+            "sku": "BRT-TEA-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "barista-tea-4",
+            "name": "Herbal Tea Selection",
+            "brand": "Cafe Hebrews",
+            "category": "barista",
+            "section": "tea",
+            "price_ugx": 9000,
+            "original_price": 11000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Chamomile", "Peppermint", "Rooibos"],
+            "images": [
+              "/assets/images/products/barista/tea/herbal-tea.jpg"
+            ],
+            "description": "Selection of premium herbal teas. Choose from chamomile, peppermint, or rooibos.",
+            "condition": "Fresh",
+            "sku": "BRT-TEA-004",
+            "stock_qty": 999
           }
         ]
       }
     },
-    "tees": {
-      "title": "Tees",
-      "description": "Comfortable and stylish t-shirts in various designs, materials, and fits.",
+    "bar": {
+      "title": "Bar",
+      "description": "Indulge in our curated selection of cocktails and wines. Each drink crafted with precision, with options for no-sugar cocktails and premium wine pairings.",
       "subcategories": {
-        "plain": [
+        "cocktails": [
           {
-            "id": "tee-plain-1",
-            "name": "Basic White Tee",
-            "brand": "FusionCRAFT",
-            "category": "tees",
-            "section": "plain",
+            "id": "bar-cocktails-1",
+            "name": "Classic Mojito",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "cocktails",
+            "price_ugx": 25000,
+            "original_price": 30000,
+            "sizes": ["Standard"],
+            "colors": ["With Sugar", "No Sugar"],
+            "images": [
+              "/assets/images/products/bar/cocktails/mojito.jpg"
+            ],
+            "description": "Refreshing mint and lime cocktail. Available with or without sugar.",
+            "condition": "Fresh",
+            "sku": "BAR-CTL-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-cocktails-2",
+            "name": "Old Fashioned",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "cocktails",
+            "price_ugx": 28000,
+            "original_price": 35000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bar/cocktails/old-fashioned.jpg"
+            ],
+            "description": "Classic whiskey cocktail with bitters and orange twist.",
+            "condition": "Fresh",
+            "sku": "BAR-CTL-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-cocktails-3",
+            "name": "Margarita",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "cocktails",
+            "price_ugx": 26000,
+            "original_price": 32000,
+            "sizes": ["Standard"],
+            "colors": ["With Sugar", "No Sugar"],
+            "images": [
+              "/assets/images/products/bar/cocktails/margarita.jpg"
+            ],
+            "description": "Tequila-based cocktail with lime. Available with or without sugar.",
+            "condition": "Fresh",
+            "sku": "BAR-CTL-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-cocktails-4",
+            "name": "Cosmopolitan",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "cocktails",
+            "price_ugx": 27000,
+            "original_price": 33000,
+            "sizes": ["Standard"],
+            "colors": ["With Sugar", "No Sugar"],
+            "images": [
+              "/assets/images/products/bar/cocktails/cosmopolitan.jpg"
+            ],
+            "description": "Vodka, cranberry, and lime cocktail. Available with or without sugar.",
+            "condition": "Fresh",
+            "sku": "BAR-CTL-004",
+            "stock_qty": 999
+          }
+        ],
+        "wines": [
+          {
+            "id": "bar-wines-1",
+            "name": "House Red Wine",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "wines",
+            "price_ugx": 35000,
+            "original_price": 45000,
+            "sizes": ["Glass", "Bottle"],
+            "colors": ["Red"],
+            "images": [
+              "/assets/images/products/bar/wines/red-wine.jpg"
+            ],
+            "description": "Premium house red wine, perfect for pairing with meals.",
+            "condition": "Premium",
+            "sku": "BAR-WIN-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-wines-2",
+            "name": "House White Wine",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "wines",
+            "price_ugx": 35000,
+            "original_price": 45000,
+            "sizes": ["Glass", "Bottle"],
+            "colors": ["White"],
+            "images": [
+              "/assets/images/products/bar/wines/white-wine.jpg"
+            ],
+            "description": "Crisp house white wine, refreshing and elegant.",
+            "condition": "Premium",
+            "sku": "BAR-WIN-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-wines-3",
+            "name": "Rosé Wine",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "wines",
+            "price_ugx": 38000,
+            "original_price": 48000,
+            "sizes": ["Glass", "Bottle"],
+            "colors": ["Rosé"],
+            "images": [
+              "/assets/images/products/bar/wines/rose-wine.jpg"
+            ],
+            "description": "Delicate rosé wine, perfect for any occasion.",
+            "condition": "Premium",
+            "sku": "BAR-WIN-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-wines-4",
+            "name": "Sparkling Wine",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "wines",
+            "price_ugx": 45000,
+            "original_price": 55000,
+            "sizes": ["Glass", "Bottle"],
+            "colors": ["Sparkling"],
+            "images": [
+              "/assets/images/products/bar/wines/sparkling-wine.jpg"
+            ],
+            "description": "Elegant sparkling wine for celebrations and special moments.",
+            "condition": "Premium",
+            "sku": "BAR-WIN-004",
+            "stock_qty": 999
+          }
+        ],
+        "spirits": [
+          {
+            "id": "bar-spirits-1",
+            "name": "Premium Whiskey",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "spirits",
+            "price_ugx": 40000,
+            "original_price": 50000,
+            "sizes": ["Single", "Double"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bar/spirits/whiskey.jpg"
+            ],
+            "description": "Premium aged whiskey, served neat or on the rocks.",
+            "condition": "Premium",
+            "sku": "BAR-SPR-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-spirits-2",
+            "name": "Premium Gin",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "spirits",
+            "price_ugx": 35000,
+            "original_price": 45000,
+            "sizes": ["Single", "Double"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bar/spirits/gin.jpg"
+            ],
+            "description": "Premium gin, perfect for cocktails or with tonic.",
+            "condition": "Premium",
+            "sku": "BAR-SPR-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-spirits-3",
+            "name": "Premium Vodka",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "spirits",
+            "price_ugx": 35000,
+            "original_price": 45000,
+            "sizes": ["Single", "Double"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bar/spirits/vodka.jpg"
+            ],
+            "description": "Smooth premium vodka, served chilled or in cocktails.",
+            "condition": "Premium",
+            "sku": "BAR-SPR-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-spirits-4",
+            "name": "Premium Rum",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "spirits",
+            "price_ugx": 38000,
+            "original_price": 48000,
+            "sizes": ["Single", "Double"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bar/spirits/rum.jpg"
+            ],
+            "description": "Aged premium rum, rich and smooth.",
+            "condition": "Premium",
+            "sku": "BAR-SPR-004",
+            "stock_qty": 999
+          }
+        ],
+        "signature": [
+          {
+            "id": "bar-signature-1",
+            "name": "Hebrews Special",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "signature",
+            "price_ugx": 30000,
+            "original_price": 38000,
+            "sizes": ["Standard"],
+            "colors": ["With Sugar", "No Sugar"],
+            "images": [
+              "/assets/images/products/bar/signature/hebrews-special.jpg"
+            ],
+            "description": "Our signature cocktail, a unique blend of premium spirits and house-made ingredients.",
+            "condition": "Fresh",
+            "sku": "BAR-SIG-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-signature-2",
+            "name": "Tropical Breeze",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "signature",
+            "price_ugx": 28000,
+            "original_price": 35000,
+            "sizes": ["Standard"],
+            "colors": ["With Sugar", "No Sugar"],
+            "images": [
+              "/assets/images/products/bar/signature/tropical-breeze.jpg"
+            ],
+            "description": "Refreshing tropical cocktail with exotic fruits. Available with or without sugar.",
+            "condition": "Fresh",
+            "sku": "BAR-SIG-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-signature-3",
+            "name": "Sunset Spritz",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "signature",
+            "price_ugx": 26000,
+            "original_price": 32000,
+            "sizes": ["Standard"],
+            "colors": ["With Sugar", "No Sugar"],
+            "images": [
+              "/assets/images/products/bar/signature/sunset-spritz.jpg"
+            ],
+            "description": "Light and bubbly signature spritz, perfect for evening relaxation.",
+            "condition": "Fresh",
+            "sku": "BAR-SIG-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "bar-signature-4",
+            "name": "Luxury Martini",
+            "brand": "Cafe Hebrews",
+            "category": "bar",
+            "section": "signature",
+            "price_ugx": 32000,
+            "original_price": 40000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bar/signature/luxury-martini.jpg"
+            ],
+            "description": "Sophisticated martini with premium ingredients, shaken to perfection.",
+            "condition": "Fresh",
+            "sku": "BAR-SIG-004",
+            "stock_qty": 999
+          }
+        ]
+      }
+    },
+    "kitchen": {
+      "title": "Kitchen",
+      "description": "Savor our expertly prepared dishes from the grill, breakfast favorites, and main courses. Customize steaks with temperature, sauce, and side options.",
+      "subcategories": {
+        "grill": [
+          {
+            "id": "kitchen-grill-1",
+            "name": "Premium Ribeye Steak",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "grill",
+            "price_ugx": 65000,
+            "original_price": 80000,
+            "sizes": ["250g", "350g", "500g"],
+            "colors": ["Rare", "Medium", "Well Done"],
+            "images": [
+              "/assets/images/products/kitchen/grill/ribeye-steak.jpg"
+            ],
+            "description": "Premium ribeye steak, perfectly grilled. Choose temperature (Rare/Medium/Well Done), sauce (Mushroom/Pepper), and side (Fries/Rice).",
+            "condition": "Fresh",
+            "sku": "KTC-GRL-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-grill-2",
+            "name": "Grilled Chicken Breast",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "grill",
+            "price_ugx": 35000,
+            "original_price": 45000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/grill/grilled-chicken.jpg"
+            ],
+            "description": "Tender grilled chicken breast, marinated to perfection. Served with your choice of sauce and side.",
+            "condition": "Fresh",
+            "sku": "KTC-GRL-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-grill-3",
+            "name": "Grilled Fish Fillet",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "grill",
+            "price_ugx": 40000,
+            "original_price": 50000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/grill/grilled-fish.jpg"
+            ],
+            "description": "Fresh fish fillet, grilled to perfection with herbs and lemon.",
+            "condition": "Fresh",
+            "sku": "KTC-GRL-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-grill-4",
+            "name": "Grilled Lamb Chops",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "grill",
+            "price_ugx": 55000,
+            "original_price": 70000,
+            "sizes": ["3 Pieces", "5 Pieces"],
+            "colors": ["Medium", "Well Done"],
+            "images": [
+              "/assets/images/products/kitchen/grill/lamb-chops.jpg"
+            ],
+            "description": "Tender lamb chops, grilled with aromatic herbs. Choose temperature and sauce.",
+            "condition": "Fresh",
+            "sku": "KTC-GRL-004",
+            "stock_qty": 999
+          }
+        ],
+        "breakfast": [
+          {
+            "id": "kitchen-breakfast-1",
+            "name": "Full English Breakfast",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "breakfast",
+            "price_ugx": 28000,
+            "original_price": 35000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/breakfast/full-english.jpg"
+            ],
+            "description": "Complete breakfast with eggs, bacon, sausage, beans, toast, and tomatoes.",
+            "condition": "Fresh",
+            "sku": "KTC-BKF-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-breakfast-2",
+            "name": "Rolex (Breakfast Wrap)",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "breakfast",
+            "price_ugx": 12000,
+            "original_price": 15000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/breakfast/rolex.jpg"
+            ],
+            "description": "Ugandan favorite - chapati wrap with eggs, vegetables, and optional meat. Available in breakfast combo with coffee.",
+            "condition": "Fresh",
+            "sku": "KTC-BKF-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-breakfast-3",
+            "name": "Avocado Toast",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "breakfast",
+            "price_ugx": 18000,
+            "original_price": 22000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/breakfast/avocado-toast.jpg"
+            ],
+            "description": "Sourdough toast topped with fresh avocado, poached eggs, and cherry tomatoes.",
+            "condition": "Fresh",
+            "sku": "KTC-BKF-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-breakfast-4",
+            "name": "Pancake Stack",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "breakfast",
+            "price_ugx": 20000,
+            "original_price": 25000,
+            "sizes": ["3 Pancakes", "5 Pancakes"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/breakfast/pancakes.jpg"
+            ],
+            "description": "Fluffy pancakes served with maple syrup, butter, and fresh berries.",
+            "condition": "Fresh",
+            "sku": "KTC-BKF-004",
+            "stock_qty": 999
+          }
+        ],
+        "mains": [
+          {
+            "id": "kitchen-mains-1",
+            "name": "Beef Stroganoff",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "mains",
+            "price_ugx": 45000,
+            "original_price": 55000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/mains/beef-stroganoff.jpg"
+            ],
+            "description": "Tender beef in rich creamy sauce, served with rice or pasta.",
+            "condition": "Fresh",
+            "sku": "KTC-MNS-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-mains-2",
+            "name": "Grilled Chicken Pasta",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "mains",
+            "price_ugx": 38000,
+            "original_price": 48000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/mains/chicken-pasta.jpg"
+            ],
+            "description": "Creamy pasta with grilled chicken, mushrooms, and herbs.",
+            "condition": "Fresh",
+            "sku": "KTC-MNS-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-mains-3",
+            "name": "Vegetarian Curry",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "mains",
+            "price_ugx": 32000,
+            "original_price": 40000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/mains/vegetarian-curry.jpg"
+            ],
+            "description": "Rich and flavorful vegetable curry, served with basmati rice or naan.",
+            "condition": "Fresh",
+            "sku": "KTC-MNS-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-mains-4",
+            "name": "Fish and Chips",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "mains",
+            "price_ugx": 35000,
+            "original_price": 45000,
+            "sizes": ["Regular", "Large"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/kitchen/mains/fish-chips.jpg"
+            ],
+            "description": "Beer-battered fish with crispy chips, served with tartar sauce and lemon.",
+            "condition": "Fresh",
+            "sku": "KTC-MNS-004",
+            "stock_qty": 999
+          }
+        ],
+        "specials": [
+          {
+            "id": "kitchen-specials-1",
+            "name": "Chef's Special of the Day",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "specials",
+            "price_ugx": 50000,
+            "original_price": 60000,
+            "sizes": ["Standard"],
+            "colors": ["Daily Special"],
+            "images": [
+              "/assets/images/products/kitchen/specials/chef-special.jpg"
+            ],
+            "description": "Our chef's daily creation, featuring seasonal ingredients and innovative flavors.",
+            "condition": "Fresh",
+            "sku": "KTC-SPL-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-specials-2",
+            "name": "Happy Hour Special (5pm-7pm)",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "specials",
             "price_ugx": 25000,
             "original_price": 35000,
-            "sizes": ["S", "M", "L", "XL"],
-            "colors": ["White", "Black", "Navy"],
+            "sizes": ["Standard"],
+            "colors": ["Happy Hour"],
             "images": [
-              "/assets/images/products/tees/plain/1.jpg"
+              "/assets/images/products/kitchen/specials/happy-hour.jpg"
             ],
-            "description": "Essential white t-shirt made from premium cotton. Perfect foundation piece.",
-            "condition": "Like New",
-            "sku": "TEE-PLN-001",
-            "stock_qty": 12
-          }
-        ],
-        "graphic": [
+            "description": "Special pricing available 5pm-7pm daily. Selected items at discounted rates.",
+            "condition": "Fresh",
+            "sku": "KTC-SPL-002",
+            "stock_qty": 999
+          },
           {
-            "id": "tee-graphic-1",
-            "name": "Vintage Band Tee",
-            "brand": "Thrifted",
-            "category": "tees",
-            "section": "graphic",
-            "price_ugx": 35000,
+            "id": "kitchen-specials-3",
+            "name": "Breakfast Combo",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "specials",
+            "price_ugx": 18000,
+            "original_price": 25000,
+            "sizes": ["Standard"],
+            "colors": ["Coffee + Rolex"],
+            "images": [
+              "/assets/images/products/kitchen/specials/breakfast-combo.jpg"
+            ],
+            "description": "Coffee + Rolex combo at a special set price. Perfect morning deal.",
+            "condition": "Fresh",
+            "sku": "KTC-SPL-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "kitchen-specials-4",
+            "name": "Weekend Brunch Special",
+            "brand": "Cafe Hebrews",
+            "category": "kitchen",
+            "section": "specials",
+            "price_ugx": 42000,
             "original_price": 55000,
-            "sizes": ["M", "L"],
-            "colors": ["Black"],
+            "sizes": ["Standard"],
+            "colors": ["Weekend Only"],
             "images": [
-              "/assets/images/products/tees/graphic/1.jpg"
+              "/assets/images/products/kitchen/specials/weekend-brunch.jpg"
             ],
-            "description": "Authentic vintage band t-shirt with retro graphics.",
-            "condition": "Good",
-            "sku": "TEE-GRP-001",
-            "stock_qty": 2
-          }
-        ],
-        "collared": [
-          {
-            "id": "tee-collared-1",
-            "name": "Polo T-Shirt",
-            "brand": "Thrifted",
-            "category": "tees",
-            "section": "collared",
-            "price_ugx": 30000,
-            "original_price": 45000,
-            "sizes": ["S", "M", "L"],
-            "colors": ["Blue", "Green", "Red"],
-            "images": [
-              "/assets/images/products/tees/collared/1.jpg"
-            ],
-            "description": "Classic polo shirt with collar. Perfect for smart casual occasions.",
-            "condition": "Like New",
-            "sku": "TEE-COL-001",
-            "stock_qty": 8
-          }
-        ],
-        "sporty": [
-          {
-            "id": "tee-sporty-1",
-            "name": "Athletic Performance Tee",
-            "brand": "FusionCRAFT",
-            "category": "tees",
-            "section": "sporty",
-            "price_ugx": 35000,
-            "original_price": 50000,
-            "sizes": ["S", "M", "L", "XL"],
-            "colors": ["Navy", "Grey", "Black"],
-            "images": [
-              "/assets/images/products/tees/sporty/1.jpg"
-            ],
-            "description": "Moisture-wicking athletic t-shirt for workouts and sports.",
-            "condition": "Like New",
-            "sku": "TEE-SPT-001",
-            "stock_qty": 10
+            "description": "Special weekend brunch menu with premium selections at discounted rates.",
+            "condition": "Fresh",
+            "sku": "KTC-SPL-004",
+            "stock_qty": 999
           }
         ]
       }
     },
-    "coats": {
-      "title": "OuterWear",
-      "description": "Stylish outerwear to keep you warm and fashionable.",
+    "bakery": {
+      "title": "Bakery",
+      "description": "Delight in our fresh-baked pastries, breads, and confections. Perfect for breakfast combos or as the perfect ending to your dining experience.",
       "subcategories": {
-        "sweater": [
+        "pastries": [
           {
-            "id": "coat-sweater-1",
-            "name": "Cable Knit Sweater",
-            "brand": "Thrifted",
-            "category": "coats",
-            "section": "sweater",
-            "price_ugx": 65000,
-            "original_price": 95000,
-            "sizes": ["M", "L"],
-            "colors": ["Cream", "Navy"],
+            "id": "bakery-pastries-1",
+            "name": "Croissant",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "pastries",
+            "price_ugx": 8000,
+            "original_price": 10000,
+            "sizes": ["Standard"],
+            "colors": ["Plain", "Chocolate", "Almond"],
             "images": [
-              "/assets/images/products/coats/sweater/1.jpg"
+              "/assets/images/products/bakery/pastries/croissant.jpg"
             ],
-            "description": "Warm cable knit sweater perfect for chilly days.",
-            "condition": "Good",
-            "sku": "COT-SWR-001",
-            "stock_qty": 4
+            "description": "Buttery, flaky croissant, baked fresh daily. Available in plain, chocolate, or almond.",
+            "condition": "Fresh",
+            "sku": "BKY-PST-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-pastries-2",
+            "name": "Danish Pastry",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "pastries",
+            "price_ugx": 10000,
+            "original_price": 12000,
+            "sizes": ["Standard"],
+            "colors": ["Apple", "Cherry", "Cheese"],
+            "images": [
+              "/assets/images/products/bakery/pastries/danish.jpg"
+            ],
+            "description": "Sweet Danish pastry with various fillings. Choose from apple, cherry, or cheese.",
+            "condition": "Fresh",
+            "sku": "BKY-PST-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-pastries-3",
+            "name": "Pain au Chocolat",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "pastries",
+            "price_ugx": 9000,
+            "original_price": 11000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bakery/pastries/pain-au-chocolat.jpg"
+            ],
+            "description": "Classic French pastry with rich chocolate filling, baked to perfection.",
+            "condition": "Fresh",
+            "sku": "BKY-PST-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-pastries-4",
+            "name": "Cinnamon Roll",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "pastries",
+            "price_ugx": 12000,
+            "original_price": 15000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bakery/pastries/cinnamon-roll.jpg"
+            ],
+            "description": "Warm cinnamon roll with cream cheese frosting, perfect with coffee.",
+            "condition": "Fresh",
+            "sku": "BKY-PST-004",
+            "stock_qty": 999
           }
         ],
-        "hoodie": [
+        "breads": [
           {
-            "id": "coat-hoodie-1",
-            "name": "Classic Hoodie",
-            "brand": "FusionCRAFT",
-            "category": "coats",
-            "section": "hoodie",
-            "price_ugx": 55000,
-            "original_price": 85000,
-            "sizes": ["S", "M", "L", "XL"],
-            "colors": ["Grey", "Black", "Navy"],
+            "id": "bakery-breads-1",
+            "name": "Sourdough Bread",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "breads",
+            "price_ugx": 15000,
+            "original_price": 18000,
+            "sizes": ["Half Loaf", "Full Loaf"],
+            "colors": ["Standard"],
             "images": [
-              "/assets/images/products/coats/hoodie/1.jpg"
+              "/assets/images/products/bakery/breads/sourdough.jpg"
             ],
-            "description": "Comfortable hoodie with kangaroo pocket and adjustable hood.",
-            "condition": "Like New",
-            "sku": "COT-HOO-001",
-            "stock_qty": 9
+            "description": "Artisan sourdough bread, naturally leavened and baked fresh daily.",
+            "condition": "Fresh",
+            "sku": "BKY-BRD-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-breads-2",
+            "name": "Whole Wheat Bread",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "breads",
+            "price_ugx": 12000,
+            "original_price": 15000,
+            "sizes": ["Half Loaf", "Full Loaf"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bakery/breads/whole-wheat.jpg"
+            ],
+            "description": "Nutritious whole wheat bread, perfect for healthy breakfasts.",
+            "condition": "Fresh",
+            "sku": "BKY-BRD-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-breads-3",
+            "name": "French Baguette",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "breads",
+            "price_ugx": 10000,
+            "original_price": 12000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bakery/breads/baguette.jpg"
+            ],
+            "description": "Crispy French baguette, perfect for sandwiches or as a side.",
+            "condition": "Fresh",
+            "sku": "BKY-BRD-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-breads-4",
+            "name": "Multigrain Bread",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "breads",
+            "price_ugx": 13000,
+            "original_price": 16000,
+            "sizes": ["Half Loaf", "Full Loaf"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bakery/breads/multigrain.jpg"
+            ],
+            "description": "Hearty multigrain bread with seeds and grains, full of flavor and nutrition.",
+            "condition": "Fresh",
+            "sku": "BKY-BRD-004",
+            "stock_qty": 999
           }
         ],
-        "coat": [
+        "desserts": [
           {
-            "id": "coat-coat-1",
-            "name": "Trench Coat",
-            "brand": "Thrifted",
-            "category": "coats",
-            "section": "coat",
-            "price_ugx": 120000,
-            "original_price": 180000,
-            "sizes": ["M", "L"],
-            "colors": ["Beige", "Black"],
+            "id": "bakery-desserts-1",
+            "name": "Chocolate Cake",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "desserts",
+            "price_ugx": 18000,
+            "original_price": 22000,
+            "sizes": ["Slice", "Whole"],
+            "colors": ["Standard"],
             "images": [
-              "/assets/images/products/coats/coat/1.jpg"
+              "/assets/images/products/bakery/desserts/chocolate-cake.jpg"
             ],
-            "description": "Elegant trench coat perfect for formal and semi-formal occasions.",
-            "condition": "Like New",
-            "sku": "COT-COT-001",
-            "stock_qty": 3
+            "description": "Rich chocolate cake with buttercream frosting. Available by slice or whole cake.",
+            "condition": "Fresh",
+            "sku": "BKY-DSS-001",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-desserts-2",
+            "name": "Cheesecake",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "desserts",
+            "price_ugx": 20000,
+            "original_price": 25000,
+            "sizes": ["Slice", "Whole"],
+            "colors": ["Plain", "Berry", "Caramel"],
+            "images": [
+              "/assets/images/products/bakery/desserts/cheesecake.jpg"
+            ],
+            "description": "Creamy New York-style cheesecake. Choose from plain, berry, or caramel topping.",
+            "condition": "Fresh",
+            "sku": "BKY-DSS-002",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-desserts-3",
+            "name": "Tiramisu",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "desserts",
+            "price_ugx": 22000,
+            "original_price": 28000,
+            "sizes": ["Standard"],
+            "colors": ["Standard"],
+            "images": [
+              "/assets/images/products/bakery/desserts/tiramisu.jpg"
+            ],
+            "description": "Classic Italian tiramisu with coffee-soaked ladyfingers and mascarpone.",
+            "condition": "Fresh",
+            "sku": "BKY-DSS-003",
+            "stock_qty": 999
+          },
+          {
+            "id": "bakery-desserts-4",
+            "name": "Fruit Tart",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "desserts",
+            "price_ugx": 16000,
+            "original_price": 20000,
+            "sizes": ["Standard"],
+            "colors": ["Mixed Fruits"],
+            "images": [
+              "/assets/images/products/bakery/desserts/fruit-tart.jpg"
+            ],
+            "description": "Delicate pastry tart filled with vanilla custard and fresh seasonal fruits.",
+            "condition": "Fresh",
+            "sku": "BKY-DSS-004",
+            "stock_qty": 999
           }
         ],
-        "jacket": [
+        "breakfast-items": [
           {
-            "id": "coat-jacket-1",
-            "name": "Denim Jacket",
-            "brand": "Thrifted",
-            "category": "coats",
-            "section": "jacket",
-            "price_ugx": 75000,
-            "original_price": 110000,
-            "sizes": ["S", "M", "L"],
-            "colors": ["Light Blue", "Black"],
+            "id": "bakery-breakfast-1",
+            "name": "Muffin Selection",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "breakfast-items",
+            "price_ugx": 8000,
+            "original_price": 10000,
+            "sizes": ["Standard"],
+            "colors": ["Blueberry", "Chocolate Chip", "Bran"],
             "images": [
-              "/assets/images/products/coats/jacket/1.jpg"
+              "/assets/images/products/bakery/breakfast-items/muffin.jpg"
             ],
-            "description": "Classic denim jacket with timeless style.",
-            "condition": "Good",
-            "sku": "COT-JKT-001",
-            "stock_qty": 5
-          }
-        ]
-      }
-    },
-    "pants-and-shorts": {
-      "title": "Bottoms",
-      "description": "Complete your look with our selection of pants and shorts.",
-      "subcategories": {
-        "gentle": [
+            "description": "Fresh-baked muffins. Choose from blueberry, chocolate chip, or bran.",
+            "condition": "Fresh",
+            "sku": "BKY-BKF-001",
+            "stock_qty": 999
+          },
           {
-            "id": "pants-gentle-1",
-            "name": "Chino Pants",
-            "brand": "FusionCRAFT",
-            "category": "pants-and-shorts",
-            "section": "gentle",
-            "price_ugx": 85000,
-            "original_price": 120000,
-            "sizes": ["30", "32", "34", "36"],
-            "colors": ["Beige", "Navy", "Olive"],
+            "id": "bakery-breakfast-2",
+            "name": "Scone",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "breakfast-items",
+            "price_ugx": 7000,
+            "original_price": 9000,
+            "sizes": ["Standard"],
+            "colors": ["Plain", "Fruit", "Cheese"],
             "images": [
-              "/assets/images/products/pants/gentle/1.jpg"
+              "/assets/images/products/bakery/breakfast-items/scone.jpg"
             ],
-            "description": "Comfortable chino pants perfect for business casual wear.",
-            "condition": "Like New",
-            "sku": "PNS-GNT-001",
-            "stock_qty": 8
-          }
-        ],
-        "denim": [
+            "description": "Traditional scone, served with jam and clotted cream. Available in plain, fruit, or cheese.",
+            "condition": "Fresh",
+            "sku": "BKY-BKF-002",
+            "stock_qty": 999
+          },
           {
-            "id": "pants-denim-1",
-            "name": "Classic Blue Jeans",
-            "brand": "Thrifted",
-            "category": "pants-and-shorts",
-            "section": "denim",
-            "price_ugx": 75000,
-            "original_price": 110000,
-            "sizes": ["28", "30", "32", "34", "36"],
-            "colors": ["Light Blue", "Medium Blue"],
+            "id": "bakery-breakfast-3",
+            "name": "Bagel",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "breakfast-items",
+            "price_ugx": 6000,
+            "original_price": 8000,
+            "sizes": ["Standard"],
+            "colors": ["Plain", "Sesame", "Everything"],
             "images": [
-              "/assets/images/products/pants/denim/1.jpg"
+              "/assets/images/products/bakery/breakfast-items/bagel.jpg"
             ],
-            "description": "Classic blue jeans with perfect fit. Essential wardrobe piece.",
-            "condition": "Good",
-            "sku": "PNS-DNM-001",
-            "stock_qty": 12
-          }
-        ],
-        "cargo": [
+            "description": "Fresh bagel, perfect for breakfast. Choose from plain, sesame, or everything bagel.",
+            "condition": "Fresh",
+            "sku": "BKY-BKF-003",
+            "stock_qty": 999
+          },
           {
-            "id": "pants-cargo-1",
-            "name": "Cargo Shorts",
-            "brand": "Thrifted",
-            "category": "pants-and-shorts",
-            "section": "cargo",
-            "price_ugx": 55000,
-            "original_price": 80000,
-            "sizes": ["S", "M", "L"],
-            "colors": ["Green", "Khaki", "Black"],
+            "id": "bakery-breakfast-4",
+            "name": "Breakfast Pastry Platter",
+            "brand": "Cafe Hebrews",
+            "category": "bakery",
+            "section": "breakfast-items",
+            "price_ugx": 25000,
+            "original_price": 32000,
+            "sizes": ["Standard"],
+            "colors": ["Assorted"],
             "images": [
-              "/assets/images/products/pants/cargo/1.jpg"
+              "/assets/images/products/bakery/breakfast-items/pastry-platter.jpg"
             ],
-            "description": "Durable cargo shorts with multiple pockets. Perfect for outdoor activities.",
-            "condition": "Good",
-            "sku": "PNS-CRG-001",
-            "stock_qty": 6
-          }
-        ],
-        "sporty": [
-          {
-            "id": "pants-sporty-1",
-            "name": "Athletic Shorts",
-            "brand": "FusionCRAFT",
-            "category": "pants-and-shorts",
-            "section": "sporty",
-            "price_ugx": 35000,
-            "original_price": 50000,
-            "sizes": ["S", "M", "L", "XL"],
-            "colors": ["Black", "Navy", "Grey"],
-            "images": [
-              "/assets/images/products/pants/sporty/1.jpg"
-            ],
-            "description": "Moisture-wicking athletic shorts for workouts and sports.",
-            "condition": "Like New",
-            "sku": "PNS-SPT-001",
-            "stock_qty": 10
-          }
-        ]
-      }
-    },
-    "footwear": {
-      "title": "FootWear",
-      "description": "Step out in style with our curated footwear collection.",
-      "subcategories": {
-        "gentle": [
-          {
-            "id": "footwear-gentle-1",
-            "name": "Leather Dress Shoes",
-            "brand": "Thrifted",
-            "category": "footwear",
-            "section": "gentle",
-            "price_ugx": 150000,
-            "original_price": 250000,
-            "sizes": ["40", "41", "42", "43", "44"],
-            "colors": ["Black", "Brown"],
-            "images": [
-              "/assets/images/products/footwear/gentle/1.jpg"
-            ],
-            "description": "Premium leather dress shoes perfect for formal occasions.",
-            "condition": "Good",
-            "sku": "FWR-GNT-001",
-            "stock_qty": 4
-          }
-        ],
-        "sneakers": [
-          {
-            "id": "footwear-sneakers-1",
-            "name": "Classic Sneakers",
-            "brand": "Thrifted",
-            "category": "footwear",
-            "section": "sneakers",
-            "price_ugx": 95000,
-            "original_price": 150000,
-            "sizes": ["40", "41", "42", "43", "44"],
-            "colors": ["White", "Black/White"],
-            "images": [
-              "/assets/images/products/footwear/sneakers/1.jpg"
-            ],
-            "description": "Comfortable classic sneakers for everyday wear.",
-            "condition": "Like New",
-            "sku": "FWR-SNK-001",
-            "stock_qty": 8
-          }
-        ],
-        "sandals": [
-          {
-            "id": "footwear-sandals-1",
-            "name": "Leather Sandals",
-            "brand": "FusionCRAFT",
-            "category": "footwear",
-            "section": "sandals",
-            "price_ugx": 45000,
-            "original_price": 70000,
-            "sizes": ["40", "41", "42", "43"],
-            "colors": ["Brown", "Black"],
-            "images": [
-              "/assets/images/products/footwear/sandals/1.jpg"
-            ],
-            "description": "Comfortable leather sandals perfect for warm weather.",
-            "condition": "Like New",
-            "sku": "FWR-SND-001",
-            "stock_qty": 6
-          }
-        ],
-        "boots": [
-          {
-            "id": "footwear-boots-1",
-            "name": "Leather Boots",
-            "brand": "Thrifted",
-            "category": "footwear",
-            "section": "boots",
-            "price_ugx": 120000,
-            "original_price": 180000,
-            "sizes": ["41", "42", "43", "44"],
-            "colors": ["Brown", "Black"],
-            "images": [
-              "/assets/images/products/footwear/boots/1.jpg"
-            ],
-            "description": "Durable leather boots for all weather conditions.",
-            "condition": "Good",
-            "sku": "FWR-BOT-001",
-            "stock_qty": 5
-          }
-        ]
-      }
-    },
-    "accessories": {
-      "title": "Accessories",
-      "description": "Add the perfect finishing touches with our range of accessories.",
-      "subcategories": {
-        "rings-necklaces": [
-          {
-            "id": "accessory-rings-1",
-            "name": "Silver Ring Set",
-            "brand": "Thrifted",
-            "category": "accessories",
-            "section": "rings-necklaces",
-            "price_ugx": 45000,
-            "original_price": 70000,
-            "sizes": ["One Size"],
-            "colors": ["Silver", "Gold Plated"],
-            "images": [
-              "/assets/images/products/accessories/rings-necklaces/1.jpg"
-            ],
-            "description": "Set of 3 elegant silver rings for everyday wear.",
-            "condition": "Good",
-            "sku": "ACS-RNG-001",
-            "stock_qty": 4
-          }
-        ],
-        "shades-glasses": [
-          {
-            "id": "accessory-shades-1",
-            "name": "Vintage Sunglasses",
-            "brand": "Thrifted",
-            "category": "accessories",
-            "section": "shades-glasses",
-            "price_ugx": 35000,
-            "original_price": 60000,
-            "sizes": ["One Size"],
-            "colors": ["Black", "Tortoise"],
-            "images": [
-              "/assets/images/products/accessories/shades-glasses/1.jpg"
-            ],
-            "description": "Classic vintage style sunglasses with UV protection.",
-            "condition": "Like New",
-            "sku": "ACS-SHD-001",
-            "stock_qty": 6
-          }
-        ],
-        "bracelets-watches": [
-          {
-            "id": "accessory-watch-1",
-            "name": "Leather Strap Watch",
-            "brand": "Thrifted",
-            "category": "accessories",
-            "section": "bracelets-watches",
-            "price_ugx": 85000,
-            "original_price": 130000,
-            "sizes": ["One Size"],
-            "colors": ["Brown Leather", "Black Leather"],
-            "images": [
-              "/assets/images/products/accessories/bracelets-watches/1.jpg"
-            ],
-            "description": "Classic leather strap watch with minimalist design.",
-            "condition": "Good",
-            "sku": "ACS-WAT-001",
-            "stock_qty": 3
-          }
-        ],
-        "decor": [
-          {
-            "id": "accessory-decor-1",
-            "name": "Leather Belt",
-            "brand": "FusionCRAFT",
-            "category": "accessories",
-            "section": "decor",
-            "price_ugx": 40000,
-            "original_price": 65000,
-            "sizes": ["S", "M", "L"],
-            "colors": ["Brown", "Black"],
-            "images": [
-              "/assets/images/products/accessories/decor/1.jpg"
-            ],
-            "description": "Genuine leather belt with classic buckle.",
-            "condition": "Like New",
-            "sku": "ACS-DCR-001",
-            "stock_qty": 8
+            "description": "Assorted selection of breakfast pastries, perfect for sharing or indulging.",
+            "condition": "Fresh",
+            "sku": "BKY-BKF-004",
+            "stock_qty": 999
           }
         ]
       }
     }
   }
 }
-

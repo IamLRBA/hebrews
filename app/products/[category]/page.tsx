@@ -111,10 +111,58 @@ export default function ProductCategoryPage() {
 
   // Get category-specific animation config (opening transitions only)
   const getCategoryConfig = () => {
-    const configs: Record<string, { 
+    const configs: Record<string, {
       titleAnimation: any,
       descriptionAnimation: any
     }> = {
+      'barista': {
+        titleAnimation: {
+          initial: { opacity: 0, x: -100 },
+          animate: { opacity: 1, x: 0 },
+          transition: { duration: 0.8, delay: 0.2 }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.8, delay: 0.4 }
+        }
+      },
+      'bar': {
+        titleAnimation: {
+          initial: { opacity: 0, scale: 0.8 },
+          animate: { opacity: 1, scale: 1 },
+          transition: { duration: 0.7, delay: 0.15, type: 'spring' }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, x: 50 },
+          animate: { opacity: 1, x: 0 },
+          transition: { duration: 0.7, delay: 0.3 }
+        }
+      },
+      'kitchen': {
+        titleAnimation: {
+          initial: { opacity: 0, y: 50 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.8, delay: 0.25, type: 'spring' }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, scale: 0.9 },
+          animate: { opacity: 1, scale: 1 },
+          transition: { duration: 0.7, delay: 0.45 }
+        }
+      },
+      'bakery': {
+        titleAnimation: {
+          initial: { opacity: 0, x: 100 },
+          animate: { opacity: 1, x: 0 },
+          transition: { duration: 0.75, delay: 0.2, type: 'spring' }
+        },
+        descriptionAnimation: {
+          initial: { opacity: 0, y: -20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.7, delay: 0.35 }
+        }
+      },
       'shirts': {
         titleAnimation: {
           initial: { opacity: 0, x: -100 },
@@ -188,7 +236,7 @@ export default function ProductCategoryPage() {
         }
       }
     }
-    return configs[category] || configs['shirts']
+    return configs[category] || configs['barista']
   }
 
   const categoryConfig = getCategoryConfig()
@@ -197,6 +245,10 @@ export default function ProductCategoryPage() {
   // Helper function to get main product image based on category
   const getMainProductImage = (categorySlug: string): string => {
     const imageMap: Record<string, string> = {
+      'barista': '/assets/images/products-sections/fashion/shirts.jpg',
+      'bar': '/assets/images/products-sections/fashion/tees.jpg',
+      'kitchen': '/assets/images/products-sections/fashion/outerwear.jpg',
+      'bakery': '/assets/images/products-sections/fashion/bottoms.jpg',
       'shirts': '/assets/images/products-sections/fashion/shirts.jpg',
       'tees': '/assets/images/products-sections/fashion/tees.jpg',
       'coats': '/assets/images/products-sections/fashion/outerwear.jpg',
@@ -212,6 +264,10 @@ export default function ProductCategoryPage() {
   const getSubcategoryImage = (categorySlug: string, sectionSlug: string): string => {
     // Map of category slugs to their subcategories in order
     const subcategoryMaps: Record<string, string[]> = {
+      'barista': ['hot', 'cold', 'specialty', 'tea'],
+      'bar': ['cocktails', 'wines', 'spirits', 'signature'],
+      'kitchen': ['grill', 'breakfast', 'mains', 'specials'],
+      'bakery': ['pastries', 'breads', 'desserts', 'breakfast-items'],
       'shirts': ['gentle', 'checked', 'textured', 'denim'],
       'tees': ['plain', 'graphic', 'collared', 'sporty'],
       'coats': ['sweater', 'hoodie', 'coat', 'jacket'],
@@ -233,33 +289,26 @@ export default function ProductCategoryPage() {
   // Helper function to get quote for each category
   const getCategoryQuote = (categorySlug: string): { text: string; author: string } => {
     const quotes: Record<string, { text: string; author: string }> = {
-      'shirts': {
-        text: 'A shirt that fits well is worth more than one that costs a fortune.',
-        author: 'Tommy Hilfiger'
+      'barista': {
+        text: 'We are not in the coffee business serving people, we are in the people business serving coffee',
+        author: 'Howard Schultz'
       },
-      'tees': {
-        text: 'Less is more when you\'re wearing the right t-shirt.',
-        author: 'Ralph Lauren'
+      'bar': {
+        text: 'Oh, you hate your job? There is a support group for that called everybody, and they meet regularly at the bar',
+        author: 'Drew Carey'
       },
-      'coats': {
-        text: 'A coat should keep you warm, but a great coat should make you feel like you can conquer the world.',
-        author: 'Coco Chanel'
+      'kitchen': {
+        text: 'If you can organise your kitchen, you can organise your life',
+        author: 'Louis Parrish'
       },
-      'pants-and-shorts': {
-        text: 'The right pair of pants can make you feel confident and ready to take on anything.',
-        author: 'Karl Lagerfeld'
-      },
-      'footwear': {
-        text: 'Sneakers aren\'t just utilitarian, they\'re borderline art objects.',
-        author: 'Virgil Abloh'
-      },
-      'accessories': {
-        text: 'Accessories are like vitamins to fashion – they enhance the outfit.',
-        author: 'Anna Dello Russo'
+      'bakery': {
+        text: 'There are people in the world so hungry, that God cannot appear to them except in the form of bread',
+        author: 'Mahatma Gandhi'
       }
+      
     }
     
-    return quotes[categorySlug] || { text: '', author: '' }
+    return quotes[categorySlug] || quotes['barista'] || { text: 'Experience excellence in every detail.', author: 'Cafe Hebrews' }
   }
 
   const [showBackButton, setShowBackButton] = useState(true)

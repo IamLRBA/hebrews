@@ -11,12 +11,12 @@ import BackToTop from '@/components/ui/BackToTop'
 import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
 
 export const metadata: Metadata = {
-  title: 'MysticalPIECES — Future-Facing Thrift Fashion',
-  description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
-  keywords: 'futuristic thrift fashion, modern vintage clothing, conscious style, sustainable fashion, intuitive wardrobe, future-forward thrift, curated fashion pieces',
+  title: 'Cafe Hebrews — Luxury Destination Cafe',
+  description: 'A luxury destination cafe offering exquisite culinary experiences, artisanal beverages, and refined atmosphere where every moment is crafted with elegance and sophistication.',
+  keywords: 'luxury cafe, destination cafe, premium dining, artisanal coffee, gourmet cuisine, elegant dining experience, luxury restaurant, fine dining cafe, cafe Hebrews',
   authors: [{ name: 'LRBA', url: 'https://mysticalpieces.com' }],
-  creator: 'MysticalPIECES',
-  publisher: 'MysticalPIECES',
+  creator: 'Cafe Hebrews',
+  publisher: 'Cafe Hebrews',
   formatDetection: {
     email: false,
     address: false,
@@ -27,16 +27,16 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'MysticalPIECES — Future-Facing Thrift Fashion',
-    description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
+    title: 'Cafe Hebrews — Luxury Destination Cafe',
+    description: 'A luxury destination cafe offering exquisite culinary experiences, artisanal beverages, and refined atmosphere where every moment is crafted with elegance and sophistication.',
     url: 'https://mysticalpieces.com',
-    siteName: 'MysticalPIECES',
+    siteName: 'Cafe Hebrews',
     images: [
       {
         url: '/assets/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'MysticalPIECES',
+        alt: 'Cafe Hebrews',
       },
     ],
     locale: 'en_US',
@@ -44,8 +44,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MysticalPIECES — Future-Facing Thrift Fashion',
-    description: 'Futuristic thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment.',
+    title: 'Cafe Hebrews — Luxury Destination Cafe',
+    description: 'A luxury destination cafe offering exquisite culinary experiences, artisanal beverages, and refined atmosphere where every moment is crafted with elegance and sophistication.',
     images: ['/assets/images/og-image.jpg'],
   },
   robots: {

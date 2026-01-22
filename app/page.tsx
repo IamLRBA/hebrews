@@ -56,11 +56,11 @@ export default function Home() {
 
     // Check if this is the first visit only on the client
     if (typeof window !== 'undefined') {
-      const hasVisited = localStorage.getItem('mysticalpieces-visited')
+      const hasVisited = localStorage.getItem('cafehebrews-visited')
       
       if (!hasVisited) {
         setIsLoading(true)
-        localStorage.setItem('mysticalpieces-visited', 'true')
+        localStorage.setItem('cafehebrews-visited', 'true')
         
         const timer = setTimeout(() => {
           setIsLoading(false)
@@ -198,7 +198,7 @@ export default function Home() {
                           </h1>
                           <div className="hero-divider w-20 h-1 bg-primary-400/80 dark:bg-primary-500/60 rounded-full" />
                           <p className="text-lg text-primary-600 dark:text-primary-300 max-w-2xl">
-                            Wear the unseen future. Feel the divine in every thread.
+                            Where luxury meets tradition. Experience the divine in every cup.
                           </p>
                         </div>
                         <div className="flex flex-row gap-2 sm:gap-4 justify-center items-center">
@@ -270,7 +270,7 @@ export default function Home() {
                       >
                         ✧
                       </motion.span>
-                      <span className="font-medium">Step into the portal to explore future-forward thrift finds</span>
+                      <span className="font-medium">Step into the portal to explore our luxury menu and culinary experiences</span>
                       <motion.span
                         animate={{ y: [0, 5, 0] }}
                         transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
@@ -290,7 +290,7 @@ export default function Home() {
                     EᑎTEᖇ <span className="text-accent-600 dark:text-accent-400">the Portal</span>
                     </h2>
                     <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
-                      Discover future-ready thrift pieces, each piece waiting to reveal its story
+                      Discover our exquisite menu offerings, each dish crafted with passion and luxury
                     </p>
                   </motion.div>
 

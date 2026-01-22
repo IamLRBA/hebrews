@@ -53,7 +53,7 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
       <img
         key={mounted ? `logo-${resolvedTheme}` : 'logo-ssr'}
         src={mounted ? currentLogo : LIGHT_LOGO_SRC}
-        alt="Mystical PIECES® logo"
+        alt="Cafe Hebrews® logo"
         width={size}
         height={size}
         draggable={false}

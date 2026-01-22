@@ -13,9 +13,9 @@ import {
 import Companies from './Companies'
 
 const statsData = [
-  { icon: Users, number: 500, suffix: "+", label: "Happy Customers", description: "Satisfied fashion enthusiasts", color: "from-primary-400 to-primary-600" },
-  { icon: Award, number: 1200, suffix: "+", label: "Items Sold", description: "Unique thrifted & new pieces", color: "from-accent-400 to-accent-600" },
-  { icon: Clock, number: 3, suffix: "+", label: "Years Curating", description: "Fashion expertise & style", color: "from-primary-500 to-primary-700" },
+  { icon: Users, number: 500, suffix: "+", label: "Happy Customers", description: "Satisfied luxury diners", color: "from-primary-400 to-primary-600" },
+  { icon: Award, number: 1200, suffix: "+", label: "Dishes Served", description: "Exquisite culinary creations", color: "from-accent-400 to-accent-600" },
+  { icon: Clock, number: 3, suffix: "+", label: "Years of Excellence", description: "Culinary expertise & refinement", color: "from-primary-500 to-primary-700" },
   { icon: Star, number: 98, suffix: "%", label: "Client Satisfaction", description: "Exceeding expectations", color: "from-accent-500 to-accent-700" },
 ]
 
@@ -185,7 +185,7 @@ export default function Stats() {
         <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 1.2, type: "spring", stiffness: 100 }} className="text-center mt-16">
           <div className="inline-flex items-center space-x-4 bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg border border-primary-500/30 dark:border-primary-500/40">
             <Heart className="w-6 h-6 text-primary-600 dark:text-primary-300 animate-pulse" />
-            <span className="text-primary-600 dark:text-primary-300 font-semibold">Trusted by creative professionals nationwide</span>
+            <span className="text-primary-600 dark:text-primary-300 font-semibold">Trusted by discerning diners nationwide</span>
             <Target className="w-6 h-6 text-accent-600 dark:text-accent-300 animate-pulse delay-1000" />
           </div>
         </motion.div>

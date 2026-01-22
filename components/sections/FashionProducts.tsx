@@ -27,109 +27,73 @@ const products: Product[] = [
   { 
     id: 1, 
     number: '01', 
-    title: 'Shirts', 
-    description: 'Discover our collection of elegant and versatile shirts, from classic button-downs to modern casual styles that complement any wardrobe.', 
+    title: 'Barista', 
+    description: 'Discover our premium coffee and beverage selection, from expertly crafted hot drinks to refreshing cold creations. Customize with milk types and strength options.', 
     image: '/assets/images/products-sections/fashion/shirts.jpg',
-    slug: 'shirts',
+    slug: 'barista',
     subcategories: [
-      { name: 'Gentle', slug: 'gentle' },
-      { name: 'Checked', slug: 'checked' },
-      { name: 'Textured', slug: 'textured' },
-      { name: 'Denim', slug: 'denim' }
+      { name: 'Hot Beverages', slug: 'hot' },
+      { name: 'Cold Beverages', slug: 'cold' },
+      { name: 'Specialty Coffee', slug: 'specialty' },
+      { name: 'Tea Selection', slug: 'tea' }
     ],
     quote: {
-      text: 'A shirt that fits well is worth more than one that costs a fortune.',
-      author: 'Tommy Hilfiger'
+      text: 'We are not in the coffee business serving people, we are in the people business serving coffee',
+      author: 'Howard Schultz'
     }
   },
   { 
     id: 2, 
     number: '02', 
-    title: 'Tees', 
-    description: 'Comfortable and stylish t-shirts in various designs, materials, and fits perfect for everyday wear or casual outings.', 
+    title: 'Bar', 
+    description: 'Indulge in our curated selection of cocktails and wines. Each drink crafted with precision, with options for no-sugar cocktails and premium wine pairings.', 
     image: '/assets/images/products-sections/fashion/tees.jpg',
-    slug: 'tees',
+    slug: 'bar',
     subcategories: [
-      { name: 'Plain', slug: 'plain' },
-      { name: 'Graphic', slug: 'graphic' },
-      { name: 'Collared', slug: 'collared' },
-      { name: 'Sporty', slug: 'sporty' }
+      { name: 'Cocktails', slug: 'cocktails' },
+      { name: 'Wines', slug: 'wines' },
+      { name: 'Premium Spirits', slug: 'spirits' },
+      { name: 'Signature Drinks', slug: 'signature' }
     ],
     quote: {
-      text: 'Less is more when you\'re wearing the right t-shirt.',
-      author: 'Ralph Lauren'
+      text: 'Oh, you hate your job? There is a support group for that called everybody, and they meet regularly at the bar',
+      author: 'Drew Carey'
     }
   },
   { 
     id: 3, 
     number: '03', 
-    title: 'OuterWear', 
-    description: 'Stylish outerwear to keep you warm and fashionable, from classic trench coats to modern jackets for all seasons.', 
+    title: 'Kitchen', 
+    description: 'Savor our expertly prepared dishes from the grill, breakfast favorites, and main courses. Customize steaks with temperature, sauce, and side options.', 
     image: '/assets/images/products-sections/fashion/outerwear.jpg',
-    slug: 'coats',
+    slug: 'kitchen',
     subcategories: [
-      { name: 'Sweater', slug: 'sweater' },
-      { name: 'Hoodie', slug: 'hoodie' },
-      { name: 'Coat', slug: 'coat' },
-      { name: 'Jacket', slug: 'jacket' }
+      { name: 'Grill', slug: 'grill' },
+      { name: 'Breakfast', slug: 'breakfast' },
+      { name: 'Mains', slug: 'mains' },
+      { name: 'Specials', slug: 'specials' }
     ],
     quote: {
-      text: 'A coat should keep you warm, but a great coat should make you feel like you can conquer the world.',
-      author: 'Coco Chanel'
+      text: 'If you can organise your kitchen, you can organise your life',
+      author: 'Louis Parrish'
     }
   },
   { 
     id: 4, 
     number: '04', 
-    title: 'Bottoms', 
-    description: 'Complete your look with our selection of pants and shorts, ranging from formal trousers to relaxed casual styles.', 
+    title: 'Bakery', 
+    description: 'Delight in our fresh-baked pastries, breads, and confections. Perfect for breakfast combos or as the perfect ending to your dining experience.', 
     image: '/assets/images/products-sections/fashion/bottoms.jpg',
-    slug: 'pants-and-shorts',
+    slug: 'bakery',
     subcategories: [
-      { name: 'Gentle', slug: 'gentle' },
-      { name: 'Denim', slug: 'denim' },
-      { name: 'Cargo', slug: 'cargo' },
-      { name: 'Sporty', slug: 'sporty' }
+      { name: 'Pastries', slug: 'pastries' },
+      { name: 'Breads', slug: 'breads' },
+      { name: 'Desserts', slug: 'desserts' },
+      { name: 'Breakfast Items', slug: 'breakfast-items' }
     ],
     quote: {
-      text: 'The right pair of pants can make you feel confident and ready to take on anything.',
-      author: 'Karl Lagerfeld'
-    }
-  },
-  { 
-    id: 5, 
-    number: '05', 
-    title: 'FootWear', 
-    description: 'Step out in style with our curated footwear collection including sneakers, boots, and more for every occasion.', 
-    image: '/assets/images/products-sections/fashion/footwear.jpg',
-    slug: 'footwear',
-    subcategories: [
-      { name: 'Gentle', slug: 'gentle' },
-      { name: 'Sneakers', slug: 'sneakers' },
-      { name: 'Sandals', slug: 'sandals' },
-      { name: 'Boots', slug: 'boots' }
-    ],
-    quote: {
-      text: 'Sneakers aren’t just utilitarian, they\'re borderline art objects.',
-      author: 'Virgil Abloh'
-    }
-  },
-  { 
-    id: 6, 
-    number: '06', 
-    title: 'Accessories', 
-    description: 'Add the perfect finishing touches with our range of accessories including bags, belts, and other essential styling elements.', 
-    image: '/assets/images/products-sections/fashion/accessories.jpg',
-    slug: 'accessories',
-    subcategories: [
-      { name: 'Rings & Necklaces', slug: 'rings-necklaces' },
-      { name: 'Shades & Glasses', slug: 'shades-glasses' },
-      { name: 'Bracelets & Watches', slug: 'bracelets-watches' },
-      { name: 'Decor', slug: 'decor' }
-    ],
-    quote: {
-      text: 'Accessories are like vitamins to fashion – they enhance the outfit.',
-      author: 'Anna Dello Russo'
+      text: 'There are people in the world so hungry, that God cannot appear to them except in the form of bread',
+      author: 'Mahatma Gandhi'
     }
   }
 ]
@@ -145,7 +109,7 @@ export default function FashionProducts() {
       <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} viewport={{ once: true }} className="max-w-7xl mx-auto">
         <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
           <span className="text-primary-500 dark:text-primary-100">⏣ Our</span>{' '}
-          <span className="text-neutral-700 dark:text-primary-300"> Products</span>
+          <span className="text-neutral-700 dark:text-primary-300"> Menu</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto px-8">
           {products.map((s, i) => { 

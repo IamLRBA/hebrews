@@ -569,9 +569,9 @@ export default function CEOProfile() {
             <div className="text-center p-6 rounded-xl bg-gradient-to-br from-primary-800/30 to-primary-600/30 dark:from-primary-800/40 dark:to-primary-600/40 border border-primary-500/30 dark:border-primary-500/40 overflow-hidden shadow-2xl backdrop-blur-sm">
               <MapPin className="w-8 h-8 text-primary-600 mx-auto mb-3" />
               <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-2">ᒪOᑕᗩTIOᑎ</h4>
-              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Kampala, Uganda</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-3">Garuga, Entebbe Road</p>
               <a
-                href="https://maps.google.com/?q=Kampala,Uganda"
+                href="https://maps.google.com/?q=Garuga,Entebbe+Road,Uganda"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline btn-hover-secondary-filled inline-flex items-center justify-center px-6"

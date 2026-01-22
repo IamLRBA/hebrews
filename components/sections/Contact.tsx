@@ -9,7 +9,7 @@ const contactInfo = [
   { title: 'EᗰᗩIᒪ', subtitle: 'jerrylarubafestus@gmail.com', icon: Mail, buttonText: 'Email Us', action: () => window.open('mailto:jerrylarubafestus@gmail.com', '_blank'), color: 'from-primary-500 to-primary-600' },
   { title: 'ᑭᕼOᑎE', subtitle: '+256 774 948 086', icon: Phone, buttonText: 'Call Us', action: () => { const numbers = ['+256774948086', '+256755915549']; const selected = window.confirm(`Choose a number to call:\n1. ${numbers[0]}\n2. ${numbers[1]}`); if (selected !== null) { const number = numbers[selected ? 1 : 0]; window.open(`tel:${number}`, '_blank') } }, color: 'from-accent-500 to-accent-600' },
   { title: 'ᗯᕼᗩTᔕᗩᑭᑭ', subtitle: '+256 755 915 549', icon: IconBrandWhatsapp, buttonText: 'Message Us', action: () => window.open('https://wa.me/256755915549', '_blank'), color: 'from-accent-500 to-accent-600' },
-  { title: 'ᒪOᑕᗩTIOᑎ', subtitle: 'Kampala, Uganda', icon: MapPin, buttonText: 'Find Us', action: () => window.open('https://maps.google.com/?q=Kampala,Uganda', '_blank'), color: 'from-primary-500 to-primary-600' },
+  { title: 'ᒪOᑕᗩTIOᑎ', subtitle: 'Garuga, Entebbe Road', icon: MapPin, buttonText: 'Find Us', action: () => window.open('https://maps.google.com/?q=Garuga,Entebbe+Road,Uganda', '_blank'), color: 'from-primary-500 to-primary-600' },
 ]
 
 export default function Contact() {
@@ -51,7 +51,7 @@ export default function Contact() {
       <div className="container-custom">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="section-title">
           <h2 className="text-4xl md:text-5xl font-bold text-primary-800 dark:text-primary-100 mb-6">GET Iᑎ <span className="text-accent-600 dark:text-accent-300">TOᑌᑕᕼ</span></h2>
-          <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">Any questions about our fashion collection? Need styling advice? Contact us and we're here to help you find answers.</p>
+          <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">Any questions about our menu? Need dining recommendations? Contact us and we're here to help you find answers.</p>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">

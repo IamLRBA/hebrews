@@ -9,7 +9,7 @@ import { HiMiniShoppingBag } from 'react-icons/hi2'
 const portals = [
   {
     id: 1,
-    title: "ᔕᕼOᑭ",
+    title: "ᔕEᖇᐯIᑕEᔕ",
     image: "/assets/images/sections/portals/fashion.jpg",
     href: "/sections/shop"
   }

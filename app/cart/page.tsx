@@ -83,7 +83,7 @@ export default function CartPage() {
       >
         <Link href="/sections/shop" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="text-lg font-medium">⟸</span>
-          <span className="text-sm font-medium">Continue Shopping</span>
+          <span className="text-sm font-medium">Continue to Menu</span>
         </Link>
       </motion.div>
       <div className="max-w-7xl mx-auto px-4">
@@ -95,7 +95,7 @@ export default function CartPage() {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">Shopping Cart</h1>
+              <h1 className="text-4xl md:text-5xl font-bold text-neutral-850 dark:text-primary-50 mb-2">Your Order</h1>
               <p className="text-neutral-600 dark:text-primary-300">
                 {cart.length === 0 
                   ? 'Your cart is empty' 
@@ -127,7 +127,7 @@ export default function CartPage() {
               href="/sections/shop"
               className="inline-block btn btn-primary"
             >
-              Start Shopping
+              Browse Menu
             </Link>
           </motion.div>
         ) : (
@@ -237,7 +237,7 @@ export default function CartPage() {
                   href="/sections/shop"
                   className="btn btn-primary btn-hover-secondary-filled w-full font-medium justify-center"
                 >
-                  Continue Shopping
+                  Continue to Menu
                 </Link>
 
                 <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-primary-700/50">

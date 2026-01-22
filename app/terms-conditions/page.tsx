@@ -190,7 +190,7 @@ export default function TermsConditions() {
           <div className="space-y-2 text-neutral-700 dark:text-neutral-200">
             <p><strong>Email:</strong> jerrylarubafestus@gmail.com</p>
             <p><strong>Phone:</strong> +256774948086</p>
-            <p><strong>Address:</strong> Kampala, Uganda</p>
+            <p><strong>Address:</strong> Garuga, Entebbe Road</p>
           </div>
         </motion.div>
 

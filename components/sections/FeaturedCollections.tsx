@@ -43,12 +43,10 @@ export default function FeaturedCollections() {
         
         const productsData = getProductsData()
         const categories = [
-          { slug: 'shirts', name: 'Shirts' },
-          { slug: 'tees', name: 'Tees' },
-          { slug: 'coats', name: 'OuterWear' },
-          { slug: 'pants-and-shorts', name: 'Bottoms' },
-          { slug: 'footwear', name: 'FootWear' },
-          { slug: 'accessories', name: 'Accessories' }
+          { slug: 'barista', name: 'Barista' },
+          { slug: 'bar', name: 'Bar' },
+          { slug: 'kitchen', name: 'Kitchen' },
+          { slug: 'bakery', name: 'Bakery' }
         ]
 
         const featured: FeaturedProduct[] = []
@@ -164,7 +162,7 @@ export default function FeaturedCollections() {
             Featured <span className="text-accent-600 dark:text-accent-400">Collections</span>
           </h2>
           <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto mb-6">
-            Carefully curated selections. Each piece chosen for its unique story
+            Carefully curated menu selections. Each dish crafted with unique flavors and stories
           </p>
         </motion.div>
 

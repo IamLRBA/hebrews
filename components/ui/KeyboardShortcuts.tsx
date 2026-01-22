@@ -15,7 +15,7 @@ const shortcuts: Shortcut[] = [
   { key: 'cart', description: 'Open Cart', keys: ['C'] },
   { key: 'search', description: 'Open Search', keys: ['/', 'S'] },
   { key: 'about', description: 'About Us', keys: ['A'] },
-  { key: 'shop', description: 'Shop Portal', keys: ['F'] },
+  { key: 'shop', description: 'Services Portal', keys: ['F'] },
   { key: 'settings', description: 'Settings / Account', keys: ['G'] },
   { key: 'top', description: 'Scroll to Top', keys: ['T'] },
   { key: 'bottom', description: 'Scroll to Bottom', keys: ['B'] },

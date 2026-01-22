@@ -47,7 +47,7 @@ const navigation = [
 ]
 
 const portalItems = [
-  { name: 'Shop', href: '/sections/shop', outlineIcon: HiOutlineShoppingBag, solidIcon: HiMiniShoppingBag },
+  { name: 'Services', href: '/sections/shop', outlineIcon: HiOutlineShoppingBag, solidIcon: HiMiniShoppingBag },
 ]
 
 // Helper function to get all products from JSON and ProductManager
@@ -328,7 +328,7 @@ export default function Navbar() {
                           <HiX className="w-4 h-4" />
                         </button>
                       )}
-                      <input type="text" placeholder="Search fashion items" value={searchQuery} onChange={handleSearchChange} className={`navbar-search-input ${isSearchOpen ? 'pl-10' : 'pl-4'}`} autoFocus />
+                      <input type="text" placeholder="Search menu items" value={searchQuery} onChange={handleSearchChange} className={`navbar-search-input ${isSearchOpen ? 'pl-10' : 'pl-4'}`} autoFocus />
                       {showSuggestions && (
                         <div className="search-suggestions absolute top-full left-0 mt-2">
                           {filteredSuggestions.length > 0 ? (
@@ -544,7 +544,7 @@ export default function Navbar() {
                             <HiX className="w-4 h-4" />
                           </button>
                         )}
-                        <input type="text" placeholder="Search fashion items" value={searchQuery} onChange={handleSearchChange} className={`navbar-search-input w-full ${isSearchOpen ? 'pl-10' : 'pl-4'}`} autoFocus />
+                        <input type="text" placeholder="Search menu items" value={searchQuery} onChange={handleSearchChange} className={`navbar-search-input w-full ${isSearchOpen ? 'pl-10' : 'pl-4'}`} autoFocus />
                         {showSuggestions && (
                           <div className="search-suggestions absolute top-full left-0 mt-2 w-full">
                             {filteredSuggestions.length > 0 ? (

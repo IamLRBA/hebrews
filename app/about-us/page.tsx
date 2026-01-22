@@ -23,13 +23,13 @@ export default function AboutUsPage() {
               E᙭ᑭᒪOᖇE <span className="text-accent-600 dark:text-accent-400">the Portal</span>
             </h2>
             <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto mb-8">
-              Dive into our portal and feel future-forward thrift fashion in motion.
+              Dive into our portal and experience luxury dining excellence in motion.
             </p>
             <Link
               href="/sections/shop"
               className="btn btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 group"
             >
-              <span>view the ᔕᕼOᑭ portal</span>
+              <span>view the ᗰEᑎᑌ portal</span>
               <span className="transform group-hover:translate-x-1 transition-transform duration-300 text-2xl leading-none">⟹</span>
             </Link>
           </motion.div>

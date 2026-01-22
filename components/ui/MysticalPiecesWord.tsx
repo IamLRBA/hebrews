@@ -15,10 +15,10 @@ export default function MysticalPiecesWord({ className, mysticalClassName, piece
 
   return (
     <span className={classes}>
-      <span className={mysticalClasses}>Mystical</span>
+      <span className={mysticalClasses}>Cafe</span>
       <span className="mysticalpieces-word__space">&nbsp;</span>
       <span className={piecesClasses}>
-        PIECE
+        HEBREW
         <span className="mysticalpieces-word__s">
           S
           <span className="mysticalpieces-word__symbol" aria-hidden="true">®</span>
@@ -46,6 +46,21 @@ export function renderWithMysticalPieces(content: ReactNode, keyPrefix = 'mystic
       elements.push(<MysticalPiecesWord key={`${keyPrefix}-brand-${index}`} />)
     }
   })
+
+  // Also handle Cafe Hebrews variations
+  const cafeHebrewsParts = typeof content === 'string' ? content.split('Cafe Hebrews') : []
+  if (cafeHebrewsParts.length > 1) {
+    const cafeElements: ReactNode[] = []
+    cafeHebrewsParts.forEach((part, index) => {
+      if (part) {
+        cafeElements.push(<span key={`${keyPrefix}-cafe-text-${index}`}>{part}</span>)
+      }
+      if (index < cafeHebrewsParts.length - 1) {
+        cafeElements.push(<MysticalPiecesWord key={`${keyPrefix}-cafe-brand-${index}`} />)
+      }
+    })
+    return cafeElements.length > 0 ? cafeElements : elements
+  }
 
   return elements
 }

@@ -292,7 +292,7 @@ export default function ShopPage() {
           >
             <span className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
               <HiOutlineShoppingBag className="w-32 h-32 sm:w-24 sm:h-24 md:w-40 md:h-40 text-neutral-700 dark:text-primary-200 drop-shadow-lg" aria-hidden="true" />
-              <span className="text-gradient">ᔕᕼOᑭ</span>
+              <span className="text-gradient">SERVICES</span>
             </span>
           </motion.h1>
           <motion.p
@@ -301,16 +301,9 @@ export default function ShopPage() {
             transition={{ duration: 1, delay: 0.3 }}
             className="text-base sm:text-xl md:text-3xl text-neutral-800 dark:text-primary-200 mb-8 max-w-4xl mx-auto leading-relaxed px-4"
           >
-            "Build a wardrobe that Is authentically yours"
+            "comprehensive service offerings designed to bring luxury dining experiences to you"
           </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="text-sm sm:text-base md:text-lg text-neutral-700 dark:text-primary-100 max-w-3xl mx-auto px-4"
-          >
-            Understand our philosophy and continue to discover unique pieces, from vintage gems to contemporary styles.
-          </motion.div>
+          
         </motion.div>
 
         {/* Background Elements */}
@@ -321,7 +314,7 @@ export default function ShopPage() {
         </div>
       </section>
 
-      {/* Shop Philosophy Section */}
+      {/* Hybrid Services Section */}
       <section className="py-20 px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -331,8 +324,8 @@ export default function ShopPage() {
           className="max-w-6xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
-            <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭᑭIᑎG</span>{' '}
-            <span className="text-neutral-700 dark:text-primary-300">Philosophy</span>
+            <span className="text-primary-500 dark:text-primary-100">ᕼYᗷᖇIᗪ</span>{' '}
+            <span className="text-neutral-700 dark:text-primary-300">Services</span>
           </h2>
           
           <div className="space-y-16 flex flex-col items-center">
@@ -349,16 +342,16 @@ export default function ShopPage() {
                 <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
                   <img 
                     src="/assets/images/sections/fashion/philosophy-1.jpg" 
-                    alt="Mysticism" 
+                    alt="Dine-In" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
                 </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">01</div>
-                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Mysticism</h3>
+                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Dine-In</h3>
                 <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                  There is a deeper reality beyond the visible world. Find meaning in what others might overlook.
+                  Experience luxury dining in our elegant atmosphere. Savor every moment in a refined setting designed for exceptional culinary experiences.
                 </p>
               </div>
             </motion.div>
@@ -376,16 +369,16 @@ export default function ShopPage() {
                 <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-8">
                   <img 
                     src="/assets/images/sections/fashion/philosophy-2.jpg" 
-                    alt="Sustainability" 
+                    alt="Takeaway" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
                 </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">02</div>
-                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Anarchism</h3>
+                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Takeaway</h3>
                 <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                Every item you choose can be you shaping your own path and challenging the ordinary-fashion norm. 
+                Quick service for on-the-go luxury. Enjoy our premium offerings wherever you are, with the same quality and excellence.
                 </p>
               </div>
             </motion.div>
@@ -403,16 +396,16 @@ export default function ShopPage() {
                 <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-8">
                   <img 
                     src="/assets/images/sections/fashion/philosophy-3.jpg" 
-                    alt="Self-Discovery" 
+                    alt="Delivery" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
                 </div>
               </div>
               <div className="flex flex-col text-center md:text-left">
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 hidden md:block">03</div>
-                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Self-Discovery</h3>
+                <h3 className="text-3xl font-bold mb-2 text-neutral-850 dark:text-primary-50">Delivery</h3>
                 <p className="text-neutral-700 dark:text-primary-300 text-lg max-w-md">
-                Evolve with pieces that resonate with your spirit and also help you see yourself more clearly. 
+                Luxury delivered to your doorstep. Experience our premium offerings in the comfort of your own space, with the same excellence and care.
                 </p>
               </div>
             </motion.div>
@@ -420,7 +413,7 @@ export default function ShopPage() {
         </motion.div>
       </section>
 
-      {/* ⏣ Our PRODUCTS */}
+      {/* ⏣ Our MENU */}
       <FashionProducts />
 
       {/* Moodboard Section */}
@@ -443,7 +436,7 @@ export default function ShopPage() {
                 Visual Inspiration
               </h3>
               <p className="text-neutral-700 dark:text-primary-300">
-                Curated collections that capture different moods and aesthetics
+                Curated menu collections that capture different tastes and culinary aesthetics
               </p>
             </div>
             
@@ -533,7 +526,7 @@ export default function ShopPage() {
           className="max-w-7xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭ</span>{' '}
+            <span className="text-primary-500 dark:text-primary-100">ᔕEᖇᐯIᑕEᔕ</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Video Gallery</span>{' '}
           </h2>
           <FashionVideoSection />
@@ -551,11 +544,11 @@ export default function ShopPage() {
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             <span className="text-neutral-700 dark:text-primary-300">Ready to</span>{' '}
-            <span className="text-primary-500 dark:text-primary-100">ᔕᕼOᑭ</span>{' '}
-            <span className="text-neutral-700 dark:text-primary-300">Your Style?</span>
+            <span className="text-primary-500 dark:text-primary-100">ᗪIᑎE</span>{' '}
+            <span className="text-neutral-700 dark:text-primary-300">in Luxury?</span>
           </h2>
           <p className="text-xl text-neutral-700 dark:text-primary-300 mb-8">
-            Explore our collection of thrifted treasures and for any questions, contact us!
+            Explore our collection of exquisite menu offerings and for any questions, contact us!
           </p>
           <Link href="/#contact-section">
             <motion.button

@@ -24,9 +24,9 @@ import { IconBrandWhatsapp, IconBrandX, IconBrandTiktok } from '@tabler/icons-re
 const teamMembers = [
   {
     id: 1,
-    name: "ᒍOᔕᕼᑌᗩ",
-    position: "Creative Director",
-    description: "A visionary creative director with over 8 years of experience in fashion curation and style direction. Joshua leads our artistic vision and ensures every piece meets the highest style standards.",
+    name: "CEO",
+    position: "Chief Executive Officer",
+    description: "Strategic leadership and vision for Cafe Hebrews. Oversees all operations, sets the direction for luxury dining experiences, and ensures excellence across all service channels.",
     image: "/assets/images/team/joshua-nsereko.jpg",
     hoverImage: "/assets/images/team/joshua-nsereko-hover.jpg",
     social: {
@@ -39,9 +39,9 @@ const teamMembers = [
   },
   {
     id: 2,
-    name: "ᑎOᗩᕼ",
-    position: "Technical Lead",
-    description: "A tech-savvy professional with expertise in e-commerce and digital platforms. Noah ensures our online shopping experience is seamless and our digital presence is cutting-edge.",
+    name: "Admin",
+    position: "Administrator",
+    description: "All access privileges including menu engineering and staff management. Ensures smooth operations and maintains the highest standards of service excellence.",
     image: "/assets/images/team/noah-tayebwa.png",
     hoverImage: "/assets/images/team/noah-tayebwa-hover.jpg",
     social: {
@@ -54,9 +54,9 @@ const teamMembers = [
   },
   {
     id: 3,
-    name: "ᗪIᑎGᗯᗩ",
-    position: "Fashion Curator",
-    description: "A passionate fashion curator with an eye for unique finds and sustainable style. Dingwa specializes in discovering thrifted treasures and curating collections that blend vintage charm with modern trends.",
+    name: "General Manager",
+    position: "General Manager",
+    description: "All access privileges including menu engineering and staff management. Oversees daily operations, ensures quality control, and maintains service standards across all channels.",
     image: "/assets/images/team/dingwa.jpg",
     hoverImage: "/assets/images/team/dingwa-hover.jpg",
     social: {
@@ -65,6 +65,51 @@ const teamMembers = [
       x: "https://x.com/elenapetrov",
       whatsapp: "+1234567890",
       email: "elena@fusioncraft.com"
+    }
+  },
+  {
+    id: 4,
+    name: "Supervisor",
+    position: "Supervisor",
+    description: "Manages discounts (over 10%), handles void approvals, and ensures smooth service operations. Maintains quality standards and customer satisfaction.",
+    image: "/assets/images/team/dingwa.jpg",
+    hoverImage: "/assets/images/team/dingwa-hover.jpg",
+    social: {
+      linkedin: "https://linkedin.com/in/sarahchen",
+      instagram: "https://instagram.com/sarahchen",
+      x: "https://x.com/sarahchen",
+      whatsapp: "+1234567890",
+      email: "sarah@fusioncraft.com"
+    }
+  },
+  {
+    id: 5,
+    name: "Head Chef/Barista",
+    position: "Head Chef & Barista",
+    description: "Responsible for stock counting and recipe viewing. Ensures culinary excellence and maintains the highest standards in food and beverage preparation.",
+    image: "/assets/images/team/joshua-nsereko.jpg",
+    hoverImage: "/assets/images/team/joshua-nsereko-hover.jpg",
+    social: {
+      linkedin: "https://linkedin.com/in/sarahchen",
+      instagram: "https://instagram.com/sarahchen",
+      x: "https://x.com/sarahchen",
+      whatsapp: "+1234567890",
+      email: "sarah@fusioncraft.com"
+    }
+  },
+  {
+    id: 6,
+    name: "Waiter/Cashier",
+    position: "Waiter & Cashier",
+    description: "Handles order entry, bill printing, and payment recording. Ensures efficient service delivery and accurate transaction processing for all customers.",
+    image: "/assets/images/team/noah-tayebwa.png",
+    hoverImage: "/assets/images/team/noah-tayebwa-hover.jpg",
+    social: {
+      linkedin: "https://www.linkedin.com/in/ndacyayisenga-droid/",
+      instagram: "https://www.instagram.com/p/DCKOuHEChyu/?igsh=MW5uemhmaW15dTRtag==",
+      x: "https://twitter.com/NdacyayisengaN1",
+      whatsapp: "https://wa.me/256750571027",
+      email: "mailto:ndacyayinoah@gmail.com"
     }
   }
 ]
@@ -96,7 +141,7 @@ export default function AboutUs() {
           ᗩᗷOᑌT <span className="text-accent-600 dark:text-accent-100">Us</span>
           </h2>
           <p className="text-xl text-primary-700 dark:text-primary-300 max-w-3xl mx-auto">
-            We discover hidden treasures in fashion aimed at unveiling unique pieces that reveal your authentic style.
+            We discover culinary excellence aimed at unveiling unique flavors that reveal your authentic taste for luxury.
           </p>
         </motion.div>
 
@@ -123,10 +168,10 @@ export default function AboutUs() {
         >
           <div className="max-w-4xl mx-auto">
             <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
-              <MysticalPiecesWord />  began with a vision to connect fashion and style as a mirror of the self. We roam markets and archives to uncover pieces with story, quality, and design integrity.
+              <MysticalPiecesWord />  began with a vision to connect culinary artistry and luxury dining as a reflection of sophistication. We source from the finest markets and artisanal producers to uncover flavors with story, quality, and culinary integrity.
             </p>
             <p className="text-lg text-primary-600 dark:text-primary-300 leading-relaxed mb-6">
-              We blend intuition with modern futurism, bridging tactile history and digital-age aesthetics. We are an invitation to dress with clarity, confidence, and purpose.
+              We blend tradition with modern innovation, bridging classic techniques and contemporary gastronomy. We are an invitation to dine with elegance, refinement, and purpose.
             </p>
             <div className="inline-flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 bg-primary-100 dark:bg-primary-900/30 px-4 sm:px-6 py-3 rounded-full">
               <span className="text-primary-800 dark:text-primary-100 font-semibold text-sm sm:text-base">Our Core:</span>
@@ -134,7 +179,7 @@ export default function AboutUs() {
                 className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-3xl leading-snug text-center sm:text-left"
                 style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
               >
-                Hidden treasures reveal a timeless style
+                Culinary excellence reveals timeless luxury
               </span>
             </div>
           </div>
@@ -157,7 +202,7 @@ export default function AboutUs() {
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
                   <Image
                     src="/assets/images/team/lrba.jpg"
-                    alt="LRBA - CEO and Founder of MysticalPIECES"
+                    alt="LRBA - CEO and Founder of Cafe Hebrews"
                     width={128}
                     height={128}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -338,22 +383,22 @@ export default function AboutUs() {
               {
                 image: "/assets/images/sections/home/values-1.jpg",
                 title: "Intuition",
-                description: "We follow subtle cues to choose pieces that resonate now and stay relevant next season."
+                description: "We follow subtle culinary cues to create dishes that resonate now and stay timeless in the future."
               },
               {
                 image: "/assets/images/sections/home/values-4.jpg",
                 title: "Connection",
-                description: "Each piece links past and new wardrobes, nurturing a conscious style community."
+                description: "Each dining experience connects traditional and modern flavors, nurturing a conscious culinary community."
               },
               {
                 image: "/assets/images/sections/home/values-3.jpg",
                 title: "Sustainability",
-                description: "We honor Earth by extending the life of quality garments and reducing fashion waste."
+                description: "We honor Earth by sourcing quality ingredients responsibly and reducing culinary waste."
               },
               {
                 image: "/assets/images/sections/home/values-2.jpg",
                 title: "Expression",
-                description: "We champion refined self-expression, letting minimal silhouettes deliver bold identities."
+                description: "We champion refined culinary artistry, letting elegant presentation deliver bold flavors."
               }
             ].map((value, index) => (
               <motion.div
@@ -402,18 +447,18 @@ export default function AboutUs() {
             {[
               {
                 image: "/assets/images/sections/home/missions-1.jpg",
-                title: "Future Sourcing",
-                description: "To scout standout garments with enduring build, striking detail, and forward aesthetics."
+                title: "Premium Sourcing",
+                description: "To source exceptional ingredients with enduring quality, striking flavors, and forward-thinking culinary innovation."
               },
               {
                 image: "/assets/images/sections/home/missions-2.jpg",
-                title: "Circular Styling",
-                description: "To restore pre-loved treasures with care, making circular fashion effortless and stylish."
+                title: "Sustainable Dining",
+                description: "To create memorable dining experiences with care, making sustainable luxury effortless and elegant."
               },
               {
                 image: "/assets/images/sections/home/missions-3.jpg",
-                title: "Signature Revelation",
-                description: "To help you distill a personal look that feels intuitive, modern, and unmistakably yours."
+                title: "Culinary Signature",
+                description: "To help you discover a personal dining style that feels intuitive, refined, and unmistakably sophisticated."
               }
             ].map((mission, index) => (
               <motion.div
@@ -482,14 +527,14 @@ export default function AboutUs() {
                 title: "Mission Statement", 
                 description: (
                   <>
-                    <MysticalPiecesWord />  exists to awaken individuality and inspire mindful connection through future-minded thrift fashion.
+                    <MysticalPiecesWord />  exists to awaken culinary passion and inspire mindful connection through luxury dining experiences.
                   </>
                 ) 
               },
               { 
                 image: "/assets/images/sections/mission/vision-icon.jpg", 
                 title: "Vision Statement", 
-                description: "We envision a world where fashion and style speaks in intuitive, self-aware tones uniting technology, sustainability, and human-centered design." 
+                description: "We envision a world where luxury dining speaks in intuitive, refined tones uniting culinary artistry, sustainability, and human-centered hospitality." 
               }
             ].map((item, index) => (
               <MissionVisionCard key={index} item={item} index={index} />

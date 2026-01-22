@@ -30,7 +30,7 @@ export default function Footer() {
             <MysticalPiecesWord /> 
           </Link>
           <p className="tagline text-1xl md:text-2xl font-light">
-            Style that transcends the ordinary.
+            Luxury that transcends the ordinary.
           </p>
           <p className="copyright">
             © {new Date().getFullYear()} <MysticalPiecesWord /> . All rights reserved.

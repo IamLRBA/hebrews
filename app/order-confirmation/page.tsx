@@ -155,7 +155,7 @@ export default function OrderConfirmationPage() {
           <h1 className="text-4xl font-bold text-neutral-850 dark:text-primary-50 mb-4">Order Not Found</h1>
           <p className="text-primary-300 dark:text-primary-400 mb-8">We couldn't find an order with that ID.</p>
           <Link href="/products/shirts" className="btn btn-primary">
-            Continue Shopping
+            View Menu
           </Link>
         </div>
       </div>
@@ -215,7 +215,7 @@ export default function OrderConfirmationPage() {
               <h1 className="text-3xl font-bold text-gray-900 dark:text-primary-100 mb-2" style={{ letterSpacing: '0.5px' }}>
                 <MysticalPiecesWord />
               </h1>
-              <p className="text-gray-600 dark:text-primary-300 text-sm">Mystical Thrift Fashion & Soulful Style Curators</p>
+              <p className="text-gray-600 dark:text-primary-300 text-sm">Luxury Destination Cafe & Culinary Excellence</p>
             </div>
             <div className="flex justify-between items-center text-sm text-gray-600 dark:text-primary-300">
               <div className="text-left">
@@ -358,7 +358,7 @@ export default function OrderConfirmationPage() {
           {/* Footer */}
           <div className="text-center pt-6 border-t-2 border-gray-200 dark:border-neutral-600">
             <p className="text-gray-600 dark:text-primary-300 text-xs mb-2">
-              Thank you for shopping with <MysticalPiecesWord />!
+              Thank you for dining with <MysticalPiecesWord />!
             </p>
             <div className="text-gray-500 dark:text-primary-400 text-xs space-y-1">
               <p>Email: jerrylarubafestus@gmail.com</p>
