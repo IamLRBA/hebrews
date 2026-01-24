@@ -233,7 +233,7 @@ export default function AboutUs() {
                 className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-3xl leading-snug text-center sm:text-left"
                 style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
               >
-                Culinary excellence reveals timeless luxury
+                Dining excellence reveals timeless luxury
               </span>
             </div>
           </div>
