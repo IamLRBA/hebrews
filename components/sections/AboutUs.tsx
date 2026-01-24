@@ -575,7 +575,7 @@ export default function AboutUs() {
                 title: "Mission Statement", 
                 description: (
                   <>
-                    <MysticalPiecesWord />  exists to awaken culinary passion and inspire mindful connection through luxury dining experiences.
+                    <MysticalPiecesWord />  exists to awaken culinary passion and inspire mindful connection through luxury and amazing dining experiences.
                   </>
                 ) 
               },
