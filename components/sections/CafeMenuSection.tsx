@@ -29,7 +29,7 @@ const products: Product[] = [
     number: '01', 
     title: 'Barista', 
     description: 'Discover our premium coffee and beverage selection, from expertly crafted hot drinks to refreshing cold creations. Customize with milk types and strength options.', 
-    image: '/assets/images/products-sections/fashion/shirts.jpg',
+    image: '/assets/images/products-sections/cafe/barista.jpg',
     slug: 'barista',
     subcategories: [
       { name: 'Hot Beverages', slug: 'hot' },
@@ -47,7 +47,7 @@ const products: Product[] = [
     number: '02', 
     title: 'Bar', 
     description: 'Indulge in our curated selection of cocktails and wines. Each drink crafted with precision, with options for no-sugar cocktails and premium wine pairings.', 
-    image: '/assets/images/products-sections/fashion/tees.jpg',
+    image: '/assets/images/products-sections/cafe/bar.jpg',
     slug: 'bar',
     subcategories: [
       { name: 'Cocktails', slug: 'cocktails' },
@@ -65,7 +65,7 @@ const products: Product[] = [
     number: '03', 
     title: 'Kitchen', 
     description: 'Savor our expertly prepared dishes from the grill, breakfast favorites, and main courses. Customize steaks with temperature, sauce, and side options.', 
-    image: '/assets/images/products-sections/fashion/outerwear.jpg',
+    image: '/assets/images/products-sections/cafe/kitchen.jpg',
     slug: 'kitchen',
     subcategories: [
       { name: 'Grill', slug: 'grill' },
@@ -83,7 +83,7 @@ const products: Product[] = [
     number: '04', 
     title: 'Bakery', 
     description: 'Delight in our fresh-baked pastries, breads, and confections. Perfect for breakfast combos or as the perfect ending to your dining experience.', 
-    image: '/assets/images/products-sections/fashion/bottoms.jpg',
+    image: '/assets/images/products-sections/cafe/bakery.jpg',
     slug: 'bakery',
     subcategories: [
       { name: 'Pastries', slug: 'pastries' },
@@ -98,7 +98,7 @@ const products: Product[] = [
   }
 ]
 
-export default function FashionProducts() {
+export default function CafeMenuSection() {
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [hoveredThumbnail, setHoveredThumbnail] = useState<{serviceId: number, thumbIndex: number} | null>(null)
   
@@ -138,7 +138,6 @@ export default function FashionProducts() {
                   {expandedId === s.id && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
                       <div className="bg-primary-800/30 dark:bg-primary-900/40 rounded-xl p-3 sm:p-6 border border-primary-500/20 dark:border-primary-400/30">
-                        {/* Thumbnail Images */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4 justify-items-center">
                           {[1, 2, 3, 4].map((thumbIndex) => {
                             const subcategory = s.subcategories[thumbIndex - 1]
@@ -154,12 +153,12 @@ export default function FashionProducts() {
                               >
                                 <div className="bg-primary-900/20 rounded-lg h-24 w-24 sm:h-40 sm:w-40 md:h-48 md:w-48 flex items-center justify-center border border-primary-500/20 overflow-hidden shadow-lg hover:shadow-none transition-all duration-300 cursor-pointer group">
                             <img 
-                              src={`/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.jpg`}
+                              src={`/assets/images/products-sections/cafe/${s.slug}/thumb${thumbIndex}.jpg`}
                               alt={`${subcategory.name} - ${s.title}`}
                               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement
-                                target.src = `/assets/images/products-sections/fashion/${s.slug}/thumb${thumbIndex}.svg`
+                                target.src = `/assets/images/products-sections/cafe/${s.slug}/thumb${thumbIndex}.svg`
                               }}
                             />
                                   <div className="hidden text-neutral-800 dark:text-primary-400 text-sm items-center justify-center w-full h-full">
@@ -167,7 +166,6 @@ export default function FashionProducts() {
                                   </div>
                                 </div>
                                 
-                                {/* Hover Overlay */}
                                 <AnimatePresence>
                                   {isHovered && (
                                     <motion.div
@@ -191,7 +189,7 @@ export default function FashionProducts() {
                                         transition={{ delay: 0.15 }}
                                         className="btn btn-outline btn-hover-secondary-filled flex items-center justify-center text-center px-3 py-1 md:px-6 md:py-2 text-xs md:text-sm font-medium"
                                       >
-                                        View Collection
+                                        View Menu
                                       </motion.div>
                                     </motion.div>
                                   )}
@@ -201,7 +199,6 @@ export default function FashionProducts() {
                           })}
                         </div>
                         
-                        {/* Quote Section */}
                         <div className="mt-2 pt-4 border-t border-primary-500/20">
                           <blockquote className="text-center max-w-full sm:max-w-md md:max-w-lg mx-auto">
                             <Quote className="w-8 h-8 mx-auto mb-4 text-primary-400/50" />
@@ -227,5 +224,3 @@ export default function FashionProducts() {
     </section>
   )
 }
-
-

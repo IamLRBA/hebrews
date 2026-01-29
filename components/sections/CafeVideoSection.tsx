@@ -6,56 +6,55 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, FreeMode } from 'swiper/modules'
 import { Play, Pause, Volume2, VolumeX, Maximize, Settings, SkipBack, SkipForward } from 'lucide-react'
 
-// Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/free-mode'
 
-const fashionVideos = [
+const cafeVideos = [
   {
     id: 1,
-    title: 'Styling Tips - "Casual to Elegant"',
-    description: 'Transform your everyday look into elegant evening wear',
-    src: '/assets/videos/fashion/styling-casual-elegant.mp4',
-    thumbnail: '/assets/images/videos/fashion/styling-casual-elegant-cover.jpg',
+    title: 'From Bean to Cup - "Brewing Excellence"',
+    description: 'Watch our baristas craft the perfect cup from roast to pour',
+    src: '/assets/videos/cafe/styling-casual-elegant.mp4',
+    thumbnail: '/assets/images/videos/cafe/styling-casual-elegant-cover.jpg',
     duration: '4:55'
   },
   {
     id: 2,
-    title: 'Accessorizing Guide - "Jewelry & Bags"',
-    description: 'Complete guide to accessorizing with jewelry and handbags',
-    src: '/assets/videos/fashion/accessorizing-guide.mp4',
-    thumbnail: '/assets/images/videos/fashion/accessorizing-guide-cover.jpg',
+    title: 'Latte Art - "The Art of Coffee"',
+    description: 'Discover the craft of latte art and signature designs',
+    src: '/assets/videos/cafe/accessorizing-guide.mp4',
+    thumbnail: '/assets/images/videos/cafe/accessorizing-guide-cover.jpg',
     duration: '1:09'
   },
   {
     id: 3,
-    title: 'Color Coordination - "Seasonal Palettes"',
-    description: 'Mastering color coordination for different seasons',
-    src: '/assets/videos/fashion/color-coordination-seasonal.mp4',
-    thumbnail: '/assets/images/videos/fashion/color-coordination-seasonal-cover.jpg',
+    title: 'Seasonal Menu - "Fresh & Inspired"',
+    description: 'Explore our seasonal offerings and chef-inspired specials',
+    src: '/assets/videos/cafe/color-coordination-seasonal.mp4',
+    thumbnail: '/assets/images/videos/cafe/color-coordination-seasonal-cover.jpg',
     duration: '7:05'
   },
   {
     id: 4,
-    title: 'Body Type Styling - "Flattering Silhouettes"',
-    description: 'Dress for your body type with confidence',
-    src: '/assets/videos/fashion/body-type-styling.mp4',
-    thumbnail: '/assets/images/videos/fashion/body-type-styling-cover.jpg',
+    title: 'Kitchen Stories - "Behind the Scenes"',
+    description: 'A glimpse into our kitchen and the passion behind every dish',
+    src: '/assets/videos/cafe/body-type-styling.mp4',
+    thumbnail: '/assets/images/videos/cafe/body-type-styling-cover.jpg',
     duration: '09:07'
   },
   {
     id: 5,
-    title: 'Wisdom Kaye - "Fashion Ananlysis"',
-    description: 'Wisdom Kaye Breaks Down The Outfits That Made Him Famous (And A Multimillionaire)',
-    src: '/assets/videos/fashion/fashion-analysis.mp4',
-    thumbnail: '/assets/images/videos/fashion/fashion-analysis-cover.jpg',
+    title: 'Cafe Hebrews - "Our Story"',
+    description: 'Where luxury meets tradition. Experience the divine in every cup.',
+    src: '/assets/videos/cafe/fashion-analysis.mp4',
+    thumbnail: '/assets/images/videos/cafe/fashion-analysis-cover.jpg',
     duration: '8:45'
   }
 ]
 
-export default function FashionVideoSection() {
-  const [selectedVideo, setSelectedVideo] = useState(fashionVideos[0])
+export default function CafeVideoSection() {
+  const [selectedVideo, setSelectedVideo] = useState(cafeVideos[0])
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(0.8)
   const [isMuted, setIsMuted] = useState(true)
@@ -92,23 +91,22 @@ export default function FashionVideoSection() {
       video.src = src
       video.load()
     }
-    fashionVideos.forEach(video => {
+    cafeVideos.forEach(video => {
       preloadVideo(video.src)
     })
   }, [])
 
-  const handleVideoSelect = (video: typeof fashionVideos[0]) => {
+  const handleVideoSelect = (video: typeof cafeVideos[0]) => {
     setSelectedVideo(video)
     setProgress(0)
     setShowControls(true)
     setIsLoading(true)
     setVideoError(null)
-    setShowTitleDescription(true) // Show title/description when video is selected
+    setShowTitleDescription(true)
     setTimeout(() => {
       if (videoRef.current) {
         videoRef.current.play().then(() => {
           setIsPlaying(true)
-          // Hide title/description after 3 seconds when video starts playing
           setTimeout(() => {
             setShowTitleDescription(false)
           }, 3000)
@@ -125,7 +123,6 @@ export default function FashionVideoSection() {
         videoRef.current.pause()
       } else {
         videoRef.current.play()
-        // Hide title/description after 3 seconds when video starts playing
         setShowTitleDescription(true)
         setTimeout(() => {
           setShowTitleDescription(false)
@@ -183,7 +180,6 @@ export default function FashionVideoSection() {
     setShowControls(true)
   }
 
-  // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement)
@@ -332,7 +328,6 @@ export default function FashionVideoSection() {
               transition={{ duration: 0.3 }}
               className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4"
             >
-              {/* Progress bar - hidden on mobile, shown in fullscreen or desktop */}
               <div 
                 className={`w-full h-1 bg-white/30 rounded-full cursor-pointer mb-4 ${isFullscreen ? 'block' : 'hidden md:block'}`}
                 onClick={handleSeek}
@@ -344,7 +339,6 @@ export default function FashionVideoSection() {
               </div>
 
               <div className="flex items-center justify-between">
-                {/* Left side controls - simplified on mobile, full controls in fullscreen */}
                 <div className="flex items-center space-x-4">
                   <button
                     onClick={handlePlayPause}
@@ -353,12 +347,11 @@ export default function FashionVideoSection() {
                     {isPlaying ? <Pause size={24} /> : <Play size={24} />}
                   </button>
 
-                  {/* Hide these controls on mobile (unless fullscreen), show on desktop or in fullscreen */}
                   <button
                     onClick={() => {
-                      const currentIndex = fashionVideos.findIndex(video => video.id === selectedVideo.id)
-                      const prevIndex = (currentIndex - 1 + fashionVideos.length) % fashionVideos.length
-                      handleVideoSelect(fashionVideos[prevIndex])
+                      const currentIndex = cafeVideos.findIndex(video => video.id === selectedVideo.id)
+                      const prevIndex = (currentIndex - 1 + cafeVideos.length) % cafeVideos.length
+                      handleVideoSelect(cafeVideos[prevIndex])
                     }}
                     className={`${isFullscreen ? 'block' : 'hidden md:block'} text-white/70 hover:text-white transition-colors duration-300`}
                   >
@@ -366,9 +359,9 @@ export default function FashionVideoSection() {
                   </button>
                   <button
                     onClick={() => {
-                      const currentIndex = fashionVideos.findIndex(video => video.id === selectedVideo.id)
-                      const nextIndex = (currentIndex + 1) % fashionVideos.length
-                      handleVideoSelect(fashionVideos[nextIndex])
+                      const currentIndex = cafeVideos.findIndex(video => video.id === selectedVideo.id)
+                      const nextIndex = (currentIndex + 1) % cafeVideos.length
+                      handleVideoSelect(cafeVideos[nextIndex])
                     }}
                     className={`${isFullscreen ? 'block' : 'hidden md:block'} text-white/70 hover:text-white transition-colors duration-300`}
                   >
@@ -413,7 +406,6 @@ export default function FashionVideoSection() {
                   </span>
                 </div>
 
-                {/* Right side controls - only maximize on mobile, all controls in fullscreen */}
                 <div className="flex items-center space-x-4">
                   <div className={`${isFullscreen ? 'flex' : 'hidden md:flex'} items-center space-x-2`}>
                     <button
@@ -462,27 +454,15 @@ export default function FashionVideoSection() {
               watchOverflow={true}
               watchSlidesProgress={true}
               breakpoints={{
-                320: {
-                  slidesPerView: 2,
-                  spaceBetween: 12,
-                },
-                640: {
-                  slidesPerView: 3,
-                  spaceBetween: 16,
-                },
-                1024: {
-                  slidesPerView: 4,
-                  spaceBetween: 16,
-                },
-                1280: {
-                  slidesPerView: 5,
-                  spaceBetween: 16,
-                },
+                320: { slidesPerView: 2, spaceBetween: 12 },
+                640: { slidesPerView: 3, spaceBetween: 16 },
+                1024: { slidesPerView: 4, spaceBetween: 16 },
+                1280: { slidesPerView: 5, spaceBetween: 16 },
               }}
               className="video-swiper w-full"
               style={{ paddingBottom: '40px' }}
             >
-              {fashionVideos.map((video) => (
+              {cafeVideos.map((video) => (
                 <SwiperSlide key={video.id}>
                   <motion.div
                     whileHover={{ scale: 1.05 }}
@@ -576,7 +556,6 @@ export default function FashionVideoSection() {
           background: #C2B280;
           cursor: pointer;
         }
-        
         .slider::-moz-range-thumb {
           width: 12px;
           height: 12px;
@@ -585,48 +564,19 @@ export default function FashionVideoSection() {
           cursor: pointer;
           border: none;
         }
-
-        .video-swiper {
-          width: 100%;
-          overflow: visible;
-        }
-        
-        .video-swiper .swiper-wrapper {
-          display: flex;
-          align-items: stretch;
-        }
-        
-        .video-swiper .swiper-slide {
-          height: auto;
-          display: flex;
-        }
-        
+        .video-swiper { width: 100%; overflow: visible; }
+        .video-swiper .swiper-wrapper { display: flex; align-items: stretch; }
+        .video-swiper .swiper-slide { height: auto; display: flex; }
         .video-swiper .swiper-button-next,
         .video-swiper .swiper-button-prev {
-          top: 25%;
-          transform: translateY(-50%);
-          background: transparent;
-          width: auto;
-          height: auto;
-          border: none;
-          color: #C2B280;
-          z-index: 10;
+          top: 25%; transform: translateY(-50%);
+          background: transparent; width: auto; height: auto; border: none;
+          color: #C2B280; z-index: 10;
         }
-        
         .video-swiper .swiper-button-prev,
-        .video-swiper .swiper-button-next {
-          display: none !important;
-        }
-
-        .video-swiper .swiper-pagination-bullet {
-          background: #C2B280;
-          opacity: 0.6;
-          transition: background-color 0.3s ease, opacity 0.3s ease;
-        }
-        .video-swiper .swiper-pagination-bullet-active {
-          background: #C2B280;
-          opacity: 1;
-        }
+        .video-swiper .swiper-button-next { display: none !important; }
+        .video-swiper .swiper-pagination-bullet { background: #C2B280; opacity: 0.6; }
+        .video-swiper .swiper-pagination-bullet-active { background: #C2B280; opacity: 1; }
       `}</style>
     </section>
   )

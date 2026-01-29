@@ -245,16 +245,16 @@ export default function ProductCategoryPage() {
   // Helper function to get main product image based on category
   const getMainProductImage = (categorySlug: string): string => {
     const imageMap: Record<string, string> = {
-      'barista': '/assets/images/products-sections/fashion/shirts.jpg',
-      'bar': '/assets/images/products-sections/fashion/tees.jpg',
-      'kitchen': '/assets/images/products-sections/fashion/outerwear.jpg',
-      'bakery': '/assets/images/products-sections/fashion/bottoms.jpg',
-      'shirts': '/assets/images/products-sections/fashion/shirts.jpg',
-      'tees': '/assets/images/products-sections/fashion/tees.jpg',
-      'coats': '/assets/images/products-sections/fashion/outerwear.jpg',
-      'pants-and-shorts': '/assets/images/products-sections/fashion/bottoms.jpg',
-      'footwear': '/assets/images/products-sections/fashion/footwear.jpg',
-      'accessories': '/assets/images/products-sections/fashion/accessories.jpg'
+      'barista': '/assets/images/products-sections/cafe/barista.jpg',
+      'bar': '/assets/images/products-sections/cafe/bar.jpg',
+      'kitchen': '/assets/images/products-sections/cafe/kitchen.jpg',
+      'bakery': '/assets/images/products-sections/cafe/bakery.jpg',
+      'shirts': '/assets/images/products-sections/cafe/barista.jpg',
+      'tees': '/assets/images/products-sections/cafe/bar.jpg',
+      'coats': '/assets/images/products-sections/cafe/kitchen.jpg',
+      'pants-and-shorts': '/assets/images/products-sections/cafe/bakery.jpg',
+      'footwear': '/assets/images/products-sections/cafe/bakery.jpg',
+      'accessories': '/assets/images/products-sections/cafe/bar.jpg'
     }
     
     return imageMap[categorySlug] || '/assets/images/placeholder.jpg'
@@ -280,7 +280,7 @@ export default function ProductCategoryPage() {
     const thumbIndex = subcategories.indexOf(sectionSlug) + 1
     
     if (thumbIndex > 0) {
-      return `/assets/images/products-sections/fashion/${categorySlug}/thumb${thumbIndex}.jpg`
+      return `/assets/images/products-sections/cafe/${categorySlug}/thumb${thumbIndex}.jpg`
     }
     
     return '/assets/images/placeholder.jpg'
@@ -454,7 +454,7 @@ export default function ProductCategoryPage() {
                   className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
-                    target.src = `/assets/images/products-sections/fashion/${category}/thumb${(sections.indexOf(section) % 4) + 1}.svg`
+                    target.src = `/assets/images/products-sections/cafe/${category}/thumb${(sections.indexOf(section) % 4) + 1}.svg`
                   }}
                 />
               </div>

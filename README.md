@@ -1,7 +1,7 @@
 
-# MysticalPIECES - Online Thrift Store
+# Cafe Hebrews — Luxury Destination Cafe
 
-A modern, interactive e-commerce platform for curated thrift fashion. MysticalPIECES offers a unique shopping experience with carefully selected vintage and second-hand items across multiple categories.
+A modern, interactive e-commerce platform for Cafe Hebrews. Browse our menu, order online, and experience premium dining, coffee, and hospitality.
 
 ---
 
@@ -9,7 +9,7 @@ A modern, interactive e-commerce platform for curated thrift fashion. MysticalPI
 
 ### ⋆✴︎⌖⋆ E-Commerce Features
 
-- **Product Catalog**: Browse curated thrift fashion across multiple categories
+- **Product Catalog**: Browse our menu across Barista, Bar, Kitchen, and Bakery
 - **Shopping Cart**: Add items to cart with size and color selection
 - **Checkout System**: Secure checkout with delivery options
 - **Order Management**: Order confirmation with receipt generation
@@ -76,7 +76,7 @@ mysticalpieces/
 ├── public/                       # Static assets
 │   └── assets/
 │       ├── images/              # Product and brand images
-│       └── videos/              # Fashion videos
+│       └── videos/              # Cafe videos
 ├── styles/                       # Global styles
 │   └── globals.css
 ├── tailwind.config.js           # Tailwind configuration
@@ -87,49 +87,35 @@ mysticalpieces/
 
 ---
 
-## 🕸 Product Categories
+## 🕸 Menu Categories
 
-### 1. Shirts
+### 1. Barista
 
-- **Gentle**: Soft, comfortable shirt styles
-- **Checked**: Classic checked patterns
-- **Textured**: Textured fabric variations
-- **Denim**: Denim shirt collection
+- **Hot Beverages**: Espresso, cappuccino, latte, Americano
+- **Cold Beverages**: Iced coffee, cold brew, iced latte, frappe
+- **Specialty Coffee**: Flat white, mocha, macchiato, affogato
+- **Tea Selection**: English breakfast, green tea, chai latte, herbal tea
 
-### 2. Tees
+### 2. Bar
 
-- **Plain**: Simple, versatile t-shirts
-- **Graphic**: Graphic design t-shirts
-- **Collared**: Collared t-shirt styles
-- **Sporty**: Athletic and sporty designs
+- **Cocktails**: Mojito, Old Fashioned, Margarita, Cosmopolitan
+- **Wines**: Red, white, rosé, sparkling
+- **Premium Spirits**: Whiskey, gin, vodka, rum
+- **Signature Drinks**: House specials and seasonal creations
 
-### 3. Coats & Outerwear
+### 3. Kitchen
 
-- **Sweater**: Cozy sweater collection
-- **Hoodie**: Casual hoodie styles
-- **Coat**: Classic coat designs
-- **Jacket**: Various jacket styles
+- **Grill**: Steaks, grilled chicken, fish, lamb chops
+- **Breakfast**: Full English, rolex, avocado toast, pancakes
+- **Mains**: Beef stroganoff, pasta, curry, fish and chips
+- **Specials**: Chef's special, happy hour, combos, weekend brunch
 
-### 4. Pants & Shorts
+### 4. Bakery
 
-- **Gentle**: Comfortable pant styles
-- **Denim**: Denim pants and shorts
-- **Cargo**: Cargo pant collection
-- **Sporty**: Athletic wear
-
-### 5. Footwear
-
-- **Gentle**: Comfortable shoe styles
-- **Sneakers**: Athletic sneaker collection
-- **Sandals**: Casual sandal options
-- **Boots**: Boot styles
-
-### 6. Accessories
-
-- **Rings & Necklaces**: Jewelry collection
-- **Shades & Glasses**: Eyewear options
-- **Bracelets & Watches**: Timepieces and bracelets
-- **Decor**: Fashion decor items
+- **Pastries**: Croissant, danish, pain au chocolat, cinnamon roll
+- **Breads**: Sourdough, whole wheat, baguette, multigrain
+- **Desserts**: Chocolate cake, cheesecake, tiramisu, fruit tart
+- **Breakfast Items**: Muffin, scone, bagel, pastry platter
 
 ---
 
@@ -144,7 +130,7 @@ mysticalpieces/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd mysticalpieces
+   cd Hebrews
    ```
 2. **Install dependencies**
    ```bash
@@ -184,10 +170,10 @@ npm start
 - Add product details: name, price, sizes, colors, images
 - Include product descriptions and SKU information
 
-#### Fashion Videos
+#### Cafe Videos
 
-- Add fashion videos to `/public/assets/videos/fashion/`
-- Update video paths in `FashionVideoSection.tsx`
+- Add cafe videos to `/public/assets/videos/cafe/`
+- Update video paths in `CafeVideoSection.tsx`
 - Recommended formats: MP4, WebM
 - Keep file sizes reasonable for web performance
 
@@ -200,7 +186,7 @@ npm start
 ### Adding New Product Categories
 
 1. Add category data to `/data/products.json`
-2. Create category images in `/public/assets/images/products-sections/fashion/`
+2. Create category images in `/public/assets/images/products-sections/cafe/`
 3. Add subcategory images for each category
 4. Update product routes in `/app/products/[category]/`
 
@@ -336,7 +322,7 @@ For questions or support:
 
 ---
 
-**Built with ♡ by MysticalPIECES**
-*Future-facing thrift fashion curated to awaken individuality, celebrate conscious style, and build modern connections through every garment* 
+**Built with ♡ by Cafe Hebrews**
+*Where luxury meets tradition. Experience the divine in every cup.* 
 
 ---

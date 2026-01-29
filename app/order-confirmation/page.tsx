@@ -154,7 +154,7 @@ export default function OrderConfirmationPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-neutral-850 dark:text-primary-50 mb-4">Order Not Found</h1>
           <p className="text-primary-300 dark:text-primary-400 mb-8">We couldn't find an order with that ID.</p>
-          <Link href="/products/shirts" className="btn btn-primary">
+          <Link href="/products/barista" className="btn btn-primary">
             View Menu
           </Link>
         </div>
@@ -385,7 +385,7 @@ export default function OrderConfirmationPage() {
             <Download className="w-5 h-5" />
             <span>{isDownloading ? 'Downloading...' : 'Download Receipt'}</span>
           </button>
-          <Link href="/products/shirts" className="btn btn-primary inline-flex items-center justify-center space-x-2">
+          <Link href="/products/barista" className="btn btn-primary inline-flex items-center justify-center space-x-2">
             <Package className="w-5 h-5" />
             <span>Continue Shopping</span>
           </Link>

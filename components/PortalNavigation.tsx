@@ -10,7 +10,7 @@ const portals = [
   {
     id: 1,
     title: "ᔕEᖇᐯIᑕEᔕ",
-    image: "/assets/images/sections/portals/fashion.jpg",
+    image: "/assets/images/sections/portals/cafe.jpg",
     href: "/sections/shop"
   }
 ]

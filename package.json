@@ -1,7 +1,7 @@
 {
-  "name": "fusioncraft-portfolio",
+  "name": "cafe-hebrews",
   "version": "1.0.0",
-  "description": "FusionCRAFT STUDIOS - Personal Portfolio showcasing Architecture, Music, Art, Coding, and Fashion",
+  "description": "Cafe Hebrews - Luxury destination cafe offering premium dining, coffee, and hospitality",
   "private": true,
   "scripts": {
     "dev": "next dev",

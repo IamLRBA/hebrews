@@ -9,15 +9,13 @@
 - Uses `HiUserCircle` icon
 - Includes CTA to "E᙭ᑭᒪOᖇE the Portals"
 
-### 2. Fashion Services Updated
-All 6 services renamed with new product categories:
+### 2. Cafe Menu Services
+Menu categories with subcategories:
 
-**Shirts** → Gentle, Checked, Textured, Denim  
-**Tees** → Plain, Graphic, Collared, Sporty  
-**OuterWear** → Sweater, Hoodie, Coat, Jacket  
-**Bottoms** → Gentle, Denim, Cargo, Sporty  
-**FootWear** → Gentle, Sneakers, Sandals, Boots  
-**Accessories** → Rings & Necklaces, Shades & Glasses, Bracelets & Watches, Decor
+**Barista** → Hot Beverages, Cold Beverages, Specialty Coffee, Tea Selection  
+**Bar** → Cocktails, Wines, Premium Spirits, Signature Drinks  
+**Kitchen** → Grill, Breakfast, Mains, Specials  
+**Bakery** → Pastries, Breads, Desserts, Breakfast Items
 
 Each with:
 - ✅ Clickable product thumbnails (4 per service)
@@ -68,38 +66,28 @@ Each with:
 ## 📁 Where to Place Your Images
 
 ### Product Showcase Thumbnails
-Place in: `public/assets/images/products-sections/fashion/[category]/thumb[1-4].jpg`
+Place in: `public/assets/images/products-sections/cafe/[category]/thumb[1-4].jpg`
 
 ```
-shirts/thumb1.jpg (Gentle)
-shirts/thumb2.jpg (Checked)
-shirts/thumb3.jpg (Textured)
-shirts/thumb4.jpg (Denim)
+barista/thumb1.jpg (Hot Beverages)
+barista/thumb2.jpg (Cold Beverages)
+barista/thumb3.jpg (Specialty Coffee)
+barista/thumb4.jpg (Tea Selection)
 
-tees/thumb1.jpg (Plain)
-tees/thumb2.jpg (Graphic)
-tees/thumb3.jpg (Collared)
-tees/thumb4.jpg (Sporty)
+bar/thumb1.jpg (Cocktails)
+bar/thumb2.jpg (Wines)
+bar/thumb3.jpg (Premium Spirits)
+bar/thumb4.jpg (Signature Drinks)
 
-coats/thumb1.jpg (Sweater)
-coats/thumb2.jpg (Hoodie)
-coats/thumb3.jpg (Coat)
-coats/thumb4.jpg (Jacket)
+kitchen/thumb1.jpg (Grill)
+kitchen/thumb2.jpg (Breakfast)
+kitchen/thumb3.jpg (Mains)
+kitchen/thumb4.jpg (Specials)
 
-pants-and-shorts/thumb1.jpg (Gentle)
-pants-and-shorts/thumb2.jpg (Denim)
-pants-and-shorts/thumb3.jpg (Cargo)
-pants-and-shorts/thumb4.jpg (Sporty)
-
-footwear/thumb1.jpg (Gentle)
-footwear/thumb2.jpg (Sneakers)
-footwear/thumb3.jpg (Sandals)
-footwear/thumb4.jpg (Boots)
-
-accessories/thumb1.jpg (Rings & Necklaces)
-accessories/thumb2.jpg (Shades & Glasses)
-accessories/thumb3.jpg (Bracelets & Watches)
-accessories/thumb4.jpg (Decor)
+bakery/thumb1.jpg (Pastries)
+bakery/thumb2.jpg (Breads)
+bakery/thumb3.jpg (Desserts)
+bakery/thumb4.jpg (Breakfast Items)
 ```
 
 ### Product Images
@@ -113,7 +101,7 @@ See `public/assets/images/products/README.md` for full structure.
 
 ## 🎯 User Flow
 
-1. **Browse**: Homepage → Fashion Portal → Services Dropdown
+1. **Browse**: Homepage → Services Portal → Menu
 2. **View Products**: Click "Read More" → See 4 product categories
 3. **Select Product**: Click thumbnail → Opens product modal
 4. **Add to Cart**: Choose size/color → Add to cart
@@ -145,7 +133,7 @@ See `public/assets/images/products/README.md` for full structure.
 ### Modified Files
 - `app/page.tsx` (removed About Us section)
 - `components/Navbar.tsx` (added About Us link)
-- `sections/FashionProducts.tsx` (product categories + links)
+- `sections/CafeMenuSection.tsx` (menu categories + links)
 - `styles/globals.css` (added text-gradient)
 
 ## 🎨 Features Included
