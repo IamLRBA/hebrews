@@ -98,13 +98,13 @@ export default function KeyboardShortcuts() {
         case 'a':
           if (!e.ctrlKey && !e.metaKey) {
             e.preventDefault()
-            window.location.href = '/about-us'
+            window.location.href = '/'
           }
           break
         case 'f':
           if (!e.ctrlKey && !e.metaKey) {
             e.preventDefault()
-            window.location.href = '/sections/shop'
+            window.location.href = '/'
           }
           break
         case 'g':

@@ -81,7 +81,7 @@ export default function CartPage() {
         className="fixed top-20 left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/sections/shop" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+        <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="text-lg font-medium">⟸</span>
           <span className="text-sm font-medium">Continue to Menu</span>
         </Link>
@@ -124,7 +124,7 @@ export default function CartPage() {
             <h2 className="text-2xl font-bold text-neutral-900 dark:text-primary-50 mb-4">Your cart is empty</h2>
             <p className="text-neutral-600 dark:text-primary-400 mb-8">Looks like you haven't added anything to your cart yet.</p>
             <Link 
-              href="/sections/shop"
+              href="/"
               className="inline-block btn btn-primary"
             >
               Browse Menu
@@ -234,7 +234,7 @@ export default function CartPage() {
                 </Link>
 
                 <Link
-                  href="/sections/shop"
+                  href="/"
                   className="btn btn-primary btn-hover-secondary-filled w-full font-medium justify-center"
                 >
                   Continue to Menu

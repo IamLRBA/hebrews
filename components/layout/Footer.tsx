@@ -37,9 +37,7 @@ export default function Footer() {
           </p>
           <p className="copyright2">Designed by <a href="https://github.com/IamLRBA" target="_blank" rel="noopener noreferrer">ᒪᖇᗷᗩ</a></p>
           <div className="legal-links">
-            <Link href="/privacy-policy" className="legal-link">Privacy Policy</Link>
-            <span className="separator">•</span>
-            <Link href="/terms-conditions" className="legal-link">Terms & Conditions</Link>
+            <span className="legal-link text-primary-500 dark:text-primary-400">POS</span>
           </div>
         </div>
       </div>
