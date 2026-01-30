@@ -43,11 +43,10 @@ const TargetSolidIcon = (props: IconProps) => (
 
 const navigation = [
   { name: 'Home', href: '/', outlineIcon: HomeOutlineIcon, solidIcon: HomeSolidIcon },
-  { name: 'About Us', href: '/about-us', outlineIcon: HiOutlineUserCircle, solidIcon: HiUserCircle },
 ]
 
 const portalItems = [
-  { name: 'Services', href: '/sections/shop', outlineIcon: HiOutlineShoppingBag, solidIcon: HiMiniShoppingBag },
+  { name: 'Menu', href: '/', outlineIcon: HiOutlineShoppingBag, solidIcon: HiMiniShoppingBag },
 ]
 
 // Helper function to get all products from JSON and ProductManager
@@ -182,7 +181,7 @@ export default function Navbar() {
             product,
             category: categoryName,
             section: sectionName,
-            href: `/products/${product.category}#${product.section}`
+            href: '/'
           })
         }
       })

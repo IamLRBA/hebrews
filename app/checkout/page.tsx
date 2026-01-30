@@ -154,7 +154,7 @@ export default function CheckoutPage() {
         className="fixed top-20 left-8 z-50 pointer-events-none"
         style={{ pointerEvents: showBackButton ? 'auto' : 'none' }}
       >
-        <Link href="/products/shirts" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
+        <Link href="/" className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-300 hover:text-primary-800 dark:hover:text-primary-100 transition-colors duration-300">
           <span className="text-lg font-medium">⟸</span>
           <span className="text-sm font-medium">Back to Shopping</span>
         </Link>
@@ -185,7 +185,7 @@ export default function CheckoutPage() {
                 <div className="text-center py-12">
                   <ShoppingCart className="w-16 h-16 mx-auto text-neutral-300 dark:text-primary-500/50 mb-4" />
                   <p className="text-neutral-600 dark:text-primary-400 text-lg">Your cart is empty</p>
-                  <Link href="/products/shirts" className="mt-4 inline-block btn btn-primary">
+                  <Link href="/" className="mt-4 inline-block btn btn-primary">
                     Start Shopping
                   </Link>
                 </div>

@@ -1,14 +1,9 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
-import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
 import Providers from '@/components/layout/Providers'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import StructuredData from '@/components/StructuredData'
-import SkipToContent from '@/components/ui/SkipToContent'
-import AccountPromptPopup from '@/components/ui/AccountPromptPopup'
-import BackToTop from '@/components/ui/BackToTop'
-import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
+import ConditionalShell from '@/components/layout/ConditionalShell'
 
 export const metadata: Metadata = {
   title: 'Cafe Hebrews — Luxury Destination Cafe',
@@ -89,15 +84,7 @@ export default function RootLayout({
       <body className="antialiased" suppressHydrationWarning>
         <Providers>
           <ErrorBoundary>
-            <SkipToContent />
-            <Navbar />
-            <main id="main-content">
-              {children}
-            </main>
-            <Footer />
-            <AccountPromptPopup />
-            <BackToTop />
-            <KeyboardShortcuts />
+            <ConditionalShell>{children}</ConditionalShell>
           </ErrorBoundary>
         </Providers>
       </body>

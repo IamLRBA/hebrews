@@ -267,7 +267,7 @@ export default function AccountPage() {
                   <div className="text-center py-12">
                     <Package className="w-16 h-16 text-neutral-400 mx-auto mb-4" />
                     <p className="text-neutral-600 dark:text-neutral-400 mb-4">No orders yet</p>
-                    <Link href="/sections/shop" className="btn btn-outline btn-hover-secondary-filled">
+                    <Link href="/" className="btn btn-outline btn-hover-secondary-filled">
                       Start Shopping
                     </Link>
                   </div>

@@ -9,9 +9,9 @@ import { HiMiniShoppingBag } from 'react-icons/hi2'
 const portals = [
   {
     id: 1,
-    title: "ᔕEᖇᐯIᑕEᔕ",
+    title: "ᗰEᑎᑌ",
     image: "/assets/images/sections/portals/cafe.jpg",
-    href: "/sections/shop"
+    href: "/"
   }
 ]
 
