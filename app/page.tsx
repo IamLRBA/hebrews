@@ -12,7 +12,6 @@ import PortalNavigation from '@/components/ui/PortalNavigation'
 import FeaturedCollections from '@/components/sections/FeaturedCollections'
 import Stats from '@/components/sections/Stats'
 import Testimonials from '@/components/sections/Testimonials'
-import Contact from '@/components/sections/Contact'
 import AnimatedImageBanner from '@/components/sections/AnimatedImageBanner'
 import LogoMark from '@/components/ui/LogoMark'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
@@ -208,12 +207,6 @@ export default function Home() {
                           >
                             ᗪIᐯE Iᑎ ᑎOᗯ
                           </button>
-                          <button 
-                            onClick={() => scrollToSection('contact-section')}
-                            className="btn btn-secondary btn-hover-primary-outline text-sm sm:text-lg px-4 sm:px-8 py-2 sm:py-4"
-                          >
-                            GET Iᑎ TOᑌᑕᕼ
-                          </button>
                         </div>
                       </div>
                     </motion.div>
@@ -318,11 +311,6 @@ export default function Home() {
               >
                 <Testimonials />
               </motion.div>
-
-              {/* Contact Section */}
-              <div id="contact-section">
-                <Contact />
-              </div>
             </motion.div>
           )}
         </AnimatePresence>

@@ -5,8 +5,8 @@ import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Pause, Play } from 'lucide-react'
 import { HiMiniShoppingBag, HiOutlineShoppingBag } from 'react-icons/hi2'
-import FashionVideoSection from '@/components/sections/FashionVideoSection'
-import FashionProducts from '@/components/sections/FashionProducts'
+import CafeVideoSection from '@/components/sections/CafeVideoSection'
+import CafeMenuSection from '@/components/sections/CafeMenuSection'
 
 export default function ShopPage() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -36,108 +36,108 @@ export default function ShopPage() {
 
   const looks = [
     {
-      title: 'Casual Elegance',
-      description: 'Perfect blend of comfort and style',
-      materials: ['Denim', 'Cotton', 'Linen'],
-      icon: 'shirt'
+      title: 'Casual Dining',
+      description: 'Perfect blend of comfort and flavour',
+      materials: ['Fresh', 'Local', 'Seasonal'],
+      icon: 'coffee'
     },
     {
-      title: 'Business Professional',
-      description: 'Sharp and sophisticated office attire',
-      materials: ['Wool', 'Silk', 'Cotton'],
-      icon: 'briefcase'
+      title: 'Fine Dining',
+      description: 'Refined and sophisticated culinary experience',
+      materials: ['Premium', 'Artisan', 'Curated'],
+      icon: 'utensils'
     },
     {
-      title: 'Urban Street',
-      description: 'Edgy and contemporary street style',
-      materials: ['Leather', 'Denim', 'Mesh'],
-      icon: 'headphones'
+      title: 'Brunch & Coffee',
+      description: 'Relaxed mornings and specialty brews',
+      materials: ['Single Origin', 'House Baked', 'Handcrafted'],
+      icon: 'coffee'
     },
     {
-      title: 'Retro Classic',
-      description: 'Timeless vintage-inspired looks',
-      materials: ['Tweed', 'Velvet', 'Lace'],
-      icon: 'eye'
+      title: 'Classic Cafe',
+      description: 'Timeless favourites and warm hospitality',
+      materials: ['Traditional', 'Quality', 'Consistent'],
+      icon: 'heart'
     }
   ]
   
   // Style categories with expanded data
   const styleCategories = [
     { 
-      name: 'Classy', 
+      name: 'Fine Dining', 
       icon: 'briefcase', 
       description: 'Elegant and sophisticated',
-      coverImage: '👔',
-      images: ['👔', '👗', '👠', '💼', '🎩', '🧥', '👛', '👜'],
-      styles: ['Business Formal', 'Evening Wear', 'Cocktail Attire', 'Professional Look', 'Luxury Casual', 'Executive Style', 'Boardroom Ready', 'Gala Glamour']
+      coverImage: '🍽️',
+      images: ['🍽️', '🥂', '🍷', '🥩', '🦞', '🍾', '🕯️', '✨'],
+      styles: ['Tasting Menu', 'Wine Pairing', 'Chef\'s Table', 'Seasonal Specials', 'Luxury Brunch', 'Private Dining', 'Date Night', 'Celebration']
     },
     { 
-      name: 'Retro', 
-      icon: 'eye', 
-      description: 'Vintage and timeless',
-      coverImage: '🕶️',
-      images: ['🕶️', '👗', '👒', '🧥', '👠', '👔', '👜', '💍'],
-      styles: ['1950s Classic', '1960s Mod', '1970s Bohemian', '1980s Power', '1990s Minimalist', 'Art Deco', 'Victorian Elegance', 'Roaring Twenties']
+      name: 'Brunch', 
+      icon: 'sun', 
+      description: 'Laid-back and indulgent',
+      coverImage: '🥞',
+      images: ['🥞', '☕', '🍳', '🥐', '🍊', '🥑', '🍯', '🧇'],
+      styles: ['Bottomless Brunch', 'Avocado Toast', 'Pancake Stack', 'Eggs Benedict', 'Fresh Juices', 'Pastry Board', 'Healthy Bowls', 'Weekend Vibes']
     },
     { 
-      name: 'Modern', 
-      icon: 'zap', 
-      description: 'Contemporary and trendy',
-      coverImage: '🚀',
-      images: ['🚀', '👕', '👖', '👟', '👜', '🧢', '👓', '⌚'],
-      styles: ['Modern Minimalist', 'Tech Wear', 'Athleisure', 'Street Fashion', 'Sustainable Style', 'Smart Casual', 'Urban Professional', 'Digital Nomad']
+      name: 'Coffee Culture', 
+      icon: 'coffee', 
+      description: 'Specialty brews and artisan roasts',
+      coverImage: '☕',
+      images: ['☕', '🥛', '🍵', '🧊', '🍫', '🥐', '📖', '💻'],
+      styles: ['Single Origin', 'Cold Brew', 'Latte Art', 'Pour Over', 'Espresso Bar', 'Quiet Corner', 'Work Friendly', 'Meet & Greet']
     },
     { 
-      name: 'Streetwear', 
-      icon: 'headphones', 
-      description: 'Urban and casual',
-      coverImage: '🎧',
-      images: ['🎧', '👕', '👖', '👟', '🧢', '👜', '⌚', '💎'],
-      styles: ['Urban Casual', 'Skate Style', 'Hip Hop Fashion', 'Street Luxe', 'Tech Street', 'Graffiti Inspired', 'Underground', 'City Vibes']
+      name: 'Bar & Lounge', 
+      icon: 'moon', 
+      description: 'Cocktails and evening atmosphere',
+      coverImage: '🍸',
+      images: ['🍸', '🍷', '🥃', '🎵', '🌙', '🕯️', '🍹', '✨'],
+      styles: ['Signature Cocktails', 'Wine List', 'Live Music', 'Happy Hour', 'Rooftop Vibes', 'Craft Spirits', 'Small Plates', 'Nightcap']
     }
   ]
   
   // Moodboard data
   const moodboardData = {
     inspiration: [
-      { icon: '🎨', name: 'Art', image: '/assets/images/fashion/inspiration/art.jpg' },
-      { icon: '✨', name: 'Sparkle', image: '/assets/images/fashion/inspiration/sparkle.jpg' },
-      { icon: '🌟', name: 'Star', image: '/assets/images/fashion/inspiration/star.jpg' },
-      { icon: '💫', name: 'Dizzy', image: '/assets/images/fashion/inspiration/dizzy.jpg' },
-      { icon: '🔮', name: 'Crystal Ball', image: '/assets/images/fashion/inspiration/crystal-ball.jpg' },
-      { icon: '🌈', name: 'Rainbow', image: '/assets/images/fashion/inspiration/rainbow.jpg' },
-      { icon: '🎭', name: 'Theater', image: '/assets/images/fashion/inspiration/theatre.jpg' },
-      { icon: '🎪', name: 'Circus', image: '/assets/images/fashion/inspiration/circus.jpg' }
+      { icon: '🎨', name: 'Art', image: '/assets/images/cafe/inspiration/art.jpg' },
+      { icon: '✨', name: 'Sparkle', image: '/assets/images/cafe/inspiration/sparkle.jpg' },
+      { icon: '🌟', name: 'Star', image: '/assets/images/cafe/inspiration/star.jpg' },
+      { icon: '💫', name: 'Dizzy', image: '/assets/images/cafe/inspiration/dizzy.jpg' },
+      { icon: '🔮', name: 'Crystal Ball', image: '/assets/images/cafe/inspiration/crystal-ball.jpg' },
+      { icon: '🌈', name: 'Rainbow', image: '/assets/images/cafe/inspiration/rainbow.jpg' },
+      { icon: '🎭', name: 'Theater', image: '/assets/images/cafe/inspiration/theatre.jpg' },
+      { icon: '🎪', name: 'Circus', image: '/assets/images/cafe/inspiration/circus.jpg' }
     ],
     elegance: [
-      { icon: '👑', name: 'Crown', image: '/assets/images/fashion/elegance/crown.jpg' },
-      { icon: '💎', name: 'Gem', image: '/assets/images/fashion/elegance/gem.jpg' },
-      { icon: '🕊️', name: 'Dove', image: '/assets/images/fashion/elegance/dove.jpg' },
-      { icon: '🌹', name: 'Rose', image: '/assets/images/fashion/elegance/rose.jpg' },
-      { icon: '🦢', name: 'Swan', image: '/assets/images/fashion/elegance/swan.jpg' },
-      { icon: '💍', name: 'Ring', image: '/assets/images/fashion/elegance/ring.jpg' },
-      { icon: '👗', name: 'Dress', image: '/assets/images/fashion/elegance/dress.jpg' },
-      { icon: '👠', name: 'High Heel', image: '/assets/images/fashion/elegance/high-heel.jpg' }
+      { icon: '👑', name: 'Crown', image: '/assets/images/cafe/elegance/crown.jpg' },
+      { icon: '💎', name: 'Gem', image: '/assets/images/cafe/elegance/gem.jpg' },
+      { icon: '🕊️', name: 'Dove', image: '/assets/images/cafe/elegance/dove.jpg' },
+      { icon: '🌹', name: 'Rose', image: '/assets/images/cafe/elegance/rose.jpg' },
+      { icon: '🦢', name: 'Swan', image: '/assets/images/cafe/elegance/swan.jpg' },
+      { icon: '💍', name: 'Ring', image: '/assets/images/cafe/elegance/ring.jpg' },
+      { icon: '🥂', name: 'Champagne', image: '/assets/images/cafe/elegance/dress.jpg' },
+      { icon: '🍽️', name: 'Fine Dining', image: '/assets/images/cafe/elegance/high-heel.jpg' }
     ],
     urban: [
-      { icon: '🏙️', name: 'City', image: '/assets/images/fashion/urban/city.jpg' },
-      { icon: '🚗', name: 'Car', image: '/assets/images/fashion/urban/car.jpg' },
-      { icon: '🎵', name: 'Music', image: '/assets/images/fashion/urban/music.jpg' },
-      { icon: '🎧', name: 'Headphones', image: '/assets/images/fashion/urban/headphones.jpg' },
-      { icon: '🛹', name: 'Skateboard', image: '/assets/images/fashion/urban/skateboard.jpg' },
-      { icon: '🎨', name: 'Art', image: '/assets/images/fashion/urban/art.jpg' },
-      { icon: '💡', name: 'Light Bulb', image: '/assets/images/fashion/urban/light-bulb.jpg' },
-      { icon: '⚡', name: 'Lightning', image: '/assets/images/fashion/urban/lightning.jpg' }
+      { icon: '🏙️', name: 'City', image: '/assets/images/cafe/urban/city.jpg' },
+      { icon: '🚗', name: 'Car', image: '/assets/images/cafe/urban/car.jpg' },
+      { icon: '🎵', name: 'Music', image: '/assets/images/cafe/urban/music.jpg' },
+      { icon: '🎧', name: 'Headphones', image: '/assets/images/cafe/urban/headphones.jpg' },
+      { icon: '☕', name: 'Coffee', image: '/assets/images/cafe/urban/skateboard.jpg' },
+      { icon: '🎨', name: 'Art', image: '/assets/images/cafe/urban/art.jpg' },
+      { icon: '💡', name: 'Light Bulb', image: '/assets/images/cafe/urban/light-bulb.jpg' },
+      { icon: '⚡', name: 'Lightning', image: '/assets/images/cafe/urban/lightning.jpg' }
     ],
     nature: [
-      { icon: '🌿', name: 'Herb', image: '/assets/images/fashion/nature/herb.jpg' },
-      { icon: '🌸', name: 'Cherry Blossom', image: '/assets/images/fashion/nature/cherry-blossom.jpg' },
-      { icon: '🌺', name: 'Hibiscus', image: '/assets/images/fashion/nature/hibiscus.jpg' },
-      { icon: '🍃', name: 'Leaf', image: '/assets/images/fashion/nature/leaf.jpg' },
-      { icon: '🌊', name: 'Wave', image: '/assets/images/fashion/nature/wave.jpg' },
-      { icon: '🌅', name: 'Sunrise', image: '/assets/images/fashion/nature/sunrise.jpg' },
-      { icon: '🌙', name: 'Moon', image: '/assets/images/fashion/nature/moon.jpg' },
-      { icon: '⭐', name: 'Star', image: '/assets/images/fashion/nature/star.jpg' }
+      { icon: '🌿', name: 'Herb', image: '/assets/images/cafe/nature/herb.jpg' },
+      { icon: '🌸', name: 'Cherry Blossom', image: '/assets/images/cafe/nature/cherry-blossom.jpg' },
+      { icon: '🌺', name: 'Hibiscus', image: '/assets/images/cafe/nature/hibiscus.jpg' },
+      { icon: '🍃', name: 'Leaf', image: '/assets/images/cafe/nature/leaf.jpg' },
+      { icon: '🌊', name: 'Wave', image: '/assets/images/cafe/nature/wave.jpg' },
+      { icon: '🌅', name: 'Sunrise', image: '/assets/images/cafe/nature/sunrise.jpg' },
+      { icon: '🌙', name: 'Moon', image: '/assets/images/cafe/nature/moon.jpg' },
+      { icon: '⭐', name: 'Star', image: '/assets/images/cafe/nature/star.jpg' }
     ]
   }
 
@@ -341,7 +341,7 @@ export default function ShopPage() {
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">01</div>
                 <div className="flex-shrink-0 bg-gradient-to-br from-primary-800/30 to-primary-600/30 rounded-2xl border border-primary-500/30 overflow-hidden shadow-2xl p-8">
                   <img 
-                    src="/assets/images/sections/fashion/philosophy-1.jpg" 
+                    src="/assets/images/sections/cafe/philosophy-1.jpg" 
                     alt="Dine-In" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
@@ -368,7 +368,7 @@ export default function ShopPage() {
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">02</div>
                 <div className="flex-shrink-0 bg-gradient-to-br from-primary-600/30 to-primary-400/30 rounded-2xl border border-primary-400/30 overflow-hidden shadow-2xl p-8">
                   <img 
-                    src="/assets/images/sections/fashion/philosophy-2.jpg" 
+                    src="/assets/images/sections/cafe/philosophy-2.jpg" 
                     alt="Takeaway" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
@@ -395,7 +395,7 @@ export default function ShopPage() {
                 <div className="text-6xl font-bold text-primary-500 dark:text-primary-600 mb-4 md:hidden">03</div>
                 <div className="flex-shrink-0 bg-gradient-to-br from-primary-400/30 to-primary-200/30 rounded-2xl border border-primary-200/30 overflow-hidden shadow-2xl p-8">
                   <img 
-                    src="/assets/images/sections/fashion/philosophy-3.jpg" 
+                    src="/assets/images/sections/cafe/philosophy-3.jpg" 
                     alt="Delivery" 
                     className="w-24 h-24 object-cover rounded-xl"
                   />
@@ -414,7 +414,7 @@ export default function ShopPage() {
       </section>
 
       {/* ⏣ Our MENU */}
-      <FashionProducts />
+      <CafeMenuSection />
 
       {/* Moodboard Section */}
       <section className="py-20 px-4">
@@ -526,10 +526,10 @@ export default function ShopPage() {
           className="max-w-7xl mx-auto"
         >
           <h2 className="text-5xl md:text-6xl font-bold text-center mb-16">
-            <span className="text-primary-500 dark:text-primary-100">ᔕEᖇᐯIᑕEᔕ</span>{' '}
+            <span className="text-primary-500 dark:text-primary-100">HEBREWS</span>{' '}
             <span className="text-neutral-700 dark:text-primary-300">Video Gallery</span>{' '}
           </h2>
-          <FashionVideoSection />
+          <CafeVideoSection />
         </motion.div>
       </section>
 

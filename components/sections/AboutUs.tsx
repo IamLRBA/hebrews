@@ -7,6 +7,7 @@ import Image from 'next/image'
 import MissionVisionCard from './MissionVisionCard'
 import MysticalPiecesWord from '@/components/ui/MysticalPiecesWord'
 import AnimatedImageBannerAboutUs from './AnimatedImageBannerAboutUs'
+import Contact from './Contact'
 import { 
   Building2, 
   Music, 
@@ -17,28 +18,81 @@ import {
   Instagram,
   Mail,
   ExternalLink,
-  Zap
+  Zap,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react'
 import { IconBrandWhatsapp, IconBrandX, IconBrandTiktok } from '@tabler/icons-react'
+import { AnimatePresence } from 'framer-motion'
+
+// CEO Profile Dropdown Component
+function CEOProfileDropdown() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const socialLinks = [
+    { name: 'LinkedIn', href: 'https://www.linkedin.com/in/ndacyayisenga-droid/', icon: Linkedin },
+    { name: 'Instagram', href: 'https://www.instagram.com/p/DCKOuHEChyu/?igsh=MW5uemhmaW15dTRtag==', icon: Instagram },
+    { name: 'X (Twitter)', href: 'https://twitter.com/NdacyayisengaN1', icon: IconBrandX },
+    { name: 'WhatsApp', href: 'https://wa.me/256750571027', icon: IconBrandWhatsapp },
+    { name: 'Email', href: 'mailto:ndacyayinoah@gmail.com', icon: Mail },
+  ]
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="btn btn-outline inline-flex items-center space-x-2 w-full justify-center"
+      >
+        <span>{isOpen ? 'Minimise Profile' : 'Read Profile'}</span>
+        {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+      </button>
+      
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mt-4 overflow-hidden"
+          >
+            <div className="bg-primary-800/10 dark:bg-primary-900/20 backdrop-blur-sm rounded-xl p-6 border border-primary-500/20 space-y-6">
+              <div>
+                <p className="text-primary-700 dark:text-primary-300 text-sm leading-relaxed mb-4">
+                  A visionary leader and entrepreneur who founded Cafe Hebrews with a mission to create a luxury destination where culinary excellence meets refined hospitality. With a passion for creating exceptional dining experiences, LRBA has built a brand that celebrates tradition while embracing innovation in the culinary arts.
+                </p>
+              </div>
+
+              <div>
+                <h5 className="text-lg font-bold text-primary-800 dark:text-primary-100 mb-3">ᑕOᑎᑎEᑕT</h5>
+                <div className="flex flex-wrap justify-center gap-3">
+                  {socialLinks.map((social, index) => {
+                    const Icon = social.icon
+                    return (
+                      <a
+                        key={index}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 bg-primary-100 dark:bg-primary-800 rounded-full flex items-center justify-center text-primary-600 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors duration-200"
+                      >
+                        <Icon className="w-5 h-5" />
+                      </a>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 const teamMembers = [
   {
     id: 1,
-    name: "CEO",
-    position: "Chief Executive Officer",
-    description: "Strategic leadership and vision for Cafe Hebrews. Oversees all operations, sets the direction for luxury dining experiences, and ensures excellence across all service channels.",
-    image: "/assets/images/team/joshua-nsereko.jpg",
-    hoverImage: "/assets/images/team/joshua-nsereko-hover.jpg",
-    social: {
-      linkedin: "https://linkedin.com/in/sarahchen",
-      instagram: "https://instagram.com/sarahchen",
-      x: "https://x.com/sarahchen",
-      whatsapp: "+1234567890",
-      email: "sarah@fusioncraft.com"
-    }
-  },
-  {
-    id: 2,
     name: "Admin",
     position: "Administrator",
     description: "All access privileges including menu engineering and staff management. Ensures smooth operations and maintains the highest standards of service excellence.",
@@ -53,7 +107,7 @@ const teamMembers = [
     }
   },
   {
-    id: 3,
+    id: 2,
     name: "General Manager",
     position: "General Manager",
     description: "All access privileges including menu engineering and staff management. Oversees daily operations, ensures quality control, and maintains service standards across all channels.",
@@ -68,7 +122,7 @@ const teamMembers = [
     }
   },
   {
-    id: 4,
+    id: 3,
     name: "Supervisor",
     position: "Supervisor",
     description: "Manages discounts (over 10%), handles void approvals, and ensures smooth service operations. Maintains quality standards and customer satisfaction.",
@@ -83,7 +137,7 @@ const teamMembers = [
     }
   },
   {
-    id: 5,
+    id: 4,
     name: "Head Chef/Barista",
     position: "Head Chef & Barista",
     description: "Responsible for stock counting and recipe viewing. Ensures culinary excellence and maintains the highest standards in food and beverage preparation.",
@@ -98,7 +152,7 @@ const teamMembers = [
     }
   },
   {
-    id: 6,
+    id: 5,
     name: "Waiter/Cashier",
     position: "Waiter & Cashier",
     description: "Handles order entry, bill printing, and payment recording. Ensures efficient service delivery and accurate transaction processing for all customers.",
@@ -179,7 +233,7 @@ export default function AboutUs() {
                 className="text-accent-600 dark:text-accent-400 font-bold text-lg sm:text-xl md:text-3xl leading-snug text-center sm:text-left"
                 style={{ fontFamily: '"Mrs Saint Delafield", cursive' }}
               >
-                Culinary excellence reveals timeless luxury
+                Dining experiences reveal timeless luxury
               </span>
             </div>
           </div>
@@ -221,13 +275,7 @@ export default function AboutUs() {
                 <h4 className="text-2xl font-bold text-primary-800 dark:text-primary-100 mb-2">ᒪᖇᗷᗩ</h4>
                 <p className="text-lg text-primary-700 dark:text-primary-300 mb-6">CEO & Founder</p>
                 
-                <Link 
-                  href="/ceo-profile"
-                  className="btn btn-outline inline-flex items-center space-x-2"
-                >
-                  <span>View Profile</span>
-                  <ExternalLink className="w-4 h-4" />
-                </Link>
+                <CEOProfileDropdown />
               </div>
             </div>
           </div>
@@ -376,7 +424,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Oᑌᖇ ᐯᗩᒪᑌEᔕ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Our Values</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 px-8 md:px-12 lg:px-16">
             {[
@@ -441,7 +489,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 1.0 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Oᑌᖇ ᗰIᔕᔕIOᑎᔕ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Our Missions</h3>
           
           <div className="space-y-16 flex flex-col items-center max-w-4xl mx-auto">
             {[
@@ -518,7 +566,7 @@ export default function AboutUs() {
           transition={{ duration: 0.8, delay: 1.2 }}
           className="mt-20"
         >
-          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">ᗰIᔕᔕIOᑎ & ᐯIᔕIOᑎ</h3>
+          <h3 className="text-3xl font-bold text-primary-800 dark:text-primary-100 mb-12 text-center">Mission & Vision</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {[
@@ -527,7 +575,7 @@ export default function AboutUs() {
                 title: "Mission Statement", 
                 description: (
                   <>
-                    <MysticalPiecesWord />  exists to awaken culinary passion and inspire mindful connection through luxury dining experiences.
+                    <MysticalPiecesWord />  exists to awaken culinary passion and inspire mindful connection through luxury and amazing dining experiences.
                   </>
                 ) 
               },
@@ -540,6 +588,17 @@ export default function AboutUs() {
               <MissionVisionCard key={index} item={item} index={index} />
             ))}
           </div>
+        </motion.div>
+
+        {/* Contact Section - GET IN TOUCH */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 1.4 }}
+          className="mt-20"
+        >
+          <Contact />
         </motion.div>
       </div>
     </section>
