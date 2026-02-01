@@ -4,7 +4,7 @@ This document describes the structural changes made to convert the repository in
 
 ---
 
-## 1. Routes Removed or Deactivated
+## 1. Routes Removed/Deactivated
 
 The following routes were **removed** (files deleted) because they are not needed for a POS:
 
