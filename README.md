@@ -1,7 +1,7 @@
 
 # Cafe Hebrews — Luxury Destination Cafe
 
-A modern, interactive e-commerce platform for Cafe Hebrews. Browse our menu, order online, and experience premium dining, coffee, and hospitality.
+A modern, interactive e-commerce platform for Cafe Hebrew. Browse our menu, order online, and experience premium dining, coffee, and hospitality.
 
 ---
 
