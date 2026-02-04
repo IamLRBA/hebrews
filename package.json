@@ -28,7 +28,8 @@
     "swiper": "^11.2.10",
     "tailwindcss": "^3.4.17",
     "three": "latest",
-    "twilio": "^5.10.6"
+    "twilio": "^5.10.6",
+    "@prisma/client": "^5.22.0"
   },
   "devDependencies": {
     "@types/node": "latest",
@@ -37,6 +38,7 @@
     "@types/three": "latest",
     "autoprefixer": "latest",
     "postcss": "latest",
+    "prisma": "^5.22.0",
     "typescript": "latest"
   }
 }
