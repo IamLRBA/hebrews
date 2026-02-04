@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
         
         const fromEmail = process.env.FROM_EMAIL || 'noreply@mysticalpieces.com'
-        const fromName = process.env.FROM_NAME || 'Cafe Hebrews'
+        const fromName = process.env.FROM_NAME || 'Cafe Havilah & Pizzeria'
         
         const attachments = emailConfig.attachment ? [{
           content: emailConfig.attachment.content,
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
         })
         
         const fromEmail = process.env.FROM_EMAIL || process.env.SMTP_USER
-        const fromName = process.env.FROM_NAME || 'Cafe Hebrews'
+        const fromName = process.env.FROM_NAME || 'Cafe Havilah & Pizzeria'
         
         // Prepare attachments if provided
         const attachments = emailConfig.attachment ? [{

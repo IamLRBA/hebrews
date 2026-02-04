@@ -2,7 +2,7 @@ export default function StructuredData() {
   const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Cafe Hebrews',
+    name: 'Cafe Havilah & Pizzeria',
     url: 'https://mysticalpieces.com',
     logo: 'https://mysticalpieces.com/assets/images/logo.png',
     description: 'A luxury destination cafe offering exquisite culinary experiences, artisanal beverages, and refined atmosphere where every moment is crafted with elegance and sophistication.',
@@ -21,7 +21,7 @@ export default function StructuredData() {
   const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Cafe Hebrews',
+    name: 'Cafe Havilah & Pizzeria',
     url: 'https://mysticalpieces.com',
     potentialAction: {
       '@type': 'SearchAction',
@@ -36,7 +36,7 @@ export default function StructuredData() {
   const storeSchema = {
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
-    name: 'Cafe Hebrews',
+    name: 'Cafe Havilah & Pizzeria',
     image: 'https://mysticalpieces.com/assets/images/og-image.jpg',
     description: 'A luxury destination cafe offering exquisite culinary experiences, artisanal beverages, and refined atmosphere where every moment is crafted with elegance and sophistication.',
     url: 'https://mysticalpieces.com',

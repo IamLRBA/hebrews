@@ -45,7 +45,7 @@ const cafeVideos = [
   },
   {
     id: 5,
-    title: 'Cafe Hebrews - "Our Story"',
+    title: 'Cafe Havilah & Pizzeria - "Our Story"',
     description: 'Where luxury meets tradition. Experience the divine in every cup.',
     src: '/assets/videos/cafe/fashion-analysis.mp4',
     thumbnail: '/assets/images/videos/cafe/fashion-analysis-cover.jpg',

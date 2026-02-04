@@ -1,6 +1,7 @@
 
-# Cafe Hebrews — Luxury Destination Cafe
+# Cafe Havilah & Pizzeria — Luxury Destination Cafe
 
+A modern, interactive e-commerce platform for Cafe Havilah & Pizzeria. Browse our menu, order online, and experience premium dining, coffee, and hospitality.
 A modern, interactive e-commerce platform for Cafe Hebrew. Browse our menu, order online, and experience premium dining, coffee, hospitality and service.
 
 ---
@@ -322,7 +323,7 @@ For questions or support:
 
 ---
 
-**Built with ♡ by Cafe Hebrews**
+**Built with ♡ by Cafe Havilah & Pizzeria**
 *Where luxury meets tradition. Experience the divine in every cup.* 
 
 ---

@@ -351,7 +351,7 @@ export default function AccountPage() {
                         onChange={(e) => setReviewText(e.target.value)}
                         rows={4}
                         className="w-full px-4 py-3 border border-primary-200 dark:border-neutral-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-neutral-800 dark:text-white"
-                        placeholder="Share your experience with Cafe Hebrews..."
+                        placeholder="Share your experience with Cafe Havilah & Pizzeria..."
                         required
                       />
                     </div>

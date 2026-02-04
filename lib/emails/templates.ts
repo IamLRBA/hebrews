@@ -14,7 +14,7 @@ export interface EmailConfig {
 
 export class EmailTemplates {
   static buyerConfirmation(order: Order, receiptImage?: string): EmailConfig {
-    const subject = `Order Confirmed - ${order.id} - Cafe Hebrews`
+    const subject = `Order Confirmed - ${order.id} - Cafe Havilah & Pizzeria`
     
     const html = `
 <!DOCTYPE html>
@@ -38,7 +38,7 @@ export class EmailTemplates {
   <div class="container">
     <div class="header">
       <h1>Order Confirmed! 🎉</h1>
-      <p>Thank you for dining with Cafe Hebrews</p>
+      <p>Thank you for dining with Cafe Havilah & Pizzeria</p>
     </div>
     
     <div class="content">
@@ -96,13 +96,13 @@ export class EmailTemplates {
       
       <p>If you have any questions, please don't hesitate to contact us.</p>
       
-      <p>Thank you for choosing Cafe Hebrews!</p>
+      <p>Thank you for choosing Cafe Havilah & Pizzeria!</p>
     </div>
     
     <div class="footer">
-      <p>Cafe Hebrews | Luxury Destination Cafe & Culinary Excellence</p>
+      <p>Cafe Havilah & Pizzeria | Luxury Destination Cafe & Culinary Excellence</p>
       <p>Email: jerrylarubafestus@gmail.com | Phone: +256 755 915 549</p>
-      <p>© ${new Date().getFullYear()} Cafe Hebrews. All rights reserved.</p>
+      <p>© ${new Date().getFullYear()} Cafe Havilah & Pizzeria. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -110,7 +110,7 @@ export class EmailTemplates {
     `
     
     const text = `
-Order Confirmed - Cafe Hebrews
+Order Confirmed - Cafe Havilah & Pizzeria
 
 Dear ${order.customer.fullName},
 
@@ -144,9 +144,9 @@ ${order.notes ? `- Notes: ${order.notes}` : ''}
 Payment: Cash on Delivery
 Delivery: Expected within 2-3 business days
 
-Thank you for choosing Cafe Hebrews!
+Thank you for choosing Cafe Havilah & Pizzeria!
 
-Cafe Hebrews
+Cafe Havilah & Pizzeria
 Email: jerrylarubafestus@gmail.com
 Phone: +256 755 915 549
     `
@@ -171,7 +171,7 @@ Phone: +256 755 915 549
   }
 
   static sellerNotification(order: Order): EmailConfig {
-    const subject = `New Order Received - ${order.id} - Cafe Hebrews`
+    const subject = `New Order Received - ${order.id} - Cafe Havilah & Pizzeria`
     
     const html = `
 <!DOCTYPE html>
@@ -262,8 +262,8 @@ Phone: +256 755 915 549
     </div>
     
     <div class="footer">
-      <p>Cafe Hebrews | Admin Notification</p>
-      <p>© ${new Date().getFullYear()} Cafe Hebrews. All rights reserved.</p>
+      <p>Cafe Havilah & Pizzeria | Admin Notification</p>
+      <p>© ${new Date().getFullYear()} Cafe Havilah & Pizzeria. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -271,7 +271,7 @@ Phone: +256 755 915 549
     `
     
     const text = `
-New Order Received - Cafe Hebrews
+New Order Received - Cafe Havilah & Pizzeria
 
 URGENT: A new order has been placed and requires your attention.
 
