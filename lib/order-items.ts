@@ -15,12 +15,12 @@ export class OrderNotFoundError extends Error {
   }
 }
 
-export class OrderNotPendingError extends Error {
-  readonly code = 'ORDER_NOT_PENDING' as const
-  constructor(public readonly orderId: string) {
-    super(`Order is not pending; items cannot be modified: ${orderId}`)
-    this.name = 'OrderNotPendingError'
-    Object.setPrototypeOf(this, OrderNotPendingError.prototype)
+export class OrderImmutableError extends Error {
+  readonly code = 'ORDER_IMMUTABLE' as const
+  constructor(public readonly orderId: string, public readonly status: string) {
+    super(`Order is ${status}; items cannot be modified: ${orderId}`)
+    this.name = 'OrderImmutableError'
+    Object.setPrototypeOf(this, OrderImmutableError.prototype)
   }
 }
 
@@ -64,7 +64,9 @@ export class InvalidQuantityError extends Error {
 // Helpers (within module)
 // ---------------------------------------------------------------------------
 
-async function assertOrderPending(tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0], orderId: string): Promise<void> {
+const EDITABLE_STATUSES = ['pending', 'preparing'] as const
+
+async function assertOrderEditable(tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0], orderId: string): Promise<void> {
   const order = await tx.order.findUnique({
     where: { id: orderId },
     select: { id: true, status: true },
@@ -72,8 +74,8 @@ async function assertOrderPending(tx: Parameters<Parameters<typeof prisma.$trans
   if (!order) {
     throw new OrderNotFoundError(orderId)
   }
-  if (order.status !== 'pending') {
-    throw new OrderNotPendingError(orderId)
+  if (!EDITABLE_STATUSES.includes(order.status as typeof EDITABLE_STATUSES[number])) {
+    throw new OrderImmutableError(orderId, order.status)
   }
 }
 
@@ -131,8 +133,8 @@ export type AddOrderItemParams = {
 }
 
 /**
- * Adds an item to an order. Order must exist and be pending; product must exist and be active; quantity >= 1.
- * Recalculates order subtotal, tax, total. Transactional.
+ * Adds an item to an order. Order must exist and be pending or preparing; product must exist and be active; quantity >= 1.
+ * Served and cancelled orders are immutable. Recalculates and persists subtotal, tax, total. Transactional.
  */
 export async function addOrderItem(params: AddOrderItemParams): Promise<OrderItem> {
   const { orderId, productId, quantity, size, modifier, notes, sortOrder = 0 } = params
@@ -142,7 +144,7 @@ export async function addOrderItem(params: AddOrderItemParams): Promise<OrderIte
   }
 
   return prisma.$transaction(async (tx) => {
-    await assertOrderPending(tx, orderId)
+    await assertOrderEditable(tx, orderId)
     const product = await assertProductActive(tx, productId)
     const unitPrice = Number(product.priceUgx)
     const lineTotal = unitPrice * quantity
@@ -173,8 +175,8 @@ export type UpdateOrderItemQuantityParams = {
 }
 
 /**
- * Updates an order item's quantity. Order must be pending; item must exist and belong to order; quantity >= 1.
- * Recalculates order subtotal, tax, total. Transactional.
+ * Updates an order item's quantity. Order must be pending or preparing; item must exist and belong to order; quantity >= 1.
+ * Served and cancelled orders are immutable. Recalculates and persists subtotal, tax, total. Transactional.
  */
 export async function updateOrderItemQuantity(params: UpdateOrderItemQuantityParams): Promise<OrderItem> {
   const { orderId, orderItemId, quantity } = params
@@ -184,7 +186,7 @@ export async function updateOrderItemQuantity(params: UpdateOrderItemQuantityPar
   }
 
   return prisma.$transaction(async (tx) => {
-    await assertOrderPending(tx, orderId)
+    await assertOrderEditable(tx, orderId)
     const item = await tx.orderItem.findFirst({
       where: { id: orderItemId, orderId },
     })
@@ -213,14 +215,14 @@ export type RemoveOrderItemParams = {
 }
 
 /**
- * Removes an item from an order. Order must be pending; item must exist and belong to order.
- * Recalculates order subtotal, tax, total. Transactional.
+ * Removes an item from an order. Order must be pending or preparing; item must exist and belong to order.
+ * Served and cancelled orders are immutable. Recalculates and persists subtotal, tax, total. Transactional.
  */
 export async function removeOrderItem(params: RemoveOrderItemParams): Promise<void> {
   const { orderId, orderItemId } = params
 
   await prisma.$transaction(async (tx) => {
-    await assertOrderPending(tx, orderId)
+    await assertOrderEditable(tx, orderId)
     const item = await tx.orderItem.findFirst({
       where: { id: orderItemId, orderId },
     })
