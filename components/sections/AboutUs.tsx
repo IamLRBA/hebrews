@@ -59,7 +59,7 @@ function CEOProfileDropdown() {
             <div className="bg-primary-800/10 dark:bg-primary-900/20 backdrop-blur-sm rounded-xl p-6 border border-primary-500/20 space-y-6">
               <div>
                 <p className="text-primary-700 dark:text-primary-300 text-sm leading-relaxed mb-4">
-                  A visionary leader and entrepreneur who founded Cafe Hebrews with a mission to create a luxury destination where culinary excellence meets refined hospitality. With a passion for creating exceptional dining experiences, LRBA has built a brand that celebrates tradition while embracing innovation in the culinary arts.
+                  A visionary leader and entrepreneur who founded Cafe Havilah & Pizzeria with a mission to create a luxury destination where culinary excellence meets refined hospitality. With a passion for creating exceptional dining experiences, LRBA has built a brand that celebrates tradition while embracing innovation in the culinary arts.
                 </p>
               </div>
 
@@ -256,7 +256,7 @@ export default function AboutUs() {
                 <div className="w-32 h-32 mx-auto mb-6 relative overflow-hidden rounded-full border-4 border-white shadow-lg">
                   <Image
                     src="/assets/images/team/lrba.jpg"
-                    alt="LRBA - CEO and Founder of Cafe Hebrews"
+                    alt="LRBA - CEO and Founder of Cafe Havilah & Pizzeria"
                     width={128}
                     height={128}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"

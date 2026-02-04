@@ -8,7 +8,7 @@
           {
             "id": "barista-hot-1",
             "name": "Espresso",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "hot",
             "price_ugx": 8000,
@@ -26,7 +26,7 @@
           {
             "id": "barista-hot-2",
             "name": "Cappuccino",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "hot",
             "price_ugx": 12000,
@@ -44,7 +44,7 @@
           {
             "id": "barista-hot-3",
             "name": "Latte",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "hot",
             "price_ugx": 13000,
@@ -62,7 +62,7 @@
           {
             "id": "barista-hot-4",
             "name": "Americano",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "hot",
             "price_ugx": 10000,
@@ -82,7 +82,7 @@
           {
             "id": "barista-cold-1",
             "name": "Iced Coffee",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "cold",
             "price_ugx": 12000,
@@ -100,7 +100,7 @@
           {
             "id": "barista-cold-2",
             "name": "Cold Brew",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "cold",
             "price_ugx": 14000,
@@ -118,7 +118,7 @@
           {
             "id": "barista-cold-3",
             "name": "Iced Latte",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "cold",
             "price_ugx": 13000,
@@ -136,7 +136,7 @@
           {
             "id": "barista-cold-4",
             "name": "Frappé",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "cold",
             "price_ugx": 15000,
@@ -156,7 +156,7 @@
           {
             "id": "barista-specialty-1",
             "name": "Flat White",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "specialty",
             "price_ugx": 14000,
@@ -174,7 +174,7 @@
           {
             "id": "barista-specialty-2",
             "name": "Mocha",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "specialty",
             "price_ugx": 15000,
@@ -192,7 +192,7 @@
           {
             "id": "barista-specialty-3",
             "name": "Macchiato",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "specialty",
             "price_ugx": 12000,
@@ -210,7 +210,7 @@
           {
             "id": "barista-specialty-4",
             "name": "Affogato",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "specialty",
             "price_ugx": 18000,
@@ -230,7 +230,7 @@
           {
             "id": "barista-tea-1",
             "name": "English Breakfast Tea",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "tea",
             "price_ugx": 8000,
@@ -248,7 +248,7 @@
           {
             "id": "barista-tea-2",
             "name": "Green Tea",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "tea",
             "price_ugx": 8000,
@@ -266,7 +266,7 @@
           {
             "id": "barista-tea-3",
             "name": "Chai Latte",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "tea",
             "price_ugx": 12000,
@@ -284,7 +284,7 @@
           {
             "id": "barista-tea-4",
             "name": "Herbal Tea Selection",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "barista",
             "section": "tea",
             "price_ugx": 9000,
@@ -310,7 +310,7 @@
           {
             "id": "bar-cocktails-1",
             "name": "Classic Mojito",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "cocktails",
             "price_ugx": 25000,
@@ -328,7 +328,7 @@
           {
             "id": "bar-cocktails-2",
             "name": "Old Fashioned",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "cocktails",
             "price_ugx": 28000,
@@ -346,7 +346,7 @@
           {
             "id": "bar-cocktails-3",
             "name": "Margarita",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "cocktails",
             "price_ugx": 26000,
@@ -364,7 +364,7 @@
           {
             "id": "bar-cocktails-4",
             "name": "Cosmopolitan",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "cocktails",
             "price_ugx": 27000,
@@ -384,7 +384,7 @@
           {
             "id": "bar-wines-1",
             "name": "House Red Wine",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "wines",
             "price_ugx": 35000,
@@ -402,7 +402,7 @@
           {
             "id": "bar-wines-2",
             "name": "House White Wine",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "wines",
             "price_ugx": 35000,
@@ -420,7 +420,7 @@
           {
             "id": "bar-wines-3",
             "name": "Rosé Wine",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "wines",
             "price_ugx": 38000,
@@ -438,7 +438,7 @@
           {
             "id": "bar-wines-4",
             "name": "Sparkling Wine",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "wines",
             "price_ugx": 45000,
@@ -458,7 +458,7 @@
           {
             "id": "bar-spirits-1",
             "name": "Premium Whiskey",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "spirits",
             "price_ugx": 40000,
@@ -476,7 +476,7 @@
           {
             "id": "bar-spirits-2",
             "name": "Premium Gin",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "spirits",
             "price_ugx": 35000,
@@ -494,7 +494,7 @@
           {
             "id": "bar-spirits-3",
             "name": "Premium Vodka",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "spirits",
             "price_ugx": 35000,
@@ -512,7 +512,7 @@
           {
             "id": "bar-spirits-4",
             "name": "Premium Rum",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "spirits",
             "price_ugx": 38000,
@@ -531,8 +531,8 @@
         "signature": [
           {
             "id": "bar-signature-1",
-            "name": "Hebrews Special",
-            "brand": "Cafe Hebrews",
+            "name": "Havilah Special",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "signature",
             "price_ugx": 30000,
@@ -540,7 +540,7 @@
             "sizes": ["Standard"],
             "colors": ["With Sugar", "No Sugar"],
             "images": [
-              "/assets/images/products/bar/signature/hebrews-special.jpg"
+              "/assets/images/products/bar/signature/havilah-special.jpg"
             ],
             "description": "Our signature cocktail, a unique blend of premium spirits and house-made ingredients.",
             "condition": "Fresh",
@@ -550,7 +550,7 @@
           {
             "id": "bar-signature-2",
             "name": "Tropical Breeze",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "signature",
             "price_ugx": 28000,
@@ -568,7 +568,7 @@
           {
             "id": "bar-signature-3",
             "name": "Sunset Spritz",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "signature",
             "price_ugx": 26000,
@@ -586,7 +586,7 @@
           {
             "id": "bar-signature-4",
             "name": "Luxury Martini",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bar",
             "section": "signature",
             "price_ugx": 32000,
@@ -612,7 +612,7 @@
           {
             "id": "kitchen-grill-1",
             "name": "Premium Ribeye Steak",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "grill",
             "price_ugx": 65000,
@@ -630,7 +630,7 @@
           {
             "id": "kitchen-grill-2",
             "name": "Grilled Chicken Breast",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "grill",
             "price_ugx": 35000,
@@ -648,7 +648,7 @@
           {
             "id": "kitchen-grill-3",
             "name": "Grilled Fish Fillet",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "grill",
             "price_ugx": 40000,
@@ -666,7 +666,7 @@
           {
             "id": "kitchen-grill-4",
             "name": "Grilled Lamb Chops",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "grill",
             "price_ugx": 55000,
@@ -686,7 +686,7 @@
           {
             "id": "kitchen-breakfast-1",
             "name": "Full English Breakfast",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "breakfast",
             "price_ugx": 28000,
@@ -704,7 +704,7 @@
           {
             "id": "kitchen-breakfast-2",
             "name": "Rolex (Breakfast Wrap)",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "breakfast",
             "price_ugx": 12000,
@@ -722,7 +722,7 @@
           {
             "id": "kitchen-breakfast-3",
             "name": "Avocado Toast",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "breakfast",
             "price_ugx": 18000,
@@ -740,7 +740,7 @@
           {
             "id": "kitchen-breakfast-4",
             "name": "Pancake Stack",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "breakfast",
             "price_ugx": 20000,
@@ -760,7 +760,7 @@
           {
             "id": "kitchen-mains-1",
             "name": "Beef Stroganoff",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "mains",
             "price_ugx": 45000,
@@ -778,7 +778,7 @@
           {
             "id": "kitchen-mains-2",
             "name": "Grilled Chicken Pasta",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "mains",
             "price_ugx": 38000,
@@ -796,7 +796,7 @@
           {
             "id": "kitchen-mains-3",
             "name": "Vegetarian Curry",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "mains",
             "price_ugx": 32000,
@@ -814,7 +814,7 @@
           {
             "id": "kitchen-mains-4",
             "name": "Fish and Chips",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "mains",
             "price_ugx": 35000,
@@ -834,7 +834,7 @@
           {
             "id": "kitchen-specials-1",
             "name": "Chef's Special of the Day",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "specials",
             "price_ugx": 50000,
@@ -852,7 +852,7 @@
           {
             "id": "kitchen-specials-2",
             "name": "Happy Hour Special (5pm-7pm)",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "specials",
             "price_ugx": 25000,
@@ -870,7 +870,7 @@
           {
             "id": "kitchen-specials-3",
             "name": "Breakfast Combo",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "specials",
             "price_ugx": 18000,
@@ -888,7 +888,7 @@
           {
             "id": "kitchen-specials-4",
             "name": "Weekend Brunch Special",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "kitchen",
             "section": "specials",
             "price_ugx": 42000,
@@ -914,7 +914,7 @@
           {
             "id": "bakery-pastries-1",
             "name": "Croissant",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "pastries",
             "price_ugx": 8000,
@@ -932,7 +932,7 @@
           {
             "id": "bakery-pastries-2",
             "name": "Danish Pastry",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "pastries",
             "price_ugx": 10000,
@@ -950,7 +950,7 @@
           {
             "id": "bakery-pastries-3",
             "name": "Pain au Chocolat",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "pastries",
             "price_ugx": 9000,
@@ -968,7 +968,7 @@
           {
             "id": "bakery-pastries-4",
             "name": "Cinnamon Roll",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "pastries",
             "price_ugx": 12000,
@@ -988,7 +988,7 @@
           {
             "id": "bakery-breads-1",
             "name": "Sourdough Bread",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "breads",
             "price_ugx": 15000,
@@ -1006,7 +1006,7 @@
           {
             "id": "bakery-breads-2",
             "name": "Whole Wheat Bread",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "breads",
             "price_ugx": 12000,
@@ -1024,7 +1024,7 @@
           {
             "id": "bakery-breads-3",
             "name": "French Baguette",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "breads",
             "price_ugx": 10000,
@@ -1042,7 +1042,7 @@
           {
             "id": "bakery-breads-4",
             "name": "Multigrain Bread",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "breads",
             "price_ugx": 13000,
@@ -1062,7 +1062,7 @@
           {
             "id": "bakery-desserts-1",
             "name": "Chocolate Cake",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "desserts",
             "price_ugx": 18000,
@@ -1080,7 +1080,7 @@
           {
             "id": "bakery-desserts-2",
             "name": "Cheesecake",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "desserts",
             "price_ugx": 20000,
@@ -1098,7 +1098,7 @@
           {
             "id": "bakery-desserts-3",
             "name": "Tiramisu",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "desserts",
             "price_ugx": 22000,
@@ -1116,7 +1116,7 @@
           {
             "id": "bakery-desserts-4",
             "name": "Fruit Tart",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "desserts",
             "price_ugx": 16000,
@@ -1136,7 +1136,7 @@
           {
             "id": "bakery-breakfast-1",
             "name": "Muffin Selection",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "breakfast-items",
             "price_ugx": 8000,
@@ -1154,7 +1154,7 @@
           {
             "id": "bakery-breakfast-2",
             "name": "Scone",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "breakfast-items",
             "price_ugx": 7000,
@@ -1172,7 +1172,7 @@
           {
             "id": "bakery-breakfast-3",
             "name": "Bagel",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "breakfast-items",
             "price_ugx": 6000,
@@ -1190,7 +1190,7 @@
           {
             "id": "bakery-breakfast-4",
             "name": "Breakfast Pastry Platter",
-            "brand": "Cafe Hebrews",
+            "brand": "Cafe Havilah & Pizzeria",
             "category": "bakery",
             "section": "breakfast-items",
             "price_ugx": 25000,

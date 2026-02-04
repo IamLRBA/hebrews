@@ -53,7 +53,7 @@ export default function LogoMark({ className, animated = false, size = 120 }: Lo
       <img
         key={mounted ? `logo-${resolvedTheme}` : 'logo-ssr'}
         src={mounted ? currentLogo : LIGHT_LOGO_SRC}
-        alt="Cafe Hebrews® logo"
+        alt="Cafe Havilah & Pizzeria® logo"
         width={size}
         height={size}
         draggable={false}

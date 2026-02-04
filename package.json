@@ -1,7 +1,7 @@
 {
-  "name": "cafe-hebrews",
+  "name": "cafe-havilah-pizzeria",
   "version": "1.0.0",
-  "description": "Cafe Hebrews - Luxury destination cafe offering premium dining, coffee, and hospitality",
+  "description": "Cafe Havilah & Pizzeria - Luxury destination cafe offering premium dining, coffee, and hospitality",
   "private": true,
   "scripts": {
     "dev": "next dev",
