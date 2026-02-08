@@ -163,6 +163,108 @@ export async function getKdsOrders(): Promise<KdsOrderForDisplay[]> {
 }
 
 // ---------------------------------------------------------------------------
+// Order detail read model (single order with items and payments)
+// ---------------------------------------------------------------------------
+
+export type OrderDetailItem = {
+  id: string
+  productId: string
+  quantity: number
+  size: string | null
+  modifier: string | null
+  notes: string | null
+  subtotalUgx: number
+}
+
+export type OrderDetailPayment = {
+  id: string
+  amountUgx: number
+  method: string
+  status: string
+}
+
+export type OrderDetail = {
+  orderId: string
+  orderNumber: string
+  orderType: 'dine_in' | 'takeaway'
+  tableId: string | null
+  status: string
+  totalUgx: number
+  createdAt: Date
+  items: OrderDetailItem[]
+  payments: OrderDetailPayment[]
+}
+
+/**
+ * Returns a single order with items and payments. Read-only.
+ * subtotalUgx comes from order item lineTotalUgx.
+ * Returns null if the order does not exist.
+ */
+export async function getOrderDetail(orderId: string): Promise<OrderDetail | null> {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    select: {
+      id: true,
+      orderNumber: true,
+      orderType: true,
+      tableId: true,
+      status: true,
+      totalUgx: true,
+      createdAt: true,
+      orderItems: {
+        orderBy: { sortOrder: 'asc' },
+        select: {
+          id: true,
+          productId: true,
+          quantity: true,
+          size: true,
+          modifier: true,
+          notes: true,
+          lineTotalUgx: true,
+        },
+      },
+      payments: {
+        select: {
+          id: true,
+          amountUgx: true,
+          method: true,
+          status: true,
+        },
+      },
+    },
+  })
+
+  if (!order) {
+    return null
+  }
+
+  return {
+    orderId: order.id,
+    orderNumber: order.orderNumber,
+    orderType: order.orderType,
+    tableId: order.tableId,
+    status: order.status,
+    totalUgx: Number(order.totalUgx),
+    createdAt: order.createdAt,
+    items: order.orderItems.map((item) => ({
+      id: item.id,
+      productId: item.productId,
+      quantity: item.quantity,
+      size: item.size,
+      modifier: item.modifier,
+      notes: item.notes,
+      subtotalUgx: Number(item.lineTotalUgx),
+    })),
+    payments: order.payments.map((p) => ({
+      id: p.id,
+      amountUgx: Number(p.amountUgx),
+      method: p.method,
+      status: p.status,
+    })),
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Shift summary read model
 // ---------------------------------------------------------------------------
 
@@ -258,4 +360,39 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary | n
     cashPaymentsUgx,
     nonCashPaymentsUgx,
   }
+}
+
+// ---------------------------------------------------------------------------
+// Active products read model (POS menu)
+// ---------------------------------------------------------------------------
+
+export type ProductForPos = {
+  id: string
+  name: string
+  priceUgx: number
+  isActive: boolean
+}
+
+/**
+ * Returns active products for POS product selection. Read-only.
+ * Only products with isActive = true. Sorted by name ascending.
+ */
+export async function getActiveProductsForPos(): Promise<ProductForPos[]> {
+  const products = await prisma.product.findMany({
+    where: { isActive: true },
+    orderBy: { name: 'asc' },
+    select: {
+      id: true,
+      name: true,
+      priceUgx: true,
+      isActive: true,
+    },
+  })
+
+  return products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    priceUgx: Number(p.priceUgx),
+    isActive: p.isActive,
+  }))
 }
