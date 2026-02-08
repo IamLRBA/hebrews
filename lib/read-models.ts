@@ -90,6 +90,75 @@ export async function getActiveOrdersForPos(): Promise<ActiveOrderForPos[]> {
   })
 }
 
+/**
+ * Returns active orders for a specific shift. Same shape as getActiveOrdersForPos.
+ * Active = status in (pending, preparing, ready). Read-only.
+ * Returns [] if shift has no active orders.
+ */
+export async function getActiveOrdersForShift(shiftId: string): Promise<ActiveOrderForPos[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      shiftId,
+      status: { in: [...ACTIVE_ORDER_STATUSES] },
+    },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      orderNumber: true,
+      orderType: true,
+      tableId: true,
+      status: true,
+      createdAt: true,
+      subtotalUgx: true,
+      taxUgx: true,
+      totalUgx: true,
+      createdByStaffId: true,
+      terminalId: true,
+    },
+  })
+
+  if (orders.length === 0) {
+    return []
+  }
+
+  const orderIds = orders.map((o) => o.id)
+  const paymentSums = await prisma.payment.groupBy({
+    by: ['orderId'],
+    where: {
+      orderId: { in: orderIds },
+      status: 'completed',
+    },
+    _sum: { amountUgx: true },
+  })
+
+  const totalPaidByOrderId = new Map<string, number>()
+  for (const row of paymentSums) {
+    const sum = row._sum.amountUgx
+    totalPaidByOrderId.set(row.orderId, sum != null ? Number(sum) : 0)
+  }
+
+  return orders.map((o) => {
+    const totalPaidUgx = totalPaidByOrderId.get(o.id) ?? 0
+    const totalUgx = Number(o.totalUgx)
+    const isFullyPaid = totalPaidUgx >= totalUgx
+    return {
+      orderId: o.id,
+      orderNumber: o.orderNumber,
+      orderType: o.orderType,
+      tableId: o.tableId,
+      status: o.status,
+      createdAt: o.createdAt,
+      subtotalUgx: Number(o.subtotalUgx),
+      taxUgx: Number(o.taxUgx),
+      totalUgx,
+      totalPaidUgx,
+      isFullyPaid,
+      createdByStaffId: o.createdByStaffId,
+      terminalId: o.terminalId,
+    }
+  })
+}
+
 // ---------------------------------------------------------------------------
 // Kitchen Display System (KDS) read model
 // ---------------------------------------------------------------------------
@@ -394,5 +463,94 @@ export async function getActiveProductsForPos(): Promise<ProductForPos[]> {
     name: p.name,
     priceUgx: Number(p.priceUgx),
     isActive: p.isActive,
+  }))
+}
+
+// ---------------------------------------------------------------------------
+// Active staff read model (POS login)
+// ---------------------------------------------------------------------------
+
+export type ActiveStaffMember = {
+  id: string
+  name: string
+}
+
+/**
+ * Returns all active staff for POS login dropdown.
+ * Read-only; no schema changes. Sorted by name ascending.
+ */
+export async function getActiveStaff(): Promise<ActiveStaffMember[]> {
+  const staff = await prisma.staff.findMany({
+    where: { isActive: true },
+    orderBy: { fullName: 'asc' },
+    select: { id: true, fullName: true },
+  })
+  return staff.map((s) => ({ id: s.id, name: s.fullName }))
+}
+
+// ---------------------------------------------------------------------------
+// KDS orders read model (Kitchen Display)
+// ---------------------------------------------------------------------------
+
+const KDS_SCREEN_STATUSES = ['pending', 'preparing'] as const
+
+export type KdsOrderItem = {
+  productId: string
+  quantity: number
+  size: string | null
+  modifier: string | null
+  notes: string | null
+}
+
+export type KdsOrder = {
+  orderId: string
+  orderNumber: string
+  orderType: string
+  tableId: string | null
+  status: string
+  createdAt: Date
+  items: KdsOrderItem[]
+}
+
+/**
+ * Returns orders for kitchen display: status in (pending, preparing).
+ * Read-only. Sorted by createdAt ascending (oldest first).
+ */
+export async function getKdsOrders(): Promise<KdsOrder[]> {
+  const orders = await prisma.order.findMany({
+    where: { status: { in: [...KDS_SCREEN_STATUSES] } },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      orderNumber: true,
+      orderType: true,
+      tableId: true,
+      status: true,
+      createdAt: true,
+      orderItems: {
+        select: {
+          productId: true,
+          quantity: true,
+          size: true,
+          modifier: true,
+          notes: true,
+        },
+      },
+    },
+  })
+  return orders.map((o) => ({
+    orderId: o.id,
+    orderNumber: o.orderNumber,
+    orderType: o.orderType,
+    tableId: o.tableId,
+    status: o.status,
+    createdAt: o.createdAt,
+    items: o.orderItems.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      size: item.size,
+      modifier: item.modifier,
+      notes: item.notes,
+    })),
   }))
 }

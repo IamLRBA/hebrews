@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-
-const STAFF_ID = '00000000-0000-0000-0000-000000000001'
+import { getStaffId, posFetch } from '@/lib/pos-client'
 
 type ShiftSummary = {
   shiftId: string
@@ -29,6 +29,8 @@ type ActiveShift = {
 }
 
 export default function ShiftPage() {
+  const router = useRouter()
+  const [staffOk, setStaffOk] = useState(false)
   const [activeShift, setActiveShift] = useState<ActiveShift | null>(null)
   const [summary, setSummary] = useState<ShiftSummary | null>(null)
   const [loading, setLoading] = useState(true)
@@ -40,7 +42,7 @@ export default function ShiftPage() {
 
   async function fetchActiveShift() {
     try {
-      const res = await fetch(`/api/shifts/active?staffId=${STAFF_ID}`)
+      const res = await posFetch('/api/shifts/active')
       if (!res.ok) {
         if (res.status === 404) {
           setError('No active shift')
@@ -60,7 +62,7 @@ export default function ShiftPage() {
 
   async function fetchShiftSummary(shiftId: string) {
     try {
-      const res = await fetch(`/api/shifts/${shiftId}`)
+      const res = await posFetch(`/api/shifts/${shiftId}`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         throw new Error(data.error || `HTTP ${res.status}`)
@@ -74,10 +76,19 @@ export default function ShiftPage() {
   }
 
   useEffect(() => {
+    if (!getStaffId()) {
+      router.replace('/pos/login')
+      return
+    }
+    setStaffOk(true)
+  }, [router])
+
+  useEffect(() => {
+    if (!staffOk) return
     setLoading(true)
     setError(null)
     fetchActiveShift().finally(() => setLoading(false))
-  }, [])
+  }, [staffOk])
 
   useEffect(() => {
     if (activeShift?.shiftId) {
@@ -97,11 +108,11 @@ export default function ShiftPage() {
     }
     setClosing(true)
     try {
-      const res = await fetch(`/api/shifts/${activeShift.shiftId}/close`, {
+      const res = await posFetch(`/api/shifts/${activeShift.shiftId}/close`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          closedByStaffId: STAFF_ID,
+          closedByStaffId: getStaffId(),
           declaredCashUgx: amount,
         }),
       })
@@ -119,7 +130,7 @@ export default function ShiftPage() {
     }
   }
 
-  if (loading) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p>Loading…</p></main>
+  if (!staffOk || loading) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p>Loading…</p></main>
   if (error && !activeShift) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p style={{ color: 'red' }}>{error}</p><Link href="/pos">← Back to POS</Link></main>
 
   return (

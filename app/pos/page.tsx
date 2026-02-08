@@ -1,15 +1,17 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-
-const STAFF_ID = '00000000-0000-0000-0000-000000000001'
+import { getStaffId, posFetch } from '@/lib/pos-client'
 
 function generateOrderNumber() {
   return `ORD-${Date.now()}`
 }
 
 export default function PosActiveOrdersPage() {
+  const router = useRouter()
+  const [staffOk, setStaffOk] = useState(false)
   const [orders, setOrders] = useState<Array<{
     orderId: string
     orderNumber: string
@@ -27,7 +29,7 @@ export default function PosActiveOrdersPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch('/api/orders/active')
+      const res = await posFetch('/api/orders/active')
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         throw new Error(data.error || `HTTP ${res.status}`)
@@ -46,18 +48,27 @@ export default function PosActiveOrdersPage() {
   }
 
   useEffect(() => {
+    if (!getStaffId()) {
+      router.replace('/pos/login')
+      return
+    }
+    setStaffOk(true)
+  }, [router])
+
+  useEffect(() => {
+    if (!staffOk) return
     fetchOrders()
-  }, [])
+  }, [staffOk])
 
   async function handleNewDineIn() {
     setCreating('dine-in')
     try {
       const tableId = prompt('Table ID (e.g. T1):') || 'T1'
-      const res = await fetch('/api/orders/dine-in', {
+      const res = await posFetch('/api/orders/dine-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          staffId: STAFF_ID,
+          staffId: getStaffId(),
           tableId,
           orderNumber: generateOrderNumber(),
         }),
@@ -77,11 +88,11 @@ export default function PosActiveOrdersPage() {
   async function handleNewTakeaway() {
     setCreating('takeaway')
     try {
-      const res = await fetch('/api/orders/takeaway', {
+      const res = await posFetch('/api/orders/takeaway', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          staffId: STAFF_ID,
+          staffId: getStaffId(),
           orderNumber: generateOrderNumber(),
         }),
       })
@@ -96,6 +107,8 @@ export default function PosActiveOrdersPage() {
       setCreating(null)
     }
   }
+
+  if (!staffOk) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p>Loading…</p></main>
 
   return (
     <main style={{ padding: '1.5rem', fontFamily: 'system-ui, sans-serif' }}>

@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-
-const STAFF_ID = '00000000-0000-0000-0000-000000000001'
+import { getStaffId, posFetch } from '@/lib/pos-client'
 
 type OrderItem = {
   id: string
@@ -51,9 +50,12 @@ export default function OrderDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [addingItem, setAddingItem] = useState(false)
   const [recordingPayment, setRecordingPayment] = useState(false)
+  const [payingType, setPayingType] = useState<'cash' | 'mobile' | 'card' | null>(null)
+  const [paymentAmountUgx, setPaymentAmountUgx] = useState('')
   const [checkingOut, setCheckingOut] = useState(false)
   const [cancelling, setCancelling] = useState(false)
 
+  const [staffOk, setStaffOk] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
   const [productId, setProductId] = useState('')
   const [quantity, setQuantity] = useState(1)
@@ -64,7 +66,7 @@ export default function OrderDetailPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`/api/orders/${orderId}`)
+      const res = await posFetch(`/api/orders/${orderId}`)
       if (!res.ok) {
         if (res.status === 404) {
           setError('Order not found')
@@ -85,7 +87,7 @@ export default function OrderDetailPage() {
 
   async function fetchProducts() {
     try {
-      const res = await fetch('/api/products')
+      const res = await posFetch('/api/products')
       if (res.ok) {
         const data = await res.json()
         setProducts(data)
@@ -96,19 +98,29 @@ export default function OrderDetailPage() {
   }
 
   useEffect(() => {
-    if (orderId) fetchOrder()
-  }, [orderId])
+    if (!getStaffId()) {
+      router.replace('/pos/login')
+      return
+    }
+    setStaffOk(true)
+  }, [router])
 
   useEffect(() => {
+    if (!staffOk || !orderId) return
+    fetchOrder()
+  }, [staffOk, orderId])
+
+  useEffect(() => {
+    if (!staffOk) return
     fetchProducts()
-  }, [])
+  }, [staffOk])
 
   async function handleAddItem(e: React.FormEvent) {
     e.preventDefault()
     if (!productId || quantity < 1) return
     setAddingItem(true)
     try {
-      const res = await fetch(`/api/orders/${orderId}/items`, {
+      const res = await posFetch(`/api/orders/${orderId}/items`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, quantity }),
@@ -136,14 +148,14 @@ export default function OrderDetailPage() {
     }
     setRecordingPayment(true)
     try {
-      const res = await fetch(`/api/orders/${orderId}/payments`, {
+      const res = await posFetch(`/api/orders/${orderId}/payments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amountUgx: amount,
           method,
           status: 'completed',
-          createdByStaffId: STAFF_ID,
+          createdByStaffId: getStaffId(),
         }),
       })
       if (!res.ok) {
@@ -162,10 +174,10 @@ export default function OrderDetailPage() {
   async function handleCheckout() {
     setCheckingOut(true)
     try {
-      const res = await fetch(`/api/orders/${orderId}/checkout`, {
+      const res = await posFetch(`/api/orders/${orderId}/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ updatedByStaffId: STAFF_ID }),
+        body: JSON.stringify({ updatedByStaffId: getStaffId() }),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
@@ -179,14 +191,42 @@ export default function OrderDetailPage() {
     }
   }
 
+  async function handlePay(paymentType: 'cash' | 'mobile' | 'card') {
+    if (!order || order.status !== 'ready') return
+    const totalPaid = order.payments
+      .filter((p) => p.status === 'completed')
+      .reduce((sum, p) => sum + p.amountUgx, 0)
+    const remaining = order.totalUgx - totalPaid
+    const enteredAmount = paymentAmountUgx === '' ? remaining : parseFloat(paymentAmountUgx)
+    if (isNaN(enteredAmount) || enteredAmount <= 0 || enteredAmount > remaining) return
+    setPayingType(paymentType)
+    try {
+      const res = await posFetch(`/api/orders/${orderId}/pay`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amountUgx: enteredAmount, paymentType }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || `HTTP ${res.status}`)
+      }
+      await fetchOrder()
+      setPaymentAmountUgx('')
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Failed to record payment')
+    } finally {
+      setPayingType(null)
+    }
+  }
+
   async function handleCancel() {
     if (!confirm('Cancel this order?')) return
     setCancelling(true)
     try {
-      const res = await fetch(`/api/orders/${orderId}/cancel`, {
+      const res = await posFetch(`/api/orders/${orderId}/cancel`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cancelledByStaffId: STAFF_ID }),
+        body: JSON.stringify({ cancelledByStaffId: getStaffId() }),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
@@ -204,7 +244,7 @@ export default function OrderDetailPage() {
     order?.status === 'served' || order?.status === 'cancelled'
   const canCheckout = order?.status === 'ready' && !block
 
-  if (loading) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p>Loading…</p></main>
+  if (!staffOk || loading) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p>Loading…</p></main>
   if (error && !order) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p style={{ color: 'red' }}>{error}</p><Link href="/pos">← Back to POS</Link></main>
 
   return (
@@ -216,6 +256,13 @@ export default function OrderDetailPage() {
         <p><strong>Type:</strong> {order?.orderType === 'dine_in' ? 'Dine-in' : 'Takeaway'}</p>
         {order?.tableId && <p><strong>Table:</strong> {order.tableId}</p>}
         <p><strong>Status:</strong> {order?.status}</p>
+        {order?.status === 'served' && (
+          <p>
+            <strong>Payment complete</strong>
+            {' '}
+            <Link href={`/pos/orders/${order.orderId}/receipt`}>View Receipt</Link>
+          </p>
+        )}
         <p><strong>Total:</strong> {order?.totalUgx?.toLocaleString()} UGX</p>
       </section>
 
@@ -290,6 +337,48 @@ export default function OrderDetailPage() {
           </form>
         )}
       </section>
+
+      {order?.status === 'ready' && (
+        <section style={{ marginBottom: '1.5rem', padding: '1rem', border: '1px solid #ccc', borderRadius: '4px' }}>
+          <h2>Payment</h2>
+          {(() => {
+            const totalPaid = order.payments
+              .filter((p) => p.status === 'completed')
+              .reduce((sum, p) => sum + p.amountUgx, 0)
+            const remaining = order.totalUgx - totalPaid
+            const displayAmount = paymentAmountUgx === '' ? String(remaining) : paymentAmountUgx
+            const enteredAmount = paymentAmountUgx === '' ? remaining : parseFloat(paymentAmountUgx)
+            const validAmount = !isNaN(enteredAmount) && enteredAmount > 0 && enteredAmount <= remaining
+            return (
+              <>
+                <p><strong>Order total:</strong> {order.totalUgx.toLocaleString()} UGX</p>
+                <p><strong>Amount paid:</strong> {totalPaid.toLocaleString()} UGX</p>
+                <p><strong>Remaining:</strong> {remaining.toLocaleString()} UGX</p>
+                {remaining > 0 && (
+                  <>
+                    <label style={{ display: 'block', marginTop: '0.5rem' }}>
+                      Amount to pay (UGX):{' '}
+                      <input
+                        type="number"
+                        min={0}
+                        step={100}
+                        value={displayAmount}
+                        onChange={(e) => setPaymentAmountUgx(e.target.value)}
+                        style={{ padding: '0.25rem', width: '10rem' }}
+                      />
+                    </label>
+                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                      <button onClick={() => handlePay('cash')} disabled={payingType !== null || !validAmount}>Pay Cash</button>
+                      <button onClick={() => handlePay('mobile')} disabled={payingType !== null || !validAmount}>Pay MoMo</button>
+                      <button onClick={() => handlePay('card')} disabled={payingType !== null || !validAmount}>Pay Card</button>
+                    </div>
+                  </>
+                )}
+              </>
+            )
+          })()}
+        </section>
+      )}
 
       <section style={{ display: 'flex', gap: '0.5rem' }}>
         <button onClick={handleCheckout} disabled={!canCheckout || checkingOut}>

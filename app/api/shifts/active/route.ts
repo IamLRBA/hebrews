@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getActiveShift } from '@/lib/staff-session'
 
+const STAFF_ID_HEADER = 'x-staff-id'
+
 export async function GET(request: NextRequest) {
   try {
-    const staffId = request.nextUrl.searchParams.get('staffId')
+    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
     if (!staffId) {
-      return NextResponse.json({ error: 'staffId query param is required' }, { status: 400 })
+      return NextResponse.json({ error: 'Staff session required' }, { status: 400 })
     }
 
     const shift = await getActiveShift(staffId)

@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/db'
 import type { Payment, PaymentMethod, PaymentStatus } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
+import { getActiveShift } from '@/lib/staff-session'
+import { checkoutOrder } from '@/lib/checkout'
 
 // ---------------------------------------------------------------------------
 // Typed errors
@@ -46,6 +48,15 @@ export class PaymentExceedsOrderTotalError extends Error {
     )
     this.name = 'PaymentExceedsOrderTotalError'
     Object.setPrototypeOf(this, PaymentExceedsOrderTotalError.prototype)
+  }
+}
+
+export class OrderNotReadyForPaymentError extends Error {
+  readonly code = 'ORDER_NOT_READY_FOR_PAYMENT' as const
+  constructor(public readonly orderId: string, public readonly status: string) {
+    super(`Order is ${status}; only ready orders can receive payments: ${orderId}`)
+    this.name = 'OrderNotReadyForPaymentError'
+    Object.setPrototypeOf(this, OrderNotReadyForPaymentError.prototype)
   }
 }
 
@@ -154,4 +165,81 @@ export async function recordPayment(params: RecordPaymentParams): Promise<Paymen
       },
     })
   })
+}
+
+// ---------------------------------------------------------------------------
+// Order payment (ready orders only; auto-serve when fully paid)
+// ---------------------------------------------------------------------------
+
+export type OrderPaymentType = 'cash' | 'mobile' | 'card'
+
+const PAYMENT_TYPE_TO_METHOD: Record<OrderPaymentType, PaymentMethod> = {
+  cash: 'cash',
+  mobile: 'mtn_momo',
+  card: 'card',
+}
+
+export type RecordOrderPaymentParams = {
+  orderId: string
+  amountUgx: number
+  paymentType: OrderPaymentType
+  receivedByStaffId: string
+}
+
+/**
+ * Records a payment for an order. Only orders in "ready" status may receive payments.
+ * Validates: order exists, status is ready, active shift exists for staff, amount > 0, total payments do not exceed order total.
+ * Creates payment as completed. If total paid (completed payments) >= order total, transitions order to served and releases table.
+ */
+export async function recordOrderPayment(params: RecordOrderPaymentParams): Promise<Payment> {
+  const { orderId, amountUgx, paymentType, receivedByStaffId } = params
+
+  if (amountUgx <= 0) {
+    throw new PaymentAmountInvalidError(amountUgx)
+  }
+
+  await getActiveShift(receivedByStaffId)
+
+  const payment = await prisma.$transaction(async (tx) => {
+    const order = await tx.order.findUnique({
+      where: { id: orderId },
+      select: { id: true, status: true, totalUgx: true },
+    })
+
+    if (!order) {
+      throw new OrderNotFoundError(orderId)
+    }
+    if (order.status !== 'ready') {
+      throw new OrderNotReadyForPaymentError(orderId, order.status)
+    }
+
+    const currentTotal = await getTotalPaymentAmountsForOrder(tx, orderId)
+    const orderTotal = Number(order.totalUgx)
+    if (currentTotal + amountUgx > orderTotal) {
+      throw new PaymentExceedsOrderTotalError(orderId, orderTotal, currentTotal, amountUgx)
+    }
+
+    const method = PAYMENT_TYPE_TO_METHOD[paymentType]
+
+    return tx.payment.create({
+      data: {
+        orderId,
+        amountUgx: new Decimal(amountUgx),
+        method,
+        status: 'completed',
+        createdByStaffId: receivedByStaffId,
+      },
+    })
+  })
+
+  const totalPaid = await getTotalPaid(orderId)
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    select: { totalUgx: true, status: true },
+  })
+  if (order && order.status === 'ready' && totalPaid >= Number(order.totalUgx)) {
+    await checkoutOrder({ orderId, updatedByStaffId: receivedByStaffId })
+  }
+
+  return payment
 }
