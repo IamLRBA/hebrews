@@ -1,7 +1,6 @@
 /**
  * POS route group layout.
- * Full-screen shell for POS; no Navbar/Footer (handled by root ConditionalShell for pathname === '/').
- * Tablet/desktop friendly.
+ * Full-screen wrapper only — no Navbar, no Footer. Shell is suppressed by ConditionalShell for /, /pos/*, and /kds.
  */
 export default function PosLayout({
   children,

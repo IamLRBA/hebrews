@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { addItemToOrder } from '@/lib/domain/orders'
+import { payOrderCash } from '@/lib/domain/orders'
 import { getOrderDetail } from '@/lib/read-models'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
@@ -14,24 +14,15 @@ export async function POST(
     }
 
     const body = await request.json()
-    const { productId, quantity = 1, size, modifier, notes } = body
-
-    if (typeof productId !== 'string' || !productId) {
-      return NextResponse.json({ error: 'productId is required (string)' }, { status: 400 })
+    const { amountUgx, staffId } = body
+    if (typeof amountUgx !== 'number' || amountUgx < 0) {
+      return NextResponse.json({ error: 'amountUgx is required (number >= 0)' }, { status: 400 })
     }
-    if (typeof quantity !== 'number' || quantity < 1) {
-      return NextResponse.json({ error: 'quantity is required (number >= 1)' }, { status: 400 })
+    if (typeof staffId !== 'string' || !staffId) {
+      return NextResponse.json({ error: 'staffId is required (string)' }, { status: 400 })
     }
 
-    await addItemToOrder({
-      orderId,
-      productId,
-      quantity,
-      size: size ?? null,
-      modifier: modifier ?? null,
-      notes: notes ?? null,
-    })
-
+    await payOrderCash({ orderId, amountUgx, staffId })
     const order = await getOrderDetail(orderId)
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })

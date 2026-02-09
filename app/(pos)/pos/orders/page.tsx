@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
+import { PosNavHeader } from '@/components/pos/PosNavHeader'
 
 type ActiveOrder = {
   orderId: string
@@ -24,6 +25,18 @@ function timeSince(dateStr: string): string {
   if (min < 60) return `${min}m ago`
   const hr = Math.floor(min / 60)
   return `${hr}h ago`
+}
+
+function statusBadgeClass(status: string): string {
+  const base = 'pos-badge '
+  switch (status) {
+    case 'pending': return base + 'pos-badge-pending'
+    case 'preparing': return base + 'pos-badge-preparing'
+    case 'ready': return base + 'pos-badge-ready'
+    case 'served': return base + 'pos-badge-served'
+    case 'cancelled': return base + 'pos-badge-cancelled'
+    default: return base + 'pos-badge-pending'
+  }
 }
 
 export default function PosOrdersPage() {
@@ -164,50 +177,82 @@ export default function PosOrdersPage() {
     }
   }
 
-  if (!staffOk || loading) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p>Loading…</p></main>
-  if (error && !shiftId) return <main style={{ padding: '1.5rem', fontFamily: 'system-ui' }}><p style={{ color: 'red' }}>{error}</p><Link href="/pos">← Back to POS</Link></main>
+  if (!staffOk || loading) {
+    return (
+      <main className="pos-page flex items-center justify-center">
+        <div className="pos-card max-w-sm w-full text-center">
+          <p className="text-primary-600 dark:text-primary-300">Loading…</p>
+        </div>
+      </main>
+    )
+  }
+
+  if (error && !shiftId) {
+    return (
+      <main className="pos-page">
+        <div className="pos-page-container max-w-md">
+          <div className="pos-alert pos-alert-error mb-4">{error}</div>
+          <Link href="/pos" className="pos-link">← Back to POS</Link>
+        </div>
+      </main>
+    )
+  }
 
   return (
-    <main style={{ padding: '1.5rem', fontFamily: 'system-ui, sans-serif' }}>
-      <p><Link href="/pos" style={{ textDecoration: 'none' }}>← Back to POS</Link></p>
-      <h1>Active Orders</h1>
+    <main className="pos-page">
+      <div className="pos-page-container">
+        <PosNavHeader />
+        <h1 className="pos-section-title text-2xl mb-1">Shift Orders</h1>
+        <p className="pos-section-subtitle mb-6">Orders for your current shift</p>
 
-      {orders.length === 0 && <p>No active orders for this shift.</p>}
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-        {orders.map((o) => (
-          <div
-            key={o.orderId}
-            style={{
-              border: '1px solid #ccc',
-              borderRadius: '8px',
-              padding: '1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.5rem',
-            }}
-          >
-            <p style={{ margin: 0, fontWeight: 'bold' }}>{o.orderNumber}</p>
-            <p style={{ margin: 0 }}>Table: {o.tableId || '—'}</p>
-            <p style={{ margin: 0 }}>Status: {o.status}</p>
-            <p style={{ margin: 0 }}>{o.totalUgx.toLocaleString()} UGX</p>
-            <p style={{ margin: 0, fontSize: '0.9rem', color: '#666' }}>{timeSince(o.createdAt)}</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
-              {o.status === 'pending' && (
-                <>
-                  <button onClick={() => setStatus(o.orderId, 'preparing')} disabled={acting !== null}>Start Preparing</button>
-                  <button onClick={() => cancel(o.orderId)} disabled={acting !== null}>Cancel</button>
-                </>
-              )}
-              {o.status === 'preparing' && (
-                <button onClick={() => setStatus(o.orderId, 'ready')} disabled={acting !== null}>Mark Ready</button>
-              )}
-              {o.status === 'ready' && (
-                <button onClick={() => checkout(o.orderId)} disabled={acting !== null}>Mark Served</button>
-              )}
-            </div>
+        {orders.length === 0 && (
+          <div className="pos-card">
+            <p className="text-neutral-600 dark:text-neutral-400 m-0">No active orders for this shift.</p>
           </div>
-        ))}
+        )}
+
+        <div className="grid gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-3">
+          {orders.map((o) => (
+            <div key={o.orderId} className="pos-order-card">
+              <p className="font-medium text-primary-800 dark:text-primary-100 m-0">{o.orderNumber}</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mt-1">
+                {o.orderType === 'dine_in' && o.tableId ? `Table ${o.tableId}` : 'Takeaway'}
+              </p>
+              <p className="m-0 mt-2">
+                <span className={statusBadgeClass(o.status)}>{o.status}</span>
+              </p>
+              <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200">
+                UGX {o.totalUgx.toLocaleString()}
+              </p>
+              <p className="text-xs text-neutral-500 dark:text-neutral-500 m-0 mt-1">{timeSince(o.createdAt)}</p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                {o.status === 'pending' && (
+                  <>
+                    <button onClick={() => setStatus(o.orderId, 'preparing')} disabled={acting !== null} className="btn btn-outline text-sm py-2 px-3 disabled:opacity-60">
+                      Start Preparing
+                    </button>
+                    <button onClick={() => cancel(o.orderId)} disabled={acting !== null} className="btn btn-danger text-sm py-2 px-3 disabled:opacity-60">
+                      Cancel
+                    </button>
+                  </>
+                )}
+                {o.status === 'preparing' && (
+                  <button onClick={() => setStatus(o.orderId, 'ready')} disabled={acting !== null} className="btn btn-primary text-sm py-2 px-3 disabled:opacity-60">
+                    Mark Ready
+                  </button>
+                )}
+                {o.status === 'ready' && (
+                  <button onClick={() => checkout(o.orderId)} disabled={acting !== null} className="btn btn-secondary text-sm py-2 px-3 disabled:opacity-60">
+                    Mark Served
+                  </button>
+                )}
+              </div>
+              <Link href={`/pos/orders/${o.orderId}`} className="pos-link text-sm mt-2 inline-block">
+                Open order →
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   )

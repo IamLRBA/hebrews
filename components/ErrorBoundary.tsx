@@ -14,35 +14,43 @@ interface State {
   error: Error | null
 }
 
+/** Normalize thrown value to Error so we never display "[object Event]" or other non-useful strings. */
+function normalizeError(thrown: unknown): Error {
+  if (thrown instanceof Error) return thrown
+  if (thrown && typeof thrown === 'object' && 'message' in thrown && typeof (thrown as { message: unknown }).message === 'string') {
+    return new Error((thrown as { message: string }).message)
+  }
+  // Event or other object: avoid "[object Event]"
+  const str = typeof thrown === 'string' ? thrown : String(thrown)
+  return new Error(str === '[object Event]' ? 'An unexpected error occurred' : str)
+}
+
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = { hasError: false, error: null }
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: unknown): State {
+    const err = normalizeError(error)
     // Don't catch hydration errors - they're usually harmless and resolve on retry
-    // Hydration errors are warnings in React 18+, not actual errors
-    if (error.message && (error.message.includes('hydration') || error.message.includes('Hydration'))) {
-      console.warn('Hydration mismatch detected (non-fatal):', error.message)
-      // Return null to let React handle it normally
+    if (err.message && (err.message.includes('hydration') || err.message.includes('Hydration'))) {
+      console.warn('Hydration mismatch detected (non-fatal):', err.message)
       return { hasError: false, error: null }
     }
-    return { hasError: true, error }
+    return { hasError: true, error: err }
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo)
-    
-    // Log detailed error information for debugging
+  componentDidCatch(error: unknown, errorInfo: ErrorInfo) {
+    const err = normalizeError(error)
+    console.error('ErrorBoundary caught an error:', err, errorInfo)
+
     if (typeof window !== 'undefined') {
-      console.error('Error name:', error.name)
-      console.error('Error message:', error.message)
-      console.error('Error stack:', error.stack)
+      console.error('Error name:', err.name)
+      console.error('Error message:', err.message)
+      console.error('Error stack:', err.stack)
       console.error('Component stack:', errorInfo.componentStack)
-      
-      // Check if it's a hydration error
-      if (error.message.includes('hydration') || error.message.includes('Hydration')) {
+      if (err.message.includes('hydration') || err.message.includes('Hydration')) {
         console.warn('Hydration error detected - this is usually harmless and will resolve on retry')
       }
     }
@@ -76,13 +84,8 @@ export class ErrorBoundary extends Component<Props, State> {
             {(process.env.NODE_ENV === 'development' || typeof window !== 'undefined') && this.state.error && (
               <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg text-left">
                 <p className="text-sm font-mono text-red-800 dark:text-red-200 break-all mb-2">
-                  {this.state.error.toString()}
+                  {this.state.error.message || this.state.error.toString()}
                 </p>
-                {this.state.error.message && (
-                  <p className="text-xs text-red-600 dark:text-red-300 mt-2">
-                    {this.state.error.message}
-                  </p>
-                )}
               </div>
             )}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">

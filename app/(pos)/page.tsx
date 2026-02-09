@@ -1,13 +1,30 @@
-/**
- * POS default landing screen.
- * Placeholder until POS menu/order UI is built.
- */
-export default function PosPage() {
+'use client'
+
+import Link from 'next/link'
+import { Coffee } from 'lucide-react'
+
+const CAFE_NAME = 'Cafe Havilah & Pizzeria'
+
+export default function PosLandingPage() {
   return (
-    <div className="flex-1 flex items-center justify-center p-8">
-      <h1 className="text-4xl md:text-6xl font-bold text-primary-800 dark:text-primary-100">
-        POS Menu
-      </h1>
+    <div className="pos-landing">
+      <div className="max-w-md mx-auto">
+        <div className="w-20 h-20 rounded-2xl bg-primary-100 dark:bg-primary-800 flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <Coffee className="w-10 h-10 text-primary-600 dark:text-primary-300" aria-hidden />
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-semibold text-primary-800 dark:text-primary-100 tracking-tight mb-2">
+          {CAFE_NAME}
+        </h1>
+        <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base mb-8">
+          Point of Sale
+        </p>
+        <Link
+          href="/pos"
+          className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-xl font-semibold text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+        >
+          Enter POS
+        </Link>
+      </div>
     </div>
   )
 }
