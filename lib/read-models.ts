@@ -90,6 +90,75 @@ export async function getActiveOrdersForPos(): Promise<ActiveOrderForPos[]> {
   })
 }
 
+/**
+ * Returns active orders for a specific shift. Same shape as getActiveOrdersForPos.
+ * Active = status in (pending, preparing, ready). Read-only.
+ * Returns [] if shift has no active orders.
+ */
+export async function getActiveOrdersForShift(shiftId: string): Promise<ActiveOrderForPos[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      shiftId,
+      status: { in: [...ACTIVE_ORDER_STATUSES] },
+    },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      orderNumber: true,
+      orderType: true,
+      tableId: true,
+      status: true,
+      createdAt: true,
+      subtotalUgx: true,
+      taxUgx: true,
+      totalUgx: true,
+      createdByStaffId: true,
+      terminalId: true,
+    },
+  })
+
+  if (orders.length === 0) {
+    return []
+  }
+
+  const orderIds = orders.map((o) => o.id)
+  const paymentSums = await prisma.payment.groupBy({
+    by: ['orderId'],
+    where: {
+      orderId: { in: orderIds },
+      status: 'completed',
+    },
+    _sum: { amountUgx: true },
+  })
+
+  const totalPaidByOrderId = new Map<string, number>()
+  for (const row of paymentSums) {
+    const sum = row._sum.amountUgx
+    totalPaidByOrderId.set(row.orderId, sum != null ? Number(sum) : 0)
+  }
+
+  return orders.map((o) => {
+    const totalPaidUgx = totalPaidByOrderId.get(o.id) ?? 0
+    const totalUgx = Number(o.totalUgx)
+    const isFullyPaid = totalPaidUgx >= totalUgx
+    return {
+      orderId: o.id,
+      orderNumber: o.orderNumber,
+      orderType: o.orderType,
+      tableId: o.tableId,
+      status: o.status,
+      createdAt: o.createdAt,
+      subtotalUgx: Number(o.subtotalUgx),
+      taxUgx: Number(o.taxUgx),
+      totalUgx,
+      totalPaidUgx,
+      isFullyPaid,
+      createdByStaffId: o.createdByStaffId,
+      terminalId: o.terminalId,
+    }
+  })
+}
+
 // ---------------------------------------------------------------------------
 // Kitchen Display System (KDS) read model
 // ---------------------------------------------------------------------------
@@ -169,6 +238,7 @@ export async function getKdsOrders(): Promise<KdsOrderForDisplay[]> {
 export type OrderDetailItem = {
   id: string
   productId: string
+  productName: string
   quantity: number
   size: string | null
   modifier: string | null
@@ -177,10 +247,8 @@ export type OrderDetailItem = {
 }
 
 export type OrderDetailPayment = {
-  id: string
-  amountUgx: number
   method: string
-  status: string
+  amountUgx: number
 }
 
 export type OrderDetail = {
@@ -224,11 +292,10 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
         },
       },
       payments: {
+        where: { status: 'completed' },
         select: {
-          id: true,
           amountUgx: true,
           method: true,
-          status: true,
         },
       },
     },
@@ -237,6 +304,8 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
   if (!order) {
     return null
   }
+
+  const nameMap = await getProductNameMap()
 
   return {
     orderId: order.id,
@@ -249,6 +318,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
     items: order.orderItems.map((item) => ({
       id: item.id,
       productId: item.productId,
+      productName: nameMap[item.productId] ?? item.productId,
       quantity: item.quantity,
       size: item.size,
       modifier: item.modifier,
@@ -256,10 +326,8 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
       subtotalUgx: Number(item.lineTotalUgx),
     })),
     payments: order.payments.map((p) => ({
-      id: p.id,
-      amountUgx: Number(p.amountUgx),
       method: p.method,
-      status: p.status,
+      amountUgx: Number(p.amountUgx),
     })),
   }
 }
@@ -363,6 +431,120 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary | n
 }
 
 // ---------------------------------------------------------------------------
+// Shift payment summary read model (by method, before closing)
+// ---------------------------------------------------------------------------
+
+export type ShiftPaymentSummary = {
+  cashTotalUgx: number
+  momoTotalUgx: number
+  cardTotalUgx: number
+  grandTotalUgx: number
+}
+
+/**
+ * Returns payment totals for a shift grouped by method (cash, momo, card).
+ * Completed payments only. Momo = mtn_momo + airtel_money. Read-only.
+ * Returns zero totals if shift has no orders or no completed payments.
+ */
+export async function getShiftPaymentSummary(shiftId: string): Promise<ShiftPaymentSummary> {
+  const orders = await prisma.order.findMany({
+    where: { shiftId },
+    select: { id: true },
+  })
+  const orderIds = orders.map((o) => o.id)
+
+  if (orderIds.length === 0) {
+    return { cashTotalUgx: 0, momoTotalUgx: 0, cardTotalUgx: 0, grandTotalUgx: 0 }
+  }
+
+  const baseWhere = {
+    orderId: { in: orderIds },
+    status: 'completed' as const,
+  }
+
+  const [cashResult, cardResult, momoResult, totalResult] = await Promise.all([
+    prisma.payment.aggregate({
+      where: { ...baseWhere, method: 'cash' },
+      _sum: { amountUgx: true },
+    }),
+    prisma.payment.aggregate({
+      where: { ...baseWhere, method: 'card' },
+      _sum: { amountUgx: true },
+    }),
+    prisma.payment.aggregate({
+      where: { ...baseWhere, method: { in: ['mtn_momo', 'airtel_money'] } },
+      _sum: { amountUgx: true },
+    }),
+    prisma.payment.aggregate({
+      where: baseWhere,
+      _sum: { amountUgx: true },
+    }),
+  ])
+
+  const cashTotalUgx = cashResult._sum.amountUgx != null ? Number(cashResult._sum.amountUgx) : 0
+  const cardTotalUgx = cardResult._sum.amountUgx != null ? Number(cardResult._sum.amountUgx) : 0
+  const momoTotalUgx = momoResult._sum.amountUgx != null ? Number(momoResult._sum.amountUgx) : 0
+  const grandTotalUgx = totalResult._sum.amountUgx != null ? Number(totalResult._sum.amountUgx) : 0
+
+  return {
+    cashTotalUgx,
+    momoTotalUgx,
+    cardTotalUgx,
+    grandTotalUgx,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Table statuses read model (POS tables screen)
+// ---------------------------------------------------------------------------
+
+export type TableStatus = {
+  tableId: string
+  tableCode: string
+  hasActiveOrder: boolean
+  orderId: string | null
+  orderNumber: string | null
+}
+
+/**
+ * Returns status for all tables: whether they have an active order in the given shift.
+ * Active order = status in (pending, preparing, ready). Read-only. Sorted by table code.
+ */
+export async function getTableStatuses(shiftId: string): Promise<TableStatus[]> {
+  const [tables, orders] = await Promise.all([
+    prisma.restaurantTable.findMany({
+      where: { isActive: true },
+      orderBy: { code: 'asc' },
+      select: { id: true, code: true },
+    }),
+    prisma.order.findMany({
+      where: {
+        shiftId,
+        status: { in: [...ACTIVE_ORDER_STATUSES] },
+        tableId: { not: null },
+      },
+      select: { id: true, orderNumber: true, tableId: true },
+    }),
+  ])
+
+  const orderByTableId = new Map<string, { id: string; orderNumber: string }>()
+  for (const o of orders) {
+    if (o.tableId) orderByTableId.set(o.tableId, { id: o.id, orderNumber: o.orderNumber })
+  }
+
+  return tables.map((t) => {
+    const order = orderByTableId.get(t.id)
+    return {
+      tableId: t.id,
+      tableCode: t.code,
+      hasActiveOrder: !!order,
+      orderId: order?.id ?? null,
+      orderNumber: order?.orderNumber ?? null,
+    }
+  })
+}
+
+// ---------------------------------------------------------------------------
 // Active products read model (POS menu)
 // ---------------------------------------------------------------------------
 
@@ -394,5 +576,133 @@ export async function getActiveProductsForPos(): Promise<ProductForPos[]> {
     name: p.name,
     priceUgx: Number(p.priceUgx),
     isActive: p.isActive,
+  }))
+}
+
+export type PosProduct = {
+  productId: string
+  name: string
+  priceUgx: number
+  category?: string | null
+}
+
+/**
+ * Returns active products for POS catalog (tap-to-add). Read-only. Sorted by name.
+ */
+export async function getPosProducts(): Promise<PosProduct[]> {
+  const products = await prisma.product.findMany({
+    where: { isActive: true },
+    orderBy: { name: 'asc' },
+    select: {
+      id: true,
+      name: true,
+      priceUgx: true,
+      category: true,
+    },
+  })
+  return products.map((p) => ({
+    productId: p.id,
+    name: p.name,
+    priceUgx: Number(p.priceUgx),
+    category: p.category ?? null,
+  }))
+}
+
+/**
+ * Returns a map of product id to product name for all active products.
+ * Used to enrich order items with productName in KDS, ready orders, and order detail.
+ */
+export async function getProductNameMap(): Promise<Record<string, string>> {
+  const products = await prisma.product.findMany({
+    where: { isActive: true },
+    select: { id: true, name: true },
+  })
+  const map: Record<string, string> = {}
+  for (const p of products) {
+    map[p.id] = p.name
+  }
+  return map
+}
+
+// ---------------------------------------------------------------------------
+// Active staff read model (POS login)
+// ---------------------------------------------------------------------------
+
+export type ActiveStaffMember = {
+  id: string
+  name: string
+}
+
+/**
+ * Returns all active staff for POS login dropdown.
+ * Read-only; no schema changes. Sorted by name ascending.
+ */
+export async function getActiveStaff(): Promise<ActiveStaffMember[]> {
+  const staff = await prisma.staff.findMany({
+    where: { isActive: true },
+    orderBy: { fullName: 'asc' },
+    select: { id: true, fullName: true },
+  })
+  return staff.map((s) => ({ id: s.id, name: s.fullName }))
+}
+
+// ---------------------------------------------------------------------------
+// Ready orders read model (POS handover)
+// ---------------------------------------------------------------------------
+
+export type ReadyOrderItem = {
+  productId: string
+  productName: string
+  quantity: number
+}
+
+export type ReadyOrder = {
+  orderId: string
+  orderNumber: string
+  orderType: string
+  tableId: string | null
+  status: string
+  createdAt: Date
+  items: ReadyOrderItem[]
+}
+
+/**
+ * Returns orders with status 'ready' for POS handover screen.
+ * Read-only. Sorted by createdAt ascending (oldest first).
+ */
+export async function getReadyOrders(): Promise<ReadyOrder[]> {
+  const [orders, nameMap] = await Promise.all([
+    prisma.order.findMany({
+      where: { status: 'ready' },
+      orderBy: { createdAt: 'asc' },
+      select: {
+        id: true,
+        orderNumber: true,
+        orderType: true,
+        tableId: true,
+        status: true,
+        createdAt: true,
+        orderItems: {
+          select: {
+            productId: true,
+            quantity: true,
+          },
+        },
+      },
+    }),
+    getProductNameMap(),
+  ])
+  return orders.map((o) => ({
+    orderId: o.id,
+    orderNumber: o.orderNumber,
+    orderType: o.orderType,
+    tableId: o.tableId,
+    status: o.status,
+    createdAt: o.createdAt,
+    items: o.orderItems.map((item) => ({
+      productId: item.productId,
+      productName: nameMap[item.productId] ?? item.productId,
+      quantity: item.quantity,
+    })),
   }))
 }

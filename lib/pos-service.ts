@@ -101,6 +101,12 @@ export type CloseShiftParams = {
   declaredCashUgx?: number
 }
 
+export type TransitionOrderStatusParams = {
+  orderId: string
+  newStatus: 'pending' | 'preparing' | 'ready' | 'served' | 'cancelled'
+  updatedByStaffId: string
+}
+
 /** Creates a dine-in order. Requires tableId. */
 export async function createDineInOrder(params: CreateDineInOrderParams) {
   return createOrder({
@@ -149,6 +155,11 @@ export async function recordPayment(params: RecordPaymentParams) {
 /** Finalizes order: validates payment, transitions to served, releases table if dine-in. */
 export async function checkoutOrder(params: CheckoutOrderParams) {
   return domainCheckoutOrder(params)
+}
+
+/** Transitions order status (e.g. pending → preparing, preparing → ready). Use checkoutOrder for ready → served, cancelOrder for cancel. */
+export async function transitionOrderStatus(params: TransitionOrderStatusParams) {
+  return setOrderStatus(params)
 }
 
 /** Cancels an order. Transitions to cancelled and releases table if dine-in. */

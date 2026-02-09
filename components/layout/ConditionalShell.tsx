@@ -10,7 +10,7 @@ import KeyboardShortcuts from '@/components/ui/KeyboardShortcuts'
 
 /**
  * Renders Navbar, Footer, and global UI only for non-POS routes.
- * When pathname is '/' (POS home), only children are rendered (no marketing shell).
+ * POS and KDS routes (/pos/*, /kds) and root POS menu (/) use no shell — only children.
  */
 export default function ConditionalShell({
   children,
@@ -18,9 +18,12 @@ export default function ConditionalShell({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const isPosRoot = pathname === '/'
+  const isPosOrKds =
+    pathname === '/' ||
+    pathname.startsWith('/pos') ||
+    pathname.startsWith('/kds')
 
-  if (isPosRoot) {
+  if (isPosOrKds) {
     return <>{children}</>
   }
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { addItemToOrder } from '@/lib/pos-service'
+import { addItemToOrder } from '@/lib/domain/orders'
+import { getOrderDetail } from '@/lib/read-models'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
 export async function POST(
@@ -13,7 +14,7 @@ export async function POST(
     }
 
     const body = await request.json()
-    const { productId, quantity, size, modifier, notes, sortOrder } = body
+    const { productId, quantity = 1, size, modifier, notes } = body
 
     if (typeof productId !== 'string' || !productId) {
       return NextResponse.json({ error: 'productId is required (string)' }, { status: 400 })
@@ -22,16 +23,20 @@ export async function POST(
       return NextResponse.json({ error: 'quantity is required (number >= 1)' }, { status: 400 })
     }
 
-    const item = await addItemToOrder({
+    await addItemToOrder({
       orderId,
       productId,
       quantity,
       size: size ?? null,
       modifier: modifier ?? null,
       notes: notes ?? null,
-      sortOrder: typeof sortOrder === 'number' ? sortOrder : undefined,
     })
-    return NextResponse.json(item)
+
+    const order = await getOrderDetail(orderId)
+    if (!order) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+    }
+    return NextResponse.json(order)
   } catch (error) {
     return toPosApiResponse(error)
   }

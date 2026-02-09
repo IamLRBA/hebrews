@@ -1,23 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createDineInOrder } from '@/lib/pos-service'
+import { createDineInOrder } from '@/lib/domain/orders'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { staffId, tableId, orderNumber } = body
+    const { tableId, createdByStaffId } = body
 
-    if (typeof staffId !== 'string' || !staffId) {
-      return NextResponse.json({ error: 'staffId is required (string)' }, { status: 400 })
-    }
     if (typeof tableId !== 'string' || !tableId) {
       return NextResponse.json({ error: 'tableId is required (string)' }, { status: 400 })
     }
-    if (typeof orderNumber !== 'string' || !orderNumber) {
-      return NextResponse.json({ error: 'orderNumber is required (string)' }, { status: 400 })
+    if (typeof createdByStaffId !== 'string' || !createdByStaffId) {
+      return NextResponse.json({ error: 'createdByStaffId is required (string)' }, { status: 400 })
     }
 
-    const order = await createDineInOrder({ staffId, tableId, orderNumber })
+    const order = await createDineInOrder({ tableId, createdByStaffId })
     return NextResponse.json(order)
   } catch (error) {
     return toPosApiResponse(error)

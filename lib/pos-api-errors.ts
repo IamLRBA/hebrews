@@ -26,6 +26,7 @@ import {
   PaymentExceedsOrderTotalError,
   InvalidQuantityError,
 } from '@/lib/pos-service'
+import { PaymentInsufficientError } from '@/lib/domain/orders'
 
 const NOT_FOUND_ERRORS = [
   OrderNotFoundError,
@@ -54,6 +55,7 @@ const VALIDATION_ERRORS = [
   PaymentAmountInvalidError,
   PaymentExceedsOrderTotalError,
   InvalidQuantityError,
+  PaymentInsufficientError,
 ]
 
 export function toPosApiResponse(error: unknown): NextResponse {
