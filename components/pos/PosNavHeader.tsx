@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { href: '/pos/shift', label: 'Shift', icon: ClipboardList },
 ] as const
 
-export function PosNavHeader() {
+export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
   const pathname = usePathname()
 
   return (
@@ -26,11 +26,16 @@ export function PosNavHeader() {
           <Coffee className="w-7 h-7" aria-hidden />
           <span className="text-lg font-semibold tracking-tight">{CAFE_NAME}</span>
         </Link>
-        <Link href="/pos" className="pos-link text-sm font-medium w-fit">
-          ← Back to POS
-        </Link>
+        {pathname === '/pos' ? (
+          <span className="text-sm text-neutral-500 dark:text-neutral-400 font-medium">Point of Sale</span>
+        ) : (
+          <Link href="/pos" className="pos-link text-sm font-medium w-fit">
+            ⇐ Back to POS
+          </Link>
+        )}
       </div>
-      <nav className="pos-dashboard-nav justify-start" aria-label="POS sections">
+      {!hideNav && (
+      <nav className="pos-dashboard-nav" aria-label="POS sections">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href || (href !== '/pos' && pathname.startsWith(href))
           return (
@@ -45,6 +50,7 @@ export function PosNavHeader() {
           )
         })}
       </nav>
+      )}
     </header>
   )
 }

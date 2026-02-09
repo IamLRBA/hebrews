@@ -20,7 +20,7 @@ export default function PosLandingPage() {
         </p>
         <Link
           href="/pos"
-          className="inline-flex items-center justify-center gap-2 w-full sm:w-auto min-w-[200px] px-8 py-4 rounded-xl font-semibold text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 shadow-md hover:shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 dark:focus:ring-offset-neutral-900"
+          className="btn btn-primary w-full sm:w-auto min-w-[200px] px-8 py-3.5 no-underline"
         >
           Enter POS
         </Link>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
+import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import {
   LayoutGrid,
   UtensilsCrossed,
@@ -11,7 +12,7 @@ import {
   Clock,
   ClipboardList,
   PlusCircle,
-  Coffee,
+  PlayCircle,
 } from 'lucide-react'
 
 const CAFE_NAME = 'Cafe Havilah & Pizzeria'
@@ -45,10 +46,60 @@ function statusBadgeClass(status: string): string {
 export default function PosDashboardPage() {
   const router = useRouter()
   const [staffOk, setStaffOk] = useState(false)
+  const [shiftLoading, setShiftLoading] = useState(true)
+  const [hasActiveShift, setHasActiveShift] = useState(false)
+  const [shiftError, setShiftError] = useState<string | null>(null)
+  const [startingShift, setStartingShift] = useState(false)
+  const [terminalId, setTerminalId] = useState('')
+  const [hasChosenToContinue, setHasChosenToContinue] = useState(false)
   const [orders, setOrders] = useState<ActiveOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [creating, setCreating] = useState<'dine-in' | 'takeaway' | null>(null)
+
+  async function fetchActiveShift() {
+    setShiftLoading(true)
+    setShiftError(null)
+    try {
+      const res = await posFetch('/api/shifts/active')
+      if (res.ok) {
+        setHasActiveShift(true)
+      } else if (res.status === 404) {
+        setHasActiveShift(false)
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setShiftError(data.error || 'Failed to load shift')
+      }
+    } catch {
+      setShiftError('Failed to load shift')
+    } finally {
+      setShiftLoading(false)
+    }
+  }
+
+  async function handleStartShift(e: React.FormEvent) {
+    e.preventDefault()
+    setStartingShift(true)
+    try {
+      const res = await posFetch('/api/shifts/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          terminalId.trim() ? { terminalId: terminalId.trim() } : {}
+        ),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || `HTTP ${res.status}`)
+      }
+      setHasActiveShift(true)
+      setShiftError(null)
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Failed to start shift')
+    } finally {
+      setStartingShift(false)
+    }
+  }
 
   async function fetchOrders() {
     setLoading(true)
@@ -82,8 +133,12 @@ export default function PosDashboardPage() {
 
   useEffect(() => {
     if (!staffOk) return
-    fetchOrders()
+    fetchActiveShift()
   }, [staffOk])
+
+  useEffect(() => {
+    if (staffOk && hasActiveShift) fetchOrders()
+  }, [staffOk, hasActiveShift])
 
   async function handleNewDineIn() {
     setCreating('dine-in')
@@ -141,81 +196,136 @@ export default function PosDashboardPage() {
     )
   }
 
+  if (shiftLoading) {
+    return (
+      <main className="pos-page flex items-center justify-center">
+        <div className="pos-card max-w-sm w-full text-center">
+          <p className="text-primary-600 dark:text-primary-300">Checking shift…</p>
+        </div>
+      </main>
+    )
+  }
+
+  if (!hasActiveShift) {
+    return (
+      <main className="pos-page">
+        <div className="pos-page-container max-w-md mx-auto">
+          <PosNavHeader />
+          <div className="pos-card text-center">
+            <div className="w-14 h-14 rounded-xl bg-primary-100 dark:bg-primary-800 flex items-center justify-center mx-auto mb-4">
+              <PlayCircle className="w-7 h-7 text-primary-600 dark:text-primary-300" aria-hidden />
+            </div>
+            <h1 className="pos-section-title text-2xl mb-2">Start your shift</h1>
+            <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-6 max-w-sm mx-auto">
+              You need an active shift to use Tables, create orders, and record payments. Start your shift to begin.
+            </p>
+            {shiftError && (
+              <div className="pos-alert pos-alert-error mb-4 text-left">{shiftError}</div>
+            )}
+            <form onSubmit={handleStartShift} className="text-left max-w-xs mx-auto">
+              <label className="block mb-2">
+                <span className="pos-label">Terminal (optional)</span>
+                <input
+                  type="text"
+                  placeholder="pos-1"
+                  value={terminalId}
+                  onChange={(e) => setTerminalId(e.target.value)}
+                  className="pos-input mt-1"
+                  aria-label="Terminal ID"
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={startingShift}
+                className="btn btn-primary w-full mt-4 disabled:opacity-60"
+              >
+                {startingShift ? 'Starting…' : 'Start shift'}
+              </button>
+            </form>
+          </div>
+          <p className="text-center mt-6">
+            <Link href="/pos/login" className="pos-link text-sm">Use a different staff account</Link>
+          </p>
+        </div>
+      </main>
+    )
+  }
+
+  if (!hasChosenToContinue) {
+    return (
+      <main className="pos-page">
+        <div className="pos-page-container max-w-md mx-auto">
+          <PosNavHeader hideNav />
+          <div className="pos-card text-center">
+            <div className="w-14 h-14 rounded-xl bg-primary-100 dark:bg-primary-800 flex items-center justify-center mx-auto mb-4">
+              <ClipboardList className="w-7 h-7 text-primary-600 dark:text-primary-300" aria-hidden />
+            </div>
+            <h1 className="pos-section-title text-2xl mb-2">Shift</h1>
+            <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-6 max-w-sm mx-auto">
+              You have an active shift. Continue to the POS to use Tables, orders, and payments.
+            </p>
+            <button
+              type="button"
+              onClick={() => setHasChosenToContinue(true)}
+              className="btn btn-primary w-full sm:w-auto min-w-[200px]"
+            >
+              Continue to POS
+            </button>
+          </div>
+          <p className="text-center mt-6">
+            <Link href="/pos/login" className="pos-link text-sm">Use a different staff account</Link>
+          </p>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="pos-page">
       <div className="pos-page-container max-w-4xl">
-        {/* Header */}
-        <header className="pos-dashboard-header flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="flex items-center gap-2 text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100 transition-colors">
-              <Coffee className="w-8 h-8" aria-hidden />
-              <span className="text-xl font-semibold tracking-tight">{CAFE_NAME}</span>
-            </Link>
-          </div>
-          <span className="text-sm text-neutral-500 dark:text-neutral-400 font-medium">Point of Sale</span>
-        </header>
-
-        {/* Quick nav pills */}
-        <nav className="pos-dashboard-nav" aria-label="POS sections">
-          <Link href="/pos/tables" className="pos-dashboard-nav-link">
-            <LayoutGrid className="w-4 h-4" aria-hidden />
-            Tables
-          </Link>
-          <Link href="/pos/orders" className="pos-dashboard-nav-link">
-            <ListOrdered className="w-4 h-4" aria-hidden />
-            Shift Orders
-          </Link>
-          <Link href="/pos/ready" className="pos-dashboard-nav-link">
-            <Clock className="w-4 h-4" aria-hidden />
-            Ready Orders
-          </Link>
-          <Link href="/pos/shift" className="pos-dashboard-nav-link">
-            <ClipboardList className="w-4 h-4" aria-hidden />
-            Shift
-          </Link>
-        </nav>
+        <PosNavHeader />
 
         {/* Four main cards */}
         <section className="pos-dashboard-grid mb-10" aria-label="POS actions">
-          <Link href="/pos/tables" className="pos-dashboard-card">
-            <div className="pos-dashboard-card-icon">
+          <Link href="/pos/tables" className="pos-dashboard-card text-center items-center">
+            <div className="pos-dashboard-card-icon mx-auto">
               <LayoutGrid className="w-5 h-5" />
             </div>
             <h2 className="pos-dashboard-card-title">Tables</h2>
             <p className="pos-dashboard-card-desc">
               View dine-in tables and open or continue orders by table.
             </p>
-            <span className="pos-dashboard-card-cta">Open Tables →</span>
+            <span className="btn btn-outline pos-dashboard-card-cta-btn">Open Tables ⇒</span>
           </Link>
-          <Link href="/pos/orders" className="pos-dashboard-card">
-            <div className="pos-dashboard-card-icon">
+          <Link href="/pos/orders" className="pos-dashboard-card text-center items-center">
+            <div className="pos-dashboard-card-icon mx-auto">
               <ListOrdered className="w-5 h-5" />
             </div>
             <h2 className="pos-dashboard-card-title">Shift Orders</h2>
             <p className="pos-dashboard-card-desc">
               All active orders for this shift. Open, update status, or checkout.
             </p>
-            <span className="pos-dashboard-card-cta">View orders →</span>
+            <span className="btn btn-outline pos-dashboard-card-cta-btn">View orders ⇒</span>
           </Link>
-          <Link href="/pos/ready" className="pos-dashboard-card">
-            <div className="pos-dashboard-card-icon">
+          <Link href="/pos/ready" className="pos-dashboard-card text-center items-center">
+            <div className="pos-dashboard-card-icon mx-auto">
               <Clock className="w-5 h-5" />
             </div>
             <h2 className="pos-dashboard-card-title">Ready Orders</h2>
             <p className="pos-dashboard-card-desc">
               Orders ready for pickup. Mark as served when delivered to the customer.
             </p>
-            <span className="pos-dashboard-card-cta">Ready to serve →</span>
+            <span className="btn btn-outline pos-dashboard-card-cta-btn">Ready to serve ⇒</span>
           </Link>
-          <Link href="/pos/shift" className="pos-dashboard-card">
-            <div className="pos-dashboard-card-icon">
+          <Link href="/pos/shift" className="pos-dashboard-card text-center items-center">
+            <div className="pos-dashboard-card-icon mx-auto">
               <ClipboardList className="w-5 h-5" />
             </div>
             <h2 className="pos-dashboard-card-title">Shift</h2>
             <p className="pos-dashboard-card-desc">
               Shift summary, payment breakdown, and close shift with declared cash.
             </p>
-            <span className="pos-dashboard-card-cta">Shift summary →</span>
+            <span className="btn btn-outline pos-dashboard-card-cta-btn">Shift summary ⇒</span>
           </Link>
         </section>
 

@@ -75,7 +75,7 @@ export default function ReceiptPage() {
       <main className="pos-page">
         <div className="pos-page-container max-w-md">
           <div className="pos-alert pos-alert-error mb-4">{error || 'Order not found'}</div>
-          <Link href="/pos" className="pos-link">← Back to POS</Link>
+          <Link href="/pos" className="pos-link">⇐ Back to POS</Link>
         </div>
       </main>
     )
@@ -87,7 +87,7 @@ export default function ReceiptPage() {
           <div className="pos-card">
             <p className="m-0 text-neutral-700 dark:text-neutral-300">Receipt available after payment.</p>
           </div>
-          <Link href={`/pos/orders/${order.orderId}`} className="pos-link inline-block mt-4">← Back to order</Link>
+          <Link href={`/pos/orders/${order.orderId}`} className="pos-link inline-block mt-4">⇐ Back to order</Link>
         </div>
       </main>
     )
@@ -98,7 +98,7 @@ export default function ReceiptPage() {
   return (
     <main className="pos-page">
       <div className="pos-page-container max-w-md">
-        <Link href="/pos" className="pos-link inline-block mb-4">← Back to POS</Link>
+        <Link href="/pos" className="pos-link inline-block mb-4">⇐ Back to POS</Link>
         <div className="pos-card receipt-content">
           <h1 className="pos-section-title text-center mb-2">{CAFE_NAME}</h1>
           <p className="text-center m-0 text-neutral-600 dark:text-neutral-400">Order #{order.orderNumber}</p>

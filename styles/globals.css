@@ -930,6 +930,11 @@
     color: var(--color-primary-700);
   }
 
+  .pos-dashboard-card-cta-btn {
+    margin-top: auto;
+    pointer-events: none;
+  }
+
   /* Navbar Search Styles */
   .navbar-search-form {
     @apply flex items-center space-x-2;

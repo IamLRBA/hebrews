@@ -114,7 +114,7 @@ export default function KdsPage() {
   return (
     <main className="pos-page">
       <div className="pos-page-container">
-        <Link href="/pos" className="pos-link inline-block mb-4">← Back to POS</Link>
+        <Link href="/pos" className="pos-link inline-block mb-4">⇐ Back to POS</Link>
         <h1 className="pos-section-title text-2xl mb-2">Kitchen Display</h1>
         {error && <div className="pos-alert pos-alert-error mb-4">{error}</div>}
         {orders.length === 0 && !error && (
