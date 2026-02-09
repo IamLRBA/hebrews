@@ -99,18 +99,18 @@ export default function PosReadyPage() {
 
   return (
     <main className="pos-page">
-      <div className="pos-page-container">
+      <div className="pos-page-container max-w-4xl mx-auto text-center">
         <PosNavHeader />
         <h1 className="pos-section-title text-2xl mb-4">Ready Orders</h1>
-        {error && <div className="pos-alert pos-alert-error mb-4">{error}</div>}
+        {error && <div className="pos-alert pos-alert-error mb-4 max-w-md mx-auto">{error}</div>}
         {orders.length === 0 && !error && (
-          <div className="pos-card">
+          <div className="pos-card max-w-md mx-auto">
             <p className="m-0 text-neutral-600 dark:text-neutral-400">No ready orders.</p>
           </div>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {orders.map((o) => (
-            <div key={o.orderId} className="pos-card flex flex-col gap-2">
+            <div key={o.orderId} className="pos-card pos-order-card-centered flex flex-col gap-2">
               <p className="m-0 font-semibold text-primary-800 dark:text-primary-100">Order #{o.orderNumber}</p>
               <p className="m-0 text-sm text-neutral-600 dark:text-neutral-400">
                 {o.orderType === 'dine_in' && o.tableId ? `Table ${o.tableId}` : 'Takeaway'}
@@ -120,12 +120,12 @@ export default function PosReadyPage() {
                   <li key={i}>{item.productName} × {item.quantity}</li>
                 ))}
               </ul>
-              <div className="mt-2">
+              <div className="mt-2 flex justify-center">
                 <button
                   type="button"
                   onClick={() => handleServe(o.orderId)}
                   disabled={acting !== null}
-                  className="btn btn-primary w-full disabled:opacity-60"
+                  className="btn btn-primary disabled:opacity-60"
                 >
                   Serve Order
                 </button>

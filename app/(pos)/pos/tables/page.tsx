@@ -121,7 +121,7 @@ export default function PosTablesPage() {
   if (error && !shiftId) {
     return (
       <main className="pos-page">
-        <div className="pos-page-container max-w-md">
+        <div className="pos-page-container max-w-md mx-auto text-center">
           <PosNavHeader />
           <div className="pos-alert pos-alert-error mb-4">{error}</div>
           <Link href="/pos/shift" className="pos-link">Open Shift</Link>
@@ -132,10 +132,10 @@ export default function PosTablesPage() {
 
   return (
     <main className="pos-page">
-      <div className="pos-page-container">
+      <div className="pos-page-container max-w-4xl mx-auto text-center">
         <PosNavHeader />
         <h1 className="pos-section-title text-2xl mb-4">Tables</h1>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
           {tables.map((table) => (
             <button
               key={table.tableId}

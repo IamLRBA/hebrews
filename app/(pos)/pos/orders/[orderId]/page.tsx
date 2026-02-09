@@ -28,11 +28,6 @@ type PosProduct = {
   category?: string | null
 }
 
-type ActiveProduct = {
-  id: string
-  name: string
-}
-
 type OrderDetail = {
   orderId: string
   orderNumber: string
@@ -66,9 +61,6 @@ export default function OrderDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [addingItem, setAddingItem] = useState(false)
   const [updatingItemId, setUpdatingItemId] = useState<string | null>(null)
-  const [recordingPayment, setRecordingPayment] = useState(false)
-  const [payingType, setPayingType] = useState<'cash' | 'mobile' | 'card' | null>(null)
-  const [paymentAmountUgx, setPaymentAmountUgx] = useState('')
   const [checkingOut, setCheckingOut] = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [cashReceivedUgx, setCashReceivedUgx] = useState('')
@@ -80,11 +72,9 @@ export default function OrderDetailPage() {
 
   const [staffOk, setStaffOk] = useState(false)
   const [products, setProducts] = useState<PosProduct[]>([])
-  const [activeProducts, setActiveProducts] = useState<ActiveProduct[]>([])
   const [productId, setProductId] = useState('')
   const [quantity, setQuantity] = useState(1)
-  const [amountUgx, setAmountUgx] = useState('')
-  const [method, setMethod] = useState('cash')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'cash' | 'mtn_momo' | 'airtel_money' | 'card' | null>(null)
 
   async function fetchOrder() {
     setLoading(true)
@@ -121,38 +111,6 @@ export default function OrderDetailPage() {
     }
   }
 
-  async function fetchActiveProducts() {
-    try {
-      const res = await posFetch('/api/products/active')
-      if (res.ok) {
-        const data = await res.json()
-        setActiveProducts(data.map((p: { id: string; name: string }) => ({ id: p.id, name: p.name })))
-      }
-    } catch {
-      // ignore
-    }
-  }
-
-  async function handleTapProduct(product: PosProduct) {
-    setAddingItem(true)
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/items`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: product.productId, quantity: 1 }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
-      }
-      await fetchOrder()
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to add item')
-    } finally {
-      setAddingItem(false)
-    }
-  }
-
   useEffect(() => {
     if (!getStaffId()) {
       router.replace('/pos/login')
@@ -169,7 +127,6 @@ export default function OrderDetailPage() {
   useEffect(() => {
     if (!staffOk) return
     fetchProducts()
-    fetchActiveProducts()
   }, [staffOk])
 
   async function handleAddItem(e: React.FormEvent) {
@@ -242,6 +199,7 @@ export default function OrderDetailPage() {
       const data = await res.json()
       setOrder(data)
       setCashReceivedUgx('')
+      setSelectedPaymentMethod(null)
       if (data.status === 'served') {
         router.push(`/pos/orders/${orderId}/receipt`)
       }
@@ -324,59 +282,6 @@ export default function OrderDetailPage() {
     }
   }
 
-  async function handleAddOne(productId: string) {
-    setAddingItem(true)
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/items`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, quantity: 1 }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
-      }
-      const data = await res.json()
-      setOrder(data)
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to add item')
-    } finally {
-      setAddingItem(false)
-    }
-  }
-
-  async function handleRecordPayment(e: React.FormEvent) {
-    e.preventDefault()
-    const amount = parseFloat(amountUgx)
-    if (isNaN(amount) || amount <= 0) {
-      alert('Enter a valid amount')
-      return
-    }
-    setRecordingPayment(true)
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/payments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amountUgx: amount,
-          method,
-          status: 'completed',
-          createdByStaffId: getStaffId(),
-        }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
-      }
-      setAmountUgx('')
-      await fetchOrder()
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to record payment')
-    } finally {
-      setRecordingPayment(false)
-    }
-  }
-
   async function handleCheckout() {
     setCheckingOut(true)
     try {
@@ -394,32 +299,6 @@ export default function OrderDetailPage() {
       alert(e instanceof Error ? e.message : 'Failed to checkout')
     } finally {
       setCheckingOut(false)
-    }
-  }
-
-  async function handlePay(paymentType: 'cash' | 'mobile' | 'card') {
-    if (!order || order.status !== 'ready') return
-    const totalPaid = order.payments.reduce((sum, p) => sum + p.amountUgx, 0)
-    const remaining = order.totalUgx - totalPaid
-    const enteredAmount = paymentAmountUgx === '' ? remaining : parseFloat(paymentAmountUgx)
-    if (isNaN(enteredAmount) || enteredAmount <= 0 || enteredAmount > remaining) return
-    setPayingType(paymentType)
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/pay`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amountUgx: enteredAmount, paymentType }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
-      }
-      await fetchOrder()
-      setPaymentAmountUgx('')
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to record payment')
-    } finally {
-      setPayingType(null)
     }
   }
 
@@ -460,7 +339,7 @@ export default function OrderDetailPage() {
   if (error && !order) {
     return (
       <main className="pos-page">
-        <div className="pos-page-container max-w-md">
+        <div className="pos-page-container max-w-md mx-auto text-center">
           <div className="pos-alert pos-alert-error mb-4">{error}</div>
           <Link href="/pos" className="pos-link">⇐ Back to POS</Link>
         </div>
@@ -470,11 +349,11 @@ export default function OrderDetailPage() {
 
   return (
     <main className="pos-page">
-      <div className="pos-page-container">
+      <div className="pos-page-container max-w-4xl mx-auto text-center">
         <Link href="/pos" className="pos-link inline-block mb-4">⇐ Back to POS</Link>
         <h1 className="pos-section-title text-2xl mb-2">Order {order?.orderNumber}</h1>
 
-        <section className="pos-section pos-card">
+        <section className="pos-section pos-card pos-order-card-centered">
           <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Type:</strong> {order?.orderType === 'dine_in' ? 'Dine-in' : 'Takeaway'}</p>
           {order?.tableId && <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Table:</strong> {order.tableId}</p>}
           <p className="m-0 mt-1">
@@ -490,7 +369,7 @@ export default function OrderDetailPage() {
           <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200"><strong>Total:</strong> {order?.totalUgx?.toLocaleString()} UGX</p>
         </section>
 
-      <section className="pos-section pos-card">
+      <section className="pos-section pos-card pos-order-card-centered">
         <h2 className="pos-section-title">Items</h2>
         {order?.items.length === 0 && <p className="text-neutral-600 dark:text-neutral-400 m-0">No items.</p>}
         <ul className="list-none p-0">
@@ -516,25 +395,6 @@ export default function OrderDetailPage() {
             </li>
           ))}
         </ul>
-        {(order?.status === 'pending' || order?.status === 'preparing') && (
-          <>
-            <h3 className="pos-section-title text-lg mt-4 mb-2">Add Items</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-              {products.map((p) => (
-                <button
-                  key={p.productId}
-                  type="button"
-                  onClick={() => handleTapProduct(p)}
-                  disabled={addingItem}
-                  className="pos-order-card text-left disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  <span className="font-medium text-primary-800 dark:text-primary-100 block">{p.name}</span>
-                  <span className="text-sm text-primary-600 dark:text-primary-300">UGX {p.priceUgx.toLocaleString()}</span>
-                </button>
-              ))}
-            </div>
-          </>
-        )}
         {!block && (
           <form onSubmit={handleAddItem} className="flex flex-wrap gap-2 items-end mt-4">
             <label className="flex-1 min-w-[12rem]">
@@ -557,82 +417,67 @@ export default function OrderDetailPage() {
         )}
       </section>
 
-      {(order?.status === 'pending' || order?.status === 'preparing') && activeProducts.length > 0 && (
-        <section className="pos-section pos-card">
-          <h2 className="pos-section-title">Add Items to Order</h2>
-          <ul className="list-none p-0 m-0">
-            {activeProducts.map((p) => (
-              <li key={p.id} className="flex items-center gap-2 py-2 border-b border-neutral-200 dark:border-neutral-600 last:border-0">
-                <span className="flex-1 text-neutral-800 dark:text-neutral-200">{p.name}</span>
-                <button type="button" onClick={() => handleAddOne(p.id)} disabled={addingItem} className="btn btn-outline text-sm py-1 px-2 disabled:opacity-60">Add</button>
+      {/* Single Payments section: auto-calculated totals, choose method (Cash / MTN MoMo / Airtel Money / Card), then flow */}
+      <section className="pos-section pos-card pos-order-card-centered">
+        <h2 className="pos-section-title">Payments</h2>
+        {order && (
+          <>
+            <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Order total:</strong> {order.totalUgx.toLocaleString()} UGX</p>
+            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Amount paid:</strong> {(order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0).toLocaleString()} UGX</p>
+            <p className="m-0 mt-1 font-medium text-primary-700 dark:text-primary-200"><strong>Remaining:</strong> {(order.totalUgx - (order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0)).toLocaleString()} UGX</p>
+          </>
+        )}
+        {order?.payments && order.payments.length > 0 && (
+          <ul className="list-none p-0 mt-2 mb-2">
+            {order.payments.map((p, i) => (
+              <li key={i} className="py-1 text-neutral-700 dark:text-neutral-300">
+                {p.method}: {p.amountUgx.toLocaleString()} UGX
               </li>
             ))}
           </ul>
-        </section>
-      )}
-
-      <section className="pos-section pos-card">
-        <h2 className="pos-section-title">Payments</h2>
-        {order?.payments.length === 0 && <p className="text-neutral-600 dark:text-neutral-400 m-0">No payments.</p>}
-        <ul className="list-none p-0">
-          {order?.payments.map((p, i) => (
-            <li key={i} className="py-1 text-neutral-700 dark:text-neutral-300">
-              {p.method}: {p.amountUgx.toLocaleString()} UGX
-            </li>
-          ))}
-        </ul>
-        {!block && (
-          <form onSubmit={handleRecordPayment} className="flex flex-wrap gap-2 items-end mt-4">
-            <label className="w-40">
-              <span className="pos-label">Amount (UGX)</span>
-              <input type="number" min="0" step="100" placeholder="Amount" value={amountUgx} onChange={(e) => setAmountUgx(e.target.value)} className="pos-input" />
-            </label>
-            <label className="w-40">
-              <span className="pos-label">Method</span>
-              <select value={method} onChange={(e) => setMethod(e.target.value)} className="pos-select">
-                <option value="cash">Cash</option>
-                <option value="card">Card</option>
-                <option value="mtn_momo">MTN MoMo</option>
-                <option value="airtel_money">Airtel Money</option>
-              </select>
-            </label>
-            <button type="submit" disabled={recordingPayment} className="btn btn-outline disabled:opacity-60">Record Payment</button>
-          </form>
         )}
+        {!block && order && (() => {
+          const totalPaid = order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0
+          const remaining = order.totalUgx - totalPaid
+          if (remaining <= 0) return null
+          return (
+            <>
+              <p className="m-0 mt-2 pos-section-title text-sm">Choose payment method</p>
+              <div className="flex flex-wrap gap-2 mt-2 justify-center">
+                <button type="button" onClick={() => setSelectedPaymentMethod(selectedPaymentMethod === 'cash' ? null : 'cash')} className={selectedPaymentMethod === 'cash' ? 'btn btn-primary' : 'btn btn-outline'}>Cash</button>
+                <button type="button" onClick={() => setSelectedPaymentMethod(selectedPaymentMethod === 'mtn_momo' ? null : 'mtn_momo')} className={selectedPaymentMethod === 'mtn_momo' ? 'btn btn-primary' : 'btn btn-outline'}>MTN MoMo</button>
+                <button type="button" onClick={() => setSelectedPaymentMethod(selectedPaymentMethod === 'airtel_money' ? null : 'airtel_money')} className={selectedPaymentMethod === 'airtel_money' ? 'btn btn-primary' : 'btn btn-outline'}>Airtel Money</button>
+                <button type="button" onClick={() => setSelectedPaymentMethod(selectedPaymentMethod === 'card' ? null : 'card')} className={selectedPaymentMethod === 'card' ? 'btn btn-primary' : 'btn btn-outline'}>Card</button>
+              </div>
+              {selectedPaymentMethod === 'cash' && (
+                <form onSubmit={handleCompletePayment} className="mt-4 max-w-xs mx-auto text-left">
+                  <label className="block">
+                    <span className="pos-label">Cash received (UGX)</span>
+                    <input type="number" min="0" step="100" value={cashReceivedUgx} onChange={(e) => setCashReceivedUgx(e.target.value)} placeholder={String(remaining)} className="pos-input w-full mt-1" />
+                  </label>
+                  {(() => {
+                    const received = parseFloat(cashReceivedUgx)
+                    const total = order?.totalUgx ?? 0
+                    const changeUgx = !isNaN(received) && received > total ? received - total : 0
+                    return received > 0 && changeUgx > 0 ? (
+                      <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200"><strong>Change:</strong> UGX {changeUgx.toLocaleString()}</p>
+                    ) : null
+                  })()}
+                  <button type="submit" disabled={paymentInProgress || completingPayment} className="btn btn-primary mt-3 w-full disabled:opacity-60">Complete Payment</button>
+                </form>
+              )}
+              {(selectedPaymentMethod === 'mtn_momo' || selectedPaymentMethod === 'airtel_money' || selectedPaymentMethod === 'card') && (
+                <div className="mt-4">
+                  <p className="m-0 text-neutral-700 dark:text-neutral-300 text-sm">Amount to pay: <strong>{remaining.toLocaleString()} UGX</strong></p>
+                  <button type="button" onClick={handlePayWithPesapal} disabled={paymentInProgress || completingPesapalPayment} className="btn btn-secondary mt-3 disabled:opacity-60">
+                    {completingPesapalPayment ? 'Redirecting to payment…' : 'Pay with Pesapal'}
+                  </button>
+                </div>
+              )}
+            </>
+          )
+        })()}
       </section>
-
-      {order?.status === 'ready' && (
-        <section className="pos-section pos-card">
-          <h2 className="pos-section-title">Payment</h2>
-          {(() => {
-            const totalPaid = order.payments.reduce((sum, p) => sum + p.amountUgx, 0)
-            const remaining = order.totalUgx - totalPaid
-            const displayAmount = paymentAmountUgx === '' ? String(remaining) : paymentAmountUgx
-            const enteredAmount = paymentAmountUgx === '' ? remaining : parseFloat(paymentAmountUgx)
-            const validAmount = !isNaN(enteredAmount) && enteredAmount > 0 && enteredAmount <= remaining
-            return (
-              <>
-                <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Order total:</strong> {order.totalUgx.toLocaleString()} UGX</p>
-                <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Amount paid:</strong> {totalPaid.toLocaleString()} UGX</p>
-                <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Remaining:</strong> {remaining.toLocaleString()} UGX</p>
-                {remaining > 0 && (
-                  <>
-                    <label className="block mt-3">
-                      <span className="pos-label">Amount to pay (UGX)</span>
-                      <input type="number" min={0} step={100} value={displayAmount} onChange={(e) => setPaymentAmountUgx(e.target.value)} className="pos-input w-40 mt-1" />
-                    </label>
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      <button type="button" onClick={() => handlePay('cash')} disabled={payingType !== null || !validAmount} className="btn btn-outline disabled:opacity-60">Pay Cash</button>
-                      <button type="button" onClick={() => handlePay('mobile')} disabled={payingType !== null || !validAmount} className="btn btn-outline disabled:opacity-60">Pay MoMo</button>
-                      <button type="button" onClick={() => handlePay('card')} disabled={payingType !== null || !validAmount} className="btn btn-outline disabled:opacity-60">Pay Card</button>
-                    </div>
-                  </>
-                )}
-              </>
-            )
-          })()}
-        </section>
-      )}
 
       {paymentInProgress && (
         <section className="pos-alert pos-alert-warning pos-section">
@@ -641,62 +486,7 @@ export default function OrderDetailPage() {
         </section>
       )}
 
-      {(order?.status === 'pending' || order?.status === 'preparing' || order?.status === 'ready') && (
-        <section className="pos-section pos-card">
-          <h2 className="pos-section-title mb-2">Cash Payment</h2>
-          <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Total:</strong> UGX {order?.totalUgx?.toLocaleString()}</p>
-          <form onSubmit={handleCompletePayment} className="mt-3">
-            <label className="block">
-              <span className="pos-label">Cash received</span>
-              <input type="number" min="0" step="100" value={cashReceivedUgx} onChange={(e) => setCashReceivedUgx(e.target.value)} placeholder="0" className="pos-input w-40 mt-1" />
-            </label>
-            {(() => {
-              const received = parseFloat(cashReceivedUgx)
-              const total = order?.totalUgx ?? 0
-              const changeUgx = !isNaN(received) && received > total ? received - total : 0
-              return received > 0 && changeUgx > 0 ? (
-                <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200"><strong>Change:</strong> UGX {changeUgx.toLocaleString()}</p>
-              ) : null
-            })()}
-            <button type="submit" disabled={paymentInProgress || completingPayment} className="btn btn-primary mt-3 disabled:opacity-60">Complete Payment</button>
-          </form>
-        </section>
-      )}
-
-      {(order?.status === 'pending' || order?.status === 'preparing' || order?.status === 'ready') && (
-        <section className="pos-section pos-card">
-          <h2 className="pos-section-title mb-2">Mobile Money Payment</h2>
-          <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Total:</strong> UGX {order?.totalUgx?.toLocaleString()}</p>
-          <form onSubmit={handleCompleteMomoPayment} className="mt-3">
-            <label className="block">
-              <span className="pos-label">Amount received</span>
-              <input type="number" min="0" step="100" value={momoAmountUgx} onChange={(e) => setMomoAmountUgx(e.target.value)} placeholder="0" className="pos-input w-40 mt-1" />
-            </label>
-            <button type="submit" disabled={paymentInProgress || completingMomoPayment} className="btn btn-primary mt-3 disabled:opacity-60">Complete MoMo Payment</button>
-          </form>
-        </section>
-      )}
-
-      {(order?.status === 'pending' || order?.status === 'preparing' || order?.status === 'ready') && (
-        <section className="pos-section pos-card">
-          <h2 className="pos-section-title mb-2">Card / MoMo / Airtel (Pesapal)</h2>
-          <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Total:</strong> UGX {order?.totalUgx?.toLocaleString()}</p>
-          <button type="button" onClick={handlePayWithPesapal} disabled={paymentInProgress || completingPesapalPayment} className="btn btn-secondary mt-3 disabled:opacity-60">
-            {completingPesapalPayment ? 'Redirecting to payment…' : 'Pay with Pesapal'}
-          </button>
-        </section>
-      )}
-
-      {order?.payments && order.payments.length > 0 && (
-        <section className="pos-section">
-          <h2 className="pos-section-title">Payment Summary</h2>
-          {order.payments.map((p, i) => (
-            <p key={i} className="m-0 py-1 text-neutral-700 dark:text-neutral-300">{p.method}: UGX {p.amountUgx.toLocaleString()}</p>
-          ))}
-        </section>
-      )}
-
-      <section className="flex flex-wrap gap-3 mt-6">
+      <section className="flex flex-wrap gap-3 mt-6 justify-center">
         <button onClick={handleCheckout} disabled={!canCheckout || checkingOut} className="btn btn-primary disabled:opacity-60">Checkout Order</button>
         <button onClick={handleCancel} disabled={block || cancelling} className="btn btn-danger disabled:opacity-60">Cancel Order</button>
       </section>

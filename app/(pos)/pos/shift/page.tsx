@@ -167,7 +167,7 @@ export default function ShiftPage() {
   if (error && !activeShift) {
     return (
       <main className="pos-page">
-        <div className="pos-page-container max-w-md">
+        <div className="pos-page-container max-w-md mx-auto text-center">
           <PosNavHeader />
           <div className="pos-alert pos-alert-error mb-4">{error}</div>
         </div>
@@ -177,12 +177,12 @@ export default function ShiftPage() {
 
   return (
     <main className="pos-page">
-      <div className="pos-page-container max-w-2xl">
+      <div className="pos-page-container max-w-4xl mx-auto text-center">
         <PosNavHeader />
         <h1 className="pos-section-title text-2xl mb-4">Shift</h1>
 
         {activeShift && (
-          <section className="pos-section pos-card">
+          <section className="pos-section pos-card pos-order-card-centered">
             <h2 className="pos-section-title text-lg mb-2">Active Shift</h2>
             <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Shift ID:</strong> {activeShift.shiftId}</p>
             <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Start:</strong> {new Date(activeShift.startTime).toLocaleString()}</p>
@@ -191,7 +191,7 @@ export default function ShiftPage() {
         )}
 
         {summary && (
-          <section className="pos-section pos-card">
+          <section className="pos-section pos-card pos-order-card-centered">
             <h2 className="pos-section-title text-lg mb-2">Totals</h2>
             <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Gross Sales:</strong> {summary.grossSalesUgx.toLocaleString()} UGX</p>
             <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Total Payments:</strong> {summary.totalPaymentsUgx.toLocaleString()} UGX</p>
@@ -200,7 +200,7 @@ export default function ShiftPage() {
         )}
 
         {paymentSummary && activeShift && (
-          <section className="pos-section pos-card">
+          <section className="pos-section pos-card pos-order-card-centered">
             <h2 className="pos-section-title text-lg mb-2">Payment Breakdown</h2>
             <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Cash: UGX {paymentSummary.cashTotalUgx.toLocaleString()}</p>
             <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">MoMo: UGX {paymentSummary.momoTotalUgx.toLocaleString()}</p>
@@ -211,7 +211,7 @@ export default function ShiftPage() {
         )}
 
         {!closed && activeShift && (
-          <form onSubmit={handleCloseShift} className="pos-section pos-card">
+          <form onSubmit={handleCloseShift} className="pos-section pos-card pos-order-card-centered">
             <h2 className="pos-section-title text-lg mb-3">Close Shift</h2>
             <label className="block">
               <span className="pos-label">Declared Cash (UGX)</span>
@@ -230,7 +230,7 @@ export default function ShiftPage() {
         )}
 
         {closed && closeResult && (
-          <section className="pos-section pos-card border-2 border-primary-300 dark:border-primary-600">
+          <section className="pos-section pos-card pos-order-card-centered border-2 border-primary-300 dark:border-primary-600">
             <p className="font-semibold text-primary-700 dark:text-primary-200 m-0 mb-2">Shift closed.</p>
             <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Gross Sales: {closeResult.summary.grossSalesUgx.toLocaleString()} UGX</p>
             <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Total Payments: {closeResult.summary.totalPaymentsUgx.toLocaleString()} UGX</p>

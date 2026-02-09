@@ -779,6 +779,40 @@
     box-shadow: var(--shadow-md);
   }
 
+  /*
+   * Order list: flex wrap, justify-center. Tablet = 2 per row, desktop = 3 per row.
+   * All cards same size; incomplete last row (1 or 2 cards) centers naturally (inverted pyramid).
+   */
+  .pos-order-list {
+    gap: var(--space-4);
+  }
+
+  .pos-order-list-item {
+    width: 100%;
+    min-width: 14rem;
+  }
+
+  @media (min-width: 640px) {
+    .pos-order-list-item {
+      width: calc((100% - var(--space-4)) / 2);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pos-order-list-item {
+      width: calc((100% - 2 * var(--space-4)) / 3);
+    }
+  }
+
+  /* Centered content for order list cards (dashboard Active orders + Shift Orders page) */
+  .pos-order-card-centered {
+    text-align: center;
+  }
+
+  .pos-order-card-centered .flex {
+    justify-content: center;
+  }
+
   .pos-table-btn {
     padding: var(--space-4);
     border: 1px solid var(--color-border-primary);

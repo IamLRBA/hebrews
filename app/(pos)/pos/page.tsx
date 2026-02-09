@@ -52,6 +52,7 @@ export default function PosDashboardPage() {
   const [startingShift, setStartingShift] = useState(false)
   const [terminalId, setTerminalId] = useState('')
   const [hasChosenToContinue, setHasChosenToContinue] = useState(false)
+  const [hasContinuedSession, setHasContinuedSession] = useState(false)
   const [orders, setOrders] = useState<ActiveOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -137,6 +138,12 @@ export default function PosDashboardPage() {
   }, [staffOk])
 
   useEffect(() => {
+    if (hasActiveShift && typeof window !== 'undefined' && window.sessionStorage.getItem('pos_has_continued')) {
+      setHasContinuedSession(true)
+    }
+  }, [hasActiveShift])
+
+  useEffect(() => {
     if (staffOk && hasActiveShift) fetchOrders()
   }, [staffOk, hasActiveShift])
 
@@ -210,7 +217,7 @@ export default function PosDashboardPage() {
     return (
       <main className="pos-page">
         <div className="pos-page-container max-w-md mx-auto">
-          <PosNavHeader />
+          <PosNavHeader hideNav />
           <div className="pos-card text-center">
             <div className="w-14 h-14 rounded-xl bg-primary-100 dark:bg-primary-800 flex items-center justify-center mx-auto mb-4">
               <PlayCircle className="w-7 h-7 text-primary-600 dark:text-primary-300" aria-hidden />
@@ -251,7 +258,9 @@ export default function PosDashboardPage() {
     )
   }
 
-  if (!hasChosenToContinue) {
+  const showContinueScreen = hasActiveShift && !hasChosenToContinue && !hasContinuedSession
+
+  if (showContinueScreen) {
     return (
       <main className="pos-page">
         <div className="pos-page-container max-w-md mx-auto">
@@ -266,7 +275,10 @@ export default function PosDashboardPage() {
             </p>
             <button
               type="button"
-              onClick={() => setHasChosenToContinue(true)}
+              onClick={() => {
+                if (typeof window !== 'undefined') window.sessionStorage.setItem('pos_has_continued', '1')
+                setHasChosenToContinue(true)
+              }}
               className="btn btn-primary w-full sm:w-auto min-w-[200px]"
             >
               Continue to POS
@@ -382,7 +394,7 @@ export default function PosDashboardPage() {
                   ? 'list-none p-0 flex justify-center'
                   : orders.length === 2
                     ? 'list-none p-0 flex justify-center gap-4 flex-wrap max-w-2xl mx-auto'
-                    : 'list-none p-0 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto'
+                    : 'list-none p-0 flex flex-wrap justify-center gap-4 max-w-4xl mx-auto pos-order-list'
               }
             >
               {orders.map((o) => (
@@ -393,12 +405,12 @@ export default function PosDashboardPage() {
                       ? 'w-full max-w-sm'
                       : orders.length === 2
                         ? 'w-full min-w-[240px] sm:w-[calc(50%-0.5rem)] sm:max-w-[320px]'
-                        : undefined
+                        : 'pos-order-list-item'
                   }
                 >
                   <Link
                     href={`/pos/orders/${o.orderId}`}
-                    className="pos-order-card block no-underline text-inherit hover:border-primary-300 dark:hover:border-primary-600 h-full"
+                    className="pos-order-card pos-order-card-centered block no-underline text-inherit hover:border-primary-300 dark:hover:border-primary-600 h-full"
                   >
                     <p className="font-medium text-primary-800 dark:text-primary-100 m-0">{o.orderNumber}</p>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mt-1">

@@ -7,6 +7,7 @@ import { Coffee, LayoutGrid, ListOrdered, Clock, ClipboardList } from 'lucide-re
 const CAFE_NAME = 'Cafe Havilah & Pizzeria'
 
 const NAV_ITEMS = [
+  { href: '/pos', label: 'All', icon: null },
   { href: '/pos/tables', label: 'Tables', icon: LayoutGrid },
   { href: '/pos/orders', label: 'Shift Orders', icon: ListOrdered },
   { href: '/pos/ready', label: 'Ready Orders', icon: Clock },
@@ -37,14 +38,14 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
       {!hideNav && (
       <nav className="pos-dashboard-nav" aria-label="POS sections">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const isActive = pathname === href || (href !== '/pos' && pathname.startsWith(href))
+          const isActive = href === '/pos' ? pathname === '/pos' : (pathname === href || pathname.startsWith(href))
           return (
             <Link
               key={href}
               href={href}
               className={`pos-dashboard-nav-link ${isActive ? '!bg-primary-100 !border-primary-300 !text-primary-800 dark:!bg-primary-800 dark:!border-primary-600 dark:!text-primary-100' : ''}`}
             >
-              <Icon className="w-4 h-4" aria-hidden />
+              {Icon != null && <Icon className="w-4 h-4" aria-hidden />}
               {label}
             </Link>
           )

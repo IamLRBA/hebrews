@@ -200,20 +200,20 @@ export default function PosOrdersPage() {
 
   return (
     <main className="pos-page">
-      <div className="pos-page-container">
+      <div className="pos-page-container max-w-4xl mx-auto text-center">
         <PosNavHeader />
         <h1 className="pos-section-title text-2xl mb-1">Shift Orders</h1>
         <p className="pos-section-subtitle mb-6">Orders for your current shift</p>
 
         {orders.length === 0 && (
-          <div className="pos-card">
+          <div className="pos-card max-w-md mx-auto">
             <p className="text-neutral-600 dark:text-neutral-400 m-0">No active orders for this shift.</p>
           </div>
         )}
 
-        <div className="grid gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-wrap justify-center gap-4 mt-6 pos-order-list">
           {orders.map((o) => (
-            <div key={o.orderId} className="pos-order-card">
+            <div key={o.orderId} className="pos-order-card pos-order-card-centered pos-order-list-item">
               <p className="font-medium text-primary-800 dark:text-primary-100 m-0">{o.orderNumber}</p>
               <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mt-1">
                 {o.orderType === 'dine_in' && o.tableId ? `Table ${o.tableId}` : 'Takeaway'}
@@ -225,7 +225,7 @@ export default function PosOrdersPage() {
                 UGX {o.totalUgx.toLocaleString()}
               </p>
               <p className="text-xs text-neutral-500 dark:text-neutral-500 m-0 mt-1">{timeSince(o.createdAt)}</p>
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-2 mt-4 justify-center">
                 {o.status === 'pending' && (
                   <>
                     <button onClick={() => setStatus(o.orderId, 'preparing')} disabled={acting !== null} className="btn btn-outline text-sm py-2 px-3 disabled:opacity-60">
@@ -248,7 +248,7 @@ export default function PosOrdersPage() {
                 )}
               </div>
               <Link href={`/pos/orders/${o.orderId}`} className="pos-link text-sm mt-2 inline-block">
-                Open order →
+                Open order ⇒
               </Link>
             </div>
           ))}
