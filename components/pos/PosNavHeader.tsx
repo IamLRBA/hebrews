@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Coffee, LayoutGrid, ListOrdered, Clock, ClipboardList } from 'lucide-react'
-
-const CAFE_NAME = 'Cafe Havilah & Pizzeria'
+import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
+import SettingsDropdown from '@/components/ui/SettingsDropdown'
 
 const NAV_ITEMS = [
   { href: '/pos', label: 'All', icon: null },
@@ -25,15 +25,18 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
           className="flex items-center gap-2 text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100 transition-colors w-fit"
         >
           <Coffee className="w-7 h-7" aria-hidden />
-          <span className="text-lg font-semibold tracking-tight">{CAFE_NAME}</span>
+          <CafeHavilahWord className="text-lg font-semibold tracking-tight" />
         </Link>
-        {pathname === '/pos' ? (
-          <span className="text-sm text-neutral-500 dark:text-neutral-400 font-medium">Point of Sale</span>
-        ) : (
-          <Link href="/pos" className="pos-link text-sm font-medium w-fit">
-            ⇐ Back to POS
-          </Link>
-        )}
+        <div className="flex items-center gap-2">
+          {pathname === '/pos' ? (
+            <span className="text-sm text-neutral-500 dark:text-neutral-400 font-medium">Point of Sale</span>
+          ) : (
+            <Link href="/pos" className="pos-link text-sm font-medium w-fit">
+              ⇐ Back to POS
+            </Link>
+          )}
+          <SettingsDropdown />
+        </div>
       </div>
       {!hideNav && (
       <nav className="pos-dashboard-nav" aria-label="POS sections">
