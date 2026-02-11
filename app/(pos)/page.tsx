@@ -2,8 +2,7 @@
 
 import Link from 'next/link'
 import { Coffee } from 'lucide-react'
-
-const CAFE_NAME = 'Cafe Havilah & Pizzeria'
+import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
 
 export default function PosLandingPage() {
   return (
@@ -13,7 +12,7 @@ export default function PosLandingPage() {
           <Coffee className="w-10 h-10 text-primary-600 dark:text-primary-300" aria-hidden />
         </div>
         <h1 className="text-2xl sm:text-3xl font-semibold text-primary-800 dark:text-primary-100 tracking-tight mb-2">
-          {CAFE_NAME}
+          <CafeHavilahWord />
         </h1>
         <p className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base mb-8">
           Point of Sale

@@ -1,3 +1,7 @@
+'use client'
+
+import BackToTop from '@/components/ui/BackToTop'
+
 /**
  * POS route group layout.
  * Full-screen wrapper only — no Navbar, no Footer. Shell is suppressed by ConditionalShell for /, /pos/*, and /kds.
@@ -10,6 +14,7 @@ export default function PosLayout({
   return (
     <div className="min-h-screen w-full flex flex-col bg-unified" style={{ minHeight: '100dvh' }}>
       {children}
+      <BackToTop />
     </div>
   )
 }

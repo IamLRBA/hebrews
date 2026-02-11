@@ -15,8 +15,6 @@ import {
   PlayCircle,
 } from 'lucide-react'
 
-const CAFE_NAME = 'Cafe Havilah & Pizzeria'
-
 function generateOrderNumber() {
   return `ORD-${Date.now()}`
 }

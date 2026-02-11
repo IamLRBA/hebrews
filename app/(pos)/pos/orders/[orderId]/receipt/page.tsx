@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-
-const CAFE_NAME = 'Cafe Havilah & Pizzeria'
+import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
 
 type OrderItem = {
   id: string
@@ -100,7 +99,7 @@ export default function ReceiptPage() {
       <div className="pos-page-container max-w-md">
         <Link href="/pos" className="pos-link inline-block mb-4">⇐ Back to POS</Link>
         <div className="pos-card receipt-content">
-          <h1 className="pos-section-title text-center mb-2">{CAFE_NAME}</h1>
+          <h1 className="pos-section-title text-center mb-2"><CafeHavilahWord /></h1>
           <p className="text-center m-0 text-neutral-600 dark:text-neutral-400">Order #{order.orderNumber}</p>
           <p className="m-0 mt-2 text-neutral-700 dark:text-neutral-300">Type: {order.orderType === 'dine_in' ? 'Dine-in' : 'Takeaway'}</p>
           {order.tableId && <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300">Table: {order.tableId}</p>}
