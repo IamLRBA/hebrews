@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
+import { setShiftId } from '@/lib/pos-shift-store'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import {
   LayoutGrid,
@@ -87,10 +88,11 @@ export default function PosDashboardPage() {
           terminalId.trim() ? { terminalId: terminalId.trim() } : {}
         ),
       })
+      const data = await res.json().catch(() => ({}))
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
         throw new Error(data.error || `HTTP ${res.status}`)
       }
+      if (data.shiftId) setShiftId(data.shiftId)
       setHasActiveShift(true)
       setShiftError(null)
     } catch (e) {

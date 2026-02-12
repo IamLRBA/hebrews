@@ -30,10 +30,11 @@ type ActiveShift = {
 }
 
 type PaymentSummary = {
-  cashTotalUgx: number
-  momoTotalUgx: number
-  cardTotalUgx: number
-  grandTotalUgx: number
+  cashSales: number
+  mtnMomoSales: number
+  airtelSales: number
+  cardSales: number
+  totalSales: number
 }
 
 export default function ShiftPage() {
@@ -47,7 +48,11 @@ export default function ShiftPage() {
   const [declaredCashUgx, setDeclaredCashUgx] = useState('')
   const [closing, setClosing] = useState(false)
   const [closed, setClosed] = useState(false)
-  const [closeResult, setCloseResult] = useState<{ summary: ShiftSummary; cashVarianceUgx?: number } | null>(null)
+  const [closeResult, setCloseResult] = useState<{
+    expectedCash: number
+    countedCashUgx: number
+    variance: number
+  } | null>(null)
 
   async function fetchActiveShift() {
     try {
@@ -126,9 +131,9 @@ export default function ShiftPage() {
   async function handleCloseShift(e: React.FormEvent) {
     e.preventDefault()
     if (!activeShift?.shiftId) return
-    const amount = declaredCashUgx.trim() === '' ? undefined : parseFloat(declaredCashUgx)
-    if (amount !== undefined && (isNaN(amount) || amount < 0)) {
-      alert('Enter a valid cash amount')
+    const amount = parseFloat(declaredCashUgx)
+    if (isNaN(amount) || amount < 0) {
+      alert('Enter a valid counted cash amount')
       return
     }
     setClosing(true)
@@ -138,7 +143,7 @@ export default function ShiftPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           closedByStaffId: getStaffId(),
-          declaredCashUgx: amount,
+          countedCashUgx: amount,
         }),
       })
       if (!res.ok) {
@@ -146,7 +151,11 @@ export default function ShiftPage() {
         throw new Error(data.error || `HTTP ${res.status}`)
       }
       const data = await res.json()
-      setCloseResult({ summary: data.summary, cashVarianceUgx: data.cashVarianceUgx })
+      setCloseResult({
+        expectedCash: data.expectedCash,
+        countedCashUgx: data.countedCashUgx,
+        variance: data.variance,
+      })
       setClosed(true)
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to close shift')
@@ -193,20 +202,21 @@ export default function ShiftPage() {
         {summary && (
           <section className="pos-section pos-card pos-order-card-centered">
             <h2 className="pos-section-title text-lg mb-2">Totals</h2>
-            <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Gross Sales:</strong> {summary.grossSalesUgx.toLocaleString()} UGX</p>
-            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Total Payments:</strong> {summary.totalPaymentsUgx.toLocaleString()} UGX</p>
-            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Cash Payments:</strong> {summary.cashPaymentsUgx.toLocaleString()} UGX</p>
+            <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Gross Sales:</strong> {(summary.grossSalesUgx ?? 0).toLocaleString()} UGX</p>
+            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Total Payments:</strong> {(summary.totalPaymentsUgx ?? 0).toLocaleString()} UGX</p>
+            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Cash Payments:</strong> {(summary.cashPaymentsUgx ?? 0).toLocaleString()} UGX</p>
           </section>
         )}
 
         {paymentSummary && activeShift && (
           <section className="pos-section pos-card pos-order-card-centered">
             <h2 className="pos-section-title text-lg mb-2">Payment Breakdown</h2>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Cash: UGX {paymentSummary.cashTotalUgx.toLocaleString()}</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">MoMo: UGX {paymentSummary.momoTotalUgx.toLocaleString()}</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Card: UGX {paymentSummary.cardTotalUgx.toLocaleString()}</p>
+            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Cash: UGX {(paymentSummary.cashSales ?? 0).toLocaleString()}</p>
+            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">MTN MoMo: UGX {(paymentSummary.mtnMomoSales ?? 0).toLocaleString()}</p>
+            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Airtel: UGX {(paymentSummary.airtelSales ?? 0).toLocaleString()}</p>
+            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Card: UGX {(paymentSummary.cardSales ?? 0).toLocaleString()}</p>
             <hr className="border-neutral-200 dark:border-neutral-600 my-3" />
-            <p className="m-0 font-semibold text-primary-700 dark:text-primary-200">Total: UGX {paymentSummary.grandTotalUgx.toLocaleString()}</p>
+            <p className="m-0 font-semibold text-primary-700 dark:text-primary-200">Total: UGX {(paymentSummary.totalSales ?? 0).toLocaleString()}</p>
           </section>
         )}
 
@@ -214,12 +224,13 @@ export default function ShiftPage() {
           <form onSubmit={handleCloseShift} className="pos-section pos-card pos-order-card-centered">
             <h2 className="pos-section-title text-lg mb-3">Close Shift</h2>
             <label className="block">
-              <span className="pos-label">Declared Cash (UGX)</span>
+              <span className="pos-label">Counted Cash (UGX)</span>
               <input
                 type="number"
                 min="0"
                 step="100"
-                placeholder="Optional"
+                required
+                placeholder="Enter counted cash"
                 value={declaredCashUgx}
                 onChange={(e) => setDeclaredCashUgx(e.target.value)}
                 className="pos-input max-w-xs mt-1"
@@ -232,12 +243,9 @@ export default function ShiftPage() {
         {closed && closeResult && (
           <section className="pos-section pos-card pos-order-card-centered border-2 border-primary-300 dark:border-primary-600">
             <p className="font-semibold text-primary-700 dark:text-primary-200 m-0 mb-2">Shift closed.</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Gross Sales: {closeResult.summary.grossSalesUgx.toLocaleString()} UGX</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Total Payments: {closeResult.summary.totalPaymentsUgx.toLocaleString()} UGX</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Cash Payments: {closeResult.summary.cashPaymentsUgx.toLocaleString()} UGX</p>
-            {closeResult.cashVarianceUgx !== undefined && (
-              <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200">Cash Variance: {closeResult.cashVarianceUgx.toLocaleString()} UGX</p>
-            )}
+            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Expected cash: {closeResult.expectedCash.toLocaleString()} UGX</p>
+            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Counted cash: {closeResult.countedCashUgx.toLocaleString()} UGX</p>
+            <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200">Variance: {closeResult.variance.toLocaleString()} UGX</p>
           </section>
         )}
       </div>

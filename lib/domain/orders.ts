@@ -4,17 +4,23 @@
  */
 
 import { prisma } from '@/lib/db'
-import type { Order } from '@prisma/client'
+import type { Order, PaymentMethod } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
 import { getActiveShift } from '@/lib/staff-session'
 import { releaseTableForOrder } from '@/lib/table-lifecycle'
 import { OrderNotFoundError, InvalidOrderStatusTransitionError } from '@/lib/order-status'
+import { assertStaffRole } from '@/lib/domain/role-guard'
+import { ShiftAlreadyClosedError } from '@/lib/domain/shifts'
+import { config } from '@/lib/config'
 import {
   addOrderItem,
   OrderItemNotFoundError,
   updateOrderItemQuantity as updateOrderItemQuantityInOrderItems,
   removeOrderItem as removeOrderItemInOrderItems,
 } from '@/lib/order-items'
+
+const PAYMENT_ROLES = ['cashier', 'manager', 'admin'] as const
+const KITCHEN_ROLES = ['kitchen', 'manager', 'admin'] as const
 
 /**
  * Creates a dine-in order for the staff's active shift.
@@ -141,7 +147,7 @@ export async function removeOrderItem(params: { orderItemId: string }): Promise<
 }
 
 // ---------------------------------------------------------------------------
-// Pay order with cash and complete
+// Canonical payment finalization (single source of truth)
 // ---------------------------------------------------------------------------
 
 const PAYABLE_STATUSES = ['pending', 'preparing', 'ready'] as const
@@ -155,10 +161,128 @@ export class PaymentInsufficientError extends Error {
   }
 }
 
+export class OrderHasNoItemsError extends Error {
+  readonly code = 'ORDER_HAS_NO_ITEMS' as const
+  constructor(public readonly orderId: string) {
+    super(`Order has no items; cannot process payment: ${orderId}`)
+    this.name = 'OrderHasNoItemsError'
+    Object.setPrototypeOf(this, OrderHasNoItemsError.prototype)
+  }
+}
+
+/**
+ * CANONICAL PAYMENT FINALIZATION FUNCTION
+ * 
+ * This is the ONLY function that sets order.status = 'served'.
+ * All payment flows (cash, momo, external) must call this function.
+ * 
+ * Runs inside a Prisma transaction provided by caller.
+ * 
+ * Behavior:
+ * 1. Loads order
+ * 2. Validates order exists
+ * 3. Validates order status is payable (pending/preparing/ready)
+ * 4. Validates payment amount >= order total
+ * 5. If externalReference provided: checks for idempotency (returns early if duplicate)
+ * 6. Creates Payment record (status: completed)
+ * 7. Updates order status to 'served'
+ * 
+ * Does NOT release table (caller's responsibility after transaction).
+ */
+async function finalizePayment(
+  tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
+  params: {
+    orderId: string
+    amountUgx: number
+    method: import('@prisma/client').PaymentMethod
+    staffId: string
+    externalReference?: string
+  }
+): Promise<void> {
+  const { orderId, amountUgx, method, staffId, externalReference } = params
+
+  // Idempotency check: if externalReference provided and payment already exists, return early
+  if (externalReference) {
+    const existingPayment = await tx.payment.findUnique({
+      where: { externalReference },
+      select: { id: true, orderId: true },
+    })
+    if (existingPayment) {
+      // Payment already recorded; idempotent success
+      return
+    }
+  }
+
+  // Load order with items and shift inside transaction to prevent race conditions
+  const order = await tx.order.findUnique({
+    where: { id: orderId },
+    select: {
+      id: true,
+      status: true,
+      totalUgx: true,
+      shiftId: true,
+      shift: { select: { endTime: true } },
+      orderItems: { select: { lineTotalUgx: true } },
+    },
+  })
+  if (!order) {
+    throw new OrderNotFoundError(orderId)
+  }
+  if (order.shift.endTime !== null) {
+    throw new ShiftAlreadyClosedError(order.shiftId)
+  }
+
+  // Prevent payment for orders with zero items
+  if (!order.orderItems || order.orderItems.length === 0) {
+    throw new OrderHasNoItemsError(orderId)
+  }
+
+  // Recalculate order total from items (hardening: ensure correct total before payment)
+  const summedTotal = order.orderItems.reduce((s, i) => s + Number(i.lineTotalUgx), 0)
+  const storedTotal = Number(order.totalUgx)
+  if (Math.abs(summedTotal - storedTotal) > 0.01) {
+    await tx.order.update({
+      where: { id: orderId },
+      data: { totalUgx: new Decimal(summedTotal) },
+    })
+  }
+  const totalUgx = summedTotal
+
+  // Validate order status is payable
+  if (!PAYABLE_STATUSES.includes(order.status as (typeof PAYABLE_STATUSES)[number])) {
+    // Order already processed (race condition protection)
+    return
+  }
+
+  // Validate payment amount
+  if (amountUgx < totalUgx) {
+    throw new PaymentInsufficientError(amountUgx, totalUgx)
+  }
+
+  // Create payment record
+  await tx.payment.create({
+    data: {
+      orderId,
+      amountUgx: new Decimal(amountUgx),
+      method,
+      status: 'completed',
+      externalReference: externalReference ?? undefined,
+      createdByStaffId: staffId,
+    },
+  })
+
+  // CRITICAL: This is the ONLY place that sets order.status = 'served'
+  await tx.order.update({
+    where: { id: orderId },
+    data: { status: 'served' },
+  })
+}
+
 /**
  * Records full cash payment and marks order as served.
  * Order must exist and status be pending, preparing, or ready.
  * amountUgx must be >= order.totalUgx. Creates one Payment (cash, completed), updates order to served, releases table if dine-in.
+ * Requires role: cashier, manager, or admin.
  * Returns orderId.
  */
 export async function payOrderCash(params: {
@@ -168,35 +292,14 @@ export async function payOrderCash(params: {
 }): Promise<string> {
   const { orderId, amountUgx, staffId } = params
 
+  await assertStaffRole(staffId, [...PAYMENT_ROLES])
+
   await prisma.$transaction(async (tx) => {
-    const order = await tx.order.findUnique({
-      where: { id: orderId },
-      select: { id: true, status: true, totalUgx: true },
-    })
-    if (!order) {
-      throw new OrderNotFoundError(orderId)
-    }
-    if (!PAYABLE_STATUSES.includes(order.status as (typeof PAYABLE_STATUSES)[number])) {
-      throw new InvalidOrderStatusTransitionError(orderId, order.status as import('@prisma/client').OrderStatus, 'served')
-    }
-    const totalUgx = Number(order.totalUgx)
-    if (amountUgx < totalUgx) {
-      throw new PaymentInsufficientError(amountUgx, totalUgx)
-    }
-
-    await tx.payment.create({
-      data: {
-        orderId,
-        amountUgx: new Decimal(amountUgx),
-        method: 'cash',
-        status: 'completed',
-        createdByStaffId: staffId,
-      },
-    })
-
-    await tx.order.update({
-      where: { id: orderId },
-      data: { status: 'served' },
+    await finalizePayment(tx, {
+      orderId,
+      amountUgx,
+      method: 'cash',
+      staffId,
     })
   })
 
@@ -212,6 +315,7 @@ export async function payOrderCash(params: {
  * Records full Mobile Money payment and marks order as served.
  * Same rules as payOrderCash: order must be pending, preparing, or ready;
  * amountUgx must be >= order.totalUgx. Creates one Payment (momo, completed), updates order to served, releases table if dine-in.
+ * Requires role: cashier, manager, or admin.
  * Returns orderId.
  */
 export async function payOrderMomo(params: {
@@ -221,35 +325,14 @@ export async function payOrderMomo(params: {
 }): Promise<string> {
   const { orderId, amountUgx, staffId } = params
 
+  await assertStaffRole(staffId, [...PAYMENT_ROLES])
+
   await prisma.$transaction(async (tx) => {
-    const order = await tx.order.findUnique({
-      where: { id: orderId },
-      select: { id: true, status: true, totalUgx: true },
-    })
-    if (!order) {
-      throw new OrderNotFoundError(orderId)
-    }
-    if (!PAYABLE_STATUSES.includes(order.status as (typeof PAYABLE_STATUSES)[number])) {
-      throw new InvalidOrderStatusTransitionError(orderId, order.status as import('@prisma/client').OrderStatus, 'served')
-    }
-    const totalUgx = Number(order.totalUgx)
-    if (amountUgx < totalUgx) {
-      throw new PaymentInsufficientError(amountUgx, totalUgx)
-    }
-
-    await tx.payment.create({
-      data: {
-        orderId,
-        amountUgx: new Decimal(amountUgx),
-        method: 'mtn_momo',
-        status: 'completed',
-        createdByStaffId: staffId,
-      },
-    })
-
-    await tx.order.update({
-      where: { id: orderId },
-      data: { status: 'served' },
+    await finalizePayment(tx, {
+      orderId,
+      amountUgx,
+      method: 'mtn_momo',
+      staffId,
     })
   })
 
@@ -262,10 +345,11 @@ export async function payOrderMomo(params: {
 // ---------------------------------------------------------------------------
 
 function getPesapalConfig() {
-  const baseUrl = process.env.PESAPAL_BASE_URL
-  const consumerKey = process.env.PESAPAL_CONSUMER_KEY
-  const consumerSecret = process.env.PESAPAL_CONSUMER_SECRET
-  const ipnId = process.env.PESAPAL_IPN_ID
+  const { pesapal } = config
+  const baseUrl = pesapal.baseUrl
+  const consumerKey = pesapal.consumerKey
+  const consumerSecret = pesapal.consumerSecret
+  const ipnId = pesapal.ipnId
   if (!baseUrl || !consumerKey || !consumerSecret || !ipnId) {
     throw new Error(
       'Pesapal config missing: set PESAPAL_BASE_URL, PESAPAL_CONSUMER_KEY, PESAPAL_CONSUMER_SECRET, PESAPAL_IPN_ID'
@@ -354,10 +438,13 @@ export async function createPesapalPaymentSession(params: {
 
   const order = await prisma.order.findUnique({
     where: { id: orderId },
-    select: { id: true, status: true, totalUgx: true },
+    select: { id: true, status: true, totalUgx: true, shiftId: true, shift: { select: { endTime: true } } },
   })
   if (!order) {
     throw new OrderNotFoundError(orderId)
+  }
+  if (order.shift.endTime !== null) {
+    throw new ShiftAlreadyClosedError(order.shiftId)
   }
   if (!PAYABLE_STATUSES.includes(order.status as (typeof PAYABLE_STATUSES)[number])) {
     throw new InvalidOrderStatusTransitionError(orderId, order.status as import('@prisma/client').OrderStatus, 'served')
@@ -365,7 +452,7 @@ export async function createPesapalPaymentSession(params: {
   const totalUgx = Number(order.totalUgx)
 
   const { baseUrl, consumerKey, consumerSecret, ipnId } = getPesapalConfig()
-  const base = appBaseUrl.replace(/\/$/, '')
+  const base = (config.pesapal.callbackUrl || appBaseUrl || config.appBaseUrl).replace(/\/$/, '')
   const callbackUrl = `${base}/pos/orders/${orderId}/payment-callback`
 
   const bearerToken = await getPesapalBearerToken(baseUrl, consumerKey, consumerSecret)
@@ -395,47 +482,280 @@ export type ExternalPaymentMethod = (typeof EXTERNAL_PAYMENT_METHODS)[number]
  * In a single transaction: create Payment (method, completed), set order to served.
  * After transaction: release table for dine-in orders.
  * Returns orderId. Does not call any external APIs.
+ * IDEMPOTENT: If externalReference already exists, returns early without error.
  */
 export async function recordExternalPayment(params: {
   orderId: string
   amountUgx: number
   method: ExternalPaymentMethod
   staffId: string
+  externalReference: string
 }): Promise<string> {
-  const { orderId, amountUgx, method, staffId } = params
+  const { orderId, amountUgx, method, staffId, externalReference } = params
+
+  // Role check: skip for 'system' (webhook - already authenticated via HMAC)
+  if (staffId !== 'system') {
+    await assertStaffRole(staffId, [...PAYMENT_ROLES])
+  }
 
   await prisma.$transaction(async (tx) => {
-    const order = await tx.order.findUnique({
-      where: { id: orderId },
-      select: { id: true, status: true, totalUgx: true },
-    })
-    if (!order) {
-      throw new OrderNotFoundError(orderId)
-    }
-    if (!PAYABLE_STATUSES.includes(order.status as (typeof PAYABLE_STATUSES)[number])) {
-      throw new InvalidOrderStatusTransitionError(orderId, order.status as import('@prisma/client').OrderStatus, 'served')
-    }
-    const totalUgx = Number(order.totalUgx)
-    if (amountUgx < totalUgx) {
-      throw new PaymentInsufficientError(amountUgx, totalUgx)
-    }
-
-    await tx.payment.create({
-      data: {
-        orderId,
-        amountUgx: new Decimal(amountUgx),
-        method,
-        status: 'completed',
-        createdByStaffId: staffId,
-      },
-    })
-
-    await tx.order.update({
-      where: { id: orderId },
-      data: { status: 'served' },
+    await finalizePayment(tx, {
+      orderId,
+      amountUgx,
+      method,
+      staffId,
+      externalReference,
     })
   })
 
   await releaseTableForOrder(orderId)
+  return orderId
+}
+
+// ---------------------------------------------------------------------------
+// Order receipt (read-only)
+// ---------------------------------------------------------------------------
+
+export type OrderReceiptItem = {
+  name: string
+  quantity: number
+  unitPriceUgx: number
+  totalUgx: number
+}
+
+export type OrderReceiptPayment = {
+  method: PaymentMethod
+  amountUgx: number
+}
+
+export type OrderReceipt = {
+  orderId: string
+  status: string
+  createdAt: Date
+  servedAt: Date | null
+  staffName: string
+  tableLabel: string | null
+  items: OrderReceiptItem[]
+  totalUgx: number
+  payments: OrderReceiptPayment[]
+}
+
+/**
+ * Loads complete order receipt data for display.
+ * Includes order items with product names, payments, staff, and table info.
+ * Read-only, no side effects.
+ */
+export async function getOrderReceipt(orderId: string): Promise<OrderReceipt> {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    select: {
+      id: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      totalUgx: true,
+      createdByStaff: {
+        select: {
+          fullName: true,
+        },
+      },
+      table: {
+        select: {
+          code: true,
+        },
+      },
+      orderItems: {
+        select: {
+          quantity: true,
+          unitPriceUgx: true,
+          lineTotalUgx: true,
+          product: {
+            select: {
+              name: true,
+            },
+          },
+        },
+        orderBy: {
+          sortOrder: 'asc',
+        },
+      },
+      payments: {
+        select: {
+          method: true,
+          amountUgx: true,
+          status: true,
+        },
+        where: {
+          status: 'completed',
+        },
+      },
+    },
+  })
+
+  if (!order) {
+    throw new OrderNotFoundError(orderId)
+  }
+
+  const items: OrderReceiptItem[] = order.orderItems.map((item) => ({
+    name: item.product.name,
+    quantity: item.quantity,
+    unitPriceUgx: Number(item.unitPriceUgx),
+    totalUgx: Number(item.lineTotalUgx),
+  }))
+
+  const payments: OrderReceiptPayment[] = order.payments.map((payment) => ({
+    method: payment.method,
+    amountUgx: Number(payment.amountUgx),
+  }))
+
+  return {
+    orderId: order.id,
+    status: order.status,
+    createdAt: order.createdAt,
+    servedAt: order.status === 'served' ? order.updatedAt : null,
+    staffName: order.createdByStaff.fullName,
+    tableLabel: order.table?.code ?? null,
+    items,
+    totalUgx: Number(order.totalUgx),
+    payments,
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Kitchen queue (read-only)
+// ---------------------------------------------------------------------------
+
+export type KitchenQueueItem = {
+  name: string
+  quantity: number
+}
+
+export type KitchenQueueOrder = {
+  orderId: string
+  tableLabel: string | null
+  items: KitchenQueueItem[]
+  status: string
+  createdAt: Date
+}
+
+/**
+ * Loads kitchen queue: all pending and preparing orders for a shift.
+ * Sorted by creation time (oldest first).
+ * Read-only, no side effects.
+ */
+export async function getKitchenQueue(shiftId: string): Promise<KitchenQueueOrder[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      shiftId,
+      status: {
+        in: ['pending', 'preparing'],
+      },
+    },
+    select: {
+      id: true,
+      status: true,
+      createdAt: true,
+      table: {
+        select: {
+          code: true,
+        },
+      },
+      orderItems: {
+        select: {
+          quantity: true,
+          product: {
+            select: {
+              name: true,
+            },
+          },
+        },
+        orderBy: {
+          sortOrder: 'asc',
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  })
+
+  return orders.map((order) => ({
+    orderId: order.id,
+    tableLabel: order.table?.code ?? null,
+    items: order.orderItems.map((item) => ({
+      name: item.product.name,
+      quantity: item.quantity,
+    })),
+    status: order.status,
+    createdAt: order.createdAt,
+  }))
+}
+
+// ---------------------------------------------------------------------------
+// Kitchen status transitions
+// ---------------------------------------------------------------------------
+
+export class InvalidKitchenStatusTransitionError extends Error {
+  readonly code = 'INVALID_KITCHEN_STATUS_TRANSITION' as const
+  constructor(
+    public readonly orderId: string,
+    public readonly currentStatus: string,
+    public readonly attemptedStatus: string
+  ) {
+    super(
+      `Invalid kitchen status transition: ${currentStatus} → ${attemptedStatus} (order: ${orderId})`
+    )
+    this.name = 'InvalidKitchenStatusTransitionError'
+    Object.setPrototypeOf(this, InvalidKitchenStatusTransitionError.prototype)
+  }
+}
+
+/**
+ * Updates kitchen order status.
+ * Only allows: pending → preparing, preparing → ready.
+ * Cannot skip states or modify served orders.
+ * Requires role: kitchen, manager, or admin.
+ */
+export async function updateKitchenStatus(params: {
+  orderId: string
+  newStatus: 'preparing' | 'ready'
+  staffId: string
+}): Promise<string> {
+  const { orderId, newStatus, staffId } = params
+
+  await assertStaffRole(staffId, [...KITCHEN_ROLES])
+
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    select: { id: true, status: true },
+  })
+
+  if (!order) {
+    throw new OrderNotFoundError(orderId)
+  }
+
+  // Validate transition
+  const currentStatus = order.status
+  const validTransitions: Record<string, string[]> = {
+    pending: ['preparing'],
+    preparing: ['ready'],
+  }
+
+  const allowedNext = validTransitions[currentStatus] || []
+  if (!allowedNext.includes(newStatus)) {
+    throw new InvalidKitchenStatusTransitionError(orderId, currentStatus, newStatus)
+  }
+
+  // When kitchen marks "ready", auto-transition to "served"
+  const targetStatus = newStatus === 'ready' ? 'served' : newStatus
+
+  await prisma.order.update({
+    where: { id: orderId },
+    data: {
+      status: targetStatus,
+      updatedByStaffId: staffId,
+    },
+  })
+
   return orderId
 }

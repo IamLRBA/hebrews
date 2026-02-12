@@ -9,7 +9,8 @@ import { recordPayment as domainRecordPayment } from '@/lib/payments'
 import { checkoutOrder as domainCheckoutOrder } from '@/lib/checkout'
 import { setOrderStatus } from '@/lib/order-status'
 import { releaseTableForOrder } from '@/lib/table-lifecycle'
-import { closeShift as domainCloseShift } from '@/lib/shift-close'
+import { closeShift as domainCloseShift, getShiftSummary as domainGetShiftSummary } from '@/lib/domain/shifts'
+import { getOrderReceipt as domainGetOrderReceipt } from '@/lib/domain/orders'
 import type { PaymentMethod, PaymentStatus } from '@prisma/client'
 
 // ---------------------------------------------------------------------------
@@ -49,7 +50,7 @@ export {
 
 export { InvalidOrderStatusTransitionError } from '@/lib/order-status'
 export { OrderNotTerminalError } from '@/lib/table-lifecycle'
-export { ShiftNotFoundError, ShiftAlreadyClosedError } from '@/lib/shift-close'
+export { ShiftNotFoundError, ShiftAlreadyClosedError } from '@/lib/domain/shifts'
 
 // ---------------------------------------------------------------------------
 // POS Operations
@@ -98,7 +99,7 @@ export type CancelOrderParams = {
 export type CloseShiftParams = {
   shiftId: string
   closedByStaffId: string
-  declaredCashUgx?: number
+  countedCashUgx: number
 }
 
 export type TransitionOrderStatusParams = {
@@ -176,4 +177,14 @@ export async function cancelOrder(params: CancelOrderParams) {
 /** Closes a shift. Sets endTime, returns reconciliation summary. */
 export async function closeShift(params: CloseShiftParams) {
   return domainCloseShift(params)
+}
+
+/** Gets shift summary with sales breakdown by payment method. */
+export async function getShiftSummary(shiftId: string) {
+  return domainGetShiftSummary(shiftId)
+}
+
+/** Gets order receipt with all details for display. */
+export async function getOrderReceipt(orderId: string) {
+  return domainGetOrderReceipt(orderId)
 }

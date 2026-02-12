@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { transitionOrderStatus } from '@/lib/pos-service'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
-const VALID_STATUSES = ['pending', 'preparing', 'ready', 'served', 'cancelled'] as const
+// SECURITY: 'served' is NOT allowed here - only checkout/payment flows can mark orders as served
+const VALID_STATUSES = ['pending', 'preparing', 'ready', 'cancelled'] as const
 
 export async function POST(
   request: NextRequest,
@@ -18,7 +19,7 @@ export async function POST(
     const { newStatus, updatedByStaffId } = body
 
     if (!VALID_STATUSES.includes(newStatus)) {
-      return NextResponse.json({ error: 'newStatus must be one of: pending, preparing, ready, served, cancelled' }, { status: 400 })
+      return NextResponse.json({ error: 'newStatus must be one of: pending, preparing, ready, cancelled. Use /checkout to mark as served.' }, { status: 400 })
     }
     if (typeof updatedByStaffId !== 'string' || !updatedByStaffId) {
       return NextResponse.json({ error: 'updatedByStaffId is required (string)' }, { status: 400 })

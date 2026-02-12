@@ -27,7 +27,7 @@ export default function PaymentCallbackPage() {
             clearInterval(intervalRef.current)
             intervalRef.current = null
           }
-          router.push(`/pos/orders/${orderId}/receipt`)
+          router.push(`/pos/receipt/${orderId}`)
         }
       } catch {
         // ignore fetch errors, keep polling

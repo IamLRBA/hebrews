@@ -3,25 +3,28 @@
  * Run with: npx prisma db seed
  *
  * Creates:
- * - 2 Staff (cashier, kitchen), active
+ * - 2 Staff (cashier, kitchen), active, with bcrypt password hashes
  * - 2 Restaurant tables (T1, T2)
  * - 2 Products (Espresso, Croissant)
  *
- * POS login uses staff ID only (no password check); passwordHash is a placeholder.
+ * Default password for seeded staff: "password123"
  */
 
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
+const DEFAULT_PASSWORD = 'password123'
+
 async function main() {
-  // Staff: POS uses staff id from localStorage; passwordHash not used by POS login
+  const passwordHash = await bcrypt.hash(DEFAULT_PASSWORD, 10)
   const cashier = await prisma.staff.upsert({
     where: { username: 'cashier' },
-    update: {},
+    update: { passwordHash },
     create: {
       username: 'cashier',
-      passwordHash: 'pos-session-only-no-password-check',
+      passwordHash,
       fullName: 'POS Cashier',
       role: 'cashier',
       isActive: true,
@@ -29,10 +32,10 @@ async function main() {
   })
   const kitchen = await prisma.staff.upsert({
     where: { username: 'kitchen' },
-    update: {},
+    update: { passwordHash },
     create: {
       username: 'kitchen',
-      passwordHash: 'pos-session-only-no-password-check',
+      passwordHash,
       fullName: 'Kitchen Staff',
       role: 'kitchen',
       isActive: true,

@@ -70,14 +70,15 @@ export default function PosReadyPage() {
     if (!staffId) return
     setActing(orderId)
     try {
-      const res = await posFetch(`/api/orders/${orderId}/status`, {
+      // Use checkout API to ensure payment validation
+      const res = await posFetch(`/api/orders/${orderId}/checkout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newStatus: 'served', updatedByStaffId: staffId }),
+        body: JSON.stringify({ updatedByStaffId: staffId }),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Failed to update status')
+        throw new Error(data.error || 'Failed to checkout order')
       }
       await fetchOrders()
     } catch (e) {

@@ -8,8 +8,6 @@ const nextConfig = {
   },
   // Enable compression
   compress: true,
-  // Optimize production builds
-  swcMinify: true,
   // Security headers. Force correct MIME types for Next static assets so they aren't blocked by nosniff when something serves them as text/plain (e.g. Cursor Simple Browser / preview).
   async headers() {
     return [
