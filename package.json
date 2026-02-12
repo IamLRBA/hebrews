@@ -4,14 +4,15 @@
   "description": "Cafe Havilah & Pizzeria - Luxury destination cafe offering premium dining, coffee, and hospitality",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "dev:3001": "next dev -p 3001",
+    "dev": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev",
+    "dev:3001": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
   },
@@ -19,10 +20,12 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
+    "@prisma/client": "^5.22.0",
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
     "@sendgrid/mail": "^8.1.6",
     "@tabler/icons-react": "^3.35.0",
+    "bcrypt": "^6.0.0",
     "framer-motion": "latest",
     "gsap": "latest",
     "html2canvas": "^1.4.1",
@@ -36,11 +39,10 @@
     "swiper": "^11.2.10",
     "tailwindcss": "^3.4.17",
     "three": "latest",
-    "twilio": "^5.10.6",
-    "@prisma/client": "^5.22.0"
+    "twilio": "^5.10.6"
   },
   "devDependencies": {
-    "ts-node": "^10.9.2",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
@@ -48,6 +50,7 @@
     "autoprefixer": "latest",
     "postcss": "latest",
     "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
     "typescript": "latest"
   }
 }

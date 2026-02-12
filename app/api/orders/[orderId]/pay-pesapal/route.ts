@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createPesapalPaymentSession } from '@/lib/domain/orders'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
+import { config } from '@/lib/config'
 
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
@@ -13,9 +14,8 @@ export async function POST(
     }
 
     const appBaseUrl =
-      process.env.APP_BASE_URL ||
-      process.env.NEXT_PUBLIC_APP_ORIGIN ||
-      (typeof _request.url === 'string' ? new URL(_request.url).origin : '')
+      config.appBaseUrl ||
+      (typeof request.url === 'string' ? new URL(request.url).origin : '')
     if (!appBaseUrl) {
       return NextResponse.json(
         { error: 'APP_BASE_URL or NEXT_PUBLIC_APP_ORIGIN required for Pesapal callback' },

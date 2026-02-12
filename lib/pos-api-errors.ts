@@ -26,9 +26,12 @@ import {
   PaymentExceedsOrderTotalError,
   InvalidQuantityError,
 } from '@/lib/pos-service'
-import { PaymentInsufficientError } from '@/lib/domain/orders'
+import { PaymentInsufficientError, InvalidKitchenStatusTransitionError, OrderHasNoItemsError } from '@/lib/domain/orders'
+import { ShiftHasUnfinishedOrdersError } from '@/lib/domain/shifts'
+import { UnauthorizedRoleError, StaffNotFoundError as RoleGuardStaffNotFoundError } from '@/lib/domain/role-guard'
 
 const NOT_FOUND_ERRORS = [
+  RoleGuardStaffNotFoundError,
   OrderNotFoundError,
   ProductNotFoundError,
   OrderItemNotFoundError,
@@ -41,7 +44,9 @@ const INVALID_STATE_ERRORS = [
   OrderNotReadyForCheckoutError,
   OrderNotFullyPaidError,
   InvalidOrderStatusTransitionError,
+  InvalidKitchenStatusTransitionError,
   ShiftAlreadyClosedError,
+  ShiftHasUnfinishedOrdersError,
   OrderCancelledError,
   OrderNotTerminalError,
   ProductInactiveError,
@@ -56,7 +61,10 @@ const VALIDATION_ERRORS = [
   PaymentExceedsOrderTotalError,
   InvalidQuantityError,
   PaymentInsufficientError,
+  OrderHasNoItemsError,
 ]
+
+const UNAUTHORIZED_ERRORS = [UnauthorizedRoleError]
 
 export function toPosApiResponse(error: unknown): NextResponse {
   const message = error instanceof Error ? error.message : 'Internal server error'
@@ -69,6 +77,9 @@ export function toPosApiResponse(error: unknown): NextResponse {
   }
   if (VALIDATION_ERRORS.some((E) => error instanceof E)) {
     return NextResponse.json({ error: message }, { status: 400 })
+  }
+  if (UNAUTHORIZED_ERRORS.some((E) => error instanceof E)) {
+    return NextResponse.json({ error: message }, { status: 403 })
   }
 
   return NextResponse.json({ error: message }, { status: 500 })

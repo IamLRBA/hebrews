@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getShiftSummary } from '@/lib/domain/shifts'
+import { getKitchenQueue } from '@/lib/domain/orders'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
 export async function GET(
@@ -12,8 +12,8 @@ export async function GET(
       return NextResponse.json({ error: 'shiftId is required' }, { status: 400 })
     }
 
-    const summary = await getShiftSummary(shiftId)
-    return NextResponse.json(summary)
+    const queue = await getKitchenQueue(shiftId)
+    return NextResponse.json(queue)
   } catch (error) {
     return toPosApiResponse(error)
   }

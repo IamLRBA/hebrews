@@ -42,6 +42,7 @@ enum PaymentStatus {
 
 enum StaffRole {
   admin
+  manager
   cashier
   kitchen
 }
@@ -65,7 +66,8 @@ model Staff {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  shifts          Shift[]
+  shifts          Shift[]   @relation("ShiftStaff")
+  shiftsClosed    Shift[]   @relation("ShiftClosedBy")
   ordersCreated   Order[]   @relation("CreatedByStaff")
   ordersUpdated   Order[]   @relation("UpdatedByStaff")
   payments        Payment[]
@@ -75,16 +77,20 @@ model Staff {
 }
 
 model Shift {
-  id          String    @id @default(uuid()) @db.Uuid
-  staffId     String    @map("staff_id") @db.Uuid
-  terminalId  String    @map("terminal_id") @db.VarChar(32)
-  startTime   DateTime  @map("start_time")
-  endTime     DateTime? @map("end_time")
-  totalSales  Decimal   @default(0) @map("total_sales") @db.Decimal(12, 2)
-  createdAt   DateTime @default(now()) @map("created_at")
+  id                String    @id @default(uuid()) @db.Uuid
+  staffId           String    @map("staff_id") @db.Uuid
+  terminalId        String    @map("terminal_id") @db.VarChar(32)
+  startTime         DateTime  @map("start_time")
+  endTime           DateTime? @map("end_time")
+  totalSales        Decimal   @default(0) @map("total_sales") @db.Decimal(12, 2)
+  closedByStaffId   String?   @map("closed_by_staff_id") @db.Uuid
+  countedCashUgx    Decimal?  @map("counted_cash_ugx") @db.Decimal(12, 2)
+  cashVarianceUgx   Decimal?  @map("cash_variance_ugx") @db.Decimal(12, 2)
+  createdAt         DateTime  @default(now()) @map("created_at")
 
-  staff   Staff   @relation(fields: [staffId], references: [id])
-  orders  Order[]
+  staff         Staff   @relation("ShiftStaff", fields: [staffId], references: [id])
+  closedByStaff Staff?  @relation("ShiftClosedBy", fields: [closedByStaffId], references: [id])
+  orders        Order[]
 
   @@index([staffId])
   @@index([terminalId])
@@ -191,6 +197,7 @@ model Payment {
   method           PaymentMethod
   status           PaymentStatus @default(pending)
   reference        String?       @db.VarChar(128)
+  externalReference String?      @unique @map("external_reference") @db.VarChar(255)
   createdByStaffId String        @map("created_by_staff_id") @db.Uuid
   createdAt        DateTime      @default(now()) @map("created_at")
 
