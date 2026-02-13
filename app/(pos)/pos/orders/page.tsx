@@ -431,13 +431,16 @@ export default function PosOrdersPage() {
                   Pay
                 </button>
               </div>
+              </div>
             </>
           )}
         </aside>
       </div>
 
       <div className="flex-shrink-0 p-4 border-t border-neutral-200 dark:border-neutral-700">
-        <Link href="/pos/close" className="pos-link text-sm">Close Shift</Link>
+        <Link href="/pos/close" className="btn btn-outline py-2.5 px-4 text-sm font-medium">
+          Close Shift
+        </Link>
       </div>
     </main>
   )
