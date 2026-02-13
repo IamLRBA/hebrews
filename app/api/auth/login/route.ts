@@ -22,6 +22,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 })
     }
 
+    if (!staff.passwordHash || staff.passwordHash.length < 10) {
+      console.error('[auth/login] Staff has invalid or missing password hash:', staff.id)
+      return NextResponse.json({
+        error: 'Account not set up. Run: npx prisma db seed',
+      }, { status: 401 })
+    }
+
     const valid = await bcrypt.compare(password, staff.passwordHash)
     if (!valid) {
       return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 })
@@ -32,7 +39,11 @@ export async function POST(request: NextRequest) {
       role: staff.role,
       fullName: staff.fullName,
     })
-  } catch {
-    return NextResponse.json({ error: 'Login failed' }, { status: 500 })
+  } catch (e) {
+    console.error('[auth/login] Error:', e)
+    const message = process.env.NODE_ENV === 'development' && e instanceof Error
+      ? `Login failed: ${e.message}`
+      : 'Login failed'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

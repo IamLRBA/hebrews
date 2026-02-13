@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Coffee, LayoutGrid, ListOrdered, Clock, ClipboardList, LogOut } from 'lucide-react'
+import { Coffee, LayoutGrid, ListOrdered, Clock, ClipboardList } from 'lucide-react'
 import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
 import SettingsDropdown from '@/components/ui/SettingsDropdown'
 
@@ -13,23 +12,13 @@ const NAV_ITEMS = [
   { href: '/pos/orders', label: 'Orders', icon: ListOrdered },
   { href: '/pos/ready', label: 'Ready', icon: Clock },
   { href: '/pos/shift', label: 'Shift', icon: ClipboardList },
-  { href: '/pos/close', label: 'Close', icon: LogOut },
 ] as const
 
 export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
   const pathname = usePathname()
-  const [isScrolled, setIsScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   return (
-    <header className={`pos-dashboard-header flex flex-col gap-4 mb-6 ${isScrolled && !hideNav ? 'pos-dashboard-header-sticky' : ''}`}>
+    <header className={`pos-dashboard-header flex flex-col gap-4 mb-6 ${!hideNav ? 'pos-dashboard-header-sticky' : ''}`}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <Link
           href="/pos"

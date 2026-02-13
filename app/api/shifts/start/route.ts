@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { startShift, StaffAlreadyHasActiveShiftError } from '@/lib/shift-lifecycle'
+import { getActiveShift } from '@/lib/staff-session'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
 const STAFF_ID_HEADER = 'x-staff-id'
@@ -29,10 +30,15 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     if (error instanceof StaffAlreadyHasActiveShiftError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 409 }
-      )
+      // Staff already has an active shift — return it so the client can continue
+      const shift = await getActiveShift(error.staffId)
+      return NextResponse.json({
+        shiftId: shift.id,
+        staffId: shift.staffId,
+        terminalId: shift.terminalId,
+        startTime: shift.startTime,
+        endTime: shift.endTime,
+      })
     }
     return toPosApiResponse(error)
   }

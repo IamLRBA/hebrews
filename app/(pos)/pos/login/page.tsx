@@ -25,7 +25,8 @@ export default function PosLoginPage() {
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) {
-        throw new Error(data.error || 'Login failed')
+        const msg = data.error || (res.status === 500 ? 'Server error. Check that the database is running and seeded.' : 'Login failed')
+        throw new Error(msg)
       }
       if (typeof window !== 'undefined') {
         localStorage.setItem('pos_staff_id', data.staffId)
