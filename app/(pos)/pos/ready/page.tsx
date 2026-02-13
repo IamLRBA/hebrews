@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { Clock, CheckCircle } from 'lucide-react'
+import { formatRelativeTime } from '@/lib/utils/format'
 
 type ReadyOrderItem = {
   productId: string
@@ -91,8 +96,8 @@ export default function PosReadyPage() {
   if (!staffOk || loading) {
     return (
       <main className="pos-page flex items-center justify-center">
-        <div className="pos-card max-w-sm w-full text-center">
-          <p className="text-primary-600 dark:text-primary-300 m-0">Loading…</p>
+        <div className="pos-card max-w-sm w-full p-6">
+          <SkeletonLoader variant="card" lines={3} />
         </div>
       </main>
     )
@@ -105,30 +110,48 @@ export default function PosReadyPage() {
         <h1 className="pos-section-title text-2xl mb-4">Ready Orders</h1>
         {error && <div className="pos-alert pos-alert-error mb-4 max-w-md mx-auto">{error}</div>}
         {orders.length === 0 && !error && (
-          <div className="pos-card max-w-md mx-auto">
-            <p className="m-0 text-neutral-600 dark:text-neutral-400">No ready orders.</p>
-          </div>
+          <EmptyState
+            icon={CheckCircle}
+            title="No ready orders"
+            description="Orders will appear here when they're ready for pickup."
+          />
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {orders.map((o) => (
-            <div key={o.orderId} className="pos-card pos-order-card-centered flex flex-col gap-2">
-              <p className="m-0 font-semibold text-primary-800 dark:text-primary-100">Order #{o.orderNumber}</p>
-              <p className="m-0 text-sm text-neutral-600 dark:text-neutral-400">
-                {o.orderType === 'dine_in' && o.tableId ? `Table ${o.tableId}` : 'Takeaway'}
-              </p>
-              <ul className="m-0 pl-5 list-disc text-neutral-700 dark:text-neutral-300 space-y-1">
-                {o.items.map((item, i) => (
-                  <li key={i}>{item.productName} × {item.quantity}</li>
-                ))}
-              </ul>
-              <div className="mt-2 flex justify-center">
+            <div key={o.orderId} className="pos-card pos-order-card-centered flex flex-col gap-3 animate-slide-in-up">
+              <div className="flex items-center justify-between gap-2">
+                <p className="m-0 font-semibold text-lg text-primary-800 dark:text-primary-100">Order #{o.orderNumber}</p>
+                <StatusBadge status="ready" />
+              </div>
+              <div className="text-sm space-y-1">
+                <p className="m-0 text-neutral-600 dark:text-neutral-400">
+                  {o.orderType === 'dine_in' && o.tableId ? `Table ${o.tableId}` : 'Takeaway'}
+                </p>
+                {o.createdAt && (
+                  <p className="m-0 text-neutral-500 dark:text-neutral-500">
+                    Ready {formatRelativeTime(o.createdAt)}
+                  </p>
+                )}
+              </div>
+              <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3">
+                <ul className="m-0 pl-4 list-disc text-sm text-neutral-700 dark:text-neutral-300 space-y-1">
+                  {o.items.map((item, i) => (
+                    <li key={i}>
+                      <span className="font-medium">{item.productName}</span>
+                      {' × '}
+                      <span className="text-primary-600 dark:text-primary-400">{item.quantity}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-auto pt-2">
                 <button
                   type="button"
                   onClick={() => handleServe(o.orderId)}
                   disabled={acting !== null}
-                  className="btn btn-primary disabled:opacity-60"
+                  className="btn btn-primary w-full disabled:opacity-60"
                 >
-                  Serve Order
+                  {acting === o.orderId ? 'Serving…' : 'Serve Order'}
                 </button>
               </div>
             </div>

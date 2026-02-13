@@ -15,6 +15,9 @@ import {
   PlusCircle,
   PlayCircle,
 } from 'lucide-react'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 function generateOrderNumber() {
   return `ORD-${Date.now()}`
@@ -30,17 +33,6 @@ type ActiveOrder = {
   totalUgx: number
 }
 
-function statusBadgeClass(status: string): string {
-  const base = 'pos-badge '
-  switch (status) {
-    case 'pending': return base + 'pos-badge-pending'
-    case 'preparing': return base + 'pos-badge-preparing'
-    case 'ready': return base + 'pos-badge-ready'
-    case 'served': return base + 'pos-badge-served'
-    case 'cancelled': return base + 'pos-badge-cancelled'
-    default: return base + 'pos-badge-pending'
-  }
-}
 
 export default function PosDashboardPage() {
   const router = useRouter()
@@ -56,6 +48,8 @@ export default function PosDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [creating, setCreating] = useState<'dine-in' | 'takeaway' | null>(null)
+  const [tableCount, setTableCount] = useState<number | null>(null)
+  const [readyCount, setReadyCount] = useState<number | null>(null)
 
   async function fetchActiveShift() {
     setShiftLoading(true)
@@ -117,10 +111,33 @@ export default function PosDashboardPage() {
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       )
       setOrders(sorted)
+      
+      // Fetch ready orders count
+      const readyRes = await posFetch('/api/pos/ready-orders')
+      if (readyRes.ok) {
+        const readyData = await readyRes.json()
+        setReadyCount(readyData.length)
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load orders')
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function fetchTableCount() {
+    try {
+      const shiftRes = await posFetch('/api/shifts/active')
+      if (shiftRes.ok) {
+        const shiftData = await shiftRes.json()
+        const tablesRes = await posFetch(`/api/pos/tables?shiftId=${encodeURIComponent(shiftData.shiftId)}`)
+        if (tablesRes.ok) {
+          const tablesData = await tablesRes.json()
+          setTableCount(tablesData.length)
+        }
+      }
+    } catch {
+      // Ignore errors for metrics
     }
   }
 
@@ -144,7 +161,10 @@ export default function PosDashboardPage() {
   }, [hasActiveShift])
 
   useEffect(() => {
-    if (staffOk && hasActiveShift) fetchOrders()
+    if (staffOk && hasActiveShift) {
+      fetchOrders()
+      fetchTableCount()
+    }
   }, [staffOk, hasActiveShift])
 
   async function handleNewDineIn() {
@@ -207,7 +227,7 @@ export default function PosDashboardPage() {
     return (
       <main className="pos-page flex items-center justify-center">
         <div className="pos-card max-w-sm w-full text-center">
-          <p className="text-primary-600 dark:text-primary-300">Checking shift…</p>
+          <SkeletonLoader variant="card" />
         </div>
       </main>
     )
@@ -301,9 +321,14 @@ export default function PosDashboardPage() {
         <section className="pos-dashboard-grid mb-10" aria-label="POS actions">
           <Link href="/pos/tables" className="pos-dashboard-card text-center items-center">
             <div className="pos-dashboard-card-icon mx-auto">
-              <LayoutGrid className="w-5 h-5" />
+              <LayoutGrid className="w-6 h-6" />
             </div>
             <h2 className="pos-dashboard-card-title">Tables</h2>
+            {tableCount !== null && (
+              <p className="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-2">
+                {tableCount} {tableCount === 1 ? 'table' : 'tables'} available
+              </p>
+            )}
             <p className="pos-dashboard-card-desc">
               View dine-in tables and open or continue orders by table.
             </p>
@@ -311,9 +336,14 @@ export default function PosDashboardPage() {
           </Link>
           <Link href="/pos/orders" className="pos-dashboard-card text-center items-center">
             <div className="pos-dashboard-card-icon mx-auto">
-              <ListOrdered className="w-5 h-5" />
+              <ListOrdered className="w-6 h-6" />
             </div>
             <h2 className="pos-dashboard-card-title">Shift Orders</h2>
+            {orders.length > 0 && (
+              <p className="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-2">
+                {orders.length} {orders.length === 1 ? 'order' : 'orders'} active
+              </p>
+            )}
             <p className="pos-dashboard-card-desc">
               All active orders for this shift. Open, update status, or checkout.
             </p>
@@ -321,9 +351,14 @@ export default function PosDashboardPage() {
           </Link>
           <Link href="/pos/ready" className="pos-dashboard-card text-center items-center">
             <div className="pos-dashboard-card-icon mx-auto">
-              <Clock className="w-5 h-5" />
+              <Clock className="w-6 h-6" />
             </div>
             <h2 className="pos-dashboard-card-title">Ready Orders</h2>
+            {readyCount !== null && readyCount > 0 && (
+              <p className="text-sm font-semibold text-green-600 dark:text-green-400 mb-2">
+                {readyCount} {readyCount === 1 ? 'order' : 'orders'} ready
+              </p>
+            )}
             <p className="pos-dashboard-card-desc">
               Orders ready for pickup. Mark as served when delivered to the customer.
             </p>
@@ -331,7 +366,7 @@ export default function PosDashboardPage() {
           </Link>
           <Link href="/pos/shift" className="pos-dashboard-card text-center items-center">
             <div className="pos-dashboard-card-icon mx-auto">
-              <ClipboardList className="w-5 h-5" />
+              <ClipboardList className="w-6 h-6" />
             </div>
             <h2 className="pos-dashboard-card-title">Shift</h2>
             <p className="pos-dashboard-card-desc">
@@ -373,19 +408,19 @@ export default function PosDashboardPage() {
         <section className="pos-section text-center">
           <h2 className="pos-section-title mb-3">Active orders</h2>
           {loading && (
-            <div className="pos-card max-w-sm mx-auto">
-              <p className="text-primary-600 dark:text-primary-300 m-0">Loading…</p>
+            <div className="pos-card max-w-sm mx-auto p-6">
+              <SkeletonLoader variant="card" lines={3} />
             </div>
           )}
           {error && (
             <div className="pos-alert pos-alert-error mb-4 max-w-md mx-auto">{error}</div>
           )}
           {!loading && !error && orders.length === 0 && (
-            <div className="pos-card max-w-md mx-auto">
-              <p className="text-neutral-600 dark:text-neutral-400 m-0">
-                No active orders. Create a dine-in or takeaway order above, or open Tables to start from a table.
-              </p>
-            </div>
+            <EmptyState
+              icon={ListOrdered}
+              title="No active orders"
+              description="Create a dine-in or takeaway order above, or open Tables to start from a table."
+            />
           )}
           {!loading && !error && orders.length > 0 && (
             <ul
@@ -417,11 +452,14 @@ export default function PosDashboardPage() {
                       {o.orderType === 'dine_in' ? 'Dine-in' : 'Takeaway'}
                       {o.tableId && ` · Table ${o.tableId}`}
                     </p>
-                    <p className="text-sm m-0 mt-1">
-                      <span className={statusBadgeClass(o.status)}>{o.status}</span>
-                    </p>
-                    <p className="text-base font-medium mt-2 m-0 text-primary-700 dark:text-primary-200">
+                    <div className="m-0 mt-2">
+                      <StatusBadge status={o.status} />
+                    </div>
+                    <p className="text-lg font-semibold mt-3 m-0 text-primary-700 dark:text-primary-200">
                       UGX {o.totalUgx.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-500 m-0 mt-1">
+                      {new Date(o.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </Link>
                 </li>
