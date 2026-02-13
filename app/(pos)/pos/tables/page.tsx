@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import { EmptyState } from '@/components/ui/EmptyState'
-import { LayoutGrid, Search } from 'lucide-react'
+import { LayoutGrid, Search, X } from 'lucide-react'
 
 type TableStatus = {
   tableId: string
@@ -26,6 +26,19 @@ export default function PosTablesPage() {
   const [error, setError] = useState<string | null>(null)
   const [creating, setCreating] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchFocused, setSearchFocused] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) {
+        setSearchFocused(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   async function fetchActiveShift() {
     try {
@@ -117,6 +130,13 @@ export default function PosTablesPage() {
     table.tableCode.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  const searchSuggestions = searchQuery.trim()
+    ? tables.filter((table) =>
+        table.tableCode.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : []
+  const showSuggestions = searchFocused && searchQuery.trim().length > 0
+
   const occupiedCount = tables.filter((t) => t.hasActiveOrder).length
   const availableCount = tables.length - occupiedCount
 
@@ -143,7 +163,7 @@ export default function PosTablesPage() {
 
   return (
     <main className="pos-page">
-      <div className="pos-page-container max-w-4xl mx-auto text-center">
+      <div className="pos-page-container max-w-4xl mx-auto px-4 sm:px-6 text-center">
         <PosNavHeader />
         <h1 className="pos-section-title text-2xl mb-4">Tables</h1>
         
@@ -157,15 +177,66 @@ export default function PosTablesPage() {
               {occupiedCount} Occupied
             </span>
           </div>
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400" />
+          <div className="relative w-full sm:w-64" ref={searchWrapperRef}>
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" aria-hidden />
             <input
+              ref={searchInputRef}
               type="text"
               placeholder="Search tables..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pos-input pl-10 w-full"
+              onFocus={() => setSearchFocused(true)}
+              className="pos-input pl-10 pr-10 w-full"
+              aria-label="Search tables"
+              aria-expanded={showSuggestions}
+              aria-autocomplete="list"
             />
+            {searchQuery.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery('')
+                  setSearchFocused(false)
+                  searchInputRef.current?.focus()
+                }}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 dark:hover:text-neutral-300 dark:hover:bg-neutral-600 transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+            {showSuggestions && (
+              <ul
+                className="absolute left-0 right-0 top-full mt-1 py-2 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 bg-white dark:bg-neutral-800 shadow-lg z-50 max-h-60 overflow-auto"
+                role="listbox"
+              >
+                {searchSuggestions.length === 0 ? (
+                  <li className="px-4 py-3 text-sm text-neutral-500 dark:text-neutral-400" role="option">
+                    No tables match
+                  </li>
+                ) : (
+                  searchSuggestions.map((table) => (
+                    <li key={table.tableId} role="option">
+                      <button
+                        type="button"
+                        className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30 focus:bg-primary-50 dark:focus:bg-primary-900/30 focus:outline-none"
+                        onClick={() => {
+                          setSearchQuery(table.tableCode)
+                          setSearchFocused(false)
+                        }}
+                      >
+                        <span className="text-primary-700 dark:text-primary-300">Table {table.tableCode}</span>
+                        {table.hasActiveOrder && table.orderNumber && (
+                          <span className="ml-2 text-xs text-neutral-500 dark:text-neutral-400">
+                            #{table.orderNumber}
+                          </span>
+                        )}
+                      </button>
+                    </li>
+                  ))
+                )}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -182,7 +253,7 @@ export default function PosTablesPage() {
             description={`No tables found matching "${searchQuery}"`}
           />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center justify-center max-w-4xl mx-auto">
             {filteredTables.map((table) => (
               <button
                 key={table.tableId}

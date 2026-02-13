@@ -265,15 +265,16 @@ export default function PosOrdersPage() {
 
   return (
     <main className="pos-page min-h-screen flex flex-col">
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 fixed top-0 left-0 right-0 z-[1020] bg-[var(--color-bg-primary)] border-b border-neutral-200 dark:border-neutral-700 px-4 pt-4 pb-2">
         <PosNavHeader />
       </div>
+      <div className="flex-shrink-0 pt-[7.5rem]" aria-hidden />
       {error && (
-        <div className="mx-4 mt-2">
+        <div className="mx-4 mt-2 flex-shrink-0">
           <ErrorBanner message={error} onDismiss={() => setError(null)} />
         </div>
       )}
-      <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden min-h-0">
         {/* Left: Categories */}
         <aside className="flex-shrink-0 w-full lg:w-32 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible">
           {categories.map((cat) => (
