@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { formatCurrency, formatRelativeTime } from '@/lib/utils/format'
+import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 
 type OrderItem = {
   id: string
@@ -39,17 +42,6 @@ type OrderDetail = {
   payments: Payment[]
 }
 
-function statusBadgeClass(status: string): string {
-  const base = 'pos-badge '
-  switch (status) {
-    case 'pending': return base + 'pos-badge-pending'
-    case 'preparing': return base + 'pos-badge-preparing'
-    case 'ready': return base + 'pos-badge-ready'
-    case 'served': return base + 'pos-badge-served'
-    case 'cancelled': return base + 'pos-badge-cancelled'
-    default: return base + 'pos-badge-pending'
-  }
-}
 
 export default function OrderDetailPage() {
   const router = useRouter()
@@ -330,8 +322,8 @@ export default function OrderDetailPage() {
   if (!staffOk || loading) {
     return (
       <main className="pos-page flex items-center justify-center">
-        <div className="pos-card max-w-sm w-full text-center">
-          <p className="text-primary-600 dark:text-primary-300">Loading…</p>
+        <div className="pos-card max-w-sm w-full p-6">
+          <SkeletonLoader variant="card" lines={4} />
         </div>
       </main>
     )
@@ -354,19 +346,40 @@ export default function OrderDetailPage() {
         <h1 className="pos-section-title text-2xl mb-2">Order {order?.orderNumber}</h1>
 
         <section className="pos-section pos-card pos-order-card-centered">
-          <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Type:</strong> {order?.orderType === 'dine_in' ? 'Dine-in' : 'Takeaway'}</p>
-          {order?.tableId && <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Table:</strong> {order.tableId}</p>}
-          <p className="m-0 mt-1">
-            <span className={order ? statusBadgeClass(order.status) : 'pos-badge pos-badge-pending'}>{order?.status}</span>
-          </p>
-          {order?.status === 'served' && (
-            <p className="m-0 mt-2">
-              <strong className="text-primary-700 dark:text-primary-200">Payment complete</strong>
-              {' '}
-              <Link href={`/pos/orders/${order.orderId}/receipt`} className="pos-link">View Receipt</Link>
+          <div className="mb-4">
+            <StatusBadge status={order?.status || 'pending'} />
+          </div>
+          <div className="space-y-2 text-sm">
+            <p className="m-0 text-neutral-700 dark:text-neutral-300">
+              <strong>Type:</strong> {order?.orderType === 'dine_in' ? 'Dine-in' : 'Takeaway'}
             </p>
+            {order?.tableId && (
+              <p className="m-0 text-neutral-700 dark:text-neutral-300">
+                <strong>Table:</strong> {order.tableId}
+              </p>
+            )}
+            {order?.createdAt && (
+              <p className="m-0 text-neutral-600 dark:text-neutral-400">
+                Created {formatRelativeTime(order.createdAt)}
+              </p>
+            )}
+          </div>
+          {order?.status === 'served' && (
+            <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <p className="m-0 text-sm">
+                <strong className="text-green-700 dark:text-green-300">Payment complete</strong>
+                {' · '}
+                <Link href={`/pos/orders/${order.orderId}/receipt`} className="pos-link text-green-600 dark:text-green-400">
+                  View Receipt
+                </Link>
+              </p>
+            </div>
           )}
-          <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200"><strong>Total:</strong> {order?.totalUgx?.toLocaleString()} UGX</p>
+          <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+            <p className="m-0 text-xl font-bold text-primary-700 dark:text-primary-200">
+              {formatCurrency(order?.totalUgx || 0)}
+            </p>
+          </div>
         </section>
 
       <section className="pos-section pos-card pos-order-card-centered">
@@ -388,7 +401,7 @@ export default function OrderDetailPage() {
                 {item.size && ` • ${item.size}`}
                 {item.modifier && ` • ${item.modifier}`}
               </span>
-              <span className="font-medium text-primary-700 dark:text-primary-200">{item.subtotalUgx.toLocaleString()} UGX</span>
+              <span className="font-medium text-primary-700 dark:text-primary-200">{formatCurrency(item.subtotalUgx)}</span>
               {!block && (
                 <button type="button" onClick={() => handleRemoveItem(item.id)} disabled={updatingItemId !== null} className="btn btn-ghost text-sm py-1 px-2 disabled:opacity-60">Remove</button>
               )}
@@ -422,16 +435,32 @@ export default function OrderDetailPage() {
         <h2 className="pos-section-title">Payments</h2>
         {order && (
           <>
-            <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Order total:</strong> {order.totalUgx.toLocaleString()} UGX</p>
-            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Amount paid:</strong> {(order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0).toLocaleString()} UGX</p>
-            <p className="m-0 mt-1 font-medium text-primary-700 dark:text-primary-200"><strong>Remaining:</strong> {(order.totalUgx - (order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0)).toLocaleString()} UGX</p>
+            <div className="space-y-2 mb-4">
+              <div className="flex justify-between">
+                <span className="text-neutral-700 dark:text-neutral-300">Order total:</span>
+                <span className="font-semibold text-primary-700 dark:text-primary-200">{formatCurrency(order.totalUgx)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-neutral-700 dark:text-neutral-300">Amount paid:</span>
+                <span className="font-semibold text-green-600 dark:text-green-400">
+                  {formatCurrency(order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0)}
+                </span>
+              </div>
+              <div className="pt-2 border-t border-neutral-200 dark:border-neutral-700 flex justify-between">
+                <span className="font-medium text-neutral-800 dark:text-neutral-200">Remaining:</span>
+                <span className="font-bold text-lg text-primary-700 dark:text-primary-200">
+                  {formatCurrency(order.totalUgx - (order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0))}
+                </span>
+              </div>
+            </div>
           </>
         )}
         {order?.payments && order.payments.length > 0 && (
           <ul className="list-none p-0 mt-2 mb-2">
             {order.payments.map((p, i) => (
-              <li key={i} className="py-1 text-neutral-700 dark:text-neutral-300">
-                {p.method}: {p.amountUgx.toLocaleString()} UGX
+              <li key={i} className="py-2 px-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg text-sm flex justify-between">
+                <span className="text-neutral-700 dark:text-neutral-300 capitalize">{p.method.replace('_', ' ')}</span>
+                <span className="font-medium text-primary-700 dark:text-primary-200">{formatCurrency(p.amountUgx)}</span>
               </li>
             ))}
           </ul>
@@ -460,16 +489,22 @@ export default function OrderDetailPage() {
                     const total = order?.totalUgx ?? 0
                     const changeUgx = !isNaN(received) && received > total ? received - total : 0
                     return received > 0 && changeUgx > 0 ? (
-                      <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200"><strong>Change:</strong> UGX {changeUgx.toLocaleString()}</p>
+                      <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <p className="m-0 text-sm font-semibold text-blue-700 dark:text-blue-300">
+                          Change: {formatCurrency(changeUgx)}
+                        </p>
+                      </div>
                     ) : null
                   })()}
                   <button type="submit" disabled={paymentInProgress || completingPayment} className="btn btn-primary mt-3 w-full disabled:opacity-60">Complete Payment</button>
                 </form>
               )}
               {(selectedPaymentMethod === 'mtn_momo' || selectedPaymentMethod === 'airtel_money' || selectedPaymentMethod === 'card') && (
-                <div className="mt-4">
-                  <p className="m-0 text-neutral-700 dark:text-neutral-300 text-sm">Amount to pay: <strong>{remaining.toLocaleString()} UGX</strong></p>
-                  <button type="button" onClick={handlePayWithPesapal} disabled={paymentInProgress || completingPesapalPayment} className="btn btn-secondary mt-3 disabled:opacity-60">
+                <div className="mt-4 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-200 dark:border-primary-700">
+                  <p className="m-0 text-neutral-700 dark:text-neutral-300 text-sm mb-3">
+                    Amount to pay: <strong className="text-lg">{formatCurrency(remaining)}</strong>
+                  </p>
+                  <button type="button" onClick={handlePayWithPesapal} disabled={paymentInProgress || completingPesapalPayment} className="btn btn-secondary w-full disabled:opacity-60">
                     {completingPesapalPayment ? 'Redirecting to payment…' : 'Pay with Pesapal'}
                   </button>
                 </div>

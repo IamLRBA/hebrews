@@ -7,6 +7,9 @@ import { getStaffId, posFetch } from '@/lib/pos-client'
 import { getShiftId } from '@/lib/pos-shift-store'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import { ErrorBanner } from '@/components/pos/ErrorBanner'
+import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { ShoppingCart, Package } from 'lucide-react'
 
 type PosProduct = {
   productId: string
@@ -292,78 +295,108 @@ export default function PosOrdersPage() {
         {/* Center: Products */}
         <section className="flex-1 overflow-auto min-h-0">
           {loading ? (
-            <p className="text-neutral-500 text-center py-8">Loading products…</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="pos-card p-4">
+                  <SkeletonLoader variant="card" lines={2} />
+                </div>
+              ))}
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <EmptyState
+              icon={Package}
+              title="No products found"
+              description={selectedCategory === 'all' ? 'No products available' : `No products in "${selectedCategory}" category`}
+            />
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {filteredProducts.map((product) => (
-                <button
-                  key={product.productId}
-                  type="button"
-                  onClick={() => handleAddProduct(product)}
-                  disabled={addingItem}
-                  className="pos-card p-4 text-left hover:border-primary-400 dark:hover:border-primary-500 disabled:opacity-60"
-                >
-                  <p className="font-medium text-primary-800 dark:text-primary-100 m-0 truncate">
-                    {product.name}
-                  </p>
+              {filteredProducts.map((product) => {
+                const itemInOrder = order?.items.find((item) => item.productId === product.productId)
+                return (
+                  <button
+                    key={product.productId}
+                    type="button"
+                    onClick={() => handleAddProduct(product)}
+                    disabled={addingItem}
+                    className="pos-card p-4 text-left hover:border-primary-400 dark:hover:border-primary-500 disabled:opacity-60 transition-all relative group"
+                  >
+                    {itemInOrder && (
+                      <span className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center">
+                        {itemInOrder.quantity}
+                      </span>
+                    )}
+                    <p className="font-medium text-primary-800 dark:text-primary-100 m-0 truncate">
+                      {product.name}
+                    </p>
                   <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mt-1">
-                    UGX {product.priceUgx.toLocaleString()}
+                    {product.priceUgx.toLocaleString()} UGX
                   </p>
-                </button>
-              ))}
+                  </button>
+                )
+              })}
             </div>
           )}
         </section>
 
         {/* Right: Order panel */}
-        <aside className="flex-shrink-0 w-full lg:w-80 flex flex-col pos-card p-4 min-h-[200px] lg:min-h-0">
+        <aside className="flex-shrink-0 w-full lg:w-80 flex flex-col pos-card p-5 min-h-[200px] lg:min-h-0 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)]">
           <h2 className="pos-section-title text-lg mb-3">Current Order</h2>
 
           {!order ? (
-            <div className="flex-1 flex flex-col items-center justify-center">
-              <p className="text-neutral-500 text-center mb-4">No order yet</p>
-              <button
-                type="button"
-                onClick={handleNewOrder}
-                disabled={creating}
-                className="btn btn-primary py-3 px-6 disabled:opacity-60"
-              >
-                {creating ? 'Creating…' : 'New Order'}
-              </button>
-            </div>
+            <EmptyState
+              icon={ShoppingCart}
+              title="No order yet"
+              description="Start adding items to create an order"
+              action={
+                <button
+                  type="button"
+                  onClick={handleNewOrder}
+                  disabled={creating}
+                  className="btn btn-primary py-3 px-6 disabled:opacity-60"
+                >
+                  {creating ? 'Creating…' : 'New Order'}
+                </button>
+              }
+            />
           ) : (
             <>
               <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mb-2">
                 #{order.orderNumber} · {order.status}
               </p>
-              <ul className="flex-1 overflow-auto list-none p-0 m-0 space-y-2 mb-4">
+              <ul className="flex-1 overflow-auto list-none p-0 m-0 space-y-3 mb-4">
                 {order.items.length === 0 ? (
-                  <li className="text-neutral-500 text-center py-4">No items in order</li>
+                  <EmptyState
+                    icon={Package}
+                    title="No items yet"
+                    description="Add products from the menu"
+                  />
                 ) : (
                 order.items.map((item) => (
                   <li
                     key={item.id}
-                    className="flex items-center justify-between gap-2 py-2 border-b border-neutral-100 dark:border-neutral-700"
+                    className="flex items-center justify-between gap-3 py-3 border-b border-neutral-200 dark:border-neutral-700 last:border-b-0"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="m-0 font-medium truncate">{item.productName}</p>
-                      <p className="m-0 text-sm text-neutral-500">
-                        UGX {(item.subtotalUgx ?? item.lineTotalUgx ?? 0).toLocaleString()}
+                      <p className="m-0 font-medium truncate text-sm">{item.productName}</p>
+                      <p className="m-0 text-xs text-neutral-500 mt-0.5">
+                        {(item.subtotalUgx ?? item.lineTotalUgx ?? 0).toLocaleString()} UGX
                       </p>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => handleQuantityChange(item.id, -1)}
-                        className="w-8 h-8 rounded bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center text-lg"
+                        className="w-9 h-9 rounded-lg bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 flex items-center justify-center text-lg font-medium transition-colors touch-manipulation"
+                        aria-label="Decrease quantity"
                       >
                         −
                       </button>
-                      <span className="w-8 text-center font-medium">{item.quantity}</span>
+                      <span className="w-10 text-center font-semibold text-base">{item.quantity}</span>
                       <button
                         type="button"
                         onClick={() => handleQuantityChange(item.id, 1)}
-                        className="w-8 h-8 rounded bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center text-lg"
+                        className="w-9 h-9 rounded-lg bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 flex items-center justify-center text-lg font-medium transition-colors touch-manipulation"
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>
@@ -373,8 +406,9 @@ export default function PosOrdersPage() {
                 )}
               </ul>
 
-              <p className="font-semibold text-lg text-primary-700 dark:text-primary-200 mb-4">
-                Total: UGX {order.totalUgx.toLocaleString()}
+              <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-auto">
+              <p className="font-semibold text-xl text-primary-700 dark:text-primary-200 mb-4">
+                Total: {order.totalUgx.toLocaleString()} UGX
               </p>
 
               <div className="flex flex-col gap-2">

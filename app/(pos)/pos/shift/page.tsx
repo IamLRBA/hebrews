@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
+import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
+import { formatCurrency, formatRelativeTime } from '@/lib/utils/format'
 
 type ShiftSummary = {
   shiftId: string
@@ -167,8 +169,8 @@ export default function ShiftPage() {
   if (!staffOk || loading) {
     return (
       <main className="pos-page flex items-center justify-center">
-        <div className="pos-card max-w-sm w-full text-center">
-          <p className="text-primary-600 dark:text-primary-300 m-0">Loading…</p>
+        <div className="pos-card max-w-sm w-full p-6">
+          <SkeletonLoader variant="card" lines={4} />
         </div>
       </main>
     )
@@ -193,30 +195,83 @@ export default function ShiftPage() {
         {activeShift && (
           <section className="pos-section pos-card pos-order-card-centered">
             <h2 className="pos-section-title text-lg mb-2">Active Shift</h2>
-            <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Shift ID:</strong> {activeShift.shiftId}</p>
-            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Start:</strong> {new Date(activeShift.startTime).toLocaleString()}</p>
-            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>End:</strong> {activeShift.endTime ? new Date(activeShift.endTime).toLocaleString() : '—'}</p>
+            <div className="space-y-2 text-sm">
+              <p className="m-0 text-neutral-700 dark:text-neutral-300">
+                <strong>Shift ID:</strong> <span className="font-mono text-xs">{activeShift.shiftId.slice(0, 8)}...</span>
+              </p>
+              <p className="m-0 text-neutral-700 dark:text-neutral-300">
+                <strong>Started:</strong> {formatRelativeTime(activeShift.startTime)}
+              </p>
+              {activeShift.endTime && (
+                <p className="m-0 text-neutral-700 dark:text-neutral-300">
+                  <strong>Ended:</strong> {formatRelativeTime(activeShift.endTime)}
+                </p>
+              )}
+            </div>
           </section>
         )}
 
         {summary && (
           <section className="pos-section pos-card pos-order-card-centered">
-            <h2 className="pos-section-title text-lg mb-2">Totals</h2>
-            <p className="m-0 text-neutral-700 dark:text-neutral-300"><strong>Gross Sales:</strong> {(summary.grossSalesUgx ?? 0).toLocaleString()} UGX</p>
-            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Total Payments:</strong> {(summary.totalPaymentsUgx ?? 0).toLocaleString()} UGX</p>
-            <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300"><strong>Cash Payments:</strong> {(summary.cashPaymentsUgx ?? 0).toLocaleString()} UGX</p>
+            <h2 className="pos-section-title text-lg mb-3">Totals</h2>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
+                <span className="text-neutral-700 dark:text-neutral-300 font-medium">Gross Sales:</span>
+                <span className="font-bold text-lg text-primary-700 dark:text-primary-200">
+                  {formatCurrency(summary.grossSalesUgx ?? 0)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
+                <span className="text-neutral-700 dark:text-neutral-300">Total Payments:</span>
+                <span className="font-semibold text-primary-700 dark:text-primary-200">
+                  {formatCurrency(summary.totalPaymentsUgx ?? 0)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
+                <span className="text-neutral-700 dark:text-neutral-300">Cash Payments:</span>
+                <span className="font-semibold text-primary-700 dark:text-primary-200">
+                  {formatCurrency(summary.cashPaymentsUgx ?? 0)}
+                </span>
+              </div>
+            </div>
           </section>
         )}
 
         {paymentSummary && activeShift && (
           <section className="pos-section pos-card pos-order-card-centered">
-            <h2 className="pos-section-title text-lg mb-2">Payment Breakdown</h2>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Cash: UGX {(paymentSummary.cashSales ?? 0).toLocaleString()}</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">MTN MoMo: UGX {(paymentSummary.mtnMomoSales ?? 0).toLocaleString()}</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Airtel: UGX {(paymentSummary.airtelSales ?? 0).toLocaleString()}</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Card: UGX {(paymentSummary.cardSales ?? 0).toLocaleString()}</p>
-            <hr className="border-neutral-200 dark:border-neutral-600 my-3" />
-            <p className="m-0 font-semibold text-primary-700 dark:text-primary-200">Total: UGX {(paymentSummary.totalSales ?? 0).toLocaleString()}</p>
+            <h2 className="pos-section-title text-lg mb-3">Payment Breakdown</h2>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center p-2 bg-neutral-50 dark:bg-neutral-800 rounded">
+                <span className="text-neutral-700 dark:text-neutral-300">Cash:</span>
+                <span className="font-medium text-primary-700 dark:text-primary-200">
+                  {formatCurrency(paymentSummary.cashSales ?? 0)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center p-2 bg-neutral-50 dark:bg-neutral-800 rounded">
+                <span className="text-neutral-700 dark:text-neutral-300">MTN MoMo:</span>
+                <span className="font-medium text-primary-700 dark:text-primary-200">
+                  {formatCurrency(paymentSummary.mtnMomoSales ?? 0)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center p-2 bg-neutral-50 dark:bg-neutral-800 rounded">
+                <span className="text-neutral-700 dark:text-neutral-300">Airtel:</span>
+                <span className="font-medium text-primary-700 dark:text-primary-200">
+                  {formatCurrency(paymentSummary.airtelSales ?? 0)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center p-2 bg-neutral-50 dark:bg-neutral-800 rounded">
+                <span className="text-neutral-700 dark:text-neutral-300">Card:</span>
+                <span className="font-medium text-primary-700 dark:text-primary-200">
+                  {formatCurrency(paymentSummary.cardSales ?? 0)}
+                </span>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t-2 border-primary-200 dark:border-primary-700 flex justify-between items-center">
+              <span className="font-semibold text-lg text-neutral-800 dark:text-neutral-200">Total:</span>
+              <span className="font-bold text-xl text-primary-700 dark:text-primary-200">
+                {formatCurrency(paymentSummary.totalSales ?? 0)}
+              </span>
+            </div>
           </section>
         )}
 
@@ -243,9 +298,30 @@ export default function ShiftPage() {
         {closed && closeResult && (
           <section className="pos-section pos-card pos-order-card-centered border-2 border-primary-300 dark:border-primary-600">
             <p className="font-semibold text-primary-700 dark:text-primary-200 m-0 mb-2">Shift closed.</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Expected cash: {closeResult.expectedCash.toLocaleString()} UGX</p>
-            <p className="m-0 py-1 text-neutral-700 dark:text-neutral-300">Counted cash: {closeResult.countedCashUgx.toLocaleString()} UGX</p>
-            <p className="m-0 mt-2 font-medium text-primary-700 dark:text-primary-200">Variance: {closeResult.variance.toLocaleString()} UGX</p>
+            <div className="space-y-3">
+              <div className="flex justify-between p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
+                <span className="text-neutral-700 dark:text-neutral-300">Expected cash:</span>
+                <span className="font-semibold">{formatCurrency(closeResult.expectedCash)}</span>
+              </div>
+              <div className="flex justify-between p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
+                <span className="text-neutral-700 dark:text-neutral-300">Counted cash:</span>
+                <span className="font-semibold">{formatCurrency(closeResult.countedCashUgx)}</span>
+              </div>
+              <div className={`flex justify-between p-3 rounded-lg ${
+                Math.abs(closeResult.variance) < 0.01 
+                  ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' 
+                  : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
+              }`}>
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200">Variance:</span>
+                <span className={`font-bold text-lg ${
+                  Math.abs(closeResult.variance) < 0.01 
+                    ? 'text-green-700 dark:text-green-300' 
+                    : 'text-yellow-700 dark:text-yellow-300'
+                }`}>
+                  {formatCurrency(closeResult.variance)}
+                </span>
+              </div>
+            </div>
           </section>
         )}
       </div>

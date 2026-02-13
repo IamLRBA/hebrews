@@ -7,6 +7,8 @@ import { getStaffId, posFetch } from '@/lib/pos-client'
 import { getShiftId } from '@/lib/pos-shift-store'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import { ErrorBanner } from '@/components/pos/ErrorBanner'
+import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
+import { DollarSign, Smartphone, CreditCard, Wallet } from 'lucide-react'
 
 type OrderDetail = {
   orderId: string
@@ -144,8 +146,8 @@ export default function PosPaymentPage() {
   if (loading) {
     return (
       <main className="pos-page flex items-center justify-center min-h-screen">
-        <div className="pos-card max-w-sm w-full text-center">
-          <p className="text-primary-600 dark:text-primary-300 m-0">Loading…</p>
+        <div className="pos-card max-w-sm w-full p-6">
+          <SkeletonLoader variant="card" lines={4} />
         </div>
       </main>
     )
@@ -172,46 +174,53 @@ export default function PosPaymentPage() {
         </div>
       )}
       <div className="flex-1 flex flex-col items-center justify-center p-6">
-        <div className="pos-card w-full max-w-md p-6">
+        <div className="pos-card w-full max-w-lg p-8">
           <h1 className="pos-section-title text-2xl mb-2">Payment</h1>
           <p className="text-neutral-600 dark:text-neutral-400 m-0 mb-6">
             Order #{order.orderNumber}
           </p>
-          <p className="text-2xl font-bold text-primary-700 dark:text-primary-200 mb-8">
-            UGX {order.totalUgx.toLocaleString()}
-          </p>
+          <div className="mb-8 p-6 bg-primary-50 dark:bg-primary-900/20 rounded-xl border-2 border-primary-200 dark:border-primary-700">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mb-2">Total Amount</p>
+            <p className="text-3xl font-bold text-primary-700 dark:text-primary-200 m-0">
+              UGX {order.totalUgx.toLocaleString()}
+            </p>
+          </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 pos-payment-grid">
             <button
               type="button"
               onClick={handlePayCash}
               disabled={paying !== null}
-              className="btn btn-primary py-4 text-lg disabled:opacity-60"
+              className="btn btn-primary py-5 text-base font-semibold disabled:opacity-60 flex flex-col items-center gap-2"
             >
+              <DollarSign className="w-6 h-6" />
               {paying === 'cash' ? 'Processing…' : 'Cash'}
             </button>
             <button
               type="button"
               onClick={handlePayMomo}
               disabled={paying !== null}
-              className="btn btn-primary py-4 text-lg disabled:opacity-60"
+              className="btn btn-primary py-5 text-base font-semibold disabled:opacity-60 flex flex-col items-center gap-2"
             >
+              <Smartphone className="w-6 h-6" />
               {paying === 'momo' ? 'Processing…' : 'MTN MoMo'}
             </button>
             <button
               type="button"
               onClick={handlePayAirtel}
               disabled={paying !== null}
-              className="btn btn-outline py-4 text-lg disabled:opacity-60"
+              className="btn btn-outline py-5 text-base font-semibold disabled:opacity-60 flex flex-col items-center gap-2"
             >
+              <Wallet className="w-6 h-6" />
               {paying === 'airtel' ? 'Redirecting…' : 'Airtel Money'}
             </button>
             <button
               type="button"
               onClick={handlePayCard}
               disabled={paying !== null}
-              className="btn btn-outline py-4 text-lg disabled:opacity-60"
+              className="btn btn-outline py-5 text-base font-semibold disabled:opacity-60 flex flex-col items-center gap-2"
             >
+              <CreditCard className="w-6 h-6" />
               {paying === 'card' ? 'Redirecting…' : 'Card'}
             </button>
           </div>
