@@ -253,8 +253,9 @@ export default function PosTablesPage() {
             description={`No tables found matching "${searchQuery}"`}
           />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center justify-center max-w-4xl mx-auto">
-            {filteredTables.map((table) => (
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center w-max max-w-full mx-auto">
+              {filteredTables.map((table) => (
               <button
                 key={table.tableId}
                 type="button"
@@ -272,6 +273,7 @@ export default function PosTablesPage() {
                 </div>
               </button>
             ))}
+            </div>
           </div>
         )}
       </div>

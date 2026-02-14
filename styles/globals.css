@@ -715,6 +715,15 @@
     cursor: not-allowed;
   }
 
+  .pos-input-no-spinner {
+    -moz-appearance: textfield;
+  }
+  .pos-input-no-spinner::-webkit-outer-spin-button,
+  .pos-input-no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   .pos-input::placeholder {
     color: var(--color-text-tertiary);
   }
