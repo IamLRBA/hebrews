@@ -265,10 +265,11 @@ export default function PosOrdersPage() {
 
   return (
     <main className="pos-page min-h-screen flex flex-col">
-      <div className="flex-shrink-0 fixed top-0 left-0 right-0 z-[1020] bg-[var(--color-bg-primary)] border-b border-neutral-200 dark:border-neutral-700 px-4 pt-4 pb-2">
+      <div className="flex-shrink-0 fixed top-0 left-0 right-0 z-[1020] bg-[var(--color-bg-primary)] px-4 pt-4 [&_.pos-dashboard-header]:mb-0">
         <PosNavHeader />
       </div>
-      <div className="flex-shrink-0 pt-[7.5rem]" aria-hidden />
+      {/* Spacer so content starts below fixed nav (same height as other pages: header + nav + padding + border) */}
+      <div className="flex-shrink-0 min-h-[14rem]" aria-hidden />
       {error && (
         <div className="mx-4 mt-2 flex-shrink-0">
           <ErrorBanner message={error} onDismiss={() => setError(null)} />
@@ -276,17 +277,13 @@ export default function PosOrdersPage() {
       )}
       <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 overflow-hidden min-h-0">
         {/* Left: Categories */}
-        <aside className="flex-shrink-0 w-full lg:w-32 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible">
+        <aside className="flex-shrink-0 w-full lg:w-48 flex flex-wrap gap-3 overflow-visible justify-center md:justify-center lg:justify-start lg:flex-col lg:py-2 lg:px-1 py-2 px-1 lg:items-stretch">
           {categories.map((cat) => (
             <button
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap ${
-                selectedCategory === cat
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
-              }`}
+              className={`btn whitespace-nowrap py-2 px-4 text-sm ${selectedCategory === cat ? 'btn-primary' : 'btn-outline'}`}
             >
               {cat === 'all' ? 'All' : cat}
             </button>
@@ -341,7 +338,7 @@ export default function PosOrdersPage() {
 
         {/* Right: Order panel */}
         <aside className="flex-shrink-0 w-full lg:w-80 flex flex-col pos-card p-5 min-h-[200px] lg:min-h-0 lg:sticky lg:top-4 lg:max-h-[calc(100vh-2rem)]">
-          <h2 className="pos-section-title text-lg mb-3">Current Order</h2>
+          <h2 className="pos-section-title text-lg mb-3 text-center">Current Order</h2>
 
           {!order ? (
             <EmptyState

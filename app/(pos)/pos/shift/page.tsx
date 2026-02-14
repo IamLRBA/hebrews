@@ -280,16 +280,44 @@ export default function ShiftPage() {
             <h2 className="pos-section-title text-lg mb-3">Close Shift</h2>
             <label className="block">
               <span className="pos-label">Counted Cash (UGX)</span>
-              <input
-                type="number"
-                min="0"
-                step="100"
-                required
-                placeholder="Enter counted cash"
-                value={declaredCashUgx}
-                onChange={(e) => setDeclaredCashUgx(e.target.value)}
-                className="pos-input max-w-xs mt-1"
-              />
+              <div className="relative inline-flex items-stretch mt-1 max-w-xs w-full">
+                <input
+                  type="number"
+                  min="0"
+                  step="100"
+                  required
+                  placeholder="Enter counted cash"
+                  value={declaredCashUgx}
+                  onChange={(e) => setDeclaredCashUgx(e.target.value)}
+                  className="pos-input pos-input-no-spinner pr-12 rounded-r-none border-r-0 rounded-l-xl min-w-0"
+                />
+                <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onClick={() => {
+                      const n = Math.max(0, (parseFloat(declaredCashUgx) || 0) + 100)
+                      setDeclaredCashUgx(String(n))
+                    }}
+                    className="flex-1 flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors border-b border-neutral-200 dark:border-neutral-600"
+                    aria-label="Increase by 100"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 3v6M3 6h6" /></svg>
+                  </button>
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onClick={() => {
+                      const n = Math.max(0, (parseFloat(declaredCashUgx) || 0) - 100)
+                      setDeclaredCashUgx(String(n))
+                    }}
+                    className="flex-1 flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+                    aria-label="Decrease by 100"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M3 6h6" /></svg>
+                  </button>
+                </div>
+              </div>
             </label>
             <button type="submit" disabled={closing} className="btn btn-primary mt-4 disabled:opacity-60">Close Shift</button>
           </form>
