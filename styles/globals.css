@@ -1065,7 +1065,7 @@
   .pos-theme-switcher {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     gap: var(--space-2);
     width: 100%;
   }
@@ -1080,9 +1080,9 @@
 
   .pos-theme-switcher-options {
     display: flex;
+    flex-direction: column;
     gap: var(--space-1);
-    flex-wrap: wrap;
-    justify-content: center;
+    align-items: flex-end;
   }
 
   .pos-theme-switcher-btn {
@@ -1157,12 +1157,21 @@
   }
 
   .pos-settings-dropdown-trigger-spin {
-    animation: pos-settings-spin 0.4s ease-in-out;
+    animation: pos-settings-spin-cw 0.4s ease-in-out;
   }
 
-  @keyframes pos-settings-spin {
+  .pos-settings-dropdown-trigger-spin-ccw {
+    animation: pos-settings-spin-ccw 0.4s ease-in-out;
+  }
+
+  @keyframes pos-settings-spin-cw {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+
+  @keyframes pos-settings-spin-ccw {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
   }
 
   .pos-settings-dropdown-panel {
@@ -1170,16 +1179,50 @@
     top: calc(100% + var(--space-2));
     right: 0;
     min-width: 12rem;
+    min-height: 11rem;
     padding: var(--space-4);
     background: var(--color-bg-card);
     border: 1px solid var(--color-border-primary);
-    border-radius: var(--radius-xl);
+    border-right: none;
+    border-top-left-radius: var(--radius-xl);
+    border-top-right-radius: 0;
+    border-bottom-left-radius: calc(var(--radius-2xl) * 4);
+    border-bottom-right-radius: 0;
     box-shadow: var(--shadow-xl);
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: flex-end;
+    text-align: right;
+    overflow: hidden;
+    animation: pos-settings-dropdown-open 0.3s ease-out forwards;
+    transform-origin: top right;
+  }
+
+  @keyframes pos-settings-dropdown-open {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .pos-settings-dropdown-panel-close {
+    animation: pos-settings-dropdown-close 0.28s ease-in forwards;
+  }
+
+  @keyframes pos-settings-dropdown-close {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.5);
+    }
   }
 
   .dark .pos-settings-dropdown-panel {
@@ -1197,7 +1240,7 @@
   .pos-settings-dropdown-link {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     gap: var(--space-2);
     padding: var(--space-2) 0;
     width: 100%;

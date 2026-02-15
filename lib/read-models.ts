@@ -256,6 +256,7 @@ export type OrderDetail = {
   orderNumber: string
   orderType: 'dine_in' | 'takeaway'
   tableId: string | null
+  tableCode: string | null
   status: string
   totalUgx: number
   createdAt: Date
@@ -276,6 +277,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
       orderNumber: true,
       orderType: true,
       tableId: true,
+      table: { select: { code: true } },
       status: true,
       totalUgx: true,
       createdAt: true,
@@ -312,6 +314,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
     orderNumber: order.orderNumber,
     orderType: order.orderType,
     tableId: order.tableId,
+    tableCode: order.table?.code ?? null,
     status: order.status,
     totalUgx: Number(order.totalUgx),
     createdAt: order.createdAt,
@@ -501,6 +504,7 @@ export async function getShiftPaymentSummary(shiftId: string): Promise<ShiftPaym
 export type TableStatus = {
   tableId: string
   tableCode: string
+  capacity: number | null
   hasActiveOrder: boolean
   orderId: string | null
   orderNumber: string | null
@@ -515,7 +519,7 @@ export async function getTableStatuses(shiftId: string): Promise<TableStatus[]> 
     prisma.restaurantTable.findMany({
       where: { isActive: true },
       orderBy: { code: 'asc' },
-      select: { id: true, code: true },
+      select: { id: true, code: true, capacity: true },
     }),
     prisma.order.findMany({
       where: {
@@ -532,16 +536,30 @@ export async function getTableStatuses(shiftId: string): Promise<TableStatus[]> 
     if (o.tableId) orderByTableId.set(o.tableId, { id: o.id, orderNumber: o.orderNumber })
   }
 
-  return tables.map((t) => {
+  const result = tables.map((t) => {
     const order = orderByTableId.get(t.id)
     return {
       tableId: t.id,
       tableCode: t.code,
+      capacity: t.capacity,
       hasActiveOrder: !!order,
       orderId: order?.id ?? null,
       orderNumber: order?.orderNumber ?? null,
     }
   })
+
+  result.sort((a, b) => {
+    const isBooth = (c: string) => c.toLowerCase().startsWith('booth')
+    const aBooth = isBooth(a.tableCode)
+    const bBooth = isBooth(b.tableCode)
+    if (aBooth && !bBooth) return -1
+    if (!aBooth && bBooth) return 1
+    if (aBooth && bBooth) return a.tableCode.localeCompare(b.tableCode)
+    const aNum = parseInt(a.tableCode.replace(/\D/g, ''), 10) || 0
+    const bNum = parseInt(b.tableCode.replace(/\D/g, ''), 10) || 0
+    return aNum - bNum
+  })
+  return result
 }
 
 // ---------------------------------------------------------------------------
@@ -584,20 +602,28 @@ export type PosProduct = {
   name: string
   priceUgx: number
   category?: string | null
+  section?: string | null
+  images?: string[]
+  sizes?: string[]
+  isHappyHour?: boolean
 }
 
 /**
- * Returns active products for POS catalog (tap-to-add). Read-only. Sorted by name.
+ * Returns active products for POS catalog (tap-to-add). Read-only. Sorted by category, section, then name.
  */
 export async function getPosProducts(): Promise<PosProduct[]> {
   const products = await prisma.product.findMany({
     where: { isActive: true },
-    orderBy: { name: 'asc' },
+    orderBy: [{ category: 'asc' }, { section: 'asc' }, { name: 'asc' }],
     select: {
       id: true,
       name: true,
       priceUgx: true,
       category: true,
+      section: true,
+      images: true,
+      sizes: true,
+      isHappyHour: true,
     },
   })
   return products.map((p) => ({
@@ -605,6 +631,10 @@ export async function getPosProducts(): Promise<PosProduct[]> {
     name: p.name,
     priceUgx: Number(p.priceUgx),
     category: p.category ?? null,
+    section: p.section ?? null,
+    images: p.images ?? [],
+    sizes: p.sizes ?? [],
+    isHappyHour: p.isHappyHour ?? false,
   }))
 }
 

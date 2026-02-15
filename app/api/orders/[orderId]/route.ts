@@ -22,6 +22,7 @@ export async function GET(
       orderNumber: result.orderNumber,
       orderType: result.orderType,
       tableId: result.tableId,
+      tableCode: result.tableCode,
       status: result.status,
       totalUgx: result.totalUgx,
       items: result.items,

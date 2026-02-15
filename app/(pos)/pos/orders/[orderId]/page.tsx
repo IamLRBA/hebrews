@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { formatCurrency, formatRelativeTime } from '@/lib/utils/format'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
+import { Search, X } from 'lucide-react'
 
 type OrderItem = {
   id: string
@@ -36,8 +37,10 @@ type OrderDetail = {
   orderNumber: string
   orderType: string
   tableId: string | null
+  tableCode?: string | null
   status: string
   totalUgx: number
+  createdAt?: string
   items: OrderItem[]
   payments: Payment[]
 }
@@ -63,9 +66,13 @@ export default function OrderDetailPage() {
   const [paymentInProgress, setPaymentInProgress] = useState(false)
 
   const [staffOk, setStaffOk] = useState(false)
+  const [staffRole, setStaffRole] = useState<string | null>(null)
   const [products, setProducts] = useState<PosProduct[]>([])
   const [productId, setProductId] = useState('')
   const [quantity, setQuantity] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchFocused, setSearchFocused] = useState(false)
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'cash' | 'mtn_momo' | 'airtel_money' | 'card' | null>(null)
 
   async function fetchOrder() {
@@ -94,10 +101,8 @@ export default function OrderDetailPage() {
   async function fetchProducts() {
     try {
       const res = await posFetch('/api/pos/products')
-      if (res.ok) {
-        const data = await res.json()
-        setProducts(data)
-      }
+      const data = await res.json().catch(() => [])
+      if (res.ok && Array.isArray(data)) setProducts(data)
     } catch {
       // ignore
     }
@@ -112,6 +117,14 @@ export default function OrderDetailPage() {
   }, [router])
 
   useEffect(() => {
+    if (!staffOk) return
+    posFetch('/api/auth/me')
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => data && setStaffRole(data.role))
+      .catch(() => {})
+  }, [staffOk])
+
+  useEffect(() => {
     if (!staffOk || !orderId) return
     fetchOrder()
   }, [staffOk, orderId])
@@ -120,6 +133,16 @@ export default function OrderDetailPage() {
     if (!staffOk) return
     fetchProducts()
   }, [staffOk])
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) {
+        setSearchFocused(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   async function handleAddItem(e: React.FormEvent) {
     e.preventDefault()
@@ -137,6 +160,7 @@ export default function OrderDetailPage() {
       }
       const data = await res.json()
       setProductId('')
+      setSearchQuery('')
       setQuantity(1)
       setOrder(data)
     } catch (e) {
@@ -294,8 +318,9 @@ export default function OrderDetailPage() {
     }
   }
 
+  const canCancelOrder = staffRole === 'manager' || staffRole === 'admin'
   async function handleCancel() {
-    if (!confirm('Cancel this order?')) return
+    if (!confirm('Cancel this order? This action requires Manager or Supervisor approval.')) return
     setCancelling(true)
     try {
       const res = await posFetch(`/api/orders/${orderId}/cancel`, {
@@ -305,11 +330,11 @@ export default function OrderDetailPage() {
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
+        throw new Error(data.error || 'Failed to cancel')
       }
       router.push('/pos')
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to cancel')
+      alert(e instanceof Error ? e.message : 'Failed to cancel. Only Manager or Supervisor can cancel orders.')
     } finally {
       setCancelling(false)
     }
@@ -355,7 +380,7 @@ export default function OrderDetailPage() {
             </p>
             {order?.tableId && (
               <p className="m-0 text-neutral-700 dark:text-neutral-300">
-                <strong>Table:</strong> {order.tableId}
+                <strong>Table:</strong> {order.tableCode || order.tableId}
               </p>
             )}
             {order?.createdAt && (
@@ -389,11 +414,31 @@ export default function OrderDetailPage() {
           {order?.items.map((item) => (
             <li key={item.id} className="py-3 border-b border-neutral-200 dark:border-neutral-600 flex items-center gap-2 flex-wrap">
               {!block && (
-                <>
-                  <button type="button" onClick={() => handleItemQuantity(item.id, item.quantity - 1)} disabled={updatingItemId !== null || item.quantity <= 1} className="btn btn-outline py-1 px-2 min-w-[2rem] disabled:opacity-60">−</button>
-                  <span className="min-w-[1.5rem] text-center font-medium">{item.quantity}</span>
-                  <button type="button" onClick={() => handleItemQuantity(item.id, item.quantity + 1)} disabled={updatingItemId !== null} className="btn btn-outline py-1 px-2 min-w-[2rem] disabled:opacity-60">+</button>
-                </>
+                <div className="inline-flex items-stretch">
+                  <div className="flex items-center justify-center px-3 py-1.5 min-w-[2rem] bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 rounded-l-xl border-r-0 font-semibold text-sm">
+                    {item.quantity}
+                  </div>
+                  <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+                    <button
+                      type="button"
+                      onClick={() => handleItemQuantity(item.id, item.quantity + 1)}
+                      disabled={updatingItemId !== null}
+                      className="flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors border-b border-neutral-200 dark:border-neutral-600 disabled:opacity-60"
+                      aria-label="Increase"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 3v6M3 6h6" /></svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleItemQuantity(item.id, item.quantity - 1)}
+                      disabled={updatingItemId !== null || item.quantity <= 1}
+                      className="flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors disabled:opacity-60"
+                      aria-label="Decrease"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M3 6h6" /></svg>
+                    </button>
+                  </div>
+                </div>
               )}
               {block && <span className="font-medium">{item.quantity} × </span>}
               <span className="flex-1 text-neutral-800 dark:text-neutral-200">
@@ -409,30 +454,109 @@ export default function OrderDetailPage() {
           ))}
         </ul>
         {!block && (
-          <form onSubmit={handleAddItem} className="flex flex-wrap gap-2 items-end mt-4">
-            <label className="flex-1 min-w-[12rem]">
-              <span className="pos-label">Product</span>
-              <select value={productId} onChange={(e) => setProductId(e.target.value)} required className="pos-select">
-                <option value="">Select product</option>
-                {products.map((p) => (
-                  <option key={p.productId} value={p.productId}>
-                    {p.name} — {p.priceUgx.toLocaleString()} UGX
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="w-20">
-              <span className="pos-label">Qty</span>
-              <input type="number" min={1} value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value, 10) || 1)} className="pos-input" />
-            </label>
-            <button type="submit" disabled={addingItem} className="btn btn-primary disabled:opacity-60">Add Item</button>
+          <form onSubmit={handleAddItem} className="flex flex-wrap gap-4 items-end mt-4">
+            <div className="flex-1 min-w-[16rem]">
+              <label className="block">
+                <span className="pos-label">Product</span>
+                <div className="relative mt-1" ref={searchWrapperRef}>
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" aria-hidden />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value)
+                      setProductId('')
+                    }}
+                    onFocus={() => setSearchFocused(true)}
+                    className="pos-input pl-10 pr-10 w-full"
+                    aria-label="Search products"
+                    aria-expanded={searchFocused && searchQuery.trim().length > 0}
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery('')
+                        setProductId('')
+                        setSearchFocused(false)
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 dark:hover:text-neutral-300 dark:hover:bg-neutral-600"
+                      aria-label="Clear"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  {searchFocused && searchQuery.trim().length > 0 && (
+                    <ul
+                      className="absolute left-0 right-0 top-full mt-1 py-2 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 bg-white dark:bg-neutral-800 shadow-lg z-50 max-h-60 overflow-auto"
+                      role="listbox"
+                    >
+                      {products.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
+                        <li className="px-4 py-3 text-sm text-neutral-500" role="option">No products match</li>
+                      ) : (
+                        products
+                          .filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                          .slice(0, 10)
+                          .map((p) => (
+                            <li key={p.productId} role="option">
+                              <button
+                                type="button"
+                                className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30 focus:bg-primary-50 dark:focus:bg-primary-900/30 focus:outline-none"
+                                onClick={() => {
+                                  setProductId(p.productId)
+                                  setSearchQuery(p.name)
+                                  setSearchFocused(false)
+                                }}
+                              >
+                                {p.name} — {p.priceUgx.toLocaleString()} UGX
+                              </button>
+                            </li>
+                          ))
+                      )}
+                    </ul>
+                  )}
+                </div>
+              </label>
+            </div>
+            {productId && (
+              <label className="block">
+                <span className="pos-label">Qty</span>
+                <div className="relative inline-flex items-stretch mt-1">
+                  <div className="flex items-center justify-center px-3 py-2 min-w-[2.5rem] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-600 rounded-l-xl border-r-0 font-semibold">
+                    {quantity}
+                  </div>
+                  <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      onClick={() => setQuantity((q) => q + 1)}
+                      className="flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors border-b border-neutral-200 dark:border-neutral-600"
+                      aria-label="Increase quantity"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 3v6M3 6h6" /></svg>
+                    </button>
+                    <button
+                      type="button"
+                      tabIndex={-1}
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      className="flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+                      aria-label="Decrease quantity"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M3 6h6" /></svg>
+                    </button>
+                  </div>
+                </div>
+              </label>
+            )}
+            <button type="submit" disabled={addingItem || !productId} className="btn btn-primary disabled:opacity-60">Add Item</button>
           </form>
         )}
       </section>
 
-      {/* Single Payments section: auto-calculated totals, choose method (Cash / MTN MoMo / Airtel Money / Card), then flow */}
       <section className="pos-section pos-card pos-order-card-centered">
         <h2 className="pos-section-title">Payments</h2>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 m-0 mb-3">Split payments supported — add multiple methods as needed</p>
         {order && (
           <>
             <div className="space-y-2 mb-4">
@@ -482,7 +606,43 @@ export default function OrderDetailPage() {
                 <form onSubmit={handleCompletePayment} className="mt-4 max-w-xs mx-auto text-left">
                   <label className="block">
                     <span className="pos-label">Cash received (UGX)</span>
-                    <input type="number" min="0" step="100" value={cashReceivedUgx} onChange={(e) => setCashReceivedUgx(e.target.value)} placeholder={String(remaining)} className="pos-input w-full mt-1" />
+                    <div className="relative inline-flex items-stretch mt-1 w-full max-w-full">
+                      <input
+                        type="number"
+                        min="0"
+                        step="100"
+                        value={cashReceivedUgx}
+                        onChange={(e) => setCashReceivedUgx(e.target.value)}
+                        placeholder={String(remaining)}
+                        className="pos-input pos-input-no-spinner pr-12 rounded-r-none border-r-0 rounded-l-xl min-w-0 flex-1"
+                      />
+                      <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+                        <button
+                          type="button"
+                          tabIndex={-1}
+                          onClick={() => {
+                            const n = Math.max(0, (parseFloat(cashReceivedUgx) || 0) + 100)
+                            setCashReceivedUgx(String(n))
+                          }}
+                          className="flex-1 flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors border-b border-neutral-200 dark:border-neutral-600"
+                          aria-label="Increase by 100"
+                        >
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 3v6M3 6h6" /></svg>
+                        </button>
+                        <button
+                          type="button"
+                          tabIndex={-1}
+                          onClick={() => {
+                            const n = Math.max(0, (parseFloat(cashReceivedUgx) || 0) - 100)
+                            setCashReceivedUgx(String(n))
+                          }}
+                          className="flex-1 flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+                          aria-label="Decrease by 100"
+                        >
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M3 6h6" /></svg>
+                        </button>
+                      </div>
+                    </div>
                   </label>
                   {(() => {
                     const received = parseFloat(cashReceivedUgx)
@@ -523,7 +683,11 @@ export default function OrderDetailPage() {
 
       <section className="flex flex-wrap gap-3 mt-6 justify-center">
         <button onClick={handleCheckout} disabled={!canCheckout || checkingOut} className="btn btn-primary disabled:opacity-60">Checkout Order</button>
-        <button onClick={handleCancel} disabled={block || cancelling} className="btn btn-danger disabled:opacity-60">Cancel Order</button>
+        {canCancelOrder ? (
+          <button onClick={handleCancel} disabled={block || cancelling} className="btn btn-danger disabled:opacity-60">Cancel Order</button>
+        ) : (
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 m-0 self-center">Cancellation requires Manager or Supervisor approval</p>
+        )}
       </section>
       </div>
     </main>
