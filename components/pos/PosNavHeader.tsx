@@ -19,7 +19,7 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
 
   return (
     <header className={`pos-dashboard-header flex flex-col gap-4 mb-6 ${!hideNav ? 'pos-dashboard-header-sticky' : ''}`}>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-row items-center justify-between gap-3">
         <Link
           href="/pos"
           className="flex items-center gap-2 text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100 transition-colors w-fit"
@@ -27,7 +27,7 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
           <Coffee className="w-7 h-7" aria-hidden />
           <CafeHavilahWord className="text-lg font-semibold tracking-tight" />
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto">
           {pathname === '/pos' ? (
             <span className="text-sm text-neutral-500 dark:text-neutral-400 font-medium">Point of Sale</span>
           ) : (

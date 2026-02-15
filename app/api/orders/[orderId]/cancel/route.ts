@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cancelOrder } from '@/lib/pos-service'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
+import { assertStaffRole } from '@/lib/domain/role-guard'
+
+const CANCEL_ORDER_ROLES = ['manager', 'admin'] as const
 
 export async function POST(
   request: NextRequest,
@@ -19,6 +22,7 @@ export async function POST(
       return NextResponse.json({ error: 'cancelledByStaffId is required (string)' }, { status: 400 })
     }
 
+    await assertStaffRole(cancelledByStaffId, [...CANCEL_ORDER_ROLES])
     const order = await cancelOrder({ orderId, cancelledByStaffId })
     return NextResponse.json(order)
   } catch (error) {

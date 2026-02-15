@@ -12,6 +12,7 @@ import { LayoutGrid, Search, X } from 'lucide-react'
 type TableStatus = {
   tableId: string
   tableCode: string
+  capacity?: number | null
   hasActiveOrder: boolean
   orderId: string | null
   orderNumber: string | null
@@ -253,18 +254,18 @@ export default function PosTablesPage() {
             description={`No tables found matching "${searchQuery}"`}
           />
         ) : (
-          <div className="flex justify-center">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center w-max max-w-full mx-auto">
-              {filteredTables.map((table) => (
+          <div className="flex flex-wrap justify-center gap-4 w-full mx-auto px-6 py-4">
+            {filteredTables.map((table) => (
               <button
                 key={table.tableId}
                 type="button"
                 onClick={() => handleTableClick(table)}
                 disabled={creating !== null}
-                className={`pos-table-btn w-full text-center font-medium disabled:opacity-60 disabled:cursor-not-allowed ${table.hasActiveOrder ? 'pos-table-btn-occupied' : ''}`}
+                className={`pos-table-btn text-center font-medium disabled:opacity-60 disabled:cursor-not-allowed w-[calc((100%-1rem)/2)] sm:w-[calc((100%-2rem)/3)] md:w-[calc((100%-3rem)/4)] lg:w-[calc((100%-4rem)/5)] min-w-[100px] ${table.hasActiveOrder ? 'pos-table-btn-occupied' : ''}`}
               >
                 <div className="flex flex-col items-center gap-1">
-                  <span>Table {table.tableCode}</span>
+                  <span>{table.tableCode.startsWith('Booth') ? table.tableCode : `Table ${table.tableCode}`}</span>
+                  {table.capacity && <span className="text-xs text-neutral-500 dark:text-neutral-400 font-normal">{table.capacity} seats</span>}
                   {table.hasActiveOrder && table.orderNumber && (
                     <span className="text-xs text-primary-600 dark:text-primary-400 font-normal">
                       #{table.orderNumber}
@@ -273,7 +274,6 @@ export default function PosTablesPage() {
                 </div>
               </button>
             ))}
-            </div>
           </div>
         )}
       </div>
