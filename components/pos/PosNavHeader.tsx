@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Coffee } from 'lucide-react'
 import {
   IconLayoutGrid,
@@ -26,6 +26,10 @@ const NAV_ITEMS = [
 
 export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const isOrderDetail = /^\/pos\/orders\/[^/]+$/.test(pathname)
+  const isPaymentPage = /^\/pos\/payment\/[^/]+$/.test(pathname)
+  const showBackToHistory = (isOrderDetail && !pathname.includes('/receipt')) || isPaymentPage
 
   return (
     <header className={`pos-dashboard-header flex flex-col gap-4 mb-6 ${!hideNav ? 'pos-dashboard-header-sticky' : ''}`}>
@@ -40,6 +44,10 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
         <div className="flex items-center gap-2 ml-auto">
           {pathname === '/pos' ? (
             <span className="text-sm text-neutral-500 dark:text-neutral-400 font-medium">Point of Sale</span>
+          ) : showBackToHistory ? (
+            <button type="button" onClick={() => router.back()} className="pos-link text-sm font-medium w-fit bg-transparent border-none cursor-pointer p-0">
+              ⇐ Back
+            </button>
           ) : (
             <Link href="/pos" className="pos-link text-sm font-medium w-fit">
               ⇐ Back to POS
