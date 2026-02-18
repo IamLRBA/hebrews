@@ -5,9 +5,11 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
+import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { formatCurrency, formatRelativeTime } from '@/lib/utils/format'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
+import { ErrorBanner } from '@/components/pos/ErrorBanner'
 import { Search, X } from 'lucide-react'
 
 const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
@@ -61,24 +63,15 @@ export default function OrderDetailPage() {
   const [addingItem, setAddingItem] = useState(false)
   const [updatingItemId, setUpdatingItemId] = useState<string | null>(null)
   const [removedForUndo, setRemovedForUndo] = useState<{ productId: string; productName: string; quantity: number; size?: string | null; modifier?: string | null; notes?: string | null } | null>(null)
-  const [checkingOut, setCheckingOut] = useState(false)
-  const [cancelling, setCancelling] = useState(false)
-  const [cashReceivedUgx, setCashReceivedUgx] = useState('')
-  const [completingPayment, setCompletingPayment] = useState(false)
-  const [momoAmountUgx, setMomoAmountUgx] = useState('')
-  const [completingMomoPayment, setCompletingMomoPayment] = useState(false)
-  const [completingPesapalPayment, setCompletingPesapalPayment] = useState(false)
-  const [paymentInProgress, setPaymentInProgress] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   const [staffOk, setStaffOk] = useState(false)
-  const [staffRole, setStaffRole] = useState<string | null>(null)
   const [products, setProducts] = useState<PosProduct[]>([])
   const [productId, setProductId] = useState('')
   const [quantity, setQuantity] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
   const searchWrapperRef = useRef<HTMLDivElement>(null)
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'cash' | 'mtn_momo' | 'airtel_money' | 'card' | null>(null)
 
   async function fetchOrder() {
     setLoading(true)
@@ -120,14 +113,6 @@ export default function OrderDetailPage() {
     }
     setStaffOk(true)
   }, [router])
-
-  useEffect(() => {
-    if (!staffOk) return
-    posFetch('/api/auth/me')
-      .then((res) => res.ok ? res.json() : null)
-      .then((data) => data && setStaffRole(data.role))
-      .catch(() => {})
-  }, [staffOk])
 
   useEffect(() => {
     if (!staffOk || !orderId) return
@@ -197,93 +182,42 @@ export default function OrderDetailPage() {
     }
   }
 
-  async function handleCompletePayment(e: React.FormEvent) {
-    e.preventDefault()
-    const staffId = getStaffId()
-    if (!staffId) return
-    const amount = parseFloat(cashReceivedUgx)
-    if (isNaN(amount) || amount < 0) {
-      alert('Enter a valid cash amount')
+  async function handleSendToKitchen() {
+    if (!order || order.status !== 'pending') return
+    const items = order?.items ?? []
+    if (items.length === 0) {
+      setError('Add items before sending to kitchen')
       return
     }
-    setCompletingPayment(true)
+    setSubmitting(true)
+    setError(null)
     try {
-      const res = await posFetch(`/api/orders/${orderId}/pay-cash`, {
+      const res = await posFetch(`/api/orders/${orderId}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amountUgx: amount, staffId }),
+        body: JSON.stringify({ updatedByStaffId: getStaffId() }),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
+        throw new Error(data.error || 'Failed to send')
       }
       const data = await res.json()
       setOrder(data)
-      setCashReceivedUgx('')
-      setSelectedPaymentMethod(null)
-      if (data.status === 'served') {
-        router.push(`/pos/orders/${orderId}/receipt`)
-      }
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to complete payment')
+      setError(e instanceof Error ? e.message : 'Failed to send to kitchen')
     } finally {
-      setCompletingPayment(false)
+      setSubmitting(false)
     }
   }
 
-  async function handleCompleteMomoPayment(e: React.FormEvent) {
-    e.preventDefault()
-    const staffId = getStaffId()
-    if (!staffId) return
-    const amount = Number(momoAmountUgx)
-    if (Number.isNaN(amount) || amount < 0) {
-      alert('Enter a valid amount')
+  function handlePayment() {
+    if (!order) return
+    const items = order?.items ?? []
+    if (items.length === 0) {
+      setError('Add items before payment')
       return
     }
-    setCompletingMomoPayment(true)
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/pay-momo`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amountUgx: amount, staffId }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
-      }
-      const data = await res.json()
-      setOrder(data)
-      setMomoAmountUgx('')
-      if (data.status === 'served') {
-        router.push(`/pos/orders/${orderId}/receipt`)
-      }
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to complete MoMo payment')
-    } finally {
-      setCompletingMomoPayment(false)
-    }
-  }
-
-  async function handlePayWithPesapal() {
-    setPaymentInProgress(true)
-    setCompletingPesapalPayment(true)
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/pay-pesapal`, { method: 'POST' })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
-      }
-      const data = await res.json()
-      if (data.paymentUrl) {
-        window.location.href = data.paymentUrl
-      } else {
-        throw new Error('No payment URL')
-      }
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to start payment')
-      setPaymentInProgress(false)
-      setCompletingPesapalPayment(false)
-    }
+    router.push(`/pos/payment/${orderId}`)
   }
 
   async function handleRemoveItem(item: OrderItem) {
@@ -342,51 +276,10 @@ export default function OrderDetailPage() {
     }
   }
 
-  async function handleCheckout() {
-    setCheckingOut(true)
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/checkout`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ updatedByStaffId: getStaffId() }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
-      }
-      router.push('/pos')
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to checkout')
-    } finally {
-      setCheckingOut(false)
-    }
-  }
-
-  const canCancelOrder = staffRole === 'manager' || staffRole === 'admin'
-  async function handleCancel() {
-    if (!confirm('Cancel this order? This action requires Manager or Supervisor approval.')) return
-    setCancelling(true)
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/cancel`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cancelledByStaffId: getStaffId() }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Failed to cancel')
-      }
-      router.push('/pos')
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to cancel. Only Manager or Supervisor can cancel orders.')
-    } finally {
-      setCancelling(false)
-    }
-  }
-
-  const block =
-    order?.status === 'served' || order?.status === 'cancelled'
-  const canCheckout = order?.status === 'ready' && !block
+  const block = order?.status === 'served' || order?.status === 'cancelled'
+  const canSendToKitchen = order?.status === 'pending' && !block
+  const items = order?.items ?? []
+  const hasItems = items.length > 0
 
   if (!staffOk || loading) {
     return (
@@ -400,18 +293,27 @@ export default function OrderDetailPage() {
   if (error && !order) {
     return (
       <main className="pos-page">
-        <div className="pos-page-container max-w-md mx-auto text-center">
+        <div className="pos-page-container max-w-md mx-auto px-4">
+          <PosNavHeader />
           <div className="pos-alert pos-alert-error mb-4">{error}</div>
-          <Link href="/pos" className="pos-link">⇐ Back to POS</Link>
+          <button type="button" onClick={() => router.back()} className="pos-link">⇐ Back</button>
         </div>
       </main>
     )
   }
 
   return (
-    <main className="pos-page">
-      <div className="pos-page-container max-w-4xl mx-auto text-center">
-        <Link href="/pos" className="pos-link inline-block mb-4">⇐ Back to POS</Link>
+    <main className="pos-page min-h-screen flex flex-col">
+      <div className="flex-shrink-0 fixed top-0 left-0 right-0 z-[1020] bg-[var(--color-bg-primary)] px-4 pt-4 [&_.pos-dashboard-header]:mb-0">
+        <PosNavHeader />
+      </div>
+      <div className="flex-shrink-0 min-h-[11rem]" aria-hidden />
+      <div className="pos-page-container max-w-4xl mx-auto text-center flex-1 px-4 pb-6">
+        {error && (
+          <div className="mb-4">
+            <ErrorBanner message={error} onDismiss={() => setError(null)} />
+          </div>
+        )}
         <h1 className="pos-section-title text-2xl mb-2">Order {order?.orderNumber}</h1>
 
         <section className="pos-section pos-card pos-order-card-centered">
@@ -453,9 +355,9 @@ export default function OrderDetailPage() {
 
       <section className="pos-section pos-card pos-order-card-centered">
         <h2 className="pos-section-title">Items</h2>
-        {order?.items.length === 0 && <p className="text-neutral-600 dark:text-neutral-400 m-0">No items.</p>}
+        {items.length === 0 && <p className="text-neutral-600 dark:text-neutral-400 m-0">No items.</p>}
         <ul className="list-none p-0">
-          {order?.items.map((item, index) => {
+          {items.map((item, index) => {
             const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
             return (
             <Fragment key={item.id}>
@@ -509,7 +411,7 @@ export default function OrderDetailPage() {
               </span>
               <span className="font-medium text-primary-700 dark:text-primary-200">{formatCurrency(item.subtotalUgx)}</span>
             </li>
-            {order && index < order.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
+            {index < items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
           </Fragment>
           )
           })}
@@ -638,140 +540,18 @@ export default function OrderDetailPage() {
         )}
       </section>
 
-      <section className="pos-section pos-card pos-order-card-centered">
-        <h2 className="pos-section-title">Payments</h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 m-0 mb-3">Split payments supported — add multiple methods as needed</p>
-        {order && (
-          <>
-            <div className="space-y-2 mb-4">
-              <div className="flex justify-between">
-                <span className="text-neutral-700 dark:text-neutral-300">Order total:</span>
-                <span className="font-semibold text-primary-700 dark:text-primary-200">{formatCurrency(order.totalUgx)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-neutral-700 dark:text-neutral-300">Amount paid:</span>
-                <span className="font-semibold text-green-600 dark:text-green-400">
-                  {formatCurrency(order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0)}
-                </span>
-              </div>
-              <div className="pt-2 border-t border-neutral-200 dark:border-neutral-700 flex justify-between">
-                <span className="font-medium text-neutral-800 dark:text-neutral-200">Remaining:</span>
-                <span className="font-bold text-lg text-primary-700 dark:text-primary-200">
-                  {formatCurrency(order.totalUgx - (order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0))}
-                </span>
-              </div>
-            </div>
-          </>
-        )}
-        {order?.payments && order.payments.length > 0 && (
-          <ul className="list-none p-0 mt-2 mb-2">
-            {order.payments.map((p, i) => (
-              <li key={i} className="py-2 px-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg text-sm flex justify-between">
-                <span className="text-neutral-700 dark:text-neutral-300 capitalize">{p.method.replace('_', ' ')}</span>
-                <span className="font-medium text-primary-700 dark:text-primary-200">{formatCurrency(p.amountUgx)}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-        {!block && order && (() => {
-          const totalPaid = order.payments?.reduce((sum, p) => sum + p.amountUgx, 0) ?? 0
-          const remaining = order.totalUgx - totalPaid
-          if (remaining <= 0) return null
-          return (
-            <>
-              <p className="m-0 mt-2 pos-section-title text-sm">Choose payment method</p>
-              <div className="flex flex-wrap gap-2 mt-2 justify-center">
-                <button type="button" onClick={() => setSelectedPaymentMethod(selectedPaymentMethod === 'cash' ? null : 'cash')} className={selectedPaymentMethod === 'cash' ? 'btn btn-primary' : 'btn btn-outline'}>Cash</button>
-                <button type="button" onClick={() => setSelectedPaymentMethod(selectedPaymentMethod === 'mtn_momo' ? null : 'mtn_momo')} className={selectedPaymentMethod === 'mtn_momo' ? 'btn btn-primary' : 'btn btn-outline'}>MTN MoMo</button>
-                <button type="button" onClick={() => setSelectedPaymentMethod(selectedPaymentMethod === 'airtel_money' ? null : 'airtel_money')} className={selectedPaymentMethod === 'airtel_money' ? 'btn btn-primary' : 'btn btn-outline'}>Airtel Money</button>
-                <button type="button" onClick={() => setSelectedPaymentMethod(selectedPaymentMethod === 'card' ? null : 'card')} className={selectedPaymentMethod === 'card' ? 'btn btn-primary' : 'btn btn-outline'}>Card</button>
-              </div>
-              {selectedPaymentMethod === 'cash' && (
-                <form onSubmit={handleCompletePayment} className="mt-4 max-w-xs mx-auto text-left">
-                  <label className="block">
-                    <span className="pos-label">Cash received (UGX)</span>
-                    <div className="relative inline-flex items-stretch mt-1 w-full max-w-full">
-                      <input
-                        type="number"
-                        min="0"
-                        step="100"
-                        value={cashReceivedUgx}
-                        onChange={(e) => setCashReceivedUgx(e.target.value)}
-                        placeholder={String(remaining)}
-                        className="pos-input pos-input-no-spinner pr-12 rounded-r-none border-r-0 rounded-l-xl min-w-0 flex-1"
-                      />
-                      <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
-                        <button
-                          type="button"
-                          tabIndex={-1}
-                          onClick={() => {
-                            const n = Math.max(0, (parseFloat(cashReceivedUgx) || 0) + 100)
-                            setCashReceivedUgx(String(n))
-                          }}
-                          className="flex-1 flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors border-b border-neutral-200 dark:border-neutral-600"
-                          aria-label="Increase by 100"
-                        >
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 3v6M3 6h6" /></svg>
-                        </button>
-                        <button
-                          type="button"
-                          tabIndex={-1}
-                          onClick={() => {
-                            const n = Math.max(0, (parseFloat(cashReceivedUgx) || 0) - 100)
-                            setCashReceivedUgx(String(n))
-                          }}
-                          className="flex-1 flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
-                          aria-label="Decrease by 100"
-                        >
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M3 6h6" /></svg>
-                        </button>
-                      </div>
-                    </div>
-                  </label>
-                  {(() => {
-                    const received = parseFloat(cashReceivedUgx)
-                    const total = order?.totalUgx ?? 0
-                    const changeUgx = !isNaN(received) && received > total ? received - total : 0
-                    return received > 0 && changeUgx > 0 ? (
-                      <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                        <p className="m-0 text-sm font-semibold text-blue-700 dark:text-blue-300">
-                          Change: {formatCurrency(changeUgx)}
-                        </p>
-                      </div>
-                    ) : null
-                  })()}
-                  <button type="submit" disabled={paymentInProgress || completingPayment} className="btn btn-primary mt-3 w-full disabled:opacity-60">Complete Payment</button>
-                </form>
-              )}
-              {(selectedPaymentMethod === 'mtn_momo' || selectedPaymentMethod === 'airtel_money' || selectedPaymentMethod === 'card') && (
-                <div className="mt-4 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-200 dark:border-primary-700">
-                  <p className="m-0 text-neutral-700 dark:text-neutral-300 text-sm mb-3">
-                    Amount to pay: <strong className="text-lg">{formatCurrency(remaining)}</strong>
-                  </p>
-                  <button type="button" onClick={handlePayWithPesapal} disabled={paymentInProgress || completingPesapalPayment} className="btn btn-secondary w-full disabled:opacity-60">
-                    {completingPesapalPayment ? 'Redirecting to payment…' : 'Pay with Pesapal'}
-                  </button>
-                </div>
-              )}
-            </>
-          )
-        })()}
-      </section>
-
-      {paymentInProgress && (
-        <section className="pos-alert pos-alert-warning pos-section">
-          <strong>Payment in progress…</strong>
-          <div className="text-sm mt-1">Please wait while the customer completes the payment.</div>
-        </section>
-      )}
-
-      <section className="flex flex-wrap gap-3 mt-6 justify-center">
-        <button onClick={handleCheckout} disabled={!canCheckout || checkingOut} className="btn btn-primary disabled:opacity-60">Checkout Order</button>
-        {canCancelOrder ? (
-          <button onClick={handleCancel} disabled={block || cancelling} className="btn btn-danger disabled:opacity-60">Cancel Order</button>
-        ) : (
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 m-0 self-center">Cancellation requires Manager or Supervisor approval</p>
-        )}
+      <section className="flex flex-wrap gap-3 mt-6 justify-center pt-4 pb-4">
+        <button onClick={handlePayment} disabled={!hasItems || block} className="btn btn-primary disabled:opacity-60">
+          Payment
+        </button>
+        <button
+          type="button"
+          onClick={handleSendToKitchen}
+          disabled={!canSendToKitchen || !hasItems || submitting}
+          className={`pos-dashboard-nav-link disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:transform-none ${submitting ? 'opacity-70' : ''}`}
+        >
+          {submitting ? 'Sending…' : 'Send to Kitchen'}
+        </button>
       </section>
       </div>
     </main>

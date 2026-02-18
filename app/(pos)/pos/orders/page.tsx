@@ -297,7 +297,8 @@ export default function PosOrdersPage() {
 
   async function handleQuantityChange(itemId: string, delta: number) {
     if (!order) return
-    const item = order.items.find((i) => i.id === itemId)
+    const items = order.items ?? []
+    const item = items.find((i) => i.id === itemId)
     if (!item) return
     const newQty = item.quantity + delta
     if (newQty < 1) return
@@ -379,7 +380,8 @@ export default function PosOrdersPage() {
 
   async function handleSendToKitchen() {
     if (!order || order.status !== 'pending') return
-    if (order.items.length === 0) {
+    const items = order.items ?? []
+    if (items.length === 0) {
       setError('Add items before sending to kitchen')
       return
     }
@@ -404,7 +406,8 @@ export default function PosOrdersPage() {
   }
 
   function handlePay() {
-    if (!order || order.items.length === 0) return
+    const items = order?.items ?? []
+    if (!order || items.length === 0) return
     router.push(`/pos/payment/${order.orderId}`)
   }
 
@@ -665,7 +668,7 @@ export default function PosOrdersPage() {
               )}
               <div className="flex flex-wrap justify-center gap-5 w-full mx-auto px-6 py-4">
               {filteredDisplayProducts.map((product) => {
-                const itemInOrder = order?.items.find((i) => i.productId === product.productId)
+                const itemInOrder = (order?.items ?? []).find((i) => i.productId === product.productId)
                 return (
                   <button
                     key={product.productId}
@@ -734,10 +737,10 @@ export default function PosOrdersPage() {
                 #{order.orderNumber} · {order.status}
               </p>
               <ul className="flex-1 overflow-auto list-none p-0 m-0 space-y-3 mb-4">
-                {order.items.length === 0 ? (
+                {(order?.items ?? []).length === 0 ? (
                   <EmptyState icon={Package} title="No items yet" description="Add products from the menu" />
                 ) : (
-                  order.items.map((item, index) => {
+                  (order?.items ?? []).map((item, index) => {
                     const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
                     return (
                     <Fragment key={item.id}>
@@ -790,7 +793,7 @@ export default function PosOrdersPage() {
                         </div>
                       </div>
                     </li>
-                    {index < order.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
+                    {index < (order?.items ?? []).length - 1 && <li aria-hidden className="pos-order-item-divider" />}
                   </Fragment>
                   )
                   })
@@ -830,7 +833,7 @@ export default function PosOrdersPage() {
                     <button
                       type="button"
                       onClick={handleSendToKitchen}
-                      disabled={submitting || order.items.length === 0}
+                      disabled={submitting || (order?.items ?? []).length === 0}
                       className="btn btn-outline py-3 disabled:opacity-60"
                     >
                       {submitting ? 'Sending…' : 'Send to Kitchen'}
@@ -839,7 +842,7 @@ export default function PosOrdersPage() {
                   <button
                     type="button"
                     onClick={handlePay}
-                    disabled={order.items.length === 0}
+                    disabled={(order?.items ?? []).length === 0}
                     className="btn btn-primary py-3 disabled:opacity-60"
                   >
                     Pay
