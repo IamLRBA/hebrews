@@ -518,6 +518,7 @@ export async function recordExternalPayment(params: {
 
 export type OrderReceiptItem = {
   name: string
+  imageUrl: string | null
   quantity: number
   unitPriceUgx: number
   totalUgx: number
@@ -572,6 +573,7 @@ export async function getOrderReceipt(orderId: string): Promise<OrderReceipt> {
           product: {
             select: {
               name: true,
+              images: true,
             },
           },
         },
@@ -598,6 +600,7 @@ export async function getOrderReceipt(orderId: string): Promise<OrderReceipt> {
 
   const items: OrderReceiptItem[] = order.orderItems.map((item) => ({
     name: item.product.name,
+    imageUrl: item.product?.images?.[0] ?? null,
     quantity: item.quantity,
     unitPriceUgx: Number(item.unitPriceUgx),
     totalUgx: Number(item.lineTotalUgx),
@@ -627,6 +630,7 @@ export async function getOrderReceipt(orderId: string): Promise<OrderReceipt> {
 
 export type KitchenQueueItem = {
   name: string
+  imageUrl: string | null
   quantity: number
 }
 
@@ -666,6 +670,7 @@ export async function getKitchenQueue(shiftId: string): Promise<KitchenQueueOrde
           product: {
             select: {
               name: true,
+              images: true,
             },
           },
         },
@@ -684,6 +689,7 @@ export async function getKitchenQueue(shiftId: string): Promise<KitchenQueueOrde
     tableLabel: order.table?.code ?? null,
     items: order.orderItems.map((item) => ({
       name: item.product.name,
+      imageUrl: item.product?.images?.[0] ?? null,
       quantity: item.quantity,
     })),
     status: order.status,

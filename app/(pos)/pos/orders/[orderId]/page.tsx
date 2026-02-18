@@ -1,18 +1,22 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { Fragment, useEffect, useState, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { formatCurrency, formatRelativeTime } from '@/lib/utils/format'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import { Search, X } from 'lucide-react'
 
+const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
+
 type OrderItem = {
   id: string
   productId: string
   productName: string
+  imageUrl?: string | null
   quantity: number
   size: string | null
   modifier: string | null
@@ -56,6 +60,7 @@ export default function OrderDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [addingItem, setAddingItem] = useState(false)
   const [updatingItemId, setUpdatingItemId] = useState<string | null>(null)
+  const [removedForUndo, setRemovedForUndo] = useState<{ productId: string; productName: string; quantity: number; size?: string | null; modifier?: string | null; notes?: string | null } | null>(null)
   const [checkingOut, setCheckingOut] = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [cashReceivedUgx, setCashReceivedUgx] = useState('')
@@ -281,18 +286,57 @@ export default function OrderDetailPage() {
     }
   }
 
-  async function handleRemoveItem(itemId: string) {
-    setUpdatingItemId(itemId)
+  async function handleRemoveItem(item: OrderItem) {
+    setUpdatingItemId(item.id)
+    setRemovedForUndo(null)
     try {
-      const res = await posFetch(`/api/order-items/${itemId}`, { method: 'DELETE' })
+      const res = await posFetch(`/api/order-items/${item.id}`, { method: 'DELETE' })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         throw new Error(data.error || `HTTP ${res.status}`)
       }
       const data = await res.json()
       setOrder(data)
+      setRemovedForUndo({
+        productId: item.productId,
+        productName: item.productName,
+        quantity: item.quantity,
+        size: item.size ?? null,
+        modifier: item.modifier ?? null,
+        notes: item.notes ?? null,
+      })
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to remove item')
+    } finally {
+      setUpdatingItemId(null)
+    }
+  }
+
+  async function handleUndoRemove() {
+    if (!order || !removedForUndo) return
+    const toRestore = removedForUndo
+    setRemovedForUndo(null)
+    setUpdatingItemId('undo')
+    try {
+      const res = await posFetch(`/api/orders/${orderId}/items`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: toRestore.productId,
+          quantity: toRestore.quantity,
+          size: toRestore.size,
+          modifier: toRestore.modifier,
+          notes: toRestore.notes,
+        }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to restore')
+      }
+      const data = await res.json()
+      setOrder(data)
+    } catch (e) {
+      alert(e instanceof Error ? e.message : 'Failed to restore item')
     } finally {
       setUpdatingItemId(null)
     }
@@ -411,8 +455,25 @@ export default function OrderDetailPage() {
         <h2 className="pos-section-title">Items</h2>
         {order?.items.length === 0 && <p className="text-neutral-600 dark:text-neutral-400 m-0">No items.</p>}
         <ul className="list-none p-0">
-          {order?.items.map((item) => (
-            <li key={item.id} className="py-3 border-b border-neutral-200 dark:border-neutral-600 flex items-center gap-2 flex-wrap">
+          {order?.items.map((item, index) => {
+            const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+            return (
+            <Fragment key={item.id}>
+            <li className="py-3 flex items-center gap-3 flex-wrap">
+              <div className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                <Image src={imgSrc} alt="" fill className="object-cover" sizes="48px" />
+                {!block && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveItem(item)}
+                    disabled={updatingItemId !== null}
+                    className="absolute inset-0 flex items-center justify-center bg-black/40 transition-colors hover:bg-black/55 disabled:opacity-60 text-neutral-200 hover:text-white dark:text-neutral-300 dark:hover:text-primary-100"
+                    aria-label={`Remove ${item.productName}`}
+                  >
+                    <X className="w-6 h-6 pointer-events-none drop-shadow-sm" strokeWidth={1.5} aria-hidden />
+                  </button>
+                )}
+              </div>
               {!block && (
                 <div className="inline-flex items-stretch">
                   <div className="flex items-center justify-center px-3 py-1.5 min-w-[2rem] bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 rounded-l-xl border-r-0 font-semibold text-sm">
@@ -447,12 +508,35 @@ export default function OrderDetailPage() {
                 {item.modifier && ` • ${item.modifier}`}
               </span>
               <span className="font-medium text-primary-700 dark:text-primary-200">{formatCurrency(item.subtotalUgx)}</span>
-              {!block && (
-                <button type="button" onClick={() => handleRemoveItem(item.id)} disabled={updatingItemId !== null} className="btn btn-ghost text-sm py-1 px-2 disabled:opacity-60">Remove</button>
-              )}
             </li>
-          ))}
+            {order && index < order.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
+          </Fragment>
+          )
+          })}
         </ul>
+        {!block && removedForUndo && (
+          <div className="flex items-center justify-between gap-2 py-2 px-3 mt-3 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 text-sm">
+            <span className="text-neutral-600 dark:text-neutral-400 truncate min-w-0">Removed {removedForUndo.productName}</span>
+            <div className="flex items-center gap-1.5 shrink-0 self-center">
+              <button
+                type="button"
+                onClick={handleUndoRemove}
+                disabled={updatingItemId !== null}
+                className="font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 disabled:opacity-60 transition-colors leading-none"
+              >
+                Undo
+              </button>
+              <button
+                type="button"
+                onClick={() => setRemovedForUndo(null)}
+                className="inline-flex items-center justify-center w-6 h-6 rounded text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-colors leading-none"
+                aria-label="Confirm removal"
+              >
+                <X className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden />
+              </button>
+            </div>
+          </div>
+        )}
         {!block && (
           <form onSubmit={handleAddItem} className="flex flex-wrap gap-4 items-end mt-4">
             <div className="flex-1 min-w-[16rem]">

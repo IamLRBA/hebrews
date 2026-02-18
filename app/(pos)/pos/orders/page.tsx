@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { Fragment, useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -11,6 +11,7 @@ import { ErrorBanner } from '@/components/pos/ErrorBanner'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ShoppingCart, Package, Search, X } from 'lucide-react'
+import { IconSoup, IconSoupFilled, IconGlass, IconGlassFilled } from '@tabler/icons-react'
 import { getModifierGroupsForProduct } from '@/lib/pos-modifiers'
 
 type PosProduct = {
@@ -28,7 +29,11 @@ type OrderItem = {
   id: string
   productId: string
   productName: string
+  imageUrl?: string | null
   quantity: number
+  size?: string | null
+  modifier?: string | null
+  notes?: string | null
   subtotalUgx?: number
   lineTotalUgx?: number
 }
@@ -42,14 +47,18 @@ type OrderDetail = {
 }
 
 const FOOD_SECTIONS = [
-  'Starters / Appetizers',
-  'Salads',
-  'Main Course',
-  'Grill',
-  'Platters / Sharing',
-  'Sides',
+  'Breakfast',
+  'Starters',
+  'Chicken Dishes',
+  'Soups',
+  'Salads & Sandwiches',
+  'Burgers',
+  'Pasta',
+  'Main Dishes',
+  "Weekend Chef's Platters",
+  'Weekend Burger Offers',
   'Desserts',
-  'Chef Specials',
+  'Spicy / Specialty Dishes',
 ]
 
 const DRINK_TIERS = ['Alcoholic', 'Non-Alcoholic'] as const
@@ -61,6 +70,13 @@ function generateOrderNumber() {
 }
 
 const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
+
+/** Deterministic index from string — gives variety per section without flickering */
+function pickHeroIndex(label: string, count: number) {
+  if (count <= 1) return 0
+  const hash = label.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
+  return Math.abs(hash) % count
+}
 
 function ProductImage({ product }: { product: PosProduct }) {
   const src = product.images?.[0]
@@ -88,6 +104,8 @@ export default function PosOrdersPage() {
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const [addingItem, setAddingItem] = useState(false)
+  const [removingItemId, setRemovingItemId] = useState<string | null>(null)
+  const [removedForUndo, setRemovedForUndo] = useState<{ productId: string; productName: string; quantity: number; size?: string | null; modifier?: string | null; notes?: string | null } | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [modifierProduct, setModifierProduct] = useState<PosProduct | null>(null)
@@ -300,6 +318,65 @@ export default function PosOrdersPage() {
     }
   }
 
+  async function handleRemoveItem(item: OrderItem) {
+    if (!order) return
+    setRemovingItemId(item.id)
+    setRemovedForUndo(null)
+    setError(null)
+    try {
+      const res = await posFetch(`/api/order-items/${item.id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to remove')
+      }
+      const data = await res.json()
+      setOrder(data)
+      setRemovedForUndo({
+        productId: item.productId,
+        productName: item.productName,
+        quantity: item.quantity,
+        size: item.size ?? null,
+        modifier: item.modifier ?? null,
+        notes: item.notes ?? null,
+      })
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to remove item')
+    } finally {
+      setRemovingItemId(null)
+    }
+  }
+
+  async function handleUndoRemove() {
+    if (!order || !removedForUndo) return
+    const toRestore = removedForUndo
+    setRemovedForUndo(null)
+    setAddingItem(true)
+    setError(null)
+    try {
+      const res = await posFetch(`/api/orders/${order.orderId}/items`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: toRestore.productId,
+          quantity: toRestore.quantity,
+          size: toRestore.size,
+          modifier: toRestore.modifier,
+          notes: toRestore.notes,
+        }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to restore')
+      }
+      const data = await res.json()
+      setOrder(data)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to restore item')
+    } finally {
+      setAddingItem(false)
+    }
+  }
+
   async function handleSendToKitchen() {
     if (!order || order.status !== 'pending') return
     if (order.items.length === 0) {
@@ -390,28 +467,35 @@ export default function PosOrdersPage() {
         {/* Left: Categories */}
         <aside className="flex-shrink-0 w-full lg:w-44 flex flex-wrap gap-2 overflow-visible justify-center lg:justify-start lg:flex-col lg:py-2 lg:px-1 py-2 lg:items-stretch">
           {[
-            { id: 'popular' as const, label: 'Most Popular' },
-            { id: 'food' as const, label: 'Food' },
-            { id: 'drinks' as const, label: 'Drinks' },
-          ].map(({ id, label }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => {
-                setViewMode(id)
-                setSelectedDrinkTier(null)
-                setSelectedSubcategory(null)
-              }}
-              className={`btn whitespace-nowrap py-2 px-3 text-sm ${viewMode === id ? 'btn-primary' : 'btn-outline'}`}
-            >
-              {label}
-            </button>
-          ))}
+            { id: 'popular' as const, label: 'Most Popular', iconOutline: null, iconFilled: null },
+            { id: 'food' as const, label: 'Food', iconOutline: IconSoup, iconFilled: IconSoupFilled },
+            { id: 'drinks' as const, label: 'Drinks', iconOutline: IconGlass, iconFilled: IconGlassFilled },
+          ].map(({ id, label, iconOutline, iconFilled }) => {
+            const isActive = viewMode === id
+            const CatIcon = isActive && iconFilled ? iconFilled : iconOutline
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  setViewMode(id)
+                  setSelectedDrinkTier(null)
+                  setSelectedSubcategory(null)
+                }}
+                className={`btn pos-category-btn whitespace-nowrap py-2 px-3 text-sm inline-flex items-center justify-center gap-2 ${isActive ? 'btn-primary' : 'btn-outline'}`}
+              >
+                {CatIcon != null && (
+                  <CatIcon className="w-4 h-4 shrink-0" aria-hidden stroke={1.5} />
+                )}
+                {label}
+              </button>
+            )
+          })}
         </aside>
 
         {/* Center: Search + Subcategories or Products */}
         <section className="flex-1 overflow-auto min-h-0 flex flex-col gap-3">
-          <div className="flex-shrink-0 flex justify-center w-full">
+          <div className="flex-shrink-0 flex justify-center w-full mt-6">
             <div className="relative w-full max-w-sm" ref={searchWrapperRef}>
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" aria-hidden />
             <input
@@ -491,7 +575,7 @@ export default function PosOrdersPage() {
                 const tierSections = tier === 'Alcoholic' ? ALCOHOLIC_SECTIONS : NON_ALCOHOLIC_SECTIONS
                 const tierProducts = products.filter((p) => String(p?.category ?? '').trim() === 'Drinks' && tierSections.includes(String(p?.section ?? '').trim()))
                 const count = tierProducts.length
-                const heroProduct = tierProducts[0]
+                const heroProduct = tierProducts[pickHeroIndex(tier, count)] ?? tierProducts[0]
                 const heroSrc = heroProduct?.images?.[0]
                 const imgSrc = heroSrc && (heroSrc.startsWith('http') || heroSrc.startsWith('/')) ? heroSrc : PLACEHOLDER_IMAGE
                 return (
@@ -499,7 +583,7 @@ export default function PosOrdersPage() {
                     key={tier}
                     type="button"
                     onClick={() => setSelectedDrinkTier(tier)}
-                    className="pos-card p-0 overflow-hidden text-left hover:border-primary-400 dark:hover:border-primary-500 transition-all flex flex-col w-[calc((100%-1.25rem)/2)] sm:w-[calc((100%-2.5rem)/3)] md:w-[calc((100%-3.75rem)/4)] min-w-[140px]"
+                    className="pos-card p-0 overflow-hidden text-center hover:border-primary-400 dark:hover:border-primary-500 transition-all flex flex-col w-[calc((100%-1.25rem)/2)] sm:w-[calc((100%-2.5rem)/3)] md:w-[calc((100%-3.75rem)/4)] min-w-[140px]"
                   >
                     <div className="aspect-[4/3] relative w-full bg-neutral-100 dark:bg-neutral-800">
                       <Image src={imgSrc} alt={tier} fill className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
@@ -530,7 +614,7 @@ export default function PosOrdersPage() {
             <div className="flex flex-wrap justify-center gap-5 w-full mx-auto px-6 py-4">
               {sectionsWithProducts.map((sec) => {
                 const secProducts = products.filter((p) => String(p?.section ?? '').trim() === String(sec ?? '').trim())
-                const heroProduct = secProducts[0]
+                const heroProduct = secProducts[pickHeroIndex(sec, secProducts.length)] ?? secProducts[0]
                 const heroSrc = heroProduct.images?.[0]
                 const imgSrc = heroSrc && (heroSrc.startsWith('http') || heroSrc.startsWith('/')) ? heroSrc : PLACEHOLDER_IMAGE
                 return (
@@ -538,7 +622,7 @@ export default function PosOrdersPage() {
                     key={sec}
                     type="button"
                     onClick={() => setSelectedSubcategory(sec)}
-                    className="pos-card p-0 overflow-hidden text-left hover:border-primary-400 dark:hover:border-primary-500 transition-all flex flex-col w-[calc((100%-1.25rem)/2)] sm:w-[calc((100%-2.5rem)/3)] md:w-[calc((100%-3.75rem)/4)] min-w-[140px]"
+                    className="pos-card p-0 overflow-hidden text-center hover:border-primary-400 dark:hover:border-primary-500 transition-all flex flex-col w-[calc((100%-1.25rem)/2)] sm:w-[calc((100%-2.5rem)/3)] md:w-[calc((100%-3.75rem)/4)] min-w-[140px]"
                   >
                     <div className="aspect-[4/3] relative w-full bg-neutral-100 dark:bg-neutral-800">
                       <Image src={imgSrc} alt={sec} fill className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
@@ -568,7 +652,18 @@ export default function PosOrdersPage() {
               }
             />
           ) : (
-            <div className="flex flex-wrap justify-center gap-5 w-full mx-auto px-6 py-4">
+            <>
+              {selectedSubcategory && (
+                <div className="text-center w-full py-3 mb-2">
+                  <h2 className="pos-section-title text-xl text-neutral-600 dark:text-neutral-400">
+                    {selectedSubcategory.toUpperCase()}
+                  </h2>
+                  {selectedSubcategory === 'Weekend Burger Offers' && (
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1 mb-0">(All served with fries and side salad.)</p>
+                  )}
+                </div>
+              )}
+              <div className="flex flex-wrap justify-center gap-5 w-full mx-auto px-6 py-4">
               {filteredDisplayProducts.map((product) => {
                 const itemInOrder = order?.items.find((i) => i.productId === product.productId)
                 return (
@@ -577,7 +672,7 @@ export default function PosOrdersPage() {
                     type="button"
                     onClick={() => handleProductClick(product)}
                     disabled={addingItem}
-                    className="pos-card p-4 text-left hover:border-primary-400 dark:hover:border-primary-500 disabled:opacity-60 transition-all relative group flex flex-col overflow-hidden w-[calc((100%-1.25rem)/2)] sm:w-[calc((100%-2.5rem)/3)] md:w-[calc((100%-3.75rem)/4)] min-w-[140px]"
+                    className="pos-card p-4 text-center hover:border-primary-400 dark:hover:border-primary-500 disabled:opacity-60 transition-all relative group flex flex-col overflow-hidden w-[calc((100%-1.25rem)/2)] sm:w-[calc((100%-2.5rem)/3)] md:w-[calc((100%-3.75rem)/4)] min-w-[140px]"
                   >
                     {itemInOrder && (
                       <span className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-primary-600 text-white text-xs font-bold flex items-center justify-center">
@@ -597,10 +692,11 @@ export default function PosOrdersPage() {
                   </button>
                 )
               })}
-            </div>
+              </div>
+            </>
           )}
           {((isFood && selectedSubcategory) || (isDrinks && (selectedDrinkTier || selectedSubcategory))) && (
-            <div className="flex justify-center w-full">
+            <div className="flex justify-center w-full mb-6">
               <button
                 type="button"
                 onClick={() => (selectedSubcategory ? setSelectedSubcategory(null) : setSelectedDrinkTier(null))}
@@ -641,16 +737,32 @@ export default function PosOrdersPage() {
                 {order.items.length === 0 ? (
                   <EmptyState icon={Package} title="No items yet" description="Add products from the menu" />
                 ) : (
-                  order.items.map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex items-center justify-between gap-3 py-3 border-b border-neutral-200 dark:border-neutral-700 last:border-b-0"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="m-0 font-medium truncate text-sm">{item.productName}</p>
-                        <p className="m-0 text-xs text-neutral-500 mt-0.5">
-                          {(item.subtotalUgx ?? item.lineTotalUgx ?? 0).toLocaleString()} UGX
-                        </p>
+                  order.items.map((item, index) => {
+                    const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+                    return (
+                    <Fragment key={item.id}>
+                    <li className="flex items-center justify-between gap-3 py-3">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                          <Image src={imgSrc} alt="" fill className="object-cover" sizes="48px" />
+                          {order.status === 'pending' && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveItem(item)}
+                              disabled={removingItemId !== null || addingItem}
+                              className="absolute inset-0 flex items-center justify-center bg-black/40 transition-colors hover:bg-black/55 disabled:opacity-60 text-neutral-200 hover:text-white dark:text-neutral-300 dark:hover:text-primary-100"
+                              aria-label={`Remove ${item.productName} from order`}
+                            >
+                              <X className="w-6 h-6 pointer-events-none drop-shadow-sm" strokeWidth={1.5} aria-hidden />
+                            </button>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="m-0 font-medium truncate text-sm">{item.productName}</p>
+                          <p className="m-0 text-xs text-neutral-500 mt-0.5">
+                            {(item.subtotalUgx ?? item.lineTotalUgx ?? 0).toLocaleString()} UGX
+                          </p>
+                        </div>
                       </div>
                       <div className="inline-flex items-stretch">
                         <div className="flex items-center justify-center px-3 py-1.5 min-w-[2rem] bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 rounded-l-xl border-r-0 font-semibold text-sm">
@@ -678,9 +790,36 @@ export default function PosOrdersPage() {
                         </div>
                       </div>
                     </li>
-                  ))
+                    {index < order.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
+                  </Fragment>
+                  )
+                  })
                 )}
               </ul>
+
+              {removedForUndo && (
+                <div className="flex items-center justify-between gap-2 py-2 px-3 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 text-sm">
+                  <span className="text-neutral-600 dark:text-neutral-400 truncate min-w-0">Removed {removedForUndo.productName}</span>
+                  <div className="flex items-center gap-1.5 shrink-0 self-center">
+                    <button
+                      type="button"
+                      onClick={handleUndoRemove}
+                      disabled={addingItem}
+                      className="font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 disabled:opacity-60 transition-colors leading-none"
+                    >
+                      Undo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRemovedForUndo(null)}
+                      className="inline-flex items-center justify-center w-6 h-6 rounded text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-colors leading-none"
+                      aria-label="Confirm removal"
+                    >
+                      <X className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden />
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-auto pr-2">
                 <p className="font-semibold text-xl text-primary-700 dark:text-primary-200 mb-4">

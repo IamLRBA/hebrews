@@ -2,16 +2,26 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Coffee, LayoutGrid, ListOrdered, Clock, ClipboardList } from 'lucide-react'
+import { Coffee } from 'lucide-react'
+import {
+  IconLayoutGrid,
+  IconLayoutGridFilled,
+  IconLayoutList,
+  IconLayoutListFilled,
+  IconClock,
+  IconClockFilled,
+  IconClipboardList,
+  IconClipboardListFilled,
+} from '@tabler/icons-react'
 import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
 import SettingsDropdown from '@/components/ui/SettingsDropdown'
 
 const NAV_ITEMS = [
-  { href: '/pos', label: 'All', icon: null },
-  { href: '/pos/tables', label: 'Tables', icon: LayoutGrid },
-  { href: '/pos/orders', label: 'Orders', icon: ListOrdered },
-  { href: '/pos/ready', label: 'Ready', icon: Clock },
-  { href: '/pos/shift', label: 'Shift', icon: ClipboardList },
+  { href: '/pos', label: 'All', iconOutline: null, iconFilled: null },
+  { href: '/pos/tables', label: 'Tables', iconOutline: IconLayoutGrid, iconFilled: IconLayoutGridFilled },
+  { href: '/pos/orders', label: 'Orders', iconOutline: IconLayoutList, iconFilled: IconLayoutListFilled },
+  { href: '/pos/ready', label: 'Ready', iconOutline: IconClock, iconFilled: IconClockFilled },
+  { href: '/pos/shift', label: 'Shift', iconOutline: IconClipboardList, iconFilled: IconClipboardListFilled },
 ] as const
 
 export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
@@ -40,15 +50,19 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
       </div>
       {!hideNav && (
       <nav className="pos-dashboard-nav" aria-label="POS sections">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        {NAV_ITEMS.map(({ href, label, iconOutline, iconFilled }) => {
           const isActive = href === '/pos' ? pathname === '/pos' : (pathname === href || pathname.startsWith(href))
+          const Icon = isActive && iconFilled ? iconFilled : iconOutline
           return (
             <Link
               key={href}
               href={href}
               className={`pos-dashboard-nav-link ${isActive ? '!bg-primary-100 !border-primary-300 !text-primary-800 dark:!bg-primary-800 dark:!border-primary-600 dark:!text-primary-100' : ''}`}
+              aria-current={isActive ? 'page' : undefined}
             >
-              {Icon != null && <Icon className="w-4 h-4" aria-hidden />}
+              {Icon != null && (
+                <Icon className="w-4 h-4 shrink-0" aria-hidden stroke={1.5} />
+              )}
               {label}
             </Link>
           )

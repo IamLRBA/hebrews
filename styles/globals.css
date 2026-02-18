@@ -387,7 +387,7 @@
   }
 
   .btn::before {
-    padding: 1.5px;
+    padding: 1px;
     background: var(--btn-border-gradient);
     background-size: 200% 200%;
     background-position: 0% 50%;
@@ -665,6 +665,17 @@
     box-shadow: var(--shadow-lg);
   }
 
+  /* Category buttons: active state keeps hover style for clear indicator */
+  .pos-category-btn.btn-primary::after {
+    background: var(--btn-surface-hover);
+  }
+  .pos-category-btn.btn-primary::before {
+    background-position: 100% 50%;
+  }
+  .pos-category-btn.btn-primary {
+    color: var(--btn-text-hover);
+  }
+
   .pos-section {
     margin-bottom: var(--space-6);
   }
@@ -676,6 +687,24 @@
     margin: 0 0 var(--space-2) 0;
     letter-spacing: var(--tracking-tight);
     line-height: var(--leading-tight);
+  }
+
+  /* Thin divider between order items with fading ends */
+  .pos-order-item-divider {
+    display: block;
+    height: 1px;
+    width: 100%;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--color-border-primary) 18%,
+      var(--color-border-primary) 82%,
+      transparent 100%
+    );
   }
 
   .pos-section-subtitle {
@@ -691,7 +720,7 @@
     font-family: var(--font-family-primary);
     color: var(--color-text-primary);
     background: var(--color-bg-primary);
-    border: 2px solid var(--color-border-primary);
+    border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-lg);
     transition: all var(--transition-fast);
     min-height: 2.75rem;
@@ -735,7 +764,7 @@
     font-family: var(--font-family-primary);
     color: var(--color-text-primary);
     background: var(--color-bg-primary);
-    border: 2px solid var(--color-border-primary);
+    border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-lg);
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -935,7 +964,7 @@
   .pos-table-btn {
     padding: var(--space-5);
     min-height: 3.5rem;
-    border: 2px solid var(--color-border-primary);
+    border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-xl);
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
@@ -954,6 +983,12 @@
     box-shadow: var(--shadow-md);
   }
 
+  .dark .pos-table-btn-occupied:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--color-primary-700), var(--color-primary-600));
+    border-color: var(--color-primary-400);
+    color: var(--color-primary-100);
+  }
+
   .pos-table-btn:active:not(:disabled) {
     transform: translateY(0);
   }
@@ -962,6 +997,16 @@
     background: linear-gradient(135deg, var(--color-primary-100), var(--color-primary-200));
     border-color: var(--color-primary-400);
     box-shadow: var(--shadow-md);
+  }
+
+  .pos-table-badge-available {
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-text-primary);
+    background: transparent;
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--text-sm);
   }
 
   .pos-table-btn-occupied::after {
@@ -976,9 +1021,15 @@
     box-shadow: 0 0 0 2px var(--color-bg-card);
   }
 
+  .dark .pos-table-btn-occupied {
+    background: linear-gradient(135deg, var(--color-primary-800), var(--color-primary-700));
+    border-color: var(--color-primary-500);
+    color: var(--color-primary-100);
+  }
+
   .dark .pos-table-btn-occupied::after {
-    background: var(--color-primary-400);
-    box-shadow: 0 0 0 2px var(--color-bg-card);
+    background: var(--color-primary-300);
+    box-shadow: 0 0 0 2px var(--color-bg-primary);
   }
 
   /* POS Landing & Dashboard */
@@ -1017,7 +1068,7 @@
     background: rgba(25, 25, 25, 0.95);
   }
 
-  /* Back to top — fixed bottom-right, glassy transparent, arrow ⇑ */
+  /* Back to top — fixed bottom-right, transparent blurred, arrow ⇑ */
   .pos-back-to-top {
     position: fixed;
     bottom: var(--space-6);
@@ -1029,11 +1080,11 @@
     width: 2.75rem;
     height: 2.75rem;
     border-radius: var(--radius-full);
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     color: var(--color-primary-700);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--color-border-primary);
     box-shadow: var(--shadow-lg);
     cursor: pointer;
     transition: transform var(--transition-fast), box-shadow var(--transition-fast), color var(--transition-fast);
@@ -1052,8 +1103,10 @@
   }
 
   .dark .pos-back-to-top {
-    background: rgba(0, 0, 0, 0.25);
-    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border-primary);
     color: var(--color-primary-300);
   }
 
@@ -1268,6 +1321,7 @@
     margin-bottom: var(--space-8);
   }
 
+  /* Nav link buttons — keep original design (model for other POS buttons) */
   .pos-dashboard-nav-link {
     display: inline-flex;
     align-items: center;
@@ -1277,7 +1331,7 @@
     font-weight: var(--font-weight-medium);
     color: var(--color-text-accent);
     background: var(--color-bg-card);
-    border: 2px solid var(--color-border-primary);
+    border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-full);
     text-decoration: none;
     transition: all var(--transition-fast);
@@ -1294,8 +1348,94 @@
     transform: translateY(-1px);
   }
 
+  .pos-dashboard-nav-link[aria-current="page"]:hover {
+    background: var(--color-primary-200);
+    border-color: var(--color-border-secondary);
+    color: var(--color-primary-900);
+  }
+
   .pos-dashboard-nav-link:active {
     transform: translateY(0);
+  }
+
+  .dark .pos-dashboard-nav-link:hover {
+    color: var(--color-primary-100);
+    background: var(--color-primary-800);
+    border-color: var(--color-border-secondary);
+  }
+
+  .dark .pos-dashboard-nav-link[aria-current="page"]:hover {
+    background: var(--color-primary-700);
+    border-color: var(--color-border-secondary);
+    color: var(--color-primary-50);
+  }
+
+  /* POS buttons (excluding nav links, danger, secondary) — exact same style as nav links */
+  .pos-page .btn:not(.btn-danger):not(.btn-secondary) {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-accent);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-primary);
+    background: var(--color-bg-card);
+    box-shadow: none;
+    transition: all var(--transition-fast);
+  }
+
+  .pos-page .btn:not(.btn-danger):not(.btn-secondary)::before,
+  .pos-page .btn:not(.btn-danger):not(.btn-secondary)::after {
+    display: none;
+  }
+
+  .pos-page .btn:not(.btn-danger):not(.btn-secondary):hover,
+  .pos-page .btn:not(.btn-danger):not(.btn-secondary):focus-visible {
+    color: var(--color-primary-700);
+    background: var(--color-primary-100);
+    border-color: var(--color-border-secondary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .pos-page .btn:not(.btn-danger):not(.btn-secondary):active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  /* POS .btn-primary = active/filled state (like nav link active) */
+  .pos-page .btn-primary:not(.btn-danger):not(.btn-secondary) {
+    background: var(--color-primary-100);
+    border-color: var(--color-primary-300);
+    color: var(--color-primary-800);
+  }
+
+  .pos-page .btn-primary:not(.btn-danger):not(.btn-secondary):hover,
+  .pos-page .btn-primary:not(.btn-danger):not(.btn-secondary):focus-visible {
+    background: var(--color-primary-200);
+    border-color: var(--color-border-secondary);
+    color: var(--color-primary-900);
+  }
+
+  /* Dark mode — POS buttons (hover: dark bg + light text to match nav links) */
+  .dark .pos-page .btn:not(.btn-danger):not(.btn-secondary) {
+    color: var(--color-text-accent);
+  }
+
+  .dark .pos-page .btn:not(.btn-danger):not(.btn-secondary):hover,
+  .dark .pos-page .btn:not(.btn-danger):not(.btn-secondary):focus-visible {
+    color: var(--color-primary-100);
+    background: var(--color-primary-800);
+    border-color: var(--color-border-secondary);
+  }
+
+  .dark .pos-page .btn-primary:not(.btn-danger):not(.btn-secondary) {
+    background: var(--color-primary-800);
+    border-color: var(--color-primary-600);
+    color: var(--color-primary-100);
+  }
+
+  .dark .pos-page .btn-primary:not(.btn-danger):not(.btn-secondary):hover,
+  .dark .pos-page .btn-primary:not(.btn-danger):not(.btn-secondary):focus-visible {
+    background: var(--color-primary-700);
+    border-color: var(--color-border-secondary);
+    color: var(--color-primary-50);
   }
 
   .pos-dashboard-grid {
@@ -1407,6 +1547,21 @@
   .pos-dashboard-card-cta-btn {
     margin-top: auto;
     pointer-events: none;
+  }
+
+  /* Card CTA button: same hover style as nav links when card is hovered */
+  .pos-dashboard-card:hover .pos-dashboard-card-cta-btn {
+    color: var(--color-primary-700);
+    background: var(--color-primary-100);
+    border-color: var(--color-border-secondary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .dark .pos-dashboard-card:hover .pos-dashboard-card-cta-btn {
+    color: var(--color-primary-100);
+    background: var(--color-primary-800);
+    border-color: var(--color-border-secondary);
   }
 
   /* Navbar Search Styles */

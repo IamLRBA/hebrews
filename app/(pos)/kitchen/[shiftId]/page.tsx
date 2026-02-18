@@ -1,13 +1,17 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { Fragment, useEffect, useState, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getStaffId } from '@/lib/pos-client'
 import { ErrorBanner } from '@/components/pos/ErrorBanner'
 
+const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
+
 type QueueItem = {
   name: string
+  imageUrl?: string | null
   quantity: number
 }
 
@@ -165,12 +169,21 @@ export default function KitchenDisplayPage() {
               <p className="m-0 text-sm font-medium mb-2">
                 {order.tableLabel ?? 'Takeaway'}
               </p>
-              <ul className="m-0 pl-4 list-disc text-sm space-y-1 flex-1">
-                {order.items.map((item, i) => (
-                  <li key={i}>
-                    {item.name} × {item.quantity}
-                  </li>
-                ))}
+              <ul className="m-0 list-none p-0 text-sm flex-1">
+                {order.items.map((item, i) => {
+                  const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+                  return (
+                    <Fragment key={i}>
+                      <li className="flex items-center gap-2 py-1">
+                        <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
+                          <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
+                        </div>
+                        <span>{item.name} × {item.quantity}</span>
+                      </li>
+                      {i < order.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
+                    </Fragment>
+                  )
+                })}
               </ul>
               <p className="m-0 mt-2 text-xs capitalize">{order.status}</p>
               <div className="mt-3">
