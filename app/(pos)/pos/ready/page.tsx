@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { Fragment, useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
@@ -8,12 +8,16 @@ import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import { EmptyState } from '@/components/ui/EmptyState'
+import Image from 'next/image'
 import { Clock, CheckCircle } from 'lucide-react'
 import { formatRelativeTime } from '@/lib/utils/format'
+
+const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
 
 type ReadyOrderItem = {
   productId: string
   productName: string
+  imageUrl?: string | null
   quantity: number
 }
 
@@ -134,14 +138,22 @@ export default function PosReadyPage() {
                 )}
               </div>
               <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3">
-                <ul className="m-0 pl-4 list-disc text-sm text-neutral-700 dark:text-neutral-300 space-y-1">
-                  {o.items.map((item, i) => (
-                    <li key={i}>
-                      <span className="font-medium">{item.productName}</span>
-                      {' × '}
-                      <span className="text-primary-600 dark:text-primary-400">{item.quantity}</span>
-                    </li>
-                  ))}
+                <ul className="m-0 list-none p-0 text-sm text-neutral-700 dark:text-neutral-300">
+                  {o.items.map((item, i) => {
+                    const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+                    return (
+                      <Fragment key={i}>
+                        <li className="flex items-center gap-2 py-1">
+                          <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
+                            <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
+                          </div>
+                          <span className="font-medium">{item.productName}</span>
+                          <span className="text-primary-600 dark:text-primary-400">× {item.quantity}</span>
+                        </li>
+                        {i < o.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
+                      </Fragment>
+                    )
+                  })}
                 </ul>
               </div>
               <div className="mt-auto pt-2">

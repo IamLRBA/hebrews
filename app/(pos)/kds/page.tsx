@@ -1,13 +1,17 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { Fragment, useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
+
+const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
 
 type KdsOrderItem = {
   productId: string
   productName: string
+  imageUrl?: string | null
   quantity: number
   size: string | null
   modifier: string | null
@@ -132,15 +136,26 @@ export default function KdsPage() {
               <p className="m-0 text-sm text-neutral-600 dark:text-neutral-400">
                 {o.orderType === 'dine_in' && o.tableId ? `Table ${o.tableId}` : 'Takeaway'}
               </p>
-              <ul className="m-0 pl-5 list-disc text-neutral-700 dark:text-neutral-300 space-y-1 text-sm">
-                {o.items.map((item, i) => (
-                  <li key={i}>
-                    {item.productName} × {item.quantity}
-                    {item.size && ` • ${item.size}`}
-                    {item.modifier && ` • ${item.modifier}`}
-                    {item.notes && ` — ${item.notes}`}
-                  </li>
-                ))}
+              <ul className="m-0 list-none p-0 text-neutral-700 dark:text-neutral-300 text-sm">
+                {o.items.map((item, i) => {
+                  const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+                  return (
+                    <Fragment key={i}>
+                      <li className="flex items-center gap-2 py-1">
+                        <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
+                          <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
+                        </div>
+                        <span>
+                          {item.productName} × {item.quantity}
+                          {item.size && ` • ${item.size}`}
+                          {item.modifier && ` • ${item.modifier}`}
+                          {item.notes && ` — ${item.notes}`}
+                        </span>
+                      </li>
+                      {i < o.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
+                    </Fragment>
+                  )
+                })}
               </ul>
               <div className="mt-2">
                 {o.status === 'pending' && (

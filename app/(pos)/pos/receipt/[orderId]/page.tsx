@@ -3,9 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { getShiftId } from '@/lib/pos-shift-store'
 import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
+
+const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
 
 // Thermal receipt print styles: 80mm width, monospace, compact
 const receiptPrintStyles = `
@@ -37,6 +40,7 @@ const receiptPrintStyles = `
 
 type ReceiptItem = {
   name: string
+  imageUrl?: string | null
   quantity: number
   unitPriceUgx: number
   totalUgx: number
@@ -150,13 +154,22 @@ export default function PosReceiptPage() {
             <span>Total</span>
           </div>
           <hr className="receipt-divider border-neutral-200 dark:border-neutral-600 my-1" />
-          {receipt.items.map((item, i) => (
-            <div key={i} className="receipt-row receipt-line">
-              <span className="flex-1 truncate">{item.name}</span>
-              <span className="w-8 text-center">{item.quantity}</span>
-              <span className="w-20 text-right">{item.totalUgx.toLocaleString()}</span>
-            </div>
-          ))}
+          {receipt.items.map((item, i) => {
+            const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+            return (
+              <div key={i}>
+                <div className="receipt-row receipt-line flex items-center gap-2">
+                  <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-100 dark:bg-neutral-800 print:w-6 print:h-6">
+                    <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
+                  </div>
+                  <span className="flex-1 truncate">{item.name}</span>
+                  <span className="w-8 text-center">{item.quantity}</span>
+                  <span className="w-20 text-right">{item.totalUgx.toLocaleString()}</span>
+                </div>
+                {i < receipt.items.length - 1 && <div className="pos-order-item-divider my-1" aria-hidden />}
+              </div>
+            )
+          })}
           <hr className="receipt-divider border-neutral-200 dark:border-neutral-600 my-2" />
           <div className="receipt-row font-semibold text-base">
             <span>TOTAL:</span>

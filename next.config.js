@@ -8,20 +8,9 @@ const nextConfig = {
   },
   // Enable compression
   compress: true,
-  // Security headers. Force correct MIME types for Next static assets (must come last so they override generic headers).
+  // Security headers. More specific _next/static routes must come first so correct MIME types are sent (avoids "text/plain" / nosniff block).
   async headers() {
     return [
-      {
-        source: '/:path*',
-        headers: [
-          { key: 'X-DNS-Prefetch-Control', value: 'on' },
-          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-XSS-Protection', value: '1; mode=block' },
-          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
-        ],
-      },
       {
         source: '/_next/static/chunks/:path*',
         headers: [
@@ -32,6 +21,17 @@ const nextConfig = {
         source: '/_next/static/css/:path*',
         headers: [
           { key: 'Content-Type', value: 'text/css; charset=utf-8' },
+        ],
+      },
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
         ],
       },
     ]

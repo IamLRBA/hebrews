@@ -171,7 +171,7 @@ export default function PosTablesPage() {
         {/* Stats and Search */}
         <div className="mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
           <div className="flex gap-4 text-sm">
-            <span className="px-3 py-1.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 font-medium">
+            <span className="pos-table-badge-available">
               {availableCount} Available
             </span>
             <span className="px-3 py-1.5 rounded-full bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-200 font-medium">

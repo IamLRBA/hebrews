@@ -3,12 +3,16 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
+
+const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
 
 type OrderItem = {
   id: string
   productId: string
   productName: string
+  imageUrl?: string | null
   quantity: number
   subtotalUgx: number
 }
@@ -106,12 +110,21 @@ export default function ReceiptPage() {
           <p className="m-0 mt-1 text-neutral-700 dark:text-neutral-300">Status: {order.status}</p>
           <hr className="border-neutral-200 dark:border-neutral-600 my-4" />
           <p className="pos-section-title text-base m-0 mb-2">Items</p>
-          {order.items.map((item) => (
-            <p key={item.id} className="m-0 py-1 flex justify-between text-neutral-800 dark:text-neutral-200">
-              <span>{item.productName} × {item.quantity}</span>
-              <span className="font-medium text-primary-700 dark:text-primary-200">{item.subtotalUgx.toLocaleString()} UGX</span>
-            </p>
-          ))}
+          {order.items.map((item, index) => {
+            const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+            return (
+              <div key={item.id}>
+                <div className="flex items-center gap-3 py-2">
+                  <div className="relative w-10 h-10 flex-shrink-0 rounded overflow-hidden bg-neutral-100 dark:bg-neutral-800">
+                    <Image src={imgSrc} alt="" fill className="object-cover" sizes="40px" />
+                  </div>
+                  <span className="flex-1 text-neutral-800 dark:text-neutral-200">{item.productName} × {item.quantity}</span>
+                  <span className="font-medium text-primary-700 dark:text-primary-200">{item.subtotalUgx.toLocaleString()} UGX</span>
+                </div>
+                {index < order.items.length - 1 && <div className="pos-order-item-divider" aria-hidden />}
+              </div>
+            )
+          })}
           <hr className="border-neutral-200 dark:border-neutral-600 my-4" />
           <p className="m-0 py-1 flex justify-between font-medium">
             <span>Order total</span>

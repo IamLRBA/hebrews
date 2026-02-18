@@ -165,6 +165,7 @@ export async function getActiveOrdersForShift(shiftId: string): Promise<ActiveOr
 
 export type KdsOrderItem = {
   productName: string
+  imageUrl: string | null
   quantity: number
   size: string | null
   modifier: string | null
@@ -207,7 +208,7 @@ export async function getKdsOrders(): Promise<KdsOrderForDisplay[]> {
           modifier: true,
           notes: true,
           sortOrder: true,
-          product: { select: { name: true } },
+          product: { select: { name: true, images: true } },
         },
       },
     },
@@ -222,6 +223,7 @@ export async function getKdsOrders(): Promise<KdsOrderForDisplay[]> {
     createdAt: o.createdAt,
     items: o.orderItems.map((item) => ({
       productName: item.product.name,
+      imageUrl: item.product?.images?.[0] ?? null,
       quantity: item.quantity,
       size: item.size,
       modifier: item.modifier,
@@ -239,6 +241,7 @@ export type OrderDetailItem = {
   id: string
   productId: string
   productName: string
+  imageUrl: string | null
   quantity: number
   size: string | null
   modifier: string | null
@@ -291,6 +294,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
           modifier: true,
           notes: true,
           lineTotalUgx: true,
+          product: { select: { images: true } },
         },
       },
       payments: {
@@ -322,6 +326,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
       id: item.id,
       productId: item.productId,
       productName: nameMap[item.productId] ?? item.productId,
+      imageUrl: item.product?.images?.[0] ?? null,
       quantity: item.quantity,
       size: item.size,
       modifier: item.modifier,
@@ -683,6 +688,7 @@ export async function getActiveStaff(): Promise<ActiveStaffMember[]> {
 export type ReadyOrderItem = {
   productId: string
   productName: string
+  imageUrl: string | null
   quantity: number
 }
 
@@ -716,6 +722,7 @@ export async function getReadyOrders(): Promise<ReadyOrder[]> {
           select: {
             productId: true,
             quantity: true,
+            product: { select: { images: true } },
           },
         },
       },
@@ -732,6 +739,7 @@ export async function getReadyOrders(): Promise<ReadyOrder[]> {
     items: o.orderItems.map((item) => ({
       productId: item.productId,
       productName: nameMap[item.productId] ?? item.productId,
+      imageUrl: item.product?.images?.[0] ?? null,
       quantity: item.quantity,
     })),
   }))

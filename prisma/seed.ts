@@ -87,126 +87,147 @@ async function main() {
 
   const PLACEHOLDER_IMG = '/pos-images/placeholder.svg'
 
-  // Food & Drinks menu (placeholder prices in UGX — owner to update)
-  type ProductSeed = { sku: string; name: string; category: string; section: string; priceUgx: number; isHappyHour?: boolean }
+  // Remove existing Food products (and their order items) before replacing
+  const foodProducts = await prisma.product.findMany({ where: { category: 'Food' }, select: { id: true } })
+  const foodProductIds = foodProducts.map((p) => p.id)
+  if (foodProductIds.length > 0) {
+    await prisma.orderItem.deleteMany({ where: { productId: { in: foodProductIds } } })
+    await prisma.product.deleteMany({ where: { category: 'Food' } })
+    console.log('Removed', foodProductIds.length, 'existing Food products')
+  }
+
+  // Food & Drinks menu (Cafe Havilah prices in UGX)
+  type ProductSeed = { sku: string; name: string; category: string; section: string; priceUgx: number; isHappyHour?: boolean; image?: string }
+  const img = (path: string) => `/pos-images/${path}` // helper for image paths
   const products: ProductSeed[] = [
-    // Food — Starters / Appetizers
-    { sku: 'STARTER-001', name: 'Soup of the Day', category: 'Food', section: 'Starters / Appetizers', priceUgx: 8000 },
-    { sku: 'STARTER-002', name: 'Garlic Bread', category: 'Food', section: 'Starters / Appetizers', priceUgx: 6000 },
-    { sku: 'STARTER-003', name: 'Spring Rolls', category: 'Food', section: 'Starters / Appetizers', priceUgx: 10000 },
-    { sku: 'STARTER-004', name: 'Bruschetta', category: 'Food', section: 'Starters / Appetizers', priceUgx: 9000 },
-    { sku: 'STARTER-005', name: 'Chicken Wings', category: 'Food', section: 'Starters / Appetizers', priceUgx: 12000 },
-    // Food — Salads
-    { sku: 'SALAD-001', name: 'Caesar Salad', category: 'Food', section: 'Salads', priceUgx: 12000 },
-    { sku: 'SALAD-002', name: 'Greek Salad', category: 'Food', section: 'Salads', priceUgx: 12000 },
-    { sku: 'SALAD-003', name: 'House Salad', category: 'Food', section: 'Salads', priceUgx: 8000 },
-    { sku: 'SALAD-004', name: 'Mediterranean Salad', category: 'Food', section: 'Salads', priceUgx: 14000 },
-    // Food — Main Course
-    { sku: 'MAIN-001', name: 'Grilled Chicken', category: 'Food', section: 'Main Course', priceUgx: 22000 },
-    { sku: 'MAIN-002', name: 'Fish & Chips', category: 'Food', section: 'Main Course', priceUgx: 25000 },
-    { sku: 'MAIN-003', name: 'Beef Steak', category: 'Food', section: 'Main Course', priceUgx: 35000 },
-    { sku: 'MAIN-004', name: 'Spaghetti Bolognese', category: 'Food', section: 'Main Course', priceUgx: 18000 },
-    { sku: 'MAIN-005', name: 'Chicken Curry', category: 'Food', section: 'Main Course', priceUgx: 20000 },
-    // Food — Grill
-    { sku: 'GRILL-001', name: 'Grilled Chicken', category: 'Food', section: 'Grill', priceUgx: 22000 },
-    { sku: 'GRILL-002', name: 'Lamb Chops', category: 'Food', section: 'Grill', priceUgx: 38000 },
-    { sku: 'GRILL-003', name: 'Mixed Grill', category: 'Food', section: 'Grill', priceUgx: 42000 },
-    { sku: 'GRILL-004', name: 'Pork Chops', category: 'Food', section: 'Grill', priceUgx: 28000 },
-    { sku: 'GRILL-005', name: 'Beef Skewers', category: 'Food', section: 'Grill', priceUgx: 30000 },
-    // Food — Platters / Sharing
-    { sku: 'PLAT-001', name: 'Sharing Platter', category: 'Food', section: 'Platters / Sharing', priceUgx: 55000 },
-    { sku: 'PLAT-002', name: 'Cheese Board', category: 'Food', section: 'Platters / Sharing', priceUgx: 28000 },
-    { sku: 'PLAT-003', name: 'Meat Platter', category: 'Food', section: 'Platters / Sharing', priceUgx: 60000 },
-    // Food — Sides
-    { sku: 'SIDE-001', name: 'Fries', category: 'Food', section: 'Sides', priceUgx: 5000 },
-    { sku: 'SIDE-002', name: 'Rice', category: 'Food', section: 'Sides', priceUgx: 4000 },
-    { sku: 'SIDE-003', name: 'Coleslaw', category: 'Food', section: 'Sides', priceUgx: 4000 },
-    { sku: 'SIDE-004', name: 'Mashed Potato', category: 'Food', section: 'Sides', priceUgx: 5000 },
-    { sku: 'SIDE-005', name: 'Vegetables', category: 'Food', section: 'Sides', priceUgx: 4500 },
+    // Food — Breakfast
+    { sku: 'FOOD-BF-001', name: 'English Breakfast', category: 'Food', section: 'Breakfast', priceUgx: 30000, image: img('food/breakfast/english-breakfast.jpg') },
+    { sku: 'FOOD-BF-002', name: 'Quick Man Breakfast', category: 'Food', section: 'Breakfast', priceUgx: 30000, image: img('food/breakfast/quick-man-breakfast.jpg') },
+    { sku: 'FOOD-BF-003', name: 'Home Made Breakfast (V)', category: 'Food', section: 'Breakfast', priceUgx: 30000, image: img('food/breakfast/home-made-breakfast-v.jpg') },
+    { sku: 'FOOD-BF-004', name: 'Fresh Fruit Salad & Granola', category: 'Food', section: 'Breakfast', priceUgx: 20000, image: img('food/breakfast/fresh-fruit-salad-granola.jpg') },
+    // Food — Starters
+    { sku: 'FOOD-ST-001', name: 'French Fries Plate', category: 'Food', section: 'Starters', priceUgx: 10000, image: img('food/starters/french-fries-plate.jpg') },
+    { sku: 'FOOD-ST-002', name: 'Fish Fingers', category: 'Food', section: 'Starters', priceUgx: 20000, image: img('food/starters/fish-fingers.jpg') },
+    { sku: 'FOOD-ST-003', name: 'Chicken Samosa Pair', category: 'Food', section: 'Starters', priceUgx: 6000, image: img('food/starters/chicken-samosa-pair.jpg') },
+    // Food — Chicken Dishes
+    { sku: 'FOOD-CH-001', name: 'Chicken Wings', category: 'Food', section: 'Chicken Dishes', priceUgx: 25000, image: img('food/chicken-dishes/chicken-wings.jpg') },
+    { sku: 'FOOD-CH-002', name: 'Chicken Gizzards', category: 'Food', section: 'Chicken Dishes', priceUgx: 25000, image: img('food/chicken-dishes/chicken-gizzards.jpg') },
+    { sku: 'FOOD-CH-003', name: 'Jimbo Rolex', category: 'Food', section: 'Chicken Dishes', priceUgx: 20000, image: img('food/chicken-dishes/jimbo-rolex.jpg') },
+    { sku: 'FOOD-CH-004', name: 'Drums of Havilah (3 pcs)', category: 'Food', section: 'Chicken Dishes', priceUgx: 35000, image: img('food/chicken-dishes/drums-of-havilah.jpg') },
+    { sku: 'FOOD-CH-005', name: 'Grilled Lemon Paprika Chicken Breast', category: 'Food', section: 'Chicken Dishes', priceUgx: 35000, image: img('food/chicken-dishes/grilled-lemon-paprika-chicken-breast.jpg') },
+    { sku: 'FOOD-CH-006', name: 'Stir Fry Chicken / Beef', category: 'Food', section: 'Chicken Dishes', priceUgx: 35000, image: img('food/chicken-dishes/stir-fry-chicken-beef.jpg') },
+    // Food — Soups
+    { sku: 'FOOD-SOUP-001', name: 'Tomato & Roast Pepper Soup', category: 'Food', section: 'Soups', priceUgx: 20000, image: img('food/soups/tomato-roast-pepper-soup.jpg') },
+    { sku: 'FOOD-SOUP-002', name: 'Mushroom Soup (V)', category: 'Food', section: 'Soups', priceUgx: 20000, image: img('food/soups/mushroom-soup-v.jpg') },
+    { sku: 'FOOD-SOUP-003', name: 'Bone Soup (Clear)', category: 'Food', section: 'Soups', priceUgx: 20000, image: img('food/soups/bone-soup-clear.jpg') },
+    { sku: 'FOOD-SOUP-004', name: 'Mulokoni (Caribbean Style)', category: 'Food', section: 'Soups', priceUgx: 25000, image: img('food/soups/mulokoni-caribbean-style.jpg') },
+    // Food — Salads & Sandwiches
+    { sku: 'FOOD-SAL-001', name: 'Chicken Caesar Salad', category: 'Food', section: 'Salads & Sandwiches', priceUgx: 30000, image: img('food/salads-sandwiches/chicken-caesar-salad.jpg') },
+    { sku: 'FOOD-SAL-002', name: 'Espaniole Salad (V)', category: 'Food', section: 'Salads & Sandwiches', priceUgx: 30000, image: img('food/salads-sandwiches/espaniole-salad-v.jpg') },
+    { sku: 'FOOD-SAL-003', name: 'Club Chicken Sandwich', category: 'Food', section: 'Salads & Sandwiches', priceUgx: 25000, image: img('food/salads-sandwiches/club-chicken-sandwich.jpg') },
+    { sku: 'FOOD-SAL-004', name: 'Beef Philly Sandwich', category: 'Food', section: 'Salads & Sandwiches', priceUgx: 30000, image: img('food/salads-sandwiches/beef-philly-sandwich.jpg') },
+    { sku: 'FOOD-SAL-005', name: 'Grilled Vegetable Antipasto', category: 'Food', section: 'Salads & Sandwiches', priceUgx: 30000, image: img('food/salads-sandwiches/grilled-vegetable-antipasto.jpg') },
+    // Food — Burgers
+    { sku: 'FOOD-BRG-001', name: 'Beef & Cheese Burger', category: 'Food', section: 'Burgers', priceUgx: 30000, image: img('food/burgers/beef-cheese-burger.jpg') },
+    { sku: 'FOOD-BRG-002', name: 'Classic Chicken Burger', category: 'Food', section: 'Burgers', priceUgx: 30000, image: img('food/burgers/classic-chicken-burger.jpg') },
+    { sku: 'FOOD-BRG-003', name: 'Vegetarian Burger (V)', category: 'Food', section: 'Burgers', priceUgx: 30000, image: img('food/burgers/vegetarian-burger-v.jpg') },
+    // Food — Pasta
+    { sku: 'FOOD-PST-001', name: 'Mushroom, Chicken & Cream Pasta', category: 'Food', section: 'Pasta', priceUgx: 35000, image: img('food/pasta/mushroom-chicken-cream-pasta.jpg') },
+    { sku: 'FOOD-PST-002', name: 'Chicken, Bacon & Cream Pasta', category: 'Food', section: 'Pasta', priceUgx: 30000, image: img('food/pasta/chicken-bacon-cream-pasta.jpg') },
+    // Food — Main Dishes
+    { sku: 'FOOD-MAIN-001', name: 'Goat (½ kg)', category: 'Food', section: 'Main Dishes', priceUgx: 35000, image: img('food/main-dishes/goat.jpg') },
+    { sku: 'FOOD-MAIN-002', name: 'Local Chicken (various styles)', category: 'Food', section: 'Main Dishes', priceUgx: 45000, image: img('food/main-dishes/local-chicken.jpg') },
+    // Food — Weekend Chef's Platters
+    { sku: 'FOOD-PLAT-001', name: 'White Meat Platter', category: 'Food', section: "Weekend Chef's Platters", priceUgx: 75000, image: img('food/weekend-chefs-platters/white-meat-platter.jpg') },
+    { sku: 'FOOD-PLAT-002', name: 'Mixed Meat Platter', category: 'Food', section: "Weekend Chef's Platters", priceUgx: 85000, image: img('food/weekend-chefs-platters/mixed-meat-platter.jpg') },
+    // Food — Weekend Burger Offers
+    { sku: 'FOOD-WBO-001', name: 'Beef Bacon Cheese Burger', category: 'Food', section: 'Weekend Burger Offers', priceUgx: 25000, image: img('food/weekend-burger-offers/beef-bacon-cheese-burger.jpg') },
+    { sku: 'FOOD-WBO-002', name: 'Chicken Burger Special', category: 'Food', section: 'Weekend Burger Offers', priceUgx: 25000, image: img('food/weekend-burger-offers/chicken-burger-special.jpg') },
+    { sku: 'FOOD-WBO-003', name: 'Vegetarian Burger', category: 'Food', section: 'Weekend Burger Offers', priceUgx: 20000, image: img('food/weekend-burger-offers/vegetarian-burger.jpg') },
     // Food — Desserts
-    { sku: 'DESSERT-001', name: 'Chocolate Cake', category: 'Food', section: 'Desserts', priceUgx: 10000 },
-    { sku: 'DESSERT-002', name: 'Ice Cream', category: 'Food', section: 'Desserts', priceUgx: 7000 },
-    { sku: 'DESSERT-003', name: 'Fruit Salad', category: 'Food', section: 'Desserts', priceUgx: 8000 },
-    { sku: 'DESSERT-004', name: 'Tiramisu', category: 'Food', section: 'Desserts', priceUgx: 12000 },
-    { sku: 'DESSERT-005', name: 'Brownie', category: 'Food', section: 'Desserts', priceUgx: 8000 },
-    // Food — Chef Specials
-    { sku: 'CHEF-001', name: "Chef's Special", category: 'Food', section: 'Chef Specials', priceUgx: 30000 },
-    { sku: 'CHEF-002', name: "Daily Special", category: 'Food', section: 'Chef Specials', priceUgx: 28000 },
+    { sku: 'FOOD-DES-001', name: 'Triple Baller Ice Cream', category: 'Food', section: 'Desserts', priceUgx: 10000, image: img('food/desserts/triple-baller-ice-cream.jpg') },
+    { sku: 'FOOD-DES-002', name: 'Chocolate Brownie with Ice Cream', category: 'Food', section: 'Desserts', priceUgx: 15000, image: img('food/desserts/chocolate-brownie-ice-cream.jpg') },
+    // Food — Spicy / Specialty Dishes
+    { sku: 'FOOD-SPEC-001', name: 'Thai Chicken Thighs Satay', category: 'Food', section: 'Spicy / Specialty Dishes', priceUgx: 40000, image: img('food/spicy-specialty-dishes/thai-chicken-thighs-satay.jpg') },
+    { sku: 'FOOD-SPEC-002', name: 'Cajun Spicy Paneer (V)', category: 'Food', section: 'Spicy / Specialty Dishes', priceUgx: 45000, image: img('food/spicy-specialty-dishes/cajun-spicy-paneer-v.jpg') },
+    { sku: 'FOOD-SPEC-003', name: 'Spicy Drums of Havilah', category: 'Food', section: 'Spicy / Specialty Dishes', priceUgx: 45000, image: img('food/spicy-specialty-dishes/spicy-drums-of-havilah.jpg') },
+    { sku: 'FOOD-SPEC-004', name: 'Chili Garlic Spicy Shrimps', category: 'Food', section: 'Spicy / Specialty Dishes', priceUgx: 60000, image: img('food/spicy-specialty-dishes/chili-garlic-spicy-shrimps.jpg') },
     // Drinks — Beers (Alcoholic)
-    { sku: 'BEER-001', name: 'Local Beer', category: 'Drinks', section: 'Beers', priceUgx: 8000, isHappyHour: true },
-    { sku: 'BEER-002', name: 'Imported Beer', category: 'Drinks', section: 'Beers', priceUgx: 12000, isHappyHour: true },
-    { sku: 'BEER-003', name: 'Craft Beer', category: 'Drinks', section: 'Beers', priceUgx: 15000 },
+    { sku: 'BEER-001', name: 'Local Beer', category: 'Drinks', section: 'Beers', priceUgx: 8000, isHappyHour: true, image: img('drinks/alcoholic/beers/local-beer.jpg') },
+    { sku: 'BEER-002', name: 'Imported Beer', category: 'Drinks', section: 'Beers', priceUgx: 12000, isHappyHour: true, image: img('drinks/alcoholic/beers/imported-beer.jpg') },
+    { sku: 'BEER-003', name: 'Craft Beer', category: 'Drinks', section: 'Beers', priceUgx: 15000, image: img('drinks/alcoholic/beers/craft-beer.jpg') },
     // Drinks — Wines
-    { sku: 'WINE-001', name: 'Red Wine (Glass)', category: 'Drinks', section: 'Wines', priceUgx: 12000 },
-    { sku: 'WINE-002', name: 'Red Wine (Bottle)', category: 'Drinks', section: 'Wines', priceUgx: 45000 },
-    { sku: 'WINE-003', name: 'White Wine (Glass)', category: 'Drinks', section: 'Wines', priceUgx: 12000 },
-    { sku: 'WINE-004', name: 'White Wine (Bottle)', category: 'Drinks', section: 'Wines', priceUgx: 45000 },
-    { sku: 'WINE-005', name: 'Rosé (Glass)', category: 'Drinks', section: 'Wines', priceUgx: 12000 },
+    { sku: 'WINE-001', name: 'Red Wine (Glass)', category: 'Drinks', section: 'Wines', priceUgx: 12000, image: img('drinks/alcoholic/wines/red-wine-glass.jpg') },
+    { sku: 'WINE-002', name: 'Red Wine (Bottle)', category: 'Drinks', section: 'Wines', priceUgx: 45000, image: img('drinks/alcoholic/wines/red-wine-bottle.jpg') },
+    { sku: 'WINE-003', name: 'White Wine (Glass)', category: 'Drinks', section: 'Wines', priceUgx: 12000, image: img('drinks/alcoholic/wines/white-wine-glass.jpg') },
+    { sku: 'WINE-004', name: 'White Wine (Bottle)', category: 'Drinks', section: 'Wines', priceUgx: 45000, image: img('drinks/alcoholic/wines/white-wine-bottle.jpg') },
+    { sku: 'WINE-005', name: 'Rosé (Glass)', category: 'Drinks', section: 'Wines', priceUgx: 12000, image: img('drinks/alcoholic/wines/rose-glass.jpg') },
     // Drinks — Spirits
-    { sku: 'SPIRIT-001', name: 'Whisky (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 15000 },
-    { sku: 'SPIRIT-002', name: 'Vodka (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 12000 },
-    { sku: 'SPIRIT-003', name: 'Tequila (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 14000 },
-    { sku: 'SPIRIT-004', name: 'Rum (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 12000 },
-    { sku: 'SPIRIT-005', name: 'Gin (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 13000 },
-    { sku: 'SPIRIT-006', name: 'Liquor (Shot)', category: 'Drinks', section: 'Spirits', priceUgx: 10000 },
-    { sku: 'SPIRIT-007', name: 'Brandy (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 14000 },
+    { sku: 'SPIRIT-001', name: 'Whisky (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 15000, image: img('drinks/alcoholic/spirits/whisky-single.jpg') },
+    { sku: 'SPIRIT-002', name: 'Vodka (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 12000, image: img('drinks/alcoholic/spirits/vodka-single.jpg') },
+    { sku: 'SPIRIT-003', name: 'Tequila (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 14000, image: img('drinks/alcoholic/spirits/tequila-single.jpg') },
+    { sku: 'SPIRIT-004', name: 'Rum (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 12000, image: img('drinks/alcoholic/spirits/rum-single.jpg') },
+    { sku: 'SPIRIT-005', name: 'Gin (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 13000, image: img('drinks/alcoholic/spirits/gin-single.jpg') },
+    { sku: 'SPIRIT-006', name: 'Liquor (Shot)', category: 'Drinks', section: 'Spirits', priceUgx: 10000, image: img('drinks/alcoholic/spirits/liquor-shot.jpg') },
+    { sku: 'SPIRIT-007', name: 'Brandy (Single)', category: 'Drinks', section: 'Spirits', priceUgx: 14000, image: img('drinks/alcoholic/spirits/brandy-single.jpg') },
     // Drinks — Champagnes
-    { sku: 'CHAMP-001', name: 'Champagne (Glass)', category: 'Drinks', section: 'Champagnes', priceUgx: 25000 },
-    { sku: 'CHAMP-002', name: 'Champagne (Bottle)', category: 'Drinks', section: 'Champagnes', priceUgx: 120000 },
+    { sku: 'CHAMP-001', name: 'Champagne (Glass)', category: 'Drinks', section: 'Champagnes', priceUgx: 25000, image: img('drinks/alcoholic/champagnes/champagne-glass.jpg') },
+    { sku: 'CHAMP-002', name: 'Champagne (Bottle)', category: 'Drinks', section: 'Champagnes', priceUgx: 120000, image: img('drinks/alcoholic/champagnes/champagne-bottle.jpg') },
     // Cocktails (Happy Hour)
-    { sku: 'COCK-001', name: 'Classic Cocktail', category: 'Drinks', section: 'Cocktails', priceUgx: 18000, isHappyHour: true },
-    { sku: 'COCK-002', name: 'Signature Cocktail', category: 'Drinks', section: 'Cocktails', priceUgx: 22000, isHappyHour: true },
-    { sku: 'COCK-003', name: 'Margarita', category: 'Drinks', section: 'Cocktails', priceUgx: 20000 },
+    { sku: 'COCK-001', name: 'Classic Cocktail', category: 'Drinks', section: 'Cocktails', priceUgx: 18000, isHappyHour: true, image: img('drinks/alcoholic/cocktails/classic-cocktail.jpg') },
+    { sku: 'COCK-002', name: 'Signature Cocktail', category: 'Drinks', section: 'Cocktails', priceUgx: 22000, isHappyHour: true, image: img('drinks/alcoholic/cocktails/signature-cocktail.jpg') },
+    { sku: 'COCK-003', name: 'Margarita', category: 'Drinks', section: 'Cocktails', priceUgx: 20000, image: img('drinks/alcoholic/cocktails/margarita.jpg') },
     // Drinks — Pitchers
-    { sku: 'PITCH-001', name: 'Beer Pitcher', category: 'Drinks', section: 'Pitchers', priceUgx: 25000, isHappyHour: true },
-    { sku: 'PITCH-002', name: 'Cocktail Pitcher', category: 'Drinks', section: 'Pitchers', priceUgx: 45000 },
+    { sku: 'PITCH-001', name: 'Beer Pitcher', category: 'Drinks', section: 'Pitchers', priceUgx: 25000, isHappyHour: true, image: img('drinks/alcoholic/pitchers/beer-pitcher.jpg') },
+    { sku: 'PITCH-002', name: 'Cocktail Pitcher', category: 'Drinks', section: 'Pitchers', priceUgx: 45000, image: img('drinks/alcoholic/pitchers/cocktail-pitcher.jpg') },
     // Tea & Coffee
-    { sku: 'TC-001', name: 'Espresso', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 6000 },
-    { sku: 'TC-002', name: 'Cappuccino', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 8000 },
-    { sku: 'TC-003', name: 'Latte', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 8000 },
-    { sku: 'TC-004', name: 'Americano', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 6000 },
-    { sku: 'TC-005', name: 'Tea', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 5000 },
-    { sku: 'TC-006', name: 'Mocha', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 9000 },
-    { sku: 'TC-007', name: 'Green Tea', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 5000 },
-    { sku: 'TC-008', name: 'Chai Latte', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 8000 },
+    { sku: 'TC-001', name: 'Espresso', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 6000, image: img('drinks/nonalcoholic/tea-coffee/espresso.jpg') },
+    { sku: 'TC-002', name: 'Cappuccino', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 8000, image: img('drinks/nonalcoholic/tea-coffee/cappuccino.jpg') },
+    { sku: 'TC-003', name: 'Latte', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 8000, image: img('drinks/nonalcoholic/tea-coffee/latte.jpg') },
+    { sku: 'TC-004', name: 'Americano', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 6000, image: img('drinks/nonalcoholic/tea-coffee/americano.jpg') },
+    { sku: 'TC-005', name: 'Tea', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 5000, image: img('drinks/nonalcoholic/tea-coffee/tea.jpg') },
+    { sku: 'TC-006', name: 'Mocha', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 9000, image: img('drinks/nonalcoholic/tea-coffee/mocha.jpg') },
+    { sku: 'TC-007', name: 'Green Tea', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 5000, image: img('drinks/nonalcoholic/tea-coffee/green-tea.jpg') },
+    { sku: 'TC-008', name: 'Chai Latte', category: 'Drinks', section: 'Tea & Coffee', priceUgx: 8000, image: img('drinks/nonalcoholic/tea-coffee/chai-latte.jpg') },
     // Drinks — Fresh Juices
-    { sku: 'JUICE-001', name: 'Orange Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 7000 },
-    { sku: 'JUICE-002', name: 'Mango Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 7000 },
-    { sku: 'JUICE-003', name: 'Passion Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 7000 },
-    { sku: 'JUICE-004', name: 'Mixed Fruit Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 8000 },
-    { sku: 'JUICE-005', name: 'Pineapple Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 7000 },
-    { sku: 'JUICE-006', name: 'Avocado Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 9000 },
+    { sku: 'JUICE-001', name: 'Orange Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 7000, image: img('drinks/nonalcoholic/fresh-juices/orange-juice.jpg') },
+    { sku: 'JUICE-002', name: 'Mango Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 7000, image: img('drinks/nonalcoholic/fresh-juices/mango-juice.jpg') },
+    { sku: 'JUICE-003', name: 'Passion Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 7000, image: img('drinks/nonalcoholic/fresh-juices/passion-juice.jpg') },
+    { sku: 'JUICE-004', name: 'Mixed Fruit Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 8000, image: img('drinks/nonalcoholic/fresh-juices/mixed-fruit-juice.jpg') },
+    { sku: 'JUICE-005', name: 'Pineapple Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 7000, image: img('drinks/nonalcoholic/fresh-juices/pineapple-juice.jpg') },
+    { sku: 'JUICE-006', name: 'Avocado Juice', category: 'Drinks', section: 'Fresh Juices', priceUgx: 9000, image: img('drinks/nonalcoholic/fresh-juices/avocado-juice.jpg') },
     // Drinks — Milkshakes
-    { sku: 'MILK-001', name: 'Vanilla Milkshake', category: 'Drinks', section: 'Milkshakes', priceUgx: 9000 },
-    { sku: 'MILK-002', name: 'Chocolate Milkshake', category: 'Drinks', section: 'Milkshakes', priceUgx: 9000 },
-    { sku: 'MILK-003', name: 'Strawberry Milkshake', category: 'Drinks', section: 'Milkshakes', priceUgx: 9000 },
-    { sku: 'MILK-004', name: 'Oreo Milkshake', category: 'Drinks', section: 'Milkshakes', priceUgx: 10000 },
+    { sku: 'MILK-001', name: 'Vanilla Milkshake', category: 'Drinks', section: 'Milkshakes', priceUgx: 9000, image: img('drinks/nonalcoholic/milkshakes/vanilla-milkshake.jpg') },
+    { sku: 'MILK-002', name: 'Chocolate Milkshake', category: 'Drinks', section: 'Milkshakes', priceUgx: 9000, image: img('drinks/nonalcoholic/milkshakes/chocolate-milkshake.jpg') },
+    { sku: 'MILK-003', name: 'Strawberry Milkshake', category: 'Drinks', section: 'Milkshakes', priceUgx: 9000, image: img('drinks/nonalcoholic/milkshakes/strawberry-milkshake.jpg') },
+    { sku: 'MILK-004', name: 'Oreo Milkshake', category: 'Drinks', section: 'Milkshakes', priceUgx: 10000, image: img('drinks/nonalcoholic/milkshakes/oreo-milkshake.jpg') },
     // Drinks — Smoothies
-    { sku: 'SMTH-001', name: 'Fruit Smoothie', category: 'Drinks', section: 'Smoothies', priceUgx: 10000 },
-    { sku: 'SMTH-002', name: 'Green Smoothie', category: 'Drinks', section: 'Smoothies', priceUgx: 10000 },
-    { sku: 'SMTH-003', name: 'Berry Smoothie', category: 'Drinks', section: 'Smoothies', priceUgx: 11000 },
-    { sku: 'SMTH-004', name: 'Tropical Smoothie', category: 'Drinks', section: 'Smoothies', priceUgx: 11000 },
+    { sku: 'SMTH-001', name: 'Fruit Smoothie', category: 'Drinks', section: 'Smoothies', priceUgx: 10000, image: img('drinks/nonalcoholic/smoothies/fruit-smoothie.jpg') },
+    { sku: 'SMTH-002', name: 'Green Smoothie', category: 'Drinks', section: 'Smoothies', priceUgx: 10000, image: img('drinks/nonalcoholic/smoothies/green-smoothie.jpg') },
+    { sku: 'SMTH-003', name: 'Berry Smoothie', category: 'Drinks', section: 'Smoothies', priceUgx: 11000, image: img('drinks/nonalcoholic/smoothies/berry-smoothie.jpg') },
+    { sku: 'SMTH-004', name: 'Tropical Smoothie', category: 'Drinks', section: 'Smoothies', priceUgx: 11000, image: img('drinks/nonalcoholic/smoothies/tropical-smoothie.jpg') },
     // Drinks — Mocktails
-    { sku: 'MOCK-001', name: 'Virgin Mojito', category: 'Drinks', section: 'Mocktails', priceUgx: 8000 },
-    { sku: 'MOCK-002', name: 'Fruit Punch', category: 'Drinks', section: 'Mocktails', priceUgx: 8000 },
-    { sku: 'MOCK-003', name: 'Shirley Temple', category: 'Drinks', section: 'Mocktails', priceUgx: 7000 },
-    { sku: 'MOCK-004', name: 'Virgin Piña Colada', category: 'Drinks', section: 'Mocktails', priceUgx: 9000 },
+    { sku: 'MOCK-001', name: 'Virgin Mojito', category: 'Drinks', section: 'Mocktails', priceUgx: 8000, image: img('drinks/nonalcoholic/mocktails/virgin-mojito.jpg') },
+    { sku: 'MOCK-002', name: 'Fruit Punch', category: 'Drinks', section: 'Mocktails', priceUgx: 8000, image: img('drinks/nonalcoholic/mocktails/fruit-punch.jpg') },
+    { sku: 'MOCK-003', name: 'Shirley Temple', category: 'Drinks', section: 'Mocktails', priceUgx: 7000, image: img('drinks/nonalcoholic/mocktails/shirley-temple.jpg') },
+    { sku: 'MOCK-004', name: 'Virgin Piña Colada', category: 'Drinks', section: 'Mocktails', priceUgx: 9000, image: img('drinks/nonalcoholic/mocktails/virgin-pina-colada.jpg') },
     // Drinks — Sodas
-    { sku: 'SODA-001', name: 'Coca-Cola', category: 'Drinks', section: 'Sodas', priceUgx: 4000 },
-    { sku: 'SODA-002', name: 'Sprite', category: 'Drinks', section: 'Sodas', priceUgx: 4000 },
-    { sku: 'SODA-003', name: 'Fanta', category: 'Drinks', section: 'Sodas', priceUgx: 4000 },
-    { sku: 'SODA-004', name: 'Soda Water', category: 'Drinks', section: 'Sodas', priceUgx: 3000 },
-    { sku: 'SODA-005', name: 'Pepsi', category: 'Drinks', section: 'Sodas', priceUgx: 4000 },
+    { sku: 'SODA-001', name: 'Coca-Cola', category: 'Drinks', section: 'Sodas', priceUgx: 4000, image: img('drinks/nonalcoholic/sodas/coca-cola.jpg') },
+    { sku: 'SODA-002', name: 'Sprite', category: 'Drinks', section: 'Sodas', priceUgx: 4000, image: img('drinks/nonalcoholic/sodas/sprite.jpg') },
+    { sku: 'SODA-003', name: 'Fanta', category: 'Drinks', section: 'Sodas', priceUgx: 4000, image: img('drinks/nonalcoholic/sodas/fanta.jpg') },
+    { sku: 'SODA-004', name: 'Soda Water', category: 'Drinks', section: 'Sodas', priceUgx: 3000, image: img('drinks/nonalcoholic/sodas/soda-water.jpg') },
+    { sku: 'SODA-005', name: 'Pepsi', category: 'Drinks', section: 'Sodas', priceUgx: 4000, image: img('drinks/nonalcoholic/sodas/pepsi.jpg') },
     // Drinks — Water
-    { sku: 'WATER-001', name: 'Still Water', category: 'Drinks', section: 'Water', priceUgx: 3000 },
-    { sku: 'WATER-002', name: 'Sparkling Water', category: 'Drinks', section: 'Water', priceUgx: 5000 },
-    { sku: 'WATER-003', name: 'Flavoured Water', category: 'Drinks', section: 'Water', priceUgx: 4000 },
+    { sku: 'WATER-001', name: 'Still Water', category: 'Drinks', section: 'Water', priceUgx: 3000, image: img('drinks/nonalcoholic/water/still-water.jpg') },
+    { sku: 'WATER-002', name: 'Sparkling Water', category: 'Drinks', section: 'Water', priceUgx: 5000, image: img('drinks/nonalcoholic/water/sparkling-water.jpg') },
+    { sku: 'WATER-003', name: 'Flavoured Water', category: 'Drinks', section: 'Water', priceUgx: 4000, image: img('drinks/nonalcoholic/water/flavoured-water.jpg') },
   ]
 
   for (const p of products) {
+    const productImage = p.image ?? PLACEHOLDER_IMG
     await prisma.product.upsert({
       where: { sku: p.sku },
-      update: { name: p.name, category: p.category, section: p.section, priceUgx: p.priceUgx, isHappyHour: p.isHappyHour ?? false, images: [PLACEHOLDER_IMG] },
+      update: { name: p.name, category: p.category, section: p.section, priceUgx: p.priceUgx, isHappyHour: p.isHappyHour ?? false, images: [productImage] },
       create: {
         name: p.name,
         category: p.category,
@@ -215,7 +236,7 @@ async function main() {
         priceUgx: p.priceUgx,
         sizes: [],
         colors: [],
-        images: [PLACEHOLDER_IMG],
+        images: [productImage],
         stockQty: 999,
         isActive: true,
         isHappyHour: p.isHappyHour ?? false,
