@@ -2,10 +2,14 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Settings, LogIn } from 'lucide-react'
+import { useRouter, usePathname } from 'next/navigation'
+import { Settings, LogOut } from 'lucide-react'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
+import { clearStaffSession } from '@/lib/pos-client'
 
 export default function SettingsDropdown() {
+  const router = useRouter()
+  const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
   const [spinning, setSpinning] = useState(false)
@@ -65,14 +69,18 @@ export default function SettingsDropdown() {
         <div className={`pos-settings-dropdown-panel ${closing ? 'pos-settings-dropdown-panel-close' : ''}`} role="menu">
           <ThemeSwitcher />
           <div className="pos-settings-dropdown-divider" />
-          <Link
-            href="/pos/login"
+          <button
+            type="button"
+            onClick={() => {
+              clearStaffSession()
+              handleClose()
+              router.push('/login')
+            }}
             className="pos-settings-dropdown-link"
-            onClick={() => handleClose()}
           >
-            <LogIn className="w-4 h-4" aria-hidden />
-            <span>Staff login</span>
-          </Link>
+            <LogOut className="w-4 h-4" aria-hidden />
+            <span>Logout</span>
+          </button>
         </div>
       )}
     </div>

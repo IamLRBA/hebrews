@@ -239,8 +239,18 @@ export default function PosDashboardPage() {
         <div className="pos-page-container max-w-md mx-auto">
           <PosNavHeader hideNav />
           <div className="pos-card text-center">
-            <div className="w-14 h-14 rounded-xl bg-primary-100 dark:bg-primary-800 flex items-center justify-center mx-auto mb-4">
-              <PlayCircle className="w-7 h-7 text-primary-600 dark:text-primary-300" aria-hidden />
+            <div className="relative w-[84px] h-[84px] mx-auto mb-4">
+              <img
+                src="/Light.jpg"
+                alt="Cafe Havilah Logo"
+                className="w-[84px] h-[84px] object-contain dark:hidden"
+              />
+              <img
+                src="/Dark.jpg"
+                alt="Cafe Havilah Logo"
+                className="hidden w-[84px] h-[84px] object-contain dark:block"
+                style={{ backgroundColor: 'transparent', mixBlendMode: 'normal' }}
+              />
             </div>
             <h1 className="pos-section-title text-2xl mb-2">Start your shift</h1>
             <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-6 max-w-sm mx-auto">

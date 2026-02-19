@@ -1,43 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { ErrorBanner } from '@/components/pos/ErrorBanner'
 
 export default function PosLoginPage() {
   const router = useRouter()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!username.trim() || !password) return
-    setLoading(true)
-    setError(null)
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username.trim(), password }),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) {
-        const msg = data.error || (res.status === 500 ? 'Server error. Check that the database is running and seeded.' : 'Login failed')
-        throw new Error(msg)
-      }
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('pos_staff_id', data.staffId)
-      }
-      router.replace('/pos/start')
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Login failed')
-    } finally {
-      setLoading(false)
-    }
-  }
+  
+  useEffect(() => {
+    // Redirect to unified login
+    router.replace('/login')
+  }, [router])
+  
+  return null
 
   return (
     <main className="pos-page flex items-center justify-center min-h-screen">
