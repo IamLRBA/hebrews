@@ -44,6 +44,18 @@ type OrderDetail = {
   status: string
   totalUgx: number
   items: OrderItem[]
+  orderType?: 'takeaway' | 'dine_in'
+  tableId?: string | null
+  tableCode?: string | null
+}
+
+type TableStatus = {
+  tableId: string
+  tableCode: string
+  capacity?: number | null
+  hasActiveOrder: boolean
+  orderId: string | null
+  orderNumber: string | null
 }
 
 const FOOD_SECTIONS = [
@@ -110,6 +122,16 @@ export default function PosOrdersPage() {
   const [error, setError] = useState<string | null>(null)
   const [modifierProduct, setModifierProduct] = useState<PosProduct | null>(null)
   const [modifierSelections, setModifierSelections] = useState<Record<string, string>>({})
+  const [orderType, setOrderType] = useState<'takeaway' | 'dine_in' | null>(null)
+  const [selectedTableId, setSelectedTableId] = useState<string | null>(null)
+  const [tables, setTables] = useState<TableStatus[]>([])
+  const [tableSearchQuery, setTableSearchQuery] = useState('')
+  const [tableSearchFocused, setTableSearchFocused] = useState(false)
+  const tableSearchWrapperRef = useRef<HTMLDivElement>(null)
+  const tableSearchInputRef = useRef<HTMLInputElement>(null)
+  const [serviceTypeDropdownOpen, setServiceTypeDropdownOpen] = useState(false)
+  const serviceTypeSelectRef = useRef<HTMLSelectElement>(null)
+  const serviceTypeJustClicked = useRef(false)
 
   const shiftId = getShiftId()
 
@@ -142,8 +164,21 @@ export default function PosOrdersPage() {
   const fetchOrder = useCallback(async (orderId: string) => {
     try {
       const res = await posFetch(`/api/orders/${orderId}`)
-      if (res.ok) setOrder(await res.json())
-      else setOrder(null)
+      if (res.ok) {
+        const data = await res.json()
+        setOrder(data)
+        // Sync orderType and tableId from fetched order (only if they exist)
+        if (data.orderType) {
+          setOrderType(data.orderType)
+        } else {
+          setOrderType(null) // Reset if no orderType in fetched order
+        }
+        if (data.tableId) {
+          setSelectedTableId(data.tableId)
+        } else {
+          setSelectedTableId(null)
+        }
+      } else setOrder(null)
     } catch {
       setOrder(null)
     }
@@ -154,10 +189,33 @@ export default function PosOrdersPage() {
       if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) {
         setSearchFocused(false)
       }
+      if (tableSearchWrapperRef.current && !tableSearchWrapperRef.current.contains(e.target as Node)) {
+        setTableSearchFocused(false)
+      }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  async function fetchTables() {
+    if (!shiftId) {
+      setTables([])
+      return
+    }
+    try {
+      const res = await posFetch(`/api/pos/tables?shiftId=${encodeURIComponent(shiftId)}`)
+      if (!res.ok) throw new Error('Failed to load tables')
+      const data = await res.json()
+      setTables(data)
+    } catch (e) {
+      setTables([])
+    }
+  }
+
+  useEffect(() => {
+    if (shiftId) fetchTables()
+    else setTables([])
+  }, [shiftId])
 
   useEffect(() => {
     if (!getStaffId()) {
@@ -181,6 +239,7 @@ export default function PosOrdersPage() {
     const staffId = getStaffId()
     if (!staffId) return
     setCreating(true)
+    setError(null)
     try {
       const res = await posFetch('/api/orders/takeaway', {
         method: 'POST',
@@ -198,7 +257,10 @@ export default function PosOrdersPage() {
         status: data.status,
         totalUgx: data.totalUgx ?? 0,
         items: [],
+        // Don't include orderType - let user select it
       })
+      setOrderType(null) // No default - user must select
+      setSelectedTableId(null)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to create order')
     } finally {
@@ -231,7 +293,10 @@ export default function PosOrdersPage() {
           status: createData.status,
           totalUgx: createData.totalUgx ?? 0,
           items: [],
+          // Don't include orderType - let user select it
         })
+        setOrderType(null) // No default - user must select
+        setSelectedTableId(null)
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Failed to create order')
         setCreating(false)
@@ -259,7 +324,13 @@ export default function PosOrdersPage() {
         throw new Error(data.error || 'Failed to add item')
       }
       const data = await res.json()
-      setOrder(data)
+      // If user hasn't selected orderType yet, exclude it from order object so placeholder shows
+      if (orderType === null) {
+        const { orderType: _, ...orderWithoutType } = data
+        setOrder(orderWithoutType)
+      } else {
+        setOrder(data)
+      }
       setModifierProduct(null)
       setModifierSelections({})
       if (shiftId) fetchPopularProducts()
@@ -385,7 +456,16 @@ export default function PosOrdersPage() {
       setError('Add items before sending to kitchen')
       return
     }
+    if (!orderType) {
+      setError('Please select service type (Takeaway or Dine In)')
+      return
+    }
+    if (orderType === 'dine_in' && !selectedTableId) {
+      setError('Please select a table for dine-in order')
+      return
+    }
     setSubmitting(true)
+    setError(null)
     try {
       const res = await posFetch(`/api/orders/${order.orderId}/submit`, {
         method: 'POST',
@@ -735,8 +815,14 @@ export default function PosOrdersPage() {
             <>
               <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mb-2">
                 #{order.orderNumber} · {order.status}
+                {order.orderType && (
+                  <span className="ml-1">
+                    · {order.orderType === 'dine_in' ? 'Dine-in' : 'Takeaway'}
+                    {order.tableCode && ` · Table ${order.tableCode}`}
+                  </span>
+                )}
               </p>
-              <ul className="flex-1 overflow-auto list-none p-0 m-0 space-y-3 mb-4">
+              <ul className="flex-1 overflow-auto list-none m-0 space-y-3 mb-4 border-2 border-neutral-400 dark:border-neutral-400 rounded-lg p-3 bg-neutral-50 dark:bg-neutral-800">
                 {(order?.items ?? []).length === 0 ? (
                   <EmptyState icon={Package} title="No items yet" description="Add products from the menu" />
                 ) : (
@@ -768,10 +854,10 @@ export default function PosOrdersPage() {
                         </div>
                       </div>
                       <div className="inline-flex items-stretch">
-                        <div className="flex items-center justify-center px-3 py-1.5 min-w-[2rem] bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 rounded-l-xl border-r-0 font-semibold text-sm">
+                        <div className="flex items-center justify-center px-3 py-1.5 min-w-[2rem] bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-l-xl border-r-0 font-semibold text-sm">
                           {item.quantity}
                         </div>
-                        <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+                        <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-100 dark:bg-neutral-700">
                           <button
                             type="button"
                             onClick={() => handleQuantityChange(item.id, 1)}
@@ -828,25 +914,155 @@ export default function PosOrdersPage() {
                 <p className="font-semibold text-xl text-primary-700 dark:text-primary-200 mb-4">
                   Total: {order.totalUgx.toLocaleString()} UGX
                 </p>
+                {order.status === 'pending' && (
+                  <>
+                    <div className="mb-4">
+                      <label className="block mb-2">
+                        <span className="pos-label">Service Type</span>
+                        <div className="relative mt-1">
+                          <select
+                            ref={serviceTypeSelectRef}
+                            value={orderType || order?.orderType || ''}
+                            onMouseDown={() => {
+                              // Toggle immediately on click - this fires before onFocus
+                              serviceTypeJustClicked.current = true
+                              setServiceTypeDropdownOpen((prev) => !prev)
+                            }}
+                            onFocus={() => {
+                              // Only set to open if we didn't just click (to prevent overriding toggle)
+                              if (!serviceTypeJustClicked.current) {
+                                setServiceTypeDropdownOpen(true)
+                              }
+                              serviceTypeJustClicked.current = false
+                            }}
+                            onBlur={() => {
+                              // When select loses focus, dropdown closes
+                              setServiceTypeDropdownOpen(false)
+                              serviceTypeJustClicked.current = false
+                            }}
+                            onChange={(e) => {
+                              const newType = e.target.value as 'takeaway' | 'dine_in'
+                              setOrderType(newType)
+                              if (newType === 'takeaway') {
+                                setSelectedTableId(null)
+                              }
+                              // After selecting, dropdown closes
+                              setServiceTypeDropdownOpen(false)
+                            }}
+                            className={`pos-input pos-select-service-type w-full pr-10 pl-3 [appearance:none] [&::-webkit-appearance:none] [&::-moz-appearance:none] dark:[&::-webkit-inner-spin-button]:appearance-none dark:[&::-webkit-calendar-picker-indicator]:hidden dark:[&::-moz-appearance:none] ${!orderType && !order.orderType ? 'text-transparent' : ''}`}
+                          >
+                            <option value="" disabled hidden>Select service type...</option>
+                            <option value="takeaway">Takeaway</option>
+                            <option value="dine_in">Dine In</option>
+                          </select>
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500 dark:text-neutral-400 text-lg leading-none">
+                            {serviceTypeDropdownOpen ? '⇑' : '⇓'}
+                          </span>
+                          {!orderType && !order?.orderType && (
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-400 dark:text-neutral-500 text-sm select-none">
+                              Select service type...
+                            </span>
+                          )}
+                        </div>
+                      </label>
+                      {orderType === 'dine_in' && (
+                        <div className="mt-3">
+                          <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Select Table</p>
+                          <div className="relative" ref={tableSearchWrapperRef}>
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" aria-hidden />
+                            <input
+                              ref={tableSearchInputRef}
+                              type="text"
+                              placeholder="Search tables..."
+                              value={tableSearchQuery}
+                              onChange={(e) => setTableSearchQuery(e.target.value)}
+                              onFocus={() => setTableSearchFocused(true)}
+                              className="pos-input pl-10 pr-10 w-full"
+                              aria-label="Search tables"
+                              aria-expanded={tableSearchFocused && tableSearchQuery.trim().length > 0}
+                            />
+                            {tableSearchQuery.length > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setTableSearchQuery('')
+                                  setTableSearchFocused(false)
+                                }}
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 dark:hover:text-neutral-300 dark:hover:bg-neutral-600"
+                                aria-label="Clear"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            )}
+                            {tableSearchFocused && tableSearchQuery.trim().length > 0 && (
+                              <ul className="absolute z-50 w-full mt-1 py-2 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 bg-white dark:bg-neutral-800 shadow-lg max-h-60 overflow-auto list-none">
+                                {tables
+                                  .filter((table) =>
+                                    table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase())
+                                  )
+                                  .slice(0, 10)
+                                  .length === 0 ? (
+                                    <li className="px-4 py-3 text-sm text-neutral-500 dark:text-neutral-400">
+                                      No tables match
+                                    </li>
+                                  ) : (
+                                    tables
+                                      .filter((table) =>
+                                        table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase())
+                                      )
+                                      .slice(0, 10)
+                                      .map((table) => (
+                                        <li key={table.tableId}>
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              setSelectedTableId(table.tableId)
+                                              setTableSearchQuery(table.tableCode)
+                                              setTableSearchFocused(false)
+                                            }}
+                                            className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30 focus:bg-primary-50 dark:focus:bg-primary-900/30 focus:outline-none"
+                                          >
+                                            <span className="text-primary-700 dark:text-primary-300">Table {table.tableCode}</span>
+                                            {table.capacity && (
+                                              <span className="text-neutral-500 dark:text-neutral-400 ml-2">({table.capacity} seats)</span>
+                                            )}
+                                          </button>
+                                        </li>
+                                      ))
+                                  )}
+                              </ul>
+                            )}
+                          </div>
+                          {selectedTableId && (
+                            <p className="text-xs text-primary-600 dark:text-primary-400 mt-1">
+                              Selected: {tables.find((t) => t.tableId === selectedTableId)?.tableCode}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
                 <div className="flex flex-col gap-2">
-                  {order.status === 'pending' && (
+                  {order.status === 'pending' ? (
                     <button
                       type="button"
                       onClick={handleSendToKitchen}
-                      disabled={submitting || (order?.items ?? []).length === 0}
-                      className="btn btn-outline py-3 disabled:opacity-60"
+                      disabled={submitting || (order?.items ?? []).length === 0 || !orderType || (orderType === 'dine_in' && !selectedTableId)}
+                      className="btn btn-primary py-3 disabled:opacity-60"
                     >
                       {submitting ? 'Sending…' : 'Send to Kitchen'}
                     </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handlePay}
+                      disabled={(order?.items ?? []).length === 0}
+                      className="btn btn-primary py-3 disabled:opacity-60"
+                    >
+                      Pay
+                    </button>
                   )}
-                  <button
-                    type="button"
-                    onClick={handlePay}
-                    disabled={(order?.items ?? []).length === 0}
-                    className="btn btn-primary py-3 disabled:opacity-60"
-                  >
-                    Pay
-                  </button>
                 </div>
               </div>
             </>

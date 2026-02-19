@@ -356,7 +356,7 @@ export default function OrderDetailPage() {
       <section className="pos-section pos-card pos-order-card-centered">
         <h2 className="pos-section-title">Items</h2>
         {items.length === 0 && <p className="text-neutral-600 dark:text-neutral-400 m-0">No items.</p>}
-        <ul className="list-none p-0">
+        <ul className="list-none m-0 border-2 border-neutral-400 dark:border-neutral-400 rounded-lg p-3 bg-neutral-50 dark:bg-neutral-800">
           {items.map((item, index) => {
             const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
             return (
@@ -378,10 +378,10 @@ export default function OrderDetailPage() {
               </div>
               {!block && (
                 <div className="inline-flex items-stretch">
-                  <div className="flex items-center justify-center px-3 py-1.5 min-w-[2rem] bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 rounded-l-xl border-r-0 font-semibold text-sm">
+                  <div className="flex items-center justify-center px-3 py-1.5 min-w-[2rem] bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-l-xl border-r-0 font-semibold text-sm">
                     {item.quantity}
                   </div>
-                  <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+                  <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-100 dark:bg-neutral-700">
                     <button
                       type="button"
                       onClick={() => handleItemQuantity(item.id, item.quantity + 1)}
@@ -541,17 +541,20 @@ export default function OrderDetailPage() {
       </section>
 
       <section className="flex flex-wrap gap-3 mt-6 justify-center pt-4 pb-4">
-        <button onClick={handlePayment} disabled={!hasItems || block} className="btn btn-primary disabled:opacity-60">
-          Payment
-        </button>
-        <button
-          type="button"
-          onClick={handleSendToKitchen}
-          disabled={!canSendToKitchen || !hasItems || submitting}
-          className={`pos-dashboard-nav-link disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:transform-none ${submitting ? 'opacity-70' : ''}`}
-        >
-          {submitting ? 'Sending…' : 'Send to Kitchen'}
-        </button>
+        {order?.status === 'pending' ? (
+          <button
+            type="button"
+            onClick={handleSendToKitchen}
+            disabled={!canSendToKitchen || !hasItems || submitting}
+            className={`pos-dashboard-nav-link disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:transform-none ${submitting ? 'opacity-70' : ''}`}
+          >
+            {submitting ? 'Sending…' : 'Send to Kitchen'}
+          </button>
+        ) : (
+          <button onClick={handlePayment} disabled={!hasItems || block} className="btn btn-primary disabled:opacity-60">
+            Payment
+          </button>
+        )}
       </section>
       </div>
     </main>
