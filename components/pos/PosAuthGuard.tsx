@@ -12,12 +12,16 @@ export function PosAuthGuard({ children }: { children: React.ReactNode }) {
     if (!pathname) return
     const isPosRoute = pathname.startsWith('/pos')
     const isKitchenRoute = pathname.startsWith('/kitchen')
-    if (!isPosRoute && !isKitchenRoute) return
-    if (pathname === '/pos/login') return
+    const isAdminRoute = pathname.startsWith('/admin')
+    const isManagerRoute = pathname.startsWith('/manager')
+    const isLoginRoute = pathname === '/login' || pathname === '/pos/login'
+    
+    if (!isPosRoute && !isKitchenRoute && !isAdminRoute && !isManagerRoute) return
+    if (isLoginRoute) return
 
     const staffId = getStaffId()
     if (!staffId) {
-      router.replace('/pos/login')
+      router.replace('/login')
     }
   }, [pathname, router])
 

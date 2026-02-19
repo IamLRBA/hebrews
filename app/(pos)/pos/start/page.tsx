@@ -17,7 +17,7 @@ export default function PosStartPage() {
   useEffect(() => {
     const staffId = getStaffId()
     if (!staffId) {
-      router.replace('/pos/login')
+      router.replace('/login')
       return
     }
     setLoading(false)
@@ -27,7 +27,7 @@ export default function PosStartPage() {
     e.preventDefault()
     const staffId = getStaffId()
     if (!staffId) {
-      router.replace('/pos/login')
+      router.replace('/login')
       return
     }
     setStarting(true)
