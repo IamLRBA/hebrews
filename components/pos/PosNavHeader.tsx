@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Coffee } from 'lucide-react'
 import {
   IconLayoutGrid,
   IconLayoutGridFilled,
@@ -38,7 +37,21 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
           href="/pos"
           className="flex items-center gap-2 text-primary-700 dark:text-primary-200 hover:text-primary-800 dark:hover:text-primary-100 transition-colors w-fit"
         >
-          <Coffee className="w-7 h-7" aria-hidden />
+          <div className="relative w-[84px] h-[84px] flex-shrink-0">
+            {/* Light mode logo */}
+            <img
+              src="/Light.jpg"
+              alt="Cafe Havilah Logo"
+              className="w-[84px] h-[84px] object-contain dark:hidden"
+            />
+            {/* Dark mode logo - transparent background */}
+            <img
+              src="/Dark.jpg"
+              alt="Cafe Havilah Logo"
+              className="hidden w-[84px] h-[84px] object-contain dark:block"
+              style={{ backgroundColor: 'transparent', mixBlendMode: 'normal' }}
+            />
+          </div>
           <CafeHavilahWord className="text-lg font-semibold tracking-tight" />
         </Link>
         <div className="flex items-center gap-2 ml-auto">

@@ -14,7 +14,8 @@
     "db:migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:delete-orders": "ts-node --compiler-options {\"module\":\"CommonJS\"} scripts/delete-test-orders.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"

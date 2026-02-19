@@ -205,10 +205,10 @@ export default function PosDashboardPage() {
         const data = await res.json().catch(() => ({}))
         throw new Error(data.error || `HTTP ${res.status}`)
       }
-      await fetchOrders()
+      const data = await res.json()
+      router.push(`/pos/orders/${data.id}`)
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to create order')
-    } finally {
       setCreating(null)
     }
   }
@@ -383,15 +383,6 @@ export default function PosDashboardPage() {
             Quick actions
           </h2>
           <div className="flex flex-wrap gap-3 justify-center">
-            <button
-              type="button"
-              onClick={handleNewDineIn}
-              disabled={creating !== null}
-              className="btn btn-outline inline-flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              <PlusCircle className="w-4 h-4" aria-hidden />
-              {creating === 'dine-in' ? 'Creating…' : 'New Dine-In Order'}
-            </button>
             <button
               type="button"
               onClick={handleNewTakeaway}
