@@ -6,14 +6,24 @@ import { RoleGuard } from '@/components/pos/RoleGuard'
 import { AdminNavHeader } from '@/components/admin/AdminNavHeader'
 import { posFetch } from '@/lib/pos-client'
 import { Package, Plus, Edit, Search, X } from 'lucide-react'
+import { ProductModal } from '@/components/admin/ProductModal'
 
 const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
+
+function getProductImageSrc(images: string[] | undefined): string {
+  const first = images?.[0]
+  if (!first) return PLACEHOLDER_IMAGE
+  if (first.startsWith('http') || first.startsWith('/')) return first
+  return `/${first}`
+}
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
+  const [productModalOpen, setProductModalOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState<any>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchWrapperRef = useRef<HTMLDivElement>(null)
 
@@ -27,27 +37,38 @@ export default function AdminProductsPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const res = await posFetch('/api/pos/products')
-        if (res.ok) {
-          const data = await res.json()
-          setProducts(data)
+  async function fetchProducts() {
+    setLoading(true)
+    try {
+      const res = await posFetch('/api/admin/products')
+      if (res.ok) {
+        const data = await res.json()
+        setProducts(Array.isArray(data) ? data : data.products ?? data)
+      } else {
+        const fallback = await posFetch('/api/pos/products')
+        if (fallback.ok) {
+          const data = await fallback.json()
+          setProducts(Array.isArray(data) ? data : [])
         }
-      } catch (e) {
-        console.error('Failed to fetch products:', e)
-      } finally {
-        setLoading(false)
       }
+    } catch (e) {
+      console.error('Failed to fetch products:', e)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchProducts()
   }, [])
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.category?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredProducts = [...products]
+    .filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => (a.name || '').localeCompare(b.name || '', 'en', { sensitivity: 'base' }))
 
   const searchSuggestions = searchQuery.trim()
     ? products.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 10)
@@ -67,7 +88,7 @@ export default function AdminProductsPage() {
               <p className="text-neutral-600 dark:text-neutral-400 mb-4">
                 Manage products and inventory
               </p>
-              <button className="btn btn-primary flex items-center gap-2 mx-auto">
+              <button type="button" onClick={() => { setEditingProduct(null); setProductModalOpen(true) }} className="btn btn-primary flex items-center gap-2 mx-auto">
                 <Plus className="w-5 h-5" />
                 Add Product
               </button>
@@ -121,8 +142,8 @@ export default function AdminProductsPage() {
                             }}
                           >
                             <div className="relative w-8 h-8 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex-shrink-0">
-                              <Image
-                                src={product.images?.[0] || PLACEHOLDER_IMAGE}
+                                <Image
+                                src={getProductImageSrc(product.images)}
                                 alt=""
                                 fill
                                 className="object-cover"
@@ -139,7 +160,7 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-200 dark:border-neutral-800 overflow-hidden">
               {loading ? (
                 <div className="p-8 text-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
@@ -149,6 +170,9 @@ export default function AdminProductsPage() {
                   <table className="w-full">
                     <thead className="bg-neutral-50 dark:bg-neutral-800">
                       <tr>
+                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 w-12">
+                          #
+                        </th>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                           Image
                         </th>
@@ -160,9 +184,6 @@ export default function AdminProductsPage() {
                         </th>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                           Price
-                        </th>
-                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
-                          Stock
                         </th>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                           Status
@@ -186,30 +207,31 @@ export default function AdminProductsPage() {
                             key={product.productId}
                             className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
                           >
+                            <td className="py-4 px-6 text-sm font-medium text-neutral-700 dark:text-neutral-300 w-12">
+                              {idx + 1}
+                            </td>
                             <td className="py-4 px-6">
-                              <div className="relative w-16 h-16 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
+                              <div className="relative w-16 h-16 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700 inline-block">
                                 <Image
-                                  src={product.images?.[0] || PLACEHOLDER_IMAGE}
+                                  src={getProductImageSrc(product.images)}
                                   alt={product.name}
                                   fill
                                   className="object-cover"
                                   sizes="64px"
+                                  unoptimized
                                 />
                               </div>
                             </td>
                             <td className="py-4 px-6 text-sm font-medium text-neutral-900 dark:text-neutral-100">
                               {product.name}
                             </td>
-                          <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
-                            {product.category}
-                          </td>
-                          <td className="py-4 px-6 text-sm text-neutral-900 dark:text-neutral-100">
-                            {product.priceUgx.toLocaleString()} UGX
-                          </td>
-                          <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
-                            {product.stockQty || 0}
-                          </td>
-                          <td className="py-4 px-6">
+                            <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
+                              {product.category}
+                            </td>
+                            <td className="py-4 px-6 text-sm text-neutral-900 dark:text-neutral-100">
+                              {product.priceUgx.toLocaleString()} UGX
+                            </td>
+                            <td className="py-4 px-6">
                             <span
                               className={`px-2 py-1 rounded-full text-xs font-medium ${
                                 product.isActive
@@ -221,7 +243,7 @@ export default function AdminProductsPage() {
                             </span>
                           </td>
                           <td className="py-4 px-6">
-                              <button className="btn btn-outline p-2">
+                              <button type="button" onClick={() => { setEditingProduct(product); setProductModalOpen(true) }} className="btn btn-outline p-2">
                                 <Edit className="w-4 h-4" />
                               </button>
                           </td>
@@ -233,6 +255,13 @@ export default function AdminProductsPage() {
                 </div>
               )}
             </div>
+
+            <ProductModal
+              isOpen={productModalOpen}
+              onClose={() => { setProductModalOpen(false); setEditingProduct(null) }}
+              onSuccess={() => { setProductModalOpen(false); setEditingProduct(null); void fetchProducts() }}
+              product={editingProduct}
+            />
           </main>
         </div>
       </div>

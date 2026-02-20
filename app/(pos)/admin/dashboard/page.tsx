@@ -269,12 +269,12 @@ export default function AdminDashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {/* Revenue Trend */}
               <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
-                <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                   Revenue Trend (Last 7 Days)
                 </h2>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={analytics.revenueTrends}>
-                    <CartesianGrid strokeDasharray="3 3" />
+                    <CartesianGrid strokeDasharray="3 3" className="recharts-cartesian-grid" />
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip formatter={(value: number) => `${value.toLocaleString()} UGX`} />
@@ -292,7 +292,7 @@ export default function AdminDashboardPage() {
 
               {/* Payment Methods */}
               <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
-                <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+                <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                   Sales by Payment Method
                 </h2>
                 <ResponsiveContainer width="100%" height={300}>
@@ -317,16 +317,16 @@ export default function AdminDashboardPage() {
               </div>
             </div>
 
-            {/* Top Products */}
+            {/* Top Products - horizontal bars so product names don't overlap */}
             <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
-              <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+              <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                 Top Products (Last 30 Days)
               </h2>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={analytics.topProducts}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                  <YAxis />
+              <ResponsiveContainer width="100%" height={Math.max(400, (analytics.topProducts?.length ?? 0) * 36 + 80)}>
+                <BarChart data={analytics.topProducts} layout="vertical" margin={{ left: 8, right: 24 }}>
+                  <CartesianGrid strokeDasharray="3 3" className="recharts-cartesian-grid" />
+                  <XAxis type="number" />
+                  <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 12 }} />
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="quantity" fill="#6F4E37" name="Quantity Sold" />

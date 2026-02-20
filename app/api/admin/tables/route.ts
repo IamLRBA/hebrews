@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
         code: table.code,
         tableCode: table.code,
         capacity: table.capacity,
+        images: (table as { images?: string[] }).images ?? [],
         status: table.orders.length > 0 ? 'occupied' : 'available',
         hasActiveOrder: table.orders.length > 0,
         orderId: table.orders[0]?.id || null,
@@ -54,5 +55,38 @@ export async function GET(request: NextRequest) {
       { error: error instanceof Error ? error.message : 'Failed to fetch tables' },
       { status: 500 }
     )
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
+    if (!staffId) return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
+    await assertStaffRole(staffId, ['admin'])
+    const body = await request.json()
+    const { code, capacity, images } = body
+    if (typeof code !== 'string' || !code.trim()) return NextResponse.json({ error: 'code is required' }, { status: 400 })
+    const imagesArr = Array.isArray(images) ? images.filter((u: unknown) => typeof u === 'string').slice(0, 5) : []
+    const table = await prisma.restaurantTable.create({
+      data: {
+        code: code.trim().slice(0, 16),
+        capacity: typeof capacity === 'number' && !isNaN(capacity) ? capacity : null,
+        images: imagesArr,
+      },
+    })
+    return NextResponse.json(table)
+  } catch (error) {
+    console.error('[admin/tables] POST error:', error)
+    const message = error instanceof Error ? error.message : 'Failed to create table'
+    if (message.includes('Unknown argument') && message.includes('images')) {
+      return NextResponse.json(
+        {
+          error:
+            'Table images are not yet in the database. Stop the dev server, run: npx prisma generate && npx prisma db push, then restart.',
+        },
+        { status: 500 }
+      )
+    }
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

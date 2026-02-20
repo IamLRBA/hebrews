@@ -5,8 +5,9 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { ManagerNavHeader } from '@/components/manager/ManagerNavHeader'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { posFetch } from '@/lib/pos-client'
-import { ArrowLeft, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import Link from 'next/link'
 
 const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
@@ -17,6 +18,9 @@ export default function ManagerOrderDetailPage() {
   const orderId = params.orderId as string
   const [order, setOrder] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [confirmCancelOrder, setConfirmCancelOrder] = useState(false)
+  const [confirmRemoveItem, setConfirmRemoveItem] = useState<{ id: string; name: string } | null>(null)
+  const [removingItemId, setRemovingItemId] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchOrder() {
@@ -35,8 +39,7 @@ export default function ManagerOrderDetailPage() {
     if (orderId) fetchOrder()
   }, [orderId])
 
-  async function handleCancel() {
-    if (!confirm('Are you sure you want to cancel this order?')) return
+  async function handleCancelOrder() {
     try {
       const staffId = localStorage.getItem('pos_staff_id')
       const res = await posFetch(`/api/orders/${orderId}/cancel`, {
@@ -45,10 +48,33 @@ export default function ManagerOrderDetailPage() {
         body: JSON.stringify({ cancelledByStaffId: staffId }),
       })
       if (res.ok) {
+        setConfirmCancelOrder(false)
         router.push('/manager/orders')
+      } else {
+        const data = await res.json().catch(() => ({}))
+        alert(data.error || 'Failed to cancel order')
       }
     } catch (e) {
       alert('Failed to cancel order')
+    }
+  }
+
+  async function handleRemoveItem(itemId: string) {
+    setRemovingItemId(itemId)
+    try {
+      const res = await posFetch(`/api/order-items/${itemId}`, { method: 'DELETE' })
+      if (res.ok) {
+        const data = await res.json()
+        setOrder(data)
+        setConfirmRemoveItem(null)
+      } else {
+        const data = await res.json().catch(() => ({}))
+        alert(data.error || 'Failed to remove item')
+      }
+    } catch (e) {
+      alert('Failed to remove item')
+    } finally {
+      setRemovingItemId(null)
     }
   }
 
@@ -61,10 +87,9 @@ export default function ManagerOrderDetailPage() {
             <div className="mb-6">
               <Link
                 href="/manager/orders"
-                className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline mb-4"
+                className="pos-link inline-block mb-4"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Orders
+                ⇐ Back to Orders
               </Link>
               <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
                 Order Details
@@ -84,8 +109,9 @@ export default function ManagerOrderDetailPage() {
                     </h2>
                     {order.status !== 'served' && order.status !== 'cancelled' && (
                       <button
-                        onClick={handleCancel}
-                        className="btn btn-outline text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+                        type="button"
+                        onClick={() => setConfirmCancelOrder(true)}
+                        className="btn btn-outline flex items-center gap-2"
                       >
                         <X className="w-4 h-4" />
                         Cancel Order
@@ -128,8 +154,10 @@ export default function ManagerOrderDetailPage() {
                     <ul className="list-none m-0 p-0">
                       {order.items.map((item: any, idx: number) => {
                         const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+                        const canRemove = (order.status === 'pending' || order.status === 'preparing') && item.id
+                        const lineTotal = item.lineTotalUgx ?? item.subtotalUgx
                         return (
-                          <Fragment key={idx}>
+                          <Fragment key={item.id ?? idx}>
                             <li className="flex items-center gap-3 py-3">
                               <div className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-700">
                                 <Image src={imgSrc} alt={item.productName || 'Product'} fill className="object-cover" sizes="48px" />
@@ -145,8 +173,19 @@ export default function ManagerOrderDetailPage() {
                                 )}
                               </div>
                               <p className="text-neutral-900 dark:text-neutral-100 font-medium">
-                                {item.lineTotalUgx?.toLocaleString()} UGX
+                                {typeof lineTotal === 'number' ? lineTotal.toLocaleString() : String(lineTotal)} UGX
                               </p>
+                              {canRemove && (
+                                <button
+                                  type="button"
+                                  onClick={() => setConfirmRemoveItem({ id: item.id, name: item.productName || 'this item' })}
+                                  disabled={!!removingItemId}
+                                  className="btn btn-outline p-2"
+                                  aria-label={`Remove ${item.productName}`}
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              )}
                             </li>
                             {idx < order.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
                           </Fragment>
@@ -161,6 +200,31 @@ export default function ManagerOrderDetailPage() {
                 <p className="text-neutral-500 dark:text-neutral-400">Order not found</p>
               </div>
             )}
+
+            <ConfirmDialog
+              open={confirmCancelOrder}
+              title="Cancel order"
+              message="Are you sure you want to cancel this order? This cannot be undone."
+              confirmLabel="Cancel order"
+              cancelLabel="Keep order"
+              variant="neutral"
+              onConfirm={handleCancelOrder}
+              onCancel={() => setConfirmCancelOrder(false)}
+            />
+            <ConfirmDialog
+              open={!!confirmRemoveItem}
+              title="Remove item"
+              message={confirmRemoveItem ? `Remove "${confirmRemoveItem.name}" from this order?` : ''}
+              confirmLabel="Remove"
+              cancelLabel="Keep"
+              variant="neutral"
+              onConfirm={() => {
+                const item = confirmRemoveItem
+                setConfirmRemoveItem(null)
+                if (item) void handleRemoveItem(item.id)
+              }}
+              onCancel={() => setConfirmRemoveItem(null)}
+            />
           </main>
         </div>
       </div>

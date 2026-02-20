@@ -2272,6 +2272,29 @@
   @apply bg-neutral-800 text-neutral-200 border-neutral-600;
 }
 
+/* Recharts: dark mode tooltips (date, revenue, payment method, top products) */
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #262626 !important;
+  border: 1px solid #404040 !important;
+  color: #f5f5f5 !important;
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.dark .recharts-default-tooltip .recharts-tooltip-label {
+  color: #e5e7eb !important;
+}
+
+/* Recharts: darker hover/cursor highlight in dark mode */
+.dark .recharts-tooltip-cursor {
+  fill: rgba(55, 65, 81, 0.4);
+}
+
+.dark .recharts-cartesian-grid-horizontal line,
+.dark .recharts-cartesian-grid-vertical line {
+  stroke: #374151;
+}
+
 /* Dark mode modal styles */
 .dark .modal {
   @apply bg-neutral-800 border-neutral-700;
@@ -2495,6 +2518,31 @@ input[type="radio"]:focus {
 
 .dark .bg-emphasis {
   @apply bg-neutral-600;
+}
+
+/* Admin/Manager data tables: 2px borders matching container background; rounded header corners */
+.pos-data-table-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 0.5rem;
+  border-width: 2px;
+  border-color: rgb(229 231 235); /* neutral-200 light */
+}
+.dark .pos-data-table-wrap {
+  border-color: rgb(38 38 38); /* neutral-800 dark */
+}
+.pos-data-table-wrap thead th:first-child {
+  border-top-left-radius: 0.5rem;
+}
+.pos-data-table-wrap thead th:last-child {
+  border-top-right-radius: 0.5rem;
+}
+.pos-data-table-wrap thead th:hover {
+  /* Keep same background on hover so rounded corners remain visible */
+  background-color: inherit;
+}
+.dark .pos-data-table-wrap thead th:hover {
+  background-color: inherit;
 }
 
 /* ================================

@@ -18,10 +18,7 @@ import {
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import { EmptyState } from '@/components/ui/EmptyState'
-
-function generateOrderNumber() {
-  return `ORD-${Date.now()}`
-}
+import { OrderNameModal } from '@/components/pos/OrderNameModal'
 
 type ActiveOrder = {
   orderId: string
@@ -48,6 +45,7 @@ export default function PosDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [creating, setCreating] = useState<'dine-in' | 'takeaway' | null>(null)
+  const [orderNameModalOpen, setOrderNameModalOpen] = useState(false)
   const [tableCount, setTableCount] = useState<number | null>(null)
   const [readyCount, setReadyCount] = useState<number | null>(null)
 
@@ -190,7 +188,12 @@ export default function PosDashboardPage() {
     }
   }
 
-  async function handleNewTakeaway() {
+  function handleNewTakeawayClick() {
+    setOrderNameModalOpen(true)
+  }
+
+  async function handleOrderNameConfirm(orderName: string) {
+    setOrderNameModalOpen(false)
     setCreating('takeaway')
     try {
       const res = await posFetch('/api/orders/takeaway', {
@@ -198,7 +201,7 @@ export default function PosDashboardPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           staffId: getStaffId(),
-          orderNumber: generateOrderNumber(),
+          orderNumber: orderName,
         }),
       })
       if (!res.ok) {
@@ -209,6 +212,7 @@ export default function PosDashboardPage() {
       router.push(`/pos/orders/${data.id}`)
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to create order')
+    } finally {
       setCreating(null)
     }
   }
@@ -395,7 +399,7 @@ export default function PosDashboardPage() {
           <div className="flex flex-wrap gap-3 justify-center">
             <button
               type="button"
-              onClick={handleNewTakeaway}
+              onClick={handleNewTakeawayClick}
               disabled={creating !== null}
               className="btn btn-primary inline-flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
             >
@@ -468,6 +472,13 @@ export default function PosDashboardPage() {
             </ul>
           )}
         </section>
+
+        <OrderNameModal
+          open={orderNameModalOpen}
+          title="Order name"
+          onConfirm={handleOrderNameConfirm}
+          onCancel={() => setOrderNameModalOpen(false)}
+        />
       </div>
     </main>
   )

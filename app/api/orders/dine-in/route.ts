@@ -5,7 +5,7 @@ import { toPosApiResponse } from '@/lib/pos-api-errors'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { tableId, createdByStaffId } = body
+    const { tableId, createdByStaffId, orderNumber } = body
 
     if (typeof tableId !== 'string' || !tableId) {
       return NextResponse.json({ error: 'tableId is required (string)' }, { status: 400 })
@@ -14,7 +14,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'createdByStaffId is required (string)' }, { status: 400 })
     }
 
-    const order = await createDineInOrder({ tableId, createdByStaffId })
+    const order = await createDineInOrder({
+      tableId,
+      createdByStaffId,
+      ...(typeof orderNumber === 'string' && orderNumber.trim() ? { orderNumber: orderNumber.trim() } : {}),
+    })
     return NextResponse.json(order)
   } catch (error) {
     return toPosApiResponse(error)
