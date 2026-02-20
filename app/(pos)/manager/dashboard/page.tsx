@@ -197,7 +197,7 @@ export default function ManagerDashboardPage() {
             </div>
 
             {/* Recent Orders */}
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border-2 border-neutral-200 dark:border-neutral-800">
               <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
                 Active Orders
               </h2>

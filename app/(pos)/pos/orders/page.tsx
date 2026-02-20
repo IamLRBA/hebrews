@@ -13,6 +13,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { ShoppingCart, Package, Search, X } from 'lucide-react'
 import { IconSoup, IconSoupFilled, IconGlass, IconGlassFilled } from '@tabler/icons-react'
 import { getModifierGroupsForProduct } from '@/lib/pos-modifiers'
+import { OrderNameModal } from '@/components/pos/OrderNameModal'
 
 type PosProduct = {
   productId: string
@@ -128,6 +129,8 @@ export default function PosOrdersPage() {
   const [tableSearchQuery, setTableSearchQuery] = useState('')
   const [tableSearchFocused, setTableSearchFocused] = useState(false)
   const tableSearchWrapperRef = useRef<HTMLDivElement>(null)
+  const [orderNameModalOpen, setOrderNameModalOpen] = useState(false)
+  const pendingOrderNameAction = useRef<'new' | { product: PosProduct; size?: string | null; modifier?: string | null } | null>(null)
   const tableSearchInputRef = useRef<HTMLInputElement>(null)
   const [serviceTypeDropdownOpen, setServiceTypeDropdownOpen] = useState(false)
   const serviceTypeSelectRef = useRef<HTMLSelectElement>(null)
@@ -235,16 +238,25 @@ export default function PosOrdersPage() {
     Promise.all([fetchProducts(), fetchPopularProducts()]).finally(() => setLoading(false))
   }, [staffOk, fetchProducts, fetchPopularProducts])
 
-  async function handleNewOrder() {
+  function openNewOrderModal() {
+    pendingOrderNameAction.current = 'new'
+    setOrderNameModalOpen(true)
+  }
+
+  async function handleOrderNameConfirm(orderName: string) {
     const staffId = getStaffId()
     if (!staffId) return
+    const action = pendingOrderNameAction.current
+    pendingOrderNameAction.current = null
+    setOrderNameModalOpen(false)
+
     setCreating(true)
     setError(null)
     try {
       const res = await posFetch('/api/orders/takeaway', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ staffId, orderNumber: generateOrderNumber() }),
+        body: JSON.stringify({ staffId, orderNumber: orderName }),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
@@ -257,10 +269,35 @@ export default function PosOrdersPage() {
         status: data.status,
         totalUgx: data.totalUgx ?? 0,
         items: [],
-        // Don't include orderType - let user select it
       })
-      setOrderType(null) // No default - user must select
+      setOrderType(null)
       setSelectedTableId(null)
+
+      if (action && action !== 'new' && 'product' in action) {
+        setAddingItem(true)
+        try {
+          const addRes = await posFetch(`/api/orders/${data.id}/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              productId: action.product.productId,
+              quantity: 1,
+              size: action.size ?? undefined,
+              modifier: action.modifier ?? undefined,
+            }),
+          })
+          if (!addRes.ok) throw new Error('Failed to add item')
+          const updated = await addRes.json()
+          setOrder(updated)
+          setModifierProduct(null)
+          setModifierSelections({})
+          if (shiftId) fetchPopularProducts()
+        } catch (e) {
+          setError(e instanceof Error ? e.message : 'Failed to add item')
+        } finally {
+          setAddingItem(false)
+        }
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to create order')
     } finally {
@@ -269,44 +306,13 @@ export default function PosOrdersPage() {
   }
 
   async function doAddProduct(product: PosProduct, size?: string | null, modifier?: string | null) {
-    let orderId = order?.orderId
-    if (!orderId) {
-      const staffId = getStaffId()
-      if (!staffId) return
-      setAddingItem(true)
-      setCreating(true)
-      try {
-        const createRes = await posFetch('/api/orders/takeaway', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ staffId, orderNumber: generateOrderNumber() }),
-        })
-        if (!createRes.ok) {
-          const data = await createRes.json().catch(() => ({}))
-          throw new Error(data.error || 'Failed to create order')
-        }
-        const createData = await createRes.json()
-        orderId = createData.id
-        setOrder({
-          orderId: createData.id,
-          orderNumber: createData.orderNumber,
-          status: createData.status,
-          totalUgx: createData.totalUgx ?? 0,
-          items: [],
-          // Don't include orderType - let user select it
-        })
-        setOrderType(null) // No default - user must select
-        setSelectedTableId(null)
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'Failed to create order')
-        setCreating(false)
-        setAddingItem(false)
-        return
-      } finally {
-        setCreating(false)
-      }
+    if (!order?.orderId) {
+      pendingOrderNameAction.current = { product, size, modifier }
+      setOrderNameModalOpen(true)
+      return
     }
 
+    const orderId = order.orderId
     setAddingItem(true)
     try {
       const res = await posFetch(`/api/orders/${orderId}/items`, {
@@ -803,7 +809,7 @@ export default function PosOrdersPage() {
               action={
                 <button
                   type="button"
-                  onClick={handleNewOrder}
+                  onClick={openNewOrderModal}
                   disabled={creating}
                   className="btn btn-primary py-3 px-6 disabled:opacity-60"
                 >
@@ -1128,6 +1134,16 @@ export default function PosOrdersPage() {
           Close Shift
         </Link>
       </div>
+
+      <OrderNameModal
+        open={orderNameModalOpen}
+        title="Order name"
+        onConfirm={handleOrderNameConfirm}
+        onCancel={() => {
+          setOrderNameModalOpen(false)
+          pendingOrderNameAction.current = null
+        }}
+      />
     </main>
   )
 }

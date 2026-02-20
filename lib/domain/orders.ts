@@ -30,25 +30,30 @@ const KITCHEN_ROLES = ['kitchen', 'manager', 'admin'] as const
 export async function createDineInOrder(params: {
   tableId: string
   createdByStaffId: string
+  orderNumber?: string
 }): Promise<Order> {
-  const { tableId, createdByStaffId } = params
+  const { tableId, createdByStaffId, orderNumber: customOrderNumber } = params
 
   const shift = await getActiveShift(createdByStaffId)
 
-  const ordersInShift = await prisma.order.findMany({
-    where: { shiftId: shift.id },
-    select: { orderNumber: true },
-  })
-
-  const prefix = `${shift.id.slice(0, 8)}-`
-  let nextSeq = 1
-  for (const o of ordersInShift) {
-    if (o.orderNumber.startsWith(prefix)) {
-      const n = parseInt(o.orderNumber.slice(prefix.length), 10)
-      if (!Number.isNaN(n) && n >= nextSeq) nextSeq = n + 1
+  let orderNumber: string
+  if (customOrderNumber && customOrderNumber.trim()) {
+    orderNumber = customOrderNumber.trim().slice(0, 32)
+  } else {
+    const ordersInShift = await prisma.order.findMany({
+      where: { shiftId: shift.id },
+      select: { orderNumber: true },
+    })
+    const prefix = `${shift.id.slice(0, 8)}-`
+    let nextSeq = 1
+    for (const o of ordersInShift) {
+      if (o.orderNumber.startsWith(prefix)) {
+        const n = parseInt(o.orderNumber.slice(prefix.length), 10)
+        if (!Number.isNaN(n) && n >= nextSeq) nextSeq = n + 1
+      }
     }
+    orderNumber = `${prefix}${nextSeq}`
   }
-  const orderNumber = `${prefix}${nextSeq}`
 
   return prisma.order.create({
     data: {

@@ -1,15 +1,26 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { AdminNavHeader } from '@/components/admin/AdminNavHeader'
 import { posFetch } from '@/lib/pos-client'
-import { Clock, DollarSign, CheckCircle, XCircle } from 'lucide-react'
+import { Clock, DollarSign, CheckCircle, XCircle, Search, X } from 'lucide-react'
 import Link from 'next/link'
 
 export default function AdminShiftsPage() {
   const [shifts, setShifts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchFocused, setSearchFocused] = useState(false)
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) setSearchFocused(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     fetchShifts()
@@ -29,6 +40,14 @@ export default function AdminShiftsPage() {
       setLoading(false)
     }
   }
+
+  const filteredShifts = shifts.filter((s) =>
+    (s.staffName || '').toLowerCase().includes(searchQuery.toLowerCase().trim())
+  )
+  const searchSuggestions = searchQuery.trim()
+    ? [...new Set(shifts.filter((s) => (s.staffName || '').toLowerCase().includes(searchQuery.toLowerCase())).map((s) => s.staffName))].filter(Boolean).slice(0, 10)
+    : []
+  const showSearchSuggestions = searchFocused && searchQuery.trim().length > 0
 
   return (
     <RoleGuard allowedRoles={['admin']}>
@@ -65,21 +84,48 @@ export default function AdminShiftsPage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <div className="mb-6 flex justify-center">
+              <div className="relative w-full max-w-md" ref={searchWrapperRef}>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search by staff name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setSearchFocused(true)}
+                  className="pos-input pl-10 pr-10 w-full"
+                  aria-label="Search shifts by staff name"
+                />
+                {searchQuery.length > 0 && (
+                  <button type="button" onClick={() => { setSearchQuery(''); setSearchFocused(false) }} className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 dark:hover:text-neutral-300 dark:hover:bg-neutral-600" aria-label="Clear search">
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+                {showSearchSuggestions && (
+                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {searchSuggestions.length === 0 ? <li className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400">No matches</li> : searchSuggestions.map((name) => (
+                      <li key={name}><button type="button" className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30" onClick={() => { setSearchQuery(name); setSearchFocused(false) }}>{name}</button></li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-200 dark:border-neutral-800 overflow-hidden">
               {loading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
                 </div>
-              ) : shifts.length === 0 ? (
+              ) : filteredShifts.length === 0 ? (
                 <div className="p-8 text-center text-neutral-500 dark:text-neutral-400">
                   No shifts found
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <div className="pos-data-table-wrap border-2 border-neutral-200 dark:border-neutral-800">
                   <table className="w-full">
-                    <thead className="bg-neutral-50 dark:bg-neutral-800">
+                    <thead className="bg-neutral-100 dark:bg-neutral-800">
                       <tr>
-                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tl-lg">
                           Staff
                         </th>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
@@ -91,13 +137,13 @@ export default function AdminShiftsPage() {
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                           End Time
                         </th>
-                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tr-lg">
                           Status
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {shifts.map((shift) => (
+                      {filteredShifts.map((shift) => (
                         <tr
                           key={shift.id}
                           className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"

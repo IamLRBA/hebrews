@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { AdminNavHeader } from '@/components/admin/AdminNavHeader'
 import { posFetch } from '@/lib/pos-client'
-import { Plus, Edit, UserCheck, UserX } from 'lucide-react'
+import { Plus, Edit, UserCheck, UserX, Search, X } from 'lucide-react'
 import { StaffModal } from '@/components/admin/StaffModal'
 
 type Staff = {
@@ -20,6 +20,17 @@ export default function AdminStaffPage() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editingStaff, setEditingStaff] = useState<Staff | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchFocused, setSearchFocused] = useState(false)
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) setSearchFocused(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     fetchStaff()
@@ -67,6 +78,20 @@ export default function AdminStaffPage() {
     setShowModal(true)
   }
 
+  const filteredStaff = staff.filter(
+    (s) =>
+      (s.fullName || '').toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
+      (s.username || '').toLowerCase().includes(searchQuery.toLowerCase().trim())
+  )
+  const searchSuggestions = searchQuery.trim()
+    ? staff.filter(
+        (s) =>
+          (s.fullName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (s.username || '').toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 10)
+    : []
+  const showSearchSuggestions = searchFocused && searchQuery.trim().length > 0
+
   return (
     <RoleGuard allowedRoles={['admin']}>
       <div className="pos-page min-h-screen">
@@ -89,17 +114,44 @@ export default function AdminStaffPage() {
               </button>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <div className="mb-6 flex justify-center">
+              <div className="relative w-full max-w-md" ref={searchWrapperRef}>
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search by staff name..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setSearchFocused(true)}
+                  className="pos-input pl-10 pr-10 w-full"
+                  aria-label="Search staff by name"
+                />
+                {searchQuery.length > 0 && (
+                  <button type="button" onClick={() => { setSearchQuery(''); setSearchFocused(false) }} className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 dark:hover:text-neutral-300 dark:hover:bg-neutral-600" aria-label="Clear search">
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+                {showSearchSuggestions && (
+                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {searchSuggestions.length === 0 ? <li className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400">No matches</li> : searchSuggestions.map((s) => (
+                      <li key={s.id}><button type="button" className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30" onClick={() => { setSearchQuery(s.fullName || s.username); setSearchFocused(false) }}>{s.fullName} ({s.username})</button></li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-200 dark:border-neutral-800 overflow-hidden">
               {loading ? (
                 <div className="p-8 text-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <div className="pos-data-table-wrap border-2 border-neutral-200 dark:border-neutral-800">
                   <table className="w-full">
-                    <thead className="bg-neutral-50 dark:bg-neutral-800">
+                    <thead className="bg-neutral-100 dark:bg-neutral-800">
                       <tr>
-                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tl-lg">
                           Username
                         </th>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
@@ -111,13 +163,13 @@ export default function AdminStaffPage() {
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                           Status
                         </th>
-                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tr-lg">
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {staff.map((member) => (
+                      {filteredStaff.map((member) => (
                         <tr
                           key={member.id}
                           className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"

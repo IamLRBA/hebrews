@@ -1,39 +1,71 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import NextImage from 'next/image'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { AdminNavHeader } from '@/components/admin/AdminNavHeader'
+import { TableModal } from '@/components/admin/TableModal'
 import { posFetch } from '@/lib/pos-client'
-import { Table, Plus, Edit } from 'lucide-react'
+import { Plus, Edit, Search, X } from 'lucide-react'
+
+const TABLE_PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
+
+function getTableImageSrc(images: string[] | undefined): string {
+  const first = images?.[0]
+  if (!first) return TABLE_PLACEHOLDER_IMAGE
+  if (first.startsWith('http') || first.startsWith('/')) return first
+  return `/${first}`
+}
 
 export default function AdminTablesPage() {
   const [tables, setTables] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [tableModalOpen, setTableModalOpen] = useState(false)
+  const [editingTable, setEditingTable] = useState<any>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchFocused, setSearchFocused] = useState(false)
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    async function fetchTables() {
-      try {
-        // Fetch all tables (not shift-specific)
-        const res = await posFetch('/api/admin/tables')
-        if (res.ok) {
-          const data = await res.json()
-          setTables(data.tables || data)
-        } else {
-          // Fallback: try to get tables from a different endpoint
-          const fallbackRes = await posFetch('/api/pos/tables?shiftId=all')
-          if (fallbackRes.ok) {
-            const fallbackData = await fallbackRes.json()
-            setTables(fallbackData)
-          }
-        }
-      } catch (e) {
-        console.error('Failed to fetch tables:', e)
-      } finally {
-        setLoading(false)
-      }
+    function handleClickOutside(e: MouseEvent) {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) setSearchFocused(false)
     }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  async function fetchTables() {
+    setLoading(true)
+    try {
+      const res = await posFetch('/api/admin/tables')
+      if (res.ok) {
+        const data = await res.json()
+        setTables(data.tables || data)
+      } else {
+        const fallbackRes = await posFetch('/api/pos/tables?shiftId=all')
+        if (fallbackRes.ok) {
+          const fallbackData = await fallbackRes.json()
+          setTables(Array.isArray(fallbackData) ? fallbackData : fallbackData.tables || [])
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch tables:', e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
     fetchTables()
   }, [])
+
+  const filteredTables = tables.filter((t) =>
+    (t.code || t.tableCode || '').toLowerCase().includes(searchQuery.toLowerCase())
+  )
+  const searchSuggestions = searchQuery.trim()
+    ? tables.filter((t) => (t.code || t.tableCode || '').toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 10)
+    : []
+  const showSearchSuggestions = searchFocused && searchQuery.trim().length > 0
 
   return (
     <RoleGuard allowedRoles={['admin']}>
@@ -48,32 +80,66 @@ export default function AdminTablesPage() {
               <p className="text-neutral-600 dark:text-neutral-400 mb-4">
                 Manage restaurant tables
               </p>
-              <button className="btn btn-primary flex items-center gap-2 mx-auto">
+              <button type="button" onClick={() => { setEditingTable(null); setTableModalOpen(true) }} className="btn btn-primary flex items-center gap-2 mx-auto">
                 <Plus className="w-5 h-5" />
                 Add Table
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
+            <div className="mb-6 flex justify-center" ref={searchWrapperRef}>
+              <div className="relative w-full max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search tables..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setSearchFocused(true)}
+                  className="pos-input pl-10 pr-10 w-full"
+                  aria-label="Search tables"
+                />
+                {searchQuery.length > 0 && (
+                  <button type="button" onClick={() => { setSearchQuery(''); setSearchFocused(false) }} className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 dark:hover:text-neutral-300 dark:hover:bg-neutral-600" aria-label="Clear search">
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+                {showSearchSuggestions && (
+                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {searchSuggestions.length === 0 ? <li className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400">No matches</li> : searchSuggestions.map((t) => (
+                      <li key={t.id || t.tableId}><button type="button" className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30" onClick={() => { setSearchQuery(t.code || t.tableCode || ''); setSearchFocused(false) }}>{t.code || t.tableCode}</button></li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-4">
               {loading ? (
-                <div className="col-span-full text-center py-8">
+                <div className="w-full text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
                 </div>
               ) : (
-                tables.map((table) => {
+                filteredTables.map((table) => {
                   const isOccupied = table.status === 'occupied' || table.hasActiveOrder
                   return (
                     <div
                       key={table.id || table.tableId}
-                      className={`bg-white dark:bg-neutral-900 rounded-lg shadow-md p-4 border-2 text-center ${
+                      className={`w-full sm:w-[280px] bg-white dark:bg-neutral-900 rounded-lg shadow-md p-4 border-2 text-center ${
                         isOccupied
                           ? 'border-primary-300 dark:border-primary-700'
                           : 'border-primary-200 dark:border-primary-800'
                       }`}
                     >
                       <div className="flex items-center justify-center mb-3">
-                        <div className="p-2 bg-primary-100 dark:bg-primary-900 rounded-full">
-                          <Table className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+                        <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-neutral-200 dark:bg-neutral-700 mx-auto">
+                          <NextImage
+                            src={getTableImageSrc(table.images)}
+                            alt={table.code || table.tableCode || 'Table'}
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                            unoptimized
+                          />
                         </div>
                       </div>
                       <h3 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 mb-1">
@@ -99,7 +165,7 @@ export default function AdminTablesPage() {
                         </p>
                       )}
                       <div className="mt-3">
-                        <button className="btn btn-outline text-sm py-2 w-full flex items-center justify-center gap-1">
+                        <button type="button" onClick={() => { setEditingTable(table); setTableModalOpen(true) }} className="btn btn-outline text-sm py-2 w-full flex items-center justify-center gap-1">
                           <Edit className="w-4 h-4" />
                           Edit
                         </button>
@@ -109,6 +175,13 @@ export default function AdminTablesPage() {
                 })
               )}
             </div>
+
+            <TableModal
+              isOpen={tableModalOpen}
+              onClose={() => { setTableModalOpen(false); setEditingTable(null) }}
+              onSuccess={() => { setTableModalOpen(false); setEditingTable(null); void fetchTables() }}
+              table={editingTable}
+            />
           </main>
         </div>
       </div>

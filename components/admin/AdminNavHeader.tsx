@@ -12,9 +12,7 @@ import {
   IconClock,
   IconClockFilled,
   IconUsers,
-  IconUsersFilled,
   IconPackage,
-  IconPackageFilled,
   IconTable,
   IconTableFilled,
 } from '@tabler/icons-react'
@@ -26,8 +24,8 @@ const NAV_ITEMS = [
   { href: '/admin/orders', label: 'Orders', iconOutline: IconShoppingCart, iconFilled: IconShoppingCartFilled },
   { href: '/admin/payments', label: 'Payments', iconOutline: IconCreditCard, iconFilled: IconCreditCardFilled },
   { href: '/admin/shifts', label: 'Shifts', iconOutline: IconClock, iconFilled: IconClockFilled },
-  { href: '/admin/staff', label: 'Staff', iconOutline: IconUsers, iconFilled: IconUsersFilled },
-  { href: '/admin/products', label: 'Products', iconOutline: IconPackage, iconFilled: IconPackageFilled },
+  { href: '/admin/staff', label: 'Staff', iconOutline: IconUsers, iconFilled: null },
+  { href: '/admin/products', label: 'Products', iconOutline: IconPackage, iconFilled: null },
   { href: '/admin/tables', label: 'Tables', iconOutline: IconTable, iconFilled: IconTableFilled },
 ] as const
 

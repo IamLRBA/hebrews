@@ -89,3 +89,38 @@ export async function PUT(
     )
   }
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ staffId: string }> }
+) {
+  try {
+    const staffId = _request.headers.get(STAFF_ID_HEADER)?.trim()
+    if (!staffId) {
+      return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
+    }
+
+    await assertStaffRole(staffId, ['admin'])
+
+    const { staffId: targetStaffId } = await params
+    const existingStaff = await prisma.staff.findUnique({
+      where: { id: targetStaffId },
+    })
+
+    if (!existingStaff) {
+      return NextResponse.json({ error: 'Staff not found' }, { status: 404 })
+    }
+
+    await prisma.staff.delete({
+      where: { id: targetStaffId },
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('[staff] DELETE error:', error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to delete staff' },
+      { status: 500 }
+    )
+  }
+}

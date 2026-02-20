@@ -5,8 +5,9 @@ import { useParams, useRouter } from 'next/navigation'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { ManagerNavHeader } from '@/components/manager/ManagerNavHeader'
 import { posFetch } from '@/lib/pos-client'
-import { ArrowLeft, DollarSign, Clock } from 'lucide-react'
+import { DollarSign, Clock } from 'lucide-react'
 import Link from 'next/link'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 export default function ManagerShiftDetailPage() {
   const params = useParams()
@@ -17,6 +18,7 @@ export default function ManagerShiftDetailPage() {
   const [countedCash, setCountedCash] = useState('')
   const [loading, setLoading] = useState(true)
   const [closing, setClosing] = useState(false)
+  const [showConfirmClose, setShowConfirmClose] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -46,8 +48,12 @@ export default function ManagerShiftDetailPage() {
       alert('Please enter a valid cash amount')
       return
     }
-    if (!confirm('Are you sure you want to close this shift?')) return
+    setShowConfirmClose(true)
+  }
 
+  async function doCloseShift() {
+    setShowConfirmClose(false)
+    if (!countedCash || isNaN(Number(countedCash))) return
     setClosing(true)
     try {
       const staffId = localStorage.getItem('pos_staff_id')
@@ -96,10 +102,9 @@ export default function ManagerShiftDetailPage() {
             <div className="mb-6">
               <Link
                 href="/manager/shifts"
-                className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:underline mb-4"
+                className="pos-link inline-block mb-4"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Shifts
+                ⇐ Back to Shifts
               </Link>
               <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
                 Shift Details
@@ -180,6 +185,17 @@ export default function ManagerShiftDetailPage() {
                 </div>
               </div>
             )}
+
+            <ConfirmDialog
+              open={showConfirmClose}
+              title="Close shift"
+              message="Are you sure you want to close this shift? This cannot be undone."
+              confirmLabel="Close shift"
+              cancelLabel="Cancel"
+              variant="danger"
+              onConfirm={doCloseShift}
+              onCancel={() => setShowConfirmClose(false)}
+            />
           </main>
         </div>
       </div>

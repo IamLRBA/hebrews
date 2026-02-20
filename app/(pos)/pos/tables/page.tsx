@@ -8,6 +8,7 @@ import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { LayoutGrid, Search, X } from 'lucide-react'
+import { OrderNameModal } from '@/components/pos/OrderNameModal'
 
 type TableStatus = {
   tableId: string
@@ -26,6 +27,8 @@ export default function PosTablesPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [creating, setCreating] = useState<string | null>(null)
+  const [orderNameModalOpen, setOrderNameModalOpen] = useState(false)
+  const [pendingTableId, setPendingTableId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -97,21 +100,30 @@ export default function PosTablesPage() {
     else setTables([])
   }, [shiftId])
 
-  async function handleTableClick(table: TableStatus) {
+  function handleTableClick(table: TableStatus) {
     if (table.hasActiveOrder && table.orderId) {
       router.push(`/pos/orders/${table.orderId}`)
       return
     }
+    setPendingTableId(table.tableId)
+    setOrderNameModalOpen(true)
+  }
+
+  async function handleOrderNameConfirm(orderName: string) {
+    const tableId = pendingTableId
     const staffId = getStaffId()
-    if (!staffId) return
-    setCreating(table.tableId)
+    setOrderNameModalOpen(false)
+    setPendingTableId(null)
+    if (!tableId || !staffId) return
+    setCreating(tableId)
     try {
       const res = await posFetch('/api/orders/dine-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tableId: table.tableId,
+          tableId,
           createdByStaffId: staffId,
+          orderNumber: orderName,
         }),
       })
       if (!res.ok) {
@@ -276,6 +288,16 @@ export default function PosTablesPage() {
             ))}
           </div>
         )}
+
+        <OrderNameModal
+          open={orderNameModalOpen}
+          title="Order name"
+          onConfirm={handleOrderNameConfirm}
+          onCancel={() => {
+            setOrderNameModalOpen(false)
+            setPendingTableId(null)
+          }}
+        />
       </div>
     </main>
   )

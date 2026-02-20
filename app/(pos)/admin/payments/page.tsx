@@ -1,21 +1,38 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { AdminNavHeader } from '@/components/admin/AdminNavHeader'
 import { posFetch } from '@/lib/pos-client'
-import { CreditCard, Search } from 'lucide-react'
+import { CreditCard, Search, X } from 'lucide-react'
 
 export default function AdminPaymentsPage() {
   const [payments, setPayments] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchFocused, setSearchFocused] = useState(false)
   const [statusFilter, setStatusFilter] = useState('all')
   const [methodFilter, setMethodFilter] = useState('all')
+  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false)
+  const [methodDropdownOpen, setMethodDropdownOpen] = useState(false)
+  const searchWrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(e.target as Node)) setSearchFocused(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   useEffect(() => {
     fetchPayments()
   }, [statusFilter, methodFilter])
+
+  const searchSuggestions = searchQuery.trim()
+    ? [...new Set(payments.filter((p) => (p.orderNumber || '').toLowerCase().includes(searchQuery.toLowerCase())).map((p) => p.orderNumber))].slice(0, 10)
+    : []
+  const showSearchSuggestions = searchFocused && searchQuery.trim().length > 0
 
   async function fetchPayments() {
     setLoading(true)
@@ -54,20 +71,56 @@ export default function AdminPaymentsPage() {
 
             <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800 mb-6">
               <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                <div className="flex-1 relative" ref={searchWrapperRef}>
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
                   <input
                     type="text"
-                    placeholder="Search by order number..."
+                    placeholder="Search by order name..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pos-input pl-10 w-full"
+                    onFocus={() => setSearchFocused(true)}
+                    className="pos-input pl-10 pr-10 w-full"
+                    aria-label="Search payments by order name"
                   />
+                  {searchQuery.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => { setSearchQuery(''); setSearchFocused(false) }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:text-neutral-700 hover:bg-neutral-200 dark:hover:text-neutral-300 dark:hover:bg-neutral-600"
+                      aria-label="Clear search"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                  {showSearchSuggestions && (
+                    <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      {searchSuggestions.length === 0 ? (
+                        <li className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400">No matches</li>
+                      ) : (
+                        searchSuggestions.map((orderNum) => (
+                          <li key={orderNum}>
+                            <button
+                              type="button"
+                              className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30"
+                              onClick={() => { setSearchQuery(orderNum); setSearchFocused(false) }}
+                            >
+                              {orderNum}
+                            </button>
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                  )}
                 </div>
                 <div className="relative">
                   <select
                     value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
+                    onFocus={() => setStatusDropdownOpen(true)}
+                    onBlur={() => setStatusDropdownOpen(false)}
+                    onChange={(e) => {
+                      setStatusFilter(e.target.value)
+                      setStatusDropdownOpen(false)
+                    }}
                     className="pos-input w-full md:w-48 pr-10 appearance-none"
                   >
                     <option value="all">All Statuses</option>
@@ -76,13 +129,18 @@ export default function AdminPaymentsPage() {
                     <option value="failed">Failed</option>
                   </select>
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500 dark:text-neutral-400 text-lg leading-none">
-                    ⇓
+                    {statusDropdownOpen ? '⇑' : '⇓'}
                   </span>
                 </div>
                 <div className="relative">
                   <select
                     value={methodFilter}
-                    onChange={(e) => setMethodFilter(e.target.value)}
+                    onFocus={() => setMethodDropdownOpen(true)}
+                    onBlur={() => setMethodDropdownOpen(false)}
+                    onChange={(e) => {
+                      setMethodFilter(e.target.value)
+                      setMethodDropdownOpen(false)
+                    }}
                     className="pos-input w-full md:w-48 pr-10 appearance-none"
                   >
                     <option value="all">All Methods</option>
@@ -92,13 +150,13 @@ export default function AdminPaymentsPage() {
                     <option value="airtel_money">Airtel Money</option>
                   </select>
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-500 dark:text-neutral-400 text-lg leading-none">
-                    ⇓
+                    {methodDropdownOpen ? '⇑' : '⇓'}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-200 dark:border-neutral-800 overflow-hidden">
               {loading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
@@ -108,11 +166,11 @@ export default function AdminPaymentsPage() {
                   No payments found
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <div className="pos-data-table-wrap border-2 border-neutral-200 dark:border-neutral-800">
                   <table className="w-full">
-                    <thead className="bg-neutral-50 dark:bg-neutral-800">
+                    <thead className="bg-neutral-100 dark:bg-neutral-800">
                       <tr>
-                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tl-lg">
                           Order #
                         </th>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
@@ -127,7 +185,7 @@ export default function AdminPaymentsPage() {
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                           Staff
                         </th>
-                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                        <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tr-lg">
                           Date
                         </th>
                       </tr>

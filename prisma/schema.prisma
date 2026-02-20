@@ -101,6 +101,7 @@ model RestaurantTable {
   id        String      @id @default(uuid()) @db.Uuid
   code      String      @unique @db.VarChar(16)
   capacity  Int?
+  images    String[]    @default([])
   status    TableStatus @default(available)
   isActive  Boolean     @default(true) @map("is_active")
   createdAt DateTime   @default(now()) @map("created_at")
