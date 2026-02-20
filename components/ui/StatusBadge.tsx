@@ -34,6 +34,14 @@ export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
           border: 'border-green-300 dark:border-green-700',
           label: 'Ready'
         }
+      case 'awaiting_payment':
+        return {
+          icon: AlertCircle,
+          bg: 'bg-orange-100 dark:bg-orange-900/30',
+          text: 'text-orange-800 dark:text-orange-200',
+          border: 'border-orange-300 dark:border-orange-700',
+          label: 'Awaiting Payment'
+        }
       case 'served':
         return {
           icon: CheckCircle,

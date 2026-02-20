@@ -47,3 +47,22 @@ npx prisma db seed
 - **Password:** `password123`  
 
 (Also available: `kitchen` / `password123`)
+
+---
+
+## Troubleshooting
+
+### `prisma generate` fails with EPERM (rename query_engine-windows.dll.node)
+
+Another process has the Prisma query engine loaded, so the file can’t be overwritten. Usually it’s the **Next.js dev server** or another Node process.
+
+1. **Stop the dev server** – In the terminal where you ran `npm run dev` or `next dev`, press `Ctrl+C`.
+2. **Close other terminals** that might be running the app or tests in this project.
+3. In a **new** terminal, run:
+   ```powershell
+   cd c:\Users\User\Desktop\Hebrews
+   npx prisma generate
+   ```
+4. Then start the dev server again if needed.
+
+If it still fails, close Cursor/VS Code, run `npx prisma generate` in a standalone PowerShell window, then reopen the project.

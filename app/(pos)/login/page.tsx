@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ErrorBanner } from '@/components/pos/ErrorBanner'
-import { setStaffRole, clearStaffSession } from '@/lib/pos-client'
+import { setStaffSession, clearStaffSession } from '@/lib/pos-client'
 import { User, Lock, LogIn } from 'lucide-react'
 
 export default function UnifiedLoginPage() {
@@ -34,10 +34,9 @@ export default function UnifiedLoginPage() {
         throw new Error(msg)
       }
 
-      // Store staff ID and role
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('pos_staff_id', data.staffId)
-        setStaffRole(data.role)
+      // Store JWT and staff identity for display
+      if (data.token && typeof window !== 'undefined') {
+        setStaffSession(data.token, data.staffId, data.role)
       }
 
       // Redirect based on role
@@ -52,6 +51,7 @@ export default function UnifiedLoginPage() {
         case 'kitchen':
           router.replace('/kitchen')
           break
+        case 'waiter':
         case 'cashier':
         default:
           router.replace('/pos/start')

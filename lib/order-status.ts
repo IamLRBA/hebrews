@@ -36,7 +36,8 @@ export class InvalidOrderStatusTransitionError extends Error {
 const ALLOWED_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   pending: ['preparing', 'cancelled'],
   preparing: ['ready', 'cancelled'],
-  ready: ['served'],
+  ready: ['awaiting_payment'],
+  awaiting_payment: ['served'],
   served: [],
   cancelled: [],
 }
@@ -75,11 +76,15 @@ export async function setOrderStatus(params: SetOrderStatusParams): Promise<Orde
     throw new InvalidOrderStatusTransitionError(orderId, order.status, newStatus)
   }
 
+  const data: { status: OrderStatus; updatedByStaffId: string; servedAt?: Date } = {
+    status: newStatus,
+    updatedByStaffId,
+  }
+  if (newStatus === 'served') {
+    data.servedAt = new Date()
+  }
   return prisma.order.update({
     where: { id: orderId },
-    data: {
-      status: newStatus,
-      updatedByStaffId,
-    },
+    data,
   })
 }

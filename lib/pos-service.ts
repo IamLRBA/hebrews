@@ -104,7 +104,7 @@ export type CloseShiftParams = {
 
 export type TransitionOrderStatusParams = {
   orderId: string
-  newStatus: 'pending' | 'preparing' | 'ready' | 'served' | 'cancelled'
+  newStatus: 'pending' | 'preparing' | 'ready' | 'awaiting_payment' | 'served' | 'cancelled'
   updatedByStaffId: string
 }
 

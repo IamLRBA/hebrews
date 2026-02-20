@@ -13,7 +13,7 @@ import {
   IconLogout,
   IconSettings,
 } from '@tabler/icons-react'
-import { clearStaffSession } from '@/lib/pos-client'
+import { logout } from '@/lib/pos-client'
 import { useRouter } from 'next/navigation'
 
 const menuItems = [
@@ -31,8 +31,8 @@ export function AdminSidebar() {
   const pathname = usePathname()
   const router = useRouter()
 
-  function handleLogout() {
-    clearStaffSession()
+  async function handleLogout() {
+    await logout()
     router.push('/login')
   }
 

@@ -126,10 +126,28 @@ export default function KdsPage() {
             <p className="m-0 text-neutral-600 dark:text-neutral-400">No orders to prepare.</p>
           </div>
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ul
+          className={
+            orders.length === 1
+              ? 'list-none p-0 flex justify-center w-full'
+              : orders.length === 2
+                ? 'list-none p-0 flex justify-center gap-4 flex-wrap max-w-2xl mx-auto w-full'
+                : 'list-none p-0 flex flex-wrap justify-center gap-4 max-w-4xl mx-auto pos-order-list w-full'
+          }
+        >
           {orders.map((o) => (
-            <div key={o.orderId} className="pos-card flex flex-col gap-2">
-              <div className="flex items-center justify-between gap-2 flex-wrap">
+            <li
+              key={o.orderId}
+              className={
+                orders.length === 1
+                  ? 'w-full max-w-sm'
+                  : orders.length === 2
+                    ? 'w-full min-w-[240px] sm:w-[calc(50%-0.5rem)] sm:max-w-[320px]'
+                    : 'pos-order-list-item'
+              }
+            >
+              <div className="pos-card pos-order-card-border flex flex-col gap-2 h-full">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
                 <p className="m-0 font-semibold text-primary-800 dark:text-primary-100">{o.orderNumber}</p>
                 <span className={statusBadgeClass(o.status)}>{o.status}</span>
               </div>
@@ -178,10 +196,11 @@ export default function KdsPage() {
                     Mark Ready
                   </button>
                 )}
+                </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </main>
   )

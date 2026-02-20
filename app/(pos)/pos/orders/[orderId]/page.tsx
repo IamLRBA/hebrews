@@ -307,8 +307,8 @@ export default function OrderDetailPage() {
       <div className="flex-shrink-0 fixed top-0 left-0 right-0 z-[1020] bg-[var(--color-bg-primary)] px-4 pt-4 [&_.pos-dashboard-header]:mb-0">
         <PosNavHeader />
       </div>
-      <div className="flex-shrink-0 min-h-[11rem]" aria-hidden />
-      <div className="pos-page-container max-w-4xl mx-auto text-center flex-1 px-4 pb-6">
+      <div className="flex-shrink-0 min-h-[14rem]" aria-hidden />
+      <div className="pos-page-container max-w-4xl mx-auto text-center flex-1 px-4 pb-6 pt-2">
         {error && (
           <div className="mb-4">
             <ErrorBanner message={error} onDismiss={() => setError(null)} />
@@ -550,11 +550,11 @@ export default function OrderDetailPage() {
           >
             {submitting ? 'Sending…' : 'Send to Kitchen'}
           </button>
-        ) : (
+        ) : (order?.status === 'ready' || order?.status === 'awaiting_payment') ? (
           <button onClick={handlePayment} disabled={!hasItems || block} className="btn btn-primary disabled:opacity-60">
             Payment
           </button>
-        )}
+        ) : null}
       </section>
       </div>
     </main>

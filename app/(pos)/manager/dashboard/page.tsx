@@ -22,7 +22,7 @@ export default function ManagerDashboardPage() {
           const ordersData = await ordersRes.json()
           const pending = ordersData.filter((o: any) => o.status === 'pending').length
           const preparing = ordersData.filter((o: any) => o.status === 'preparing').length
-          const ready = ordersData.filter((o: any) => o.status === 'ready').length
+          const ready = ordersData.filter((o: any) => o.status === 'ready' || o.status === 'awaiting_payment').length
           setOrderCounts({ pending, preparing, ready })
         }
 

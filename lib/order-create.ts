@@ -33,6 +33,7 @@ export type CreateOrderParams = {
   orderType: 'dine_in' | 'takeaway'
   tableId?: string | null
   orderNumber: string
+  assignedWaiterId?: string | null
 }
 
 /**
@@ -42,7 +43,7 @@ export type CreateOrderParams = {
  * @throws TableRequiredForDineInError | TableNotAllowedForTakeawayError
  */
 export async function createOrder(params: CreateOrderParams): Promise<Order> {
-  const { staffId, orderType, tableId, orderNumber } = params
+  const { staffId, orderType, tableId, orderNumber, assignedWaiterId } = params
 
   await getStaff(staffId)
   const shift = await getActiveShift(staffId)
@@ -64,6 +65,7 @@ export async function createOrder(params: CreateOrderParams): Promise<Order> {
       tableId: orderType === 'dine_in' ? tableId! : null,
       shiftId: shift.id,
       createdByStaffId: staffId,
+      assignedWaiterId: assignedWaiterId ?? undefined,
       terminalId: shift.terminalId,
       status: 'pending',
       subtotalUgx: 0,

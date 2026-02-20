@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import bcrypt from 'bcrypt'
+import { createStaffToken } from '@/lib/pos-auth'
+import { appendAuditLog, AuditActionType, AuditEntityType } from '@/lib/audit-log'
+import { logError } from '@/lib/error-logger'
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     const staff = await prisma.staff.findUnique({
       where: { username: username.trim() },
-      select: { id: true, passwordHash: true, fullName: true, role: true, isActive: true },
+      select: { id: true, passwordHash: true, fullName: true, role: true, isActive: true, tokenVersion: true },
     })
 
     if (!staff || !staff.isActive) {
@@ -34,13 +37,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 })
     }
 
+    const token = await createStaffToken({
+      staffId: staff.id,
+      role: staff.role,
+      tokenVersion: staff.tokenVersion ?? 0,
+    })
+
+    await appendAuditLog({
+      staffId: staff.id,
+      actionType: AuditActionType.AUTH_LOGIN,
+      entityType: AuditEntityType.auth,
+      entityId: staff.id,
+      newState: { username: username.trim() },
+    }).catch((e) => logError(e, { path: '/api/auth/login' }))
+
     return NextResponse.json({
+      token,
       staffId: staff.id,
       role: staff.role,
       fullName: staff.fullName,
     })
   } catch (e) {
-    console.error('[auth/login] Error:', e)
+    logError(e, { path: '/api/auth/login' })
     const message = process.env.NODE_ENV === 'development' && e instanceof Error
       ? `Login failed: ${e.message}`
       : 'Login failed'
