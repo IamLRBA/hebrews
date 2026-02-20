@@ -18,6 +18,7 @@ enum OrderStatus {
   pending
   preparing
   ready
+  awaiting_payment
   served
   cancelled
 }
@@ -44,7 +45,15 @@ enum StaffRole {
   admin
   manager
   cashier
+  waiter
   kitchen
+}
+
+enum TerminalType {
+  POS
+  KDS
+  manager
+  mobile
 }
 
 enum TableStatus {
@@ -63,16 +72,33 @@ model Staff {
   fullName     String   @map("full_name") @db.VarChar(255)
   role         StaffRole
   isActive     Boolean  @default(true) @map("is_active")
+  tokenVersion Int      @default(0) @map("token_version")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  shifts          Shift[]   @relation("ShiftStaff")
-  shiftsClosed    Shift[]   @relation("ShiftClosedBy")
-  ordersCreated   Order[]   @relation("CreatedByStaff")
-  ordersUpdated   Order[]   @relation("UpdatedByStaff")
-  payments        Payment[]
+  shifts           Shift[]   @relation("ShiftStaff")
+  shiftsClosed     Shift[]   @relation("ShiftClosedBy")
+  ordersCreated    Order[]   @relation("CreatedByStaff")
+  ordersAssigned   Order[]   @relation("AssignedWaiter")
+  ordersUpdated    Order[]   @relation("UpdatedByStaff")
+  payments         Payment[]
 
   @@index([role])
+  @@index([isActive])
+}
+
+model Terminal {
+  id        String       @id @default(uuid()) @db.Uuid
+  code      String       @unique @map("code") @db.VarChar(32)
+  name      String       @map("name") @db.VarChar(64)
+  type      TerminalType @map("type")
+  location  String?      @map("location") @db.VarChar(128)
+  isActive  Boolean      @default(true) @map("is_active")
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  @@index([code])
+  @@index([type])
   @@index([isActive])
 }
 
@@ -141,34 +167,38 @@ model Product {
 }
 
 model Order {
-  id                String      @id @default(uuid()) @db.Uuid
-  orderNumber       String      @unique @map("order_number") @db.VarChar(32)
-  orderType         OrderType   @map("order_type")
-  tableId           String?     @map("table_id") @db.Uuid
-  shiftId           String      @map("shift_id") @db.Uuid
-  createdByStaffId  String      @map("created_by_staff_id") @db.Uuid
-  terminalId        String      @map("terminal_id") @db.VarChar(32)
-  status            OrderStatus @default(pending)
-  subtotalUgx       Decimal     @map("subtotal_ugx") @db.Decimal(12, 2)
-  taxUgx            Decimal     @default(0) @map("tax_ugx") @db.Decimal(12, 2)
-  totalUgx          Decimal     @map("total_ugx") @db.Decimal(12, 2)
-  notes             String?
-  customerName      String?     @map("customer_name") @db.VarChar(255)
-  customerPhone     String?     @map("customer_phone") @db.VarChar(32)
-  createdAt         DateTime   @default(now()) @map("created_at")
-  updatedAt         DateTime   @updatedAt @map("updated_at")
-  updatedByStaffId  String?     @map("updated_by_staff_id") @db.Uuid
+  id                 String       @id @default(uuid()) @db.Uuid
+  orderNumber        String       @unique @map("order_number") @db.VarChar(32)
+  orderType          OrderType    @map("order_type")
+  tableId            String?      @map("table_id") @db.Uuid
+  shiftId            String       @map("shift_id") @db.Uuid
+  createdByStaffId   String       @map("created_by_staff_id") @db.Uuid
+  assignedWaiterId   String?      @map("assigned_waiter_id") @db.Uuid
+  terminalId         String       @map("terminal_id") @db.VarChar(32)
+  status             OrderStatus  @default(pending)
+  subtotalUgx        Decimal      @map("subtotal_ugx") @db.Decimal(12, 2)
+  taxUgx             Decimal      @default(0) @map("tax_ugx") @db.Decimal(12, 2)
+  totalUgx           Decimal      @map("total_ugx") @db.Decimal(12, 2)
+  notes              String?
+  customerName       String?      @map("customer_name") @db.VarChar(255)
+  customerPhone      String?      @map("customer_phone") @db.VarChar(32)
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+  updatedByStaffId   String?      @map("updated_by_staff_id") @db.Uuid
+  servedAt           DateTime?    @map("served_at")
 
-  table           RestaurantTable? @relation(fields: [tableId], references: [id])
-  shift           Shift            @relation(fields: [shiftId], references: [id])
-  createdByStaff  Staff            @relation("CreatedByStaff", fields: [createdByStaffId], references: [id])
-  updatedByStaff  Staff?           @relation("UpdatedByStaff", fields: [updatedByStaffId], references: [id])
-  orderItems      OrderItem[]
-  payments        Payment[]
+  table            RestaurantTable? @relation(fields: [tableId], references: [id])
+  shift            Shift            @relation(fields: [shiftId], references: [id])
+  createdByStaff   Staff            @relation("CreatedByStaff", fields: [createdByStaffId], references: [id])
+  assignedWaiter   Staff?           @relation("AssignedWaiter", fields: [assignedWaiterId], references: [id])
+  updatedByStaff   Staff?           @relation("UpdatedByStaff", fields: [updatedByStaffId], references: [id])
+  orderItems       OrderItem[]
+  payments         Payment[]
 
   @@index([shiftId])
   @@index([tableId])
   @@index([status])
+  @@index([assignedWaiterId])
   @@index([createdAt(sort: Desc)])
 }
 
@@ -193,15 +223,17 @@ model OrderItem {
 }
 
 model Payment {
-  id                String        @id @default(uuid()) @db.Uuid
-  orderId           String        @map("order_id") @db.Uuid
-  amountUgx        Decimal       @map("amount_ugx") @db.Decimal(12, 2)
-  method           PaymentMethod
-  status           PaymentStatus @default(pending)
-  reference        String?       @db.VarChar(128)
-  externalReference String?      @unique @map("external_reference") @db.VarChar(255)
-  createdByStaffId String        @map("created_by_staff_id") @db.Uuid
-  createdAt        DateTime      @default(now()) @map("created_at")
+  id                 String         @id @default(uuid()) @db.Uuid
+  orderId            String         @map("order_id") @db.Uuid
+  amountUgx          Decimal        @map("amount_ugx") @db.Decimal(12, 2)
+  changeUgx          Decimal?       @map("change_ugx") @db.Decimal(12, 2)
+  method             PaymentMethod
+  status             PaymentStatus  @default(pending)
+  reference          String?        @db.VarChar(128)
+  externalReference  String?       @unique @map("external_reference") @db.VarChar(255)
+  createdByStaffId   String         @map("created_by_staff_id") @db.Uuid
+  terminalId         String?        @map("terminal_id") @db.VarChar(32)
+  createdAt          DateTime      @default(now()) @map("created_at")
 
   order          Order @relation(fields: [orderId], references: [id])
   createdByStaff Staff @relation(fields: [createdByStaffId], references: [id])
@@ -209,5 +241,25 @@ model Payment {
   @@index([orderId])
   @@index([status])
   @@index([method])
+  @@index([createdAt])
+}
+
+// Append-only; no update/delete from application.
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  staffId      String?  @map("staff_id") @db.Uuid
+  terminalId   String?  @map("terminal_id") @db.VarChar(32)
+  actionType   String   @map("action_type") @db.VarChar(64)
+  entityType   String   @map("entity_type") @db.VarChar(32)
+  entityId     String?  @map("entity_id") @db.Uuid
+  previousState Json?   @map("previous_state")
+  newState     Json?    @map("new_state")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([staffId])
+  @@index([terminalId])
+  @@index([actionType])
+  @@index([entityType])
+  @@index([entityId])
   @@index([createdAt])
 }

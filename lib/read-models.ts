@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db'
 
-const ACTIVE_ORDER_STATUSES = ['pending', 'preparing', 'ready'] as const
+const ACTIVE_ORDER_STATUSES = ['pending', 'preparing', 'ready', 'awaiting_payment'] as const
 const KDS_ORDER_STATUSES = ['preparing', 'ready'] as const
 
 // ---------------------------------------------------------------------------
@@ -25,7 +25,7 @@ export type ActiveOrderForPos = {
 
 /**
  * Returns all active orders for the POS screen.
- * Active = status in (pending, preparing, ready). Served and cancelled are excluded.
+ * Active = status in (pending, preparing, ready, awaiting_payment). Served and cancelled are excluded.
  * totalPaidUgx = sum of completed payments only. isFullyPaid = totalPaidUgx >= totalUgx.
  * Read-only; no writes or side effects.
  */
@@ -92,7 +92,7 @@ export async function getActiveOrdersForPos(): Promise<ActiveOrderForPos[]> {
 
 /**
  * Returns active orders for a specific shift. Same shape as getActiveOrdersForPos.
- * Active = status in (pending, preparing, ready). Read-only.
+ * Active = status in (pending, preparing, ready, awaiting_payment). Read-only.
  * Returns [] if shift has no active orders.
  */
 export async function getActiveOrdersForShift(shiftId: string): Promise<ActiveOrderForPos[]> {
@@ -517,7 +517,7 @@ export type TableStatus = {
 
 /**
  * Returns status for all tables: whether they have an active order in the given shift.
- * Active order = status in (pending, preparing, ready). Read-only. Sorted by table code.
+ * Active order = status in (pending, preparing, ready, awaiting_payment). Read-only. Sorted by table code.
  */
 export async function getTableStatuses(shiftId: string): Promise<TableStatus[]> {
   const [tables, orders] = await Promise.all([
@@ -703,13 +703,13 @@ export type ReadyOrder = {
 }
 
 /**
- * Returns orders with status 'ready' for POS handover screen.
+ * Returns orders with status 'ready' or 'awaiting_payment' for POS handover screen.
  * Read-only. Sorted by createdAt ascending (oldest first).
  */
 export async function getReadyOrders(): Promise<ReadyOrder[]> {
   const [orders, nameMap] = await Promise.all([
     prisma.order.findMany({
-      where: { status: 'ready' },
+      where: { status: { in: ['ready', 'awaiting_payment'] } },
       orderBy: { createdAt: 'asc' },
       select: {
         id: true,

@@ -3,6 +3,7 @@ import { transitionOrderStatus } from '@/lib/pos-service'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
 // SECURITY: 'served' is NOT allowed here - only checkout/payment flows can mark orders as served
+// 'awaiting_payment' is also NOT allowed here - only kitchen can transition ready → awaiting_payment
 const VALID_STATUSES = ['pending', 'preparing', 'ready', 'cancelled'] as const
 
 export async function POST(

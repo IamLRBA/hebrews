@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/db'
 
-const NON_TERMINAL_STATUSES = ['pending', 'preparing', 'ready'] as const
+const NON_TERMINAL_STATUSES = ['pending', 'preparing', 'ready', 'awaiting_payment'] as const
 const TERMINAL_STATUSES = ['served', 'cancelled'] as const
 
 // ---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ export class OrderNotTerminalError extends Error {
 
 /**
  * A table is occupied if there exists a dine-in order with this tableId
- * and status in (pending, preparing, ready).
+ * and status in (pending, preparing, ready, awaiting_payment).
  * Takeaway orders never affect tables.
  */
 export async function isTableOccupied(tableId: string): Promise<boolean> {
@@ -51,10 +51,10 @@ export async function isTableOccupied(tableId: string): Promise<boolean> {
 // ---------------------------------------------------------------------------
 
 /**
- * Releases the table for an order that has reached a terminal state (served or cancelled).
- * No-op if the order has no tableId (e.g. takeaway).
+ * Releases the table only when ALL orders for that table are in a terminal state (served or cancelled).
+ * Called when an order transitions to served or cancelled. If the order has no tableId (e.g. takeaway), no-op.
  * Throws if order does not exist or is not yet terminal.
- * Does not modify order status, payments, or items.
+ * Table is set to available only when there are no remaining dine-in orders on that table in non-terminal status.
  */
 export async function releaseTableForOrder(orderId: string): Promise<void> {
   const order = await prisma.order.findUnique({
@@ -70,6 +70,17 @@ export async function releaseTableForOrder(orderId: string): Promise<void> {
   }
   if (!TERMINAL_STATUSES.includes(order.status as (typeof TERMINAL_STATUSES)[number])) {
     throw new OrderNotTerminalError(orderId, order.status)
+  }
+
+  const nonTerminalOnTable = await prisma.order.count({
+    where: {
+      tableId: order.tableId,
+      orderType: 'dine_in',
+      status: { in: [...NON_TERMINAL_STATUSES] },
+    },
+  })
+  if (nonTerminalOnTable > 0) {
+    return
   }
 
   await prisma.restaurantTable.update({

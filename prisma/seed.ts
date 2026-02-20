@@ -53,6 +53,32 @@ async function main() {
   }
   console.log('Seeded staff:', staffData.map((s) => s.fullName).join(', '))
 
+  // Default terminals (Phase 4) — skip if Terminal table not yet migrated
+  try {
+    const terminalCodes = ['pos-1', 'kds-1', 'mgr-1']
+    const terminalMeta: Record<string, { name: string; type: 'POS' | 'KDS' | 'manager' }> = {
+      'pos-1': { name: 'POS 1', type: 'POS' },
+      'kds-1': { name: 'Kitchen Display 1', type: 'KDS' },
+      'mgr-1': { name: 'Manager Console', type: 'manager' },
+    }
+    for (const code of terminalCodes) {
+      const meta = terminalMeta[code]
+      await prisma.terminal.upsert({
+        where: { code },
+        update: { name: meta.name, type: meta.type },
+        create: { code, name: meta.name, type: meta.type, isActive: true },
+      })
+    }
+    console.log('Seeded terminals:', terminalCodes.join(', '))
+  } catch (e: unknown) {
+    const code = e && typeof e === 'object' && 'code' in e ? (e as { code: string }).code : ''
+    if (code === 'P2021' || (e instanceof Error && e.message?.includes('does not exist'))) {
+      console.warn('Terminal table not found; run Phase 4 migration (or db push) then seed again to create terminals.')
+    } else {
+      throw e
+    }
+  }
+
   // Tables (Booth I, Booth II, T1–T17)
   const tables = [
     { code: 'Booth I', capacity: 3 },

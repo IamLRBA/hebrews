@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, Fragment } from 'react'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { AdminNavHeader } from '@/components/admin/AdminNavHeader'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { StatusBadge } from '@/components/ui/StatusBadge'
 import { posFetch } from '@/lib/pos-client'
 import { Search, Eye, X } from 'lucide-react'
 import Link from 'next/link'
@@ -165,6 +166,7 @@ export default function AdminOrdersPage() {
                     <option value="pending">Pending</option>
                     <option value="preparing">Preparing</option>
                     <option value="ready">Ready</option>
+                    <option value="awaiting_payment">Awaiting Payment</option>
                     <option value="served">Served</option>
                     <option value="cancelled">Cancelled</option>
                   </select>
@@ -233,21 +235,7 @@ export default function AdminOrdersPage() {
                               {order.orderType === 'dine_in' ? 'Dine In' : 'Takeaway'}
                             </td>
                             <td className="py-4 px-6">
-                              <span
-                                className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                  order.status === 'pending'
-                                    ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
-                                    : order.status === 'preparing'
-                                    ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
-                                    : order.status === 'ready'
-                                    ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
-                                    : order.status === 'served'
-                                    ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
-                                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
-                                }`}
-                              >
-                                {order.status}
-                              </span>
+                              <StatusBadge status={order.status} />
                             </td>
                             <td className="py-4 px-6 text-sm text-neutral-900 dark:text-neutral-100">
                               {order.totalUgx.toLocaleString()} UGX

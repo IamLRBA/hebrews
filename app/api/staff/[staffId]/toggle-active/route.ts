@@ -1,19 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { assertStaffRole } from '@/lib/domain/role-guard'
-
-const STAFF_ID_HEADER = 'x-staff-id'
+import { getAuthenticatedStaff } from '@/lib/pos-auth'
+import { incrementTokenVersion } from '@/lib/pos-auth'
+import { toPosApiResponse } from '@/lib/pos-api-errors'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ staffId: string }> }
 ) {
   try {
-    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) {
-      return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
-    }
-
+    const { staffId } = await getAuthenticatedStaff(request)
     await assertStaffRole(staffId, ['admin'])
 
     const { staffId: targetStaffId } = await params
@@ -36,12 +33,12 @@ export async function POST(
       },
     })
 
+    if (!isActive) {
+      await incrementTokenVersion(targetStaffId)
+    }
+
     return NextResponse.json(updatedStaff)
   } catch (error) {
-    console.error('[staff/toggle-active] POST error:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to update staff status' },
-      { status: 500 }
-    )
+    return toPosApiResponse(error)
   }
 }

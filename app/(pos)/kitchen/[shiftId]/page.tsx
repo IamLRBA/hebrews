@@ -20,6 +20,7 @@ type QueueItem = {
 type QueueOrder = {
   orderId: string
   tableLabel: string | null
+  customerName: string | null
   items: QueueItem[]
   status: string
   createdAt: string
@@ -39,13 +40,26 @@ function timeSince(dateStr: string): string {
 function ticketBgClass(status: string): string {
   switch (status) {
     case 'pending':
-      return 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600'
+      return 'bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700'
     case 'preparing':
-      return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-400 dark:border-yellow-600'
+      return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-700'
     case 'ready':
-      return 'bg-green-50 dark:bg-green-900/20 border-green-400 dark:border-green-600'
+      return 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-700'
     default:
-      return 'bg-neutral-100 dark:bg-neutral-800'
+      return 'bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700'
+  }
+}
+
+function itemsAreaBgClass(status: string): string {
+  switch (status) {
+    case 'pending':
+      return 'bg-neutral-50 dark:bg-neutral-900'
+    case 'preparing':
+      return 'bg-neutral-50 dark:bg-yellow-950/40'
+    case 'ready':
+      return 'bg-neutral-50 dark:bg-green-950/40'
+    default:
+      return 'bg-neutral-50 dark:bg-neutral-900'
   }
 }
 
@@ -69,8 +83,8 @@ export default function KitchenDisplayPage() {
       }
       const data = await res.json()
       const allOrders = Array.isArray(data) ? data : []
-      // Filter only pending orders for this page
-      setQueue(allOrders.filter((order: any) => order.status === 'pending'))
+      // This page shows only pending orders (Preparing has its own page)
+      setQueue(allOrders.filter((order: QueueOrder) => order.status === 'pending'))
       setError(null)
     } catch (e) {
       const errorMsg = e instanceof Error ? e.message : 'Failed to load queue'
@@ -162,63 +176,76 @@ export default function KitchenDisplayPage() {
                 <p className="m-0 text-neutral-600 dark:text-neutral-400">No pending orders</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full max-w-7xl">
-            {queue.map((order) => (
-              <div
-                key={order.orderId}
-                className={`rounded-lg border-2 p-4 flex flex-col ${ticketBgClass(order.status)}`}
+              <ul
+                className={
+                  queue.length === 1
+                    ? 'list-none p-0 flex justify-center w-full'
+                    : queue.length === 2
+                      ? 'list-none p-0 flex justify-center gap-4 flex-wrap max-w-2xl mx-auto w-full'
+                      : 'list-none p-0 flex flex-wrap justify-center gap-4 max-w-4xl mx-auto pos-order-list w-full'
+                }
               >
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="font-mono font-semibold text-sm">
-                    #{order.orderId.slice(0, 8)}
-                  </span>
-                  <span className="text-xs text-neutral-500">{timeSince(order.createdAt)}</span>
-                </div>
-                <p className="m-0 text-sm font-medium mb-2">
-                  {order.tableLabel ?? 'Takeaway'}
-                </p>
-                <ul className="m-0 list-none p-0 text-sm flex-1">
-                  {order.items.map((item, i) => {
-                    const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
-                    return (
-                      <Fragment key={i}>
-                        <li className="flex items-center gap-2 py-1">
-                          <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
-                            <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
-                          </div>
-                          <span>{item.name} × {item.quantity}</span>
-                        </li>
-                        {i < order.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
-                      </Fragment>
-                    )
-                  })}
-                </ul>
-                <p className="m-0 mt-2 text-xs capitalize">{order.status}</p>
-                <div className="mt-3">
-                  {order.status === 'pending' && (
-                    <button
-                      type="button"
-                      onClick={() => handleStatusChange(order.orderId, 'preparing')}
-                      disabled={acting !== null}
-                      className="btn btn-primary w-full py-2 text-sm disabled:opacity-60"
+                {queue.map((order) => (
+                  <li
+                    key={order.orderId}
+                    className={
+                      queue.length === 1
+                        ? 'w-full max-w-sm'
+                        : queue.length === 2
+                          ? 'w-full min-w-[240px] sm:w-[calc(50%-0.5rem)] sm:max-w-[320px]'
+                          : 'pos-order-list-item'
+                    }
+                  >
+                    <div
+                      className={`pos-order-card-border rounded-lg p-4 flex flex-col items-center text-center h-full ${ticketBgClass(order.status)}`}
                     >
-                      Start Preparing
-                    </button>
-                  )}
-                  {order.status === 'preparing' && (
-                    <button
-                      type="button"
-                      onClick={() => handleStatusChange(order.orderId, 'ready')}
-                      disabled={acting !== null}
-                      className="btn btn-primary w-full py-2 text-sm disabled:opacity-60"
-                    >
-                      Mark Ready
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-              </div>
+                      <div className="flex items-center justify-between gap-2 mb-2 w-full">
+                        <span className="font-mono font-semibold text-sm">
+                          #{order.orderId.slice(0, 8)}
+                        </span>
+                        <span className="text-xs text-neutral-500">{timeSince(order.createdAt)}</span>
+                      </div>
+                      {order.customerName && (
+                        <p className="m-0 text-sm font-semibold text-primary-700 dark:text-primary-300 mb-1">
+                          {order.customerName}
+                        </p>
+                      )}
+                      <p className="m-0 text-sm font-medium mb-3">
+                        {order.tableLabel ?? 'Takeaway'}
+                      </p>
+                      <div className={`w-full ${itemsAreaBgClass(order.status)} rounded-lg p-3 mb-3 border border-neutral-200 dark:border-neutral-700`}>
+                        <ul className="m-0 list-none p-0 text-sm flex-1">
+                          {order.items.map((item, i) => {
+                            const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
+                            return (
+                              <Fragment key={i}>
+                                <li className="flex items-center gap-2 py-1 justify-center">
+                                  <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
+                                    <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
+                                  </div>
+                                  <span>{item.name} × {item.quantity}</span>
+                                </li>
+                                {i < order.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
+                              </Fragment>
+                            )
+                          })}
+                        </ul>
+                      </div>
+                      <p className="m-0 mb-3 text-xs capitalize">{order.status}</p>
+                      <div className="mt-auto w-full">
+                        <button
+                          type="button"
+                          onClick={() => handleStatusChange(order.orderId, 'preparing')}
+                          disabled={acting !== null}
+                          className="btn btn-primary w-full py-2 text-sm disabled:opacity-60"
+                        >
+                          Start Preparing
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             )}
           </main>
         </div>

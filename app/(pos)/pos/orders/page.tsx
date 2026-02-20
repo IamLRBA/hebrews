@@ -819,7 +819,7 @@ export default function PosOrdersPage() {
             />
           ) : (
             <>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mb-2">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mb-2 text-center">
                 #{order.orderNumber} · {order.status}
                 {order.orderType && (
                   <span className="ml-1">
@@ -916,7 +916,7 @@ export default function PosOrdersPage() {
                 </div>
               )}
 
-              <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-auto pr-2">
+              <div className="border-t border-neutral-200 dark:border-neutral-700 pt-4 mt-auto pr-2 flex flex-col items-center text-center">
                 <p className="font-semibold text-xl text-primary-700 dark:text-primary-200 mb-4">
                   Total: {order.totalUgx.toLocaleString()} UGX
                 </p>
@@ -1049,13 +1049,13 @@ export default function PosOrdersPage() {
                     </div>
                   </>
                 )}
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 w-full items-center">
                   {order.status === 'pending' ? (
                     <button
                       type="button"
                       onClick={handleSendToKitchen}
                       disabled={submitting || (order?.items ?? []).length === 0 || !orderType || (orderType === 'dine_in' && !selectedTableId)}
-                      className="btn btn-primary py-3 disabled:opacity-60"
+                      className="btn btn-primary py-3 disabled:opacity-60 w-full max-w-xs"
                     >
                       {submitting ? 'Sending…' : 'Send to Kitchen'}
                     </button>
@@ -1064,7 +1064,7 @@ export default function PosOrdersPage() {
                       type="button"
                       onClick={handlePay}
                       disabled={(order?.items ?? []).length === 0}
-                      className="btn btn-primary py-3 disabled:opacity-60"
+                      className="btn btn-primary py-3 disabled:opacity-60 w-full max-w-xs"
                     >
                       Pay
                     </button>

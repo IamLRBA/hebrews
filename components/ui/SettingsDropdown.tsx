@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { Settings, LogOut } from 'lucide-react'
 import ThemeSwitcher from '@/components/ThemeSwitcher'
-import { clearStaffSession } from '@/lib/pos-client'
+import { logout } from '@/lib/pos-client'
 
 export default function SettingsDropdown() {
   const router = useRouter()
@@ -71,8 +71,8 @@ export default function SettingsDropdown() {
           <div className="pos-settings-dropdown-divider" />
           <button
             type="button"
-            onClick={() => {
-              clearStaffSession()
+            onClick={async () => {
+              await logout()
               handleClose()
               router.push('/login')
             }}

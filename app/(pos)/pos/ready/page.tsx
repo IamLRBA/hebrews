@@ -31,6 +31,17 @@ type ReadyOrder = {
   items: ReadyOrderItem[]
 }
 
+function itemsAreaBgClass(status: string): string {
+  switch (status) {
+    case 'ready':
+      return 'bg-neutral-50 dark:bg-green-950/40'
+    case 'awaiting_payment':
+      return 'bg-neutral-50 dark:bg-orange-950/40'
+    default:
+      return 'bg-neutral-50 dark:bg-neutral-900'
+  }
+}
+
 export default function PosReadyPage() {
   const router = useRouter()
   const [staffOk, setStaffOk] = useState(false)
@@ -120,12 +131,30 @@ export default function PosReadyPage() {
             description="Orders will appear here when they're ready for pickup."
           />
         )}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ul
+          className={
+            orders.length === 1
+              ? 'list-none p-0 flex justify-center w-full'
+              : orders.length === 2
+                ? 'list-none p-0 flex justify-center gap-4 flex-wrap max-w-2xl mx-auto w-full'
+                : 'list-none p-0 flex flex-wrap justify-center gap-4 max-w-4xl mx-auto pos-order-list w-full'
+          }
+        >
           {orders.map((o) => (
-            <div key={o.orderId} className="pos-card pos-order-card-centered flex flex-col gap-3 animate-slide-in-up">
-              <div className="flex items-center justify-between gap-2">
+            <li
+              key={o.orderId}
+              className={
+                orders.length === 1
+                  ? 'w-full max-w-sm'
+                  : orders.length === 2
+                    ? 'w-full min-w-[240px] sm:w-[calc(50%-0.5rem)] sm:max-w-[320px]'
+                    : 'pos-order-list-item'
+              }
+            >
+              <div className="pos-card pos-order-card-border pos-order-card-centered flex flex-col gap-3 animate-slide-in-up h-full">
+                <div className="flex items-center justify-between gap-2">
                 <p className="m-0 font-semibold text-lg text-primary-800 dark:text-primary-100">Order #{o.orderNumber}</p>
-                <StatusBadge status="ready" />
+                <StatusBadge status={o.status} />
               </div>
               <div className="text-sm space-y-1">
                 <p className="m-0 text-neutral-600 dark:text-neutral-400">
@@ -137,7 +166,7 @@ export default function PosReadyPage() {
                   </p>
                 )}
               </div>
-              <div className="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-3">
+              <div className={`${itemsAreaBgClass(o.status)} rounded-lg p-3`}>
                 <ul className="m-0 list-none p-0 text-sm text-neutral-700 dark:text-neutral-300">
                   {o.items.map((item, i) => {
                     const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
@@ -165,10 +194,11 @@ export default function PosReadyPage() {
                 >
                   {acting === o.orderId ? 'Serving…' : 'Serve Order'}
                 </button>
+                </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </main>
   )

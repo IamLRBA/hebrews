@@ -54,7 +54,7 @@ export class PaymentExceedsOrderTotalError extends Error {
 export class OrderNotReadyForPaymentError extends Error {
   readonly code = 'ORDER_NOT_READY_FOR_PAYMENT' as const
   constructor(public readonly orderId: string, public readonly status: string) {
-    super(`Order is ${status}; only ready orders can receive payments: ${orderId}`)
+    super(`Order is ${status}; only ready or awaiting_payment orders can receive payments: ${orderId}`)
     this.name = 'OrderNotReadyForPaymentError'
     Object.setPrototypeOf(this, OrderNotReadyForPaymentError.prototype)
   }
@@ -187,8 +187,8 @@ export type RecordOrderPaymentParams = {
 }
 
 /**
- * Records a payment for an order. Only orders in "ready" status may receive payments.
- * Validates: order exists, status is ready, active shift exists for staff, amount > 0, total payments do not exceed order total.
+ * Records a payment for an order. Only orders in "ready" or "awaiting_payment" status may receive payments.
+ * Validates: order exists, status is ready or awaiting_payment, active shift exists for staff, amount > 0, total payments do not exceed order total.
  * Creates payment as completed. If total paid (completed payments) >= order total, transitions order to served and releases table.
  */
 export async function recordOrderPayment(params: RecordOrderPaymentParams): Promise<Payment> {
@@ -209,7 +209,7 @@ export async function recordOrderPayment(params: RecordOrderPaymentParams): Prom
     if (!order) {
       throw new OrderNotFoundError(orderId)
     }
-    if (order.status !== 'ready') {
+    if (order.status !== 'ready' && order.status !== 'awaiting_payment') {
       throw new OrderNotReadyForPaymentError(orderId, order.status)
     }
 
@@ -237,7 +237,7 @@ export async function recordOrderPayment(params: RecordOrderPaymentParams): Prom
     where: { id: orderId },
     select: { totalUgx: true, status: true },
   })
-  if (order && order.status === 'ready' && totalPaid >= Number(order.totalUgx)) {
+  if (order && (order.status === 'ready' || order.status === 'awaiting_payment') && totalPaid >= Number(order.totalUgx)) {
     await checkoutOrder({ orderId, updatedByStaffId: receivedByStaffId })
   }
 

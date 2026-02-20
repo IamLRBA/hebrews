@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db'
 import type { Order } from '@prisma/client'
 import { setOrderStatus } from '@/lib/order-status'
 import { releaseTableForOrder } from '@/lib/table-lifecycle'
+import { assertCanMarkOrderServed } from '@/lib/domain/orders'
 
 // ---------------------------------------------------------------------------
 // Typed errors
@@ -19,7 +20,7 @@ export class OrderNotFoundError extends Error {
 export class OrderNotReadyForCheckoutError extends Error {
   readonly code = 'ORDER_NOT_READY_FOR_CHECKOUT' as const
   constructor(public readonly orderId: string, public readonly status: string) {
-    super(`Order is ${status}; only ready orders can be checked out: ${orderId}`)
+    super(`Order is ${status}; only ready or awaiting_payment orders can be checked out: ${orderId}`)
     this.name = 'OrderNotReadyForCheckoutError'
     Object.setPrototypeOf(this, OrderNotReadyForCheckoutError.prototype)
   }
@@ -52,7 +53,7 @@ export type CheckoutOrderParams = {
 /**
  * Finalizes an order: validates payment completeness, transitions to served,
  * and releases the table if applicable (dine-in). Takeaway: table release is no-op.
- * Order must exist, must not be served or cancelled, must be ready, and must be
+ * Order must exist, must not be served or cancelled, must be ready or awaiting_payment, and must be
  * fully paid (sum of completed payments >= order total). Uses order lifecycle
  * and table lifecycle utilities; does not duplicate payment or status logic.
  * Single authoritative operation for closing an order.
@@ -69,7 +70,7 @@ export async function checkoutOrder(params: CheckoutOrderParams): Promise<Order>
     if (!order) {
       throw new OrderNotFoundError(orderId)
     }
-    if (order.status !== 'ready') {
+    if (order.status !== 'ready' && order.status !== 'awaiting_payment') {
       throw new OrderNotReadyForCheckoutError(orderId, order.status)
     }
 
@@ -89,6 +90,8 @@ export async function checkoutOrder(params: CheckoutOrderParams): Promise<Order>
 
     // Defer status transition and table release to after tx so we use existing utilities
   })
+
+  await assertCanMarkOrderServed(orderId, updatedByStaffId)
 
   const order = await setOrderStatus({
     orderId,
