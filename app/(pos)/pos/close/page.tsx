@@ -164,16 +164,44 @@ export default function PosClosePage() {
           <form onSubmit={handleCloseShift} className="pos-card p-6">
             <label className="block mb-4">
               <span className="pos-label">Counted Cash (UGX)</span>
-              <input
-                type="number"
-                min="0"
-                step="100"
-                required
-                value={countedCashUgx}
-                onChange={(e) => setCountedCashUgx(e.target.value)}
-                className="pos-input w-full mt-1 py-3 text-lg"
-                placeholder="Enter counted cash"
-              />
+              <div className="relative inline-flex items-stretch mt-1 w-full">
+                <input
+                  type="number"
+                  min="0"
+                  step="100"
+                  required
+                  value={countedCashUgx}
+                  onChange={(e) => setCountedCashUgx(e.target.value)}
+                  className="pos-input rounded-r-none border-r-0 rounded-l-xl min-w-0 flex-1 py-3 text-lg"
+                  placeholder="Enter counted cash"
+                />
+                <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onClick={() => {
+                      const current = parseFloat(countedCashUgx) || 0
+                      setCountedCashUgx(String(current + 1000))
+                    }}
+                    className="flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors border-b border-neutral-200 dark:border-neutral-600"
+                    aria-label="Increase by 1000"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 3v6M3 6h6" /></svg>
+                  </button>
+                  <button
+                    type="button"
+                    tabIndex={-1}
+                    onClick={() => {
+                      const current = parseFloat(countedCashUgx) || 0
+                      setCountedCashUgx(String(Math.max(0, current - 1000)))
+                    }}
+                    className="flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+                    aria-label="Decrease by 1000"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M3 6h6" /></svg>
+                  </button>
+                </div>
+              </div>
             </label>
             <button
               type="submit"

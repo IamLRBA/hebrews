@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
     }
 
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') // 'completed' | 'pending' | 'failed' | 'all'

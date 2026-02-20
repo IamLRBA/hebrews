@@ -106,7 +106,7 @@ export default function ManagerShiftDetailPage() {
               >
                 ⇐ Back to Shifts
               </Link>
-              <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
+              <h1 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-2 text-center">
                 Shift Details
               </h1>
             </div>
@@ -114,30 +114,30 @@ export default function ManagerShiftDetailPage() {
             {shift && summary && (
               <div className="space-y-6">
                 {/* Shift Summary */}
-                <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
-                  <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
+                <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+                  <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                     Shift Summary
                   </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 justify-items-center">
+                    <div className="text-center flex flex-col items-center">
                       <p className="text-sm text-neutral-600 dark:text-neutral-400">Orders Served</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
                         {summary.ordersServed}
                       </p>
                     </div>
-                    <div>
+                    <div className="text-center flex flex-col items-center">
                       <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Sales</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
                         {summary.totalSales.toLocaleString()} UGX
                       </p>
                     </div>
-                    <div>
+                    <div className="text-center flex flex-col items-center">
                       <p className="text-sm text-neutral-600 dark:text-neutral-400">Cash Sales</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
                         {summary.cashSales.toLocaleString()} UGX
                       </p>
                     </div>
-                    <div>
+                    <div className="text-center flex flex-col items-center">
                       <p className="text-sm text-neutral-600 dark:text-neutral-400">Card Sales</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
                         {summary.cardSales.toLocaleString()} UGX
@@ -157,25 +157,55 @@ export default function ManagerShiftDetailPage() {
                       )}
                     </div>
                   ) : (
-                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-center">
                       <p className="text-yellow-800 dark:text-yellow-200 font-medium mb-4">
                         Shift is active
                       </p>
-                      <div className="space-y-3">
-                        <label className="block">
+                      <div className="space-y-3 flex flex-col items-center">
+                        <label className="block w-full max-w-xs">
                           <span className="pos-label">Counted Cash (UGX)</span>
-                          <input
-                            type="number"
-                            value={countedCash}
-                            onChange={(e) => setCountedCash(e.target.value)}
-                            className="pos-input mt-1 w-full"
-                            placeholder="Enter counted cash amount"
-                          />
+                          <div className="relative inline-flex items-stretch mt-1 w-full">
+                            <input
+                              type="number"
+                              min="0"
+                              step="1000"
+                              value={countedCash}
+                              onChange={(e) => setCountedCash(e.target.value)}
+                              className="pos-input pos-input-no-spinner rounded-r-none border-r-0 rounded-l-xl min-w-0 flex-1"
+                              placeholder="Enter counted cash amount"
+                            />
+                            <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
+                              <button
+                                type="button"
+                                tabIndex={-1}
+                                onClick={() => {
+                                  const current = parseFloat(countedCash) || 0
+                                  setCountedCash(String(current + 1000))
+                                }}
+                                className="flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors border-b border-neutral-200 dark:border-neutral-600"
+                                aria-label="Increase by 1000"
+                              >
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 3v6M3 6h6" /></svg>
+                              </button>
+                              <button
+                                type="button"
+                                tabIndex={-1}
+                                onClick={() => {
+                                  const current = parseFloat(countedCash) || 0
+                                  setCountedCash(String(Math.max(0, current - 1000)))
+                                }}
+                                className="flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+                                aria-label="Decrease by 1000"
+                              >
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M3 6h6" /></svg>
+                              </button>
+                            </div>
+                          </div>
                         </label>
                         <button
                           onClick={handleCloseShift}
                           disabled={closing || !countedCash}
-                          className="btn btn-primary w-full disabled:opacity-60"
+                          className="btn btn-primary w-full max-w-xs disabled:opacity-60"
                         >
                           {closing ? 'Closing...' : 'Close Shift'}
                         </button>

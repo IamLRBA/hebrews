@@ -35,6 +35,7 @@ export function ProductModal({ isOpen, onClose, onSuccess, product }: ProductMod
   const [isActive, setIsActive] = useState(true)
   const [imageUrl, setImageUrl] = useState('')
   const [loading, setLoading] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false)
@@ -96,7 +97,7 @@ export function ProductModal({ isOpen, onClose, onSuccess, product }: ProductMod
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 dark:bg-black/60">
-      <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl border border-neutral-200 dark:border-neutral-800 w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className="bg-neutral-50 dark:bg-neutral-900 rounded-xl shadow-xl border border-neutral-200 dark:border-neutral-800 w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-800">
           <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">{product ? 'Edit Product' : 'Add Product'}</h2>
           <button type="button" onClick={onClose} className="p-2 rounded-lg text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 bg-transparent hover:bg-neutral-100 dark:hover:bg-transparent" aria-label="Close"><X className="w-5 h-5" /></button>
@@ -134,24 +135,54 @@ export function ProductModal({ isOpen, onClose, onSuccess, product }: ProductMod
                 <div className="relative inline-block">
                   <img src={imageUrl.startsWith('data:') ? imageUrl : imageUrl.startsWith('http') || imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`} alt="Product" className="w-24 h-24 object-cover rounded-lg border border-neutral-200 dark:border-neutral-700" />
                   <div className="flex gap-2 mt-2">
-                    <button type="button" onClick={() => setImageUrl('')} className="btn btn-outline text-sm py-1.5">Delete image</button>
-                    <button type="button" onClick={() => imageInputRef.current?.click()} className="btn btn-outline text-sm py-1.5">Change image</button>
+                    <button type="button" onClick={() => setImageUrl('')} className="btn btn-outline text-sm py-1.5" disabled={uploadingImage}>Delete image</button>
+                    <button type="button" onClick={() => imageInputRef.current?.click()} className="btn btn-outline text-sm py-1.5" disabled={uploadingImage}>{uploadingImage ? 'Uploading...' : 'Change image'}</button>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div className="w-24 h-24 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-400 text-sm">No image</div>
-                  <button type="button" onClick={() => imageInputRef.current?.click()} className="btn btn-outline text-sm mt-2 py-1.5">Add image</button>
+                  <button type="button" onClick={() => imageInputRef.current?.click()} className="btn btn-outline text-sm mt-2 py-1.5" disabled={uploadingImage}>{uploadingImage ? 'Uploading...' : 'Add image'}</button>
                 </div>
               )}
-              <input ref={imageInputRef} type="file" accept="image/*" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) { const r = new FileReader(); r.onload = () => setImageUrl(String(r.result)); r.readAsDataURL(f) }; e.target.value = '' }} />
+              <input
+                ref={imageInputRef}
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0]
+                  if (!f) return
+                  e.target.value = ''
+                  setUploadingImage(true)
+                  setError(null)
+                  try {
+                    const formData = new FormData()
+                    formData.append('file', f)
+                    const res = await posFetch('/api/admin/upload/product-image', {
+                      method: 'POST',
+                      body: formData,
+                    })
+                    if (!res.ok) {
+                      const data = await res.json().catch(() => ({}))
+                      throw new Error(data.error || 'Upload failed')
+                    }
+                    const data = await res.json()
+                    if (data.path) setImageUrl(data.path)
+                  } catch (err) {
+                    setError(err instanceof Error ? err.message : 'Upload failed')
+                  } finally {
+                    setUploadingImage(false)
+                  }
+                }}
+              />
             </div>
           </div>
 
           <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 focus:ring-2 accent-primary-600 dark:border-neutral-600 bg-white dark:bg-neutral-800" /><span className="pos-label">Active</span></label>
           <div className="flex gap-3 pt-4">
             {product && (product.productId || product.id) && (
-              <button type="button" onClick={() => setShowDeleteConfirm(true)} className="btn btn-outline text-red-600 dark:text-red-400 flex-1" disabled={loading}>Delete</button>
+              <button type="button" onClick={() => setShowDeleteConfirm(true)} className="btn btn-outline flex-1" disabled={loading}>Delete</button>
             )}
             <button type="button" onClick={onClose} className="btn btn-outline flex-1" disabled={loading}>Cancel</button>
             <button type="submit" className="btn btn-primary flex-1" disabled={loading}>{loading ? 'Saving...' : product ? 'Update' : 'Create'}</button>
@@ -161,18 +192,44 @@ export function ProductModal({ isOpen, onClose, onSuccess, product }: ProductMod
       <ConfirmDialog
         open={showDeleteConfirm}
         title="Delete product"
-        message="Are you sure you want to delete this product?"
+        message="Are you sure you want to delete this product? This action cannot be undone."
         confirmLabel="Delete"
         cancelLabel="Cancel"
         variant="danger"
         onConfirm={async () => {
-          setShowDeleteConfirm(false)
           const id = product?.productId ?? product?.id
-          if (!id) return
-          const res = await posFetch(`/api/admin/products/${id}`, { method: 'DELETE' })
-          if (res.ok) { onSuccess(); onClose() }
+          if (!id) {
+            setShowDeleteConfirm(false)
+            return
+          }
+          
+          setLoading(true)
+          setError(null)
+          
+          try {
+            const res = await posFetch(`/api/admin/products/${id}`, { method: 'DELETE' })
+            const data = await res.json().catch(() => ({}))
+            
+            if (res.ok) {
+              setShowDeleteConfirm(false)
+              onSuccess()
+              onClose()
+            } else {
+              setError(data.error || 'Failed to delete product')
+              setShowDeleteConfirm(false)
+            }
+          } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed to delete product')
+            setShowDeleteConfirm(false)
+          } finally {
+            setLoading(false)
+          }
         }}
-        onCancel={() => setShowDeleteConfirm(false)}
+        onCancel={() => {
+          if (!loading) {
+            setShowDeleteConfirm(false)
+          }
+        }}
       />
     </div>
   )

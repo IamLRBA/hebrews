@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Fragment } from 'react'
 import Image from 'next/image'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { AdminNavHeader } from '@/components/admin/AdminNavHeader'
@@ -95,7 +95,7 @@ export default function AdminProductsPage() {
             </div>
 
             {/* Search */}
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800 mb-6">
+            <div className="bg-accent-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800 mb-6">
               <div className="relative" ref={searchWrapperRef}>
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" aria-hidden />
                 <input
@@ -125,7 +125,7 @@ export default function AdminProductsPage() {
                 )}
                 {showSearchSuggestions && (
                   <ul
-                    className="absolute z-50 w-full mt-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                    className="absolute z-50 w-full mt-1 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto"
                     role="listbox"
                   >
                     {searchSuggestions.length === 0 ? (
@@ -160,7 +160,7 @@ export default function AdminProductsPage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-100 dark:border-neutral-800 overflow-hidden">
               {loading ? (
                 <div className="p-8 text-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
@@ -168,7 +168,7 @@ export default function AdminProductsPage() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-neutral-50 dark:bg-neutral-800">
+                    <thead className="bg-white dark:bg-neutral-800">
                       <tr>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 w-12">
                           #
@@ -195,16 +195,15 @@ export default function AdminProductsPage() {
                     </thead>
                     <tbody>
                       {filteredProducts.map((product, idx) => (
-                        <>
+                        <Fragment key={product.productId}>
                           {idx > 0 && (
-                            <tr key={`divider-${product.productId}`} className="border-t border-neutral-200 dark:border-neutral-800">
+                            <tr className="border-t border-neutral-200 dark:border-neutral-800">
                               <td colSpan={7} className="py-0 px-6">
                                 <div className="h-px bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent"></div>
                               </td>
                             </tr>
                           )}
                           <tr
-                            key={product.productId}
                             className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
                           >
                             <td className="py-4 px-6 text-sm font-medium text-neutral-700 dark:text-neutral-300 w-12">
@@ -248,7 +247,7 @@ export default function AdminProductsPage() {
                               </button>
                           </td>
                         </tr>
-                        </>
+                        </Fragment>
                       ))}
                     </tbody>
                   </table>

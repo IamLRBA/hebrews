@@ -29,7 +29,7 @@ export function ManagerSidebar() {
   }
 
   return (
-    <aside className="w-64 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 h-screen sticky top-0 flex flex-col">
+    <aside className="w-64 bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 h-screen sticky top-0 flex flex-col">
       <div className="p-6 border-b border-neutral-200 dark:border-neutral-800">
         <h2 className="text-xl font-bold text-primary-700 dark:text-primary-300">
           Manager Panel

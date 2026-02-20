@@ -104,7 +104,7 @@ export default function AdminTablesPage() {
                   </button>
                 )}
                 {showSearchSuggestions && (
-                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                     {searchSuggestions.length === 0 ? <li className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400">No matches</li> : searchSuggestions.map((t) => (
                       <li key={t.id || t.tableId}><button type="button" className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30" onClick={() => { setSearchQuery(t.code || t.tableCode || ''); setSearchFocused(false) }}>{t.code || t.tableCode}</button></li>
                     ))}
@@ -124,7 +124,7 @@ export default function AdminTablesPage() {
                   return (
                     <div
                       key={table.id || table.tableId}
-                      className={`w-full sm:w-[280px] bg-white dark:bg-neutral-900 rounded-lg shadow-md p-4 border-2 text-center ${
+                      className={`w-full sm:w-[280px] bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-4 border-2 text-center ${
                         isOccupied
                           ? 'border-primary-300 dark:border-primary-700'
                           : 'border-primary-200 dark:border-primary-800'

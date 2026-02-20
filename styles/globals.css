@@ -761,6 +761,23 @@
     color: #6b7280; /* neutral-500 for dark mode - faded look */
   }
 
+  /* Remove V pattern from select backgrounds in dark mode */
+  .dark select,
+  .dark select.pos-input,
+  .dark .pos-input[type="select"],
+  .dark select.pos-select {
+    background-image: none !important;
+    background-repeat: no-repeat !important;
+    background-size: auto !important;
+  }
+
+  /* Remove webkit select styling that causes V pattern */
+  .dark select::-webkit-appearance,
+  .dark select.pos-input::-webkit-appearance {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+
   /* Service Type Select - Fix option text colors in light mode */
   .pos-select-service-type option {
     color: #1f2937; /* dark text for light mode */
@@ -2184,6 +2201,8 @@
 /* Dark mode form elements */
 .dark input, .dark textarea, .dark select {
   @apply bg-neutral-800 border-neutral-600 text-neutral-100;
+  background-image: none !important;
+  background-repeat: no-repeat !important;
 }
 
 .dark input:focus, .dark textarea:focus, .dark select:focus {
@@ -2430,9 +2449,27 @@ input[type="radio"]:focus {
   @apply bg-neutral-700 text-neutral-200 border-neutral-600 hover:bg-neutral-600;
 }
 
-/* Dark mode select dropdown arrow */
+/* Dark mode select dropdown arrow - removed to prevent V pattern */
 .dark select {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+  background-size: auto !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Ensure all select elements in dark mode have no background patterns */
+.dark select.pos-input,
+.dark select.pos-select,
+.dark select.pos-select-service-type,
+.dark .pos-input[type="select"] {
+  background-image: none !important;
+  background-repeat: no-repeat !important;
+  background-size: auto !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
 }
 
 
