@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Fragment } from 'react'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { AdminNavHeader } from '@/components/admin/AdminNavHeader'
 import { posFetch } from '@/lib/pos-client'
@@ -102,7 +102,7 @@ export default function AdminShiftsPage() {
                   </button>
                 )}
                 {showSearchSuggestions && (
-                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                     {searchSuggestions.length === 0 ? <li className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400">No matches</li> : searchSuggestions.map((name) => (
                       <li key={name}><button type="button" className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30" onClick={() => { setSearchQuery(name); setSearchFocused(false) }}>{name}</button></li>
                     ))}
@@ -111,7 +111,7 @@ export default function AdminShiftsPage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-100 dark:border-neutral-800 overflow-hidden">
               {loading ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
@@ -121,9 +121,9 @@ export default function AdminShiftsPage() {
                   No shifts found
                 </div>
               ) : (
-                <div className="pos-data-table-wrap border-2 border-neutral-200 dark:border-neutral-800">
+                <div className="pos-data-table-wrap border-2 border-neutral-100 dark:border-neutral-800">
                   <table className="w-full">
-                    <thead className="bg-neutral-100 dark:bg-neutral-800">
+                    <thead className="bg-white dark:bg-neutral-800">
                       <tr>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tl-lg">
                           Staff
@@ -143,35 +143,43 @@ export default function AdminShiftsPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredShifts.map((shift) => (
-                        <tr
-                          key={shift.id}
-                          className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                        >
-                          <td className="py-4 px-6 text-sm text-neutral-900 dark:text-neutral-100">
-                            {shift.staffName} ({shift.staffRole})
-                          </td>
-                          <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
-                            {shift.terminalId}
-                          </td>
-                          <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
-                            {new Date(shift.startTime).toLocaleString()}
-                          </td>
-                          <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
-                            {shift.endTime ? new Date(shift.endTime).toLocaleString() : '-'}
-                          </td>
-                          <td className="py-4 px-6">
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                shift.isActive
-                                  ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
-                              }`}
-                            >
-                              {shift.isActive ? 'Active' : 'Closed'}
-                            </span>
-                          </td>
-                        </tr>
+                      {filteredShifts.map((shift, idx) => (
+                        <Fragment key={shift.id}>
+                          {idx > 0 && (
+                            <tr className="border-t border-neutral-200 dark:border-neutral-800">
+                              <td colSpan={5} className="py-0 px-6">
+                                <div className="h-px bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent"></div>
+                              </td>
+                            </tr>
+                          )}
+                          <tr
+                            className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                          >
+                            <td className="py-4 px-6 text-sm text-neutral-900 dark:text-neutral-100">
+                              {shift.staffName} ({shift.staffRole})
+                            </td>
+                            <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
+                              {shift.terminalId}
+                            </td>
+                            <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
+                              {new Date(shift.startTime).toLocaleString()}
+                            </td>
+                            <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
+                              {shift.endTime ? new Date(shift.endTime).toLocaleString() : '-'}
+                            </td>
+                            <td className="py-4 px-6">
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  shift.isActive
+                                    ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
+                                }`}
+                              >
+                                {shift.isActive ? 'Active' : 'Closed'}
+                              </span>
+                            </td>
+                          </tr>
+                        </Fragment>
                       ))}
                     </tbody>
                   </table>

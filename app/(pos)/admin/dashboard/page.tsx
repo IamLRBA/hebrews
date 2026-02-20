@@ -181,7 +181,7 @@ export default function AdminDashboardPage() {
               </div>
 
               {dateRange === 'custom' && (
-                <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-4 border border-neutral-200 dark:border-neutral-800 mb-6">
+                <div className="bg-accent-50 dark:bg-neutral-900 rounded-lg shadow-md p-4 border border-neutral-200 dark:border-neutral-800 mb-6">
                   <div className="flex gap-4">
                     <label className="flex-1">
                       <span className="pos-label">Start Date</span>
@@ -208,7 +208,7 @@ export default function AdminDashboardPage() {
 
             {/* KPI Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+              <div className="bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">Daily Revenue</p>
@@ -222,7 +222,7 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+              <div className="bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">Weekly Revenue</p>
@@ -236,7 +236,7 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+              <div className="bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">Monthly Revenue</p>
@@ -250,7 +250,7 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+              <div className="bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">Monthly Orders</p>
@@ -268,7 +268,7 @@ export default function AdminDashboardPage() {
             {/* Charts Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {/* Revenue Trend */}
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+              <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                 <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                   Revenue Trend (Last 7 Days)
                 </h2>
@@ -291,7 +291,7 @@ export default function AdminDashboardPage() {
               </div>
 
               {/* Payment Methods */}
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+              <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                 <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                   Sales by Payment Method
                 </h2>
@@ -318,7 +318,7 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Top Products - horizontal bars so product names don't overlap */}
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
               <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                 Top Products (Last 30 Days)
               </h2>

@@ -35,7 +35,7 @@ export class InvalidOrderStatusTransitionError extends Error {
 
 const ALLOWED_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   pending: ['preparing', 'cancelled'],
-  preparing: ['ready'],
+  preparing: ['ready', 'cancelled'],
   ready: ['served'],
   served: [],
   cancelled: [],

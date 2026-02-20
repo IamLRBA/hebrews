@@ -85,7 +85,7 @@ export function TableModal({ isOpen, onClose, onSuccess, table }: TableModalProp
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 dark:bg-black/60">
-      <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl border border-neutral-200 dark:border-neutral-800 w-full max-w-md max-h-[85vh] flex flex-col">
+      <div className="bg-neutral-50 dark:bg-neutral-900 rounded-xl shadow-xl border border-neutral-200 dark:border-neutral-800 w-full max-w-md max-h-[85vh] flex flex-col">
         <div className="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
           <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 text-center flex-1">
             {table ? 'Edit Table' : 'Add Table'}

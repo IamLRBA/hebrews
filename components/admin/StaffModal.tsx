@@ -121,7 +121,7 @@ export function StaffModal({ isOpen, onClose, onSuccess, staff }: StaffModalProp
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 dark:bg-black/70 p-4">
-      <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-neutral-50 dark:bg-neutral-900 rounded-lg shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-800">
           <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
             {staff?.id ? 'Edit Staff' : 'Add Staff'}
@@ -211,32 +211,12 @@ export function StaffModal({ isOpen, onClose, onSuccess, staff }: StaffModalProp
             <span className="pos-label">Active</span>
           </label>
 
-          <div className="flex gap-3 pt-4 flex-wrap">
+          <div className="flex gap-3 pt-4">
             {staff?.id && (
-              <button
-                type="button"
-                onClick={() => setShowDeleteConfirm(true)}
-                className="btn btn-outline text-red-600 dark:text-red-400 flex-1 min-w-0"
-                disabled={loading}
-              >
-                Delete
-              </button>
+              <button type="button" onClick={() => setShowDeleteConfirm(true)} className="btn btn-outline flex-1" disabled={loading}>Delete</button>
             )}
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn btn-outline flex-1 min-w-0"
-              disabled={loading}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary flex-1 min-w-0"
-              disabled={loading}
-            >
-              {loading ? 'Saving...' : staff?.id ? 'Update' : 'Create'}
-            </button>
+            <button type="button" onClick={onClose} className="btn btn-outline flex-1" disabled={loading}>Cancel</button>
+            <button type="submit" className="btn btn-primary flex-1" disabled={loading}>{loading ? 'Saving...' : staff?.id ? 'Update' : 'Create'}</button>
           </div>
         </form>
       </div>

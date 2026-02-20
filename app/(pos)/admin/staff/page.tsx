@@ -132,7 +132,7 @@ export default function AdminStaffPage() {
                   </button>
                 )}
                 {showSearchSuggestions && (
-                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                  <ul className="absolute z-50 w-full mt-1 top-full left-0 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                     {searchSuggestions.length === 0 ? <li className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400">No matches</li> : searchSuggestions.map((s) => (
                       <li key={s.id}><button type="button" className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30" onClick={() => { setSearchQuery(s.fullName || s.username); setSearchFocused(false) }}>{s.fullName} ({s.username})</button></li>
                     ))}
@@ -141,15 +141,15 @@ export default function AdminStaffPage() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-100 dark:border-neutral-800 overflow-hidden">
               {loading ? (
                 <div className="p-8 text-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
                 </div>
               ) : (
-                <div className="pos-data-table-wrap border-2 border-neutral-200 dark:border-neutral-800">
+                <div className="pos-data-table-wrap border-2 border-neutral-100 dark:border-neutral-800">
                   <table className="w-full">
-                    <thead className="bg-neutral-100 dark:bg-neutral-800">
+                    <thead className="bg-white dark:bg-neutral-800">
                       <tr>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tl-lg">
                           Username

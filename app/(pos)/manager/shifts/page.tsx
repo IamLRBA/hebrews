@@ -44,15 +44,15 @@ export default function ManagerShiftsPage() {
             </div>
 
             {loading ? (
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-8 border border-neutral-200 dark:border-neutral-800 text-center">
+              <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-8 border border-neutral-200 dark:border-neutral-800 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
               </div>
             ) : activeShift ? (
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+              <div className="bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800 text-center max-w-md mx-auto">
                 <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
                   Active Shift
                 </h2>
-                <div className="space-y-2">
+                <div className="space-y-2 flex flex-col items-center">
                   <p className="text-neutral-600 dark:text-neutral-400">
                     <span className="font-medium">Shift ID:</span> {activeShift.shiftId}
                   </p>
@@ -64,7 +64,7 @@ export default function ManagerShiftsPage() {
                     <span className="font-medium">Terminal:</span> {activeShift.terminalId}
                   </p>
                 </div>
-                <div className="mt-6">
+                <div className="mt-6 flex justify-center">
                   <Link
                     href={`/manager/shifts/${activeShift.shiftId}`}
                     className="btn btn-primary"
@@ -74,7 +74,7 @@ export default function ManagerShiftsPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+              <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                 <p className="text-neutral-500 dark:text-neutral-400">
                   No active shift
                 </p>

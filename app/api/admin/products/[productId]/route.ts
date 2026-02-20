@@ -77,6 +77,28 @@ export async function DELETE(
       return NextResponse.json({ error: 'productId required' }, { status: 400 })
     }
 
+    // Check if product exists
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+      include: {
+        orderItems: {
+          select: { id: true },
+        },
+      },
+    })
+
+    if (!product) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+    }
+
+    // Delete associated order items first (if any)
+    if (product.orderItems.length > 0) {
+      await prisma.orderItem.deleteMany({
+        where: { productId },
+      })
+    }
+
+    // Then delete the product
     await prisma.product.delete({
       where: { id: productId },
     })
@@ -84,6 +106,15 @@ export async function DELETE(
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('[admin/products] DELETE error:', error)
+    
+    // Handle Prisma foreign key constraint errors
+    if (error instanceof Error && error.message.includes('ForeignKeyConstraintError')) {
+      return NextResponse.json(
+        { error: 'Cannot delete product: it is referenced by existing orders. Please deactivate it instead.' },
+        { status: 409 }
+      )
+    }
+    
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to delete product' },
       { status: 500 }

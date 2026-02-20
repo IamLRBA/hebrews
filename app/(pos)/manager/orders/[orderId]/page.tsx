@@ -84,7 +84,7 @@ export default function ManagerOrderDetailPage() {
         <div className="pos-page-container">
           <ManagerNavHeader />
           <main>
-            <div className="mb-6">
+            <div className="mb-6 text-center">
               <Link
                 href="/manager/orders"
                 className="pos-link inline-block mb-4"
@@ -97,17 +97,45 @@ export default function ManagerOrderDetailPage() {
             </div>
 
             {loading ? (
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-8 border border-neutral-200 dark:border-neutral-800 text-center">
+              <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-8 border border-neutral-200 dark:border-neutral-800 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
               </div>
             ) : order ? (
               <div className="space-y-6">
-                <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+                <div className="bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+                  <div className="mb-4">
+                    <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 text-center">
                       Order #{order.orderNumber}
                     </h2>
-                    {order.status !== 'served' && order.status !== 'cancelled' && (
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-items-center mb-4">
+                    <div className="text-center">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Status</p>
+                      <p className="font-medium text-neutral-900 dark:text-neutral-100 capitalize">
+                        {order.status}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Type</p>
+                      <p className="font-medium text-neutral-900 dark:text-neutral-100">
+                        {order.orderType === 'dine_in' ? 'Dine In' : 'Takeaway'}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Total</p>
+                      <p className="font-medium text-neutral-900 dark:text-neutral-100">
+                        {order.totalUgx?.toLocaleString()} UGX
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Paid</p>
+                      <p className="font-medium text-neutral-900 dark:text-neutral-100">
+                        {order.totalPaidUgx?.toLocaleString()} UGX
+                      </p>
+                    </div>
+                  </div>
+                  {order.status !== 'served' && order.status !== 'cancelled' && (
+                    <div className="flex justify-center mt-4">
                       <button
                         type="button"
                         onClick={() => setConfirmCancelOrder(true)}
@@ -116,38 +144,12 @@ export default function ManagerOrderDetailPage() {
                         <X className="w-4 h-4" />
                         Cancel Order
                       </button>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Status</p>
-                      <p className="font-medium text-neutral-900 dark:text-neutral-100 capitalize">
-                        {order.status}
-                      </p>
                     </div>
-                    <div>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Type</p>
-                      <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                        {order.orderType === 'dine_in' ? 'Dine In' : 'Takeaway'}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Total</p>
-                      <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                        {order.totalUgx?.toLocaleString()} UGX
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Paid</p>
-                      <p className="font-medium text-neutral-900 dark:text-neutral-100">
-                        {order.totalPaidUgx?.toLocaleString()} UGX
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
 
                 {order.items && order.items.length > 0 && (
-                  <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+                  <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                     <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-4">
                       Items
                     </h3>
@@ -196,7 +198,7 @@ export default function ManagerOrderDetailPage() {
                 )}
               </div>
             ) : (
-              <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-8 border border-neutral-200 dark:border-neutral-800 text-center">
+              <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-8 border border-neutral-200 dark:border-neutral-800 text-center">
                 <p className="text-neutral-500 dark:text-neutral-400">Order not found</p>
               </div>
             )}

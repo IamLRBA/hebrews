@@ -19,7 +19,7 @@ export default function AdminSettingsPage() {
               </p>
             </div>
 
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
               <p className="text-neutral-500 dark:text-neutral-400">
                 Settings panel - Configuration options to be implemented
               </p>

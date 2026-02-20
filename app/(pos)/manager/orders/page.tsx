@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Fragment } from 'react'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { ManagerNavHeader } from '@/components/manager/ManagerNavHeader'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
@@ -100,7 +100,7 @@ export default function ManagerOrdersPage() {
             </div>
 
             {/* Filters */}
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800 mb-6">
+            <div className="bg-accent-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800 mb-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1 relative" ref={searchWrapperRef}>
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
@@ -127,7 +127,7 @@ export default function ManagerOrdersPage() {
                     </button>
                   )}
                   {showSearchSuggestions && (
-                    <ul className="absolute z-50 w-full mt-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    <ul className="absolute z-50 w-full mt-1 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                       {searchSuggestions.length === 0 ? (
                         <li className="px-4 py-2 text-sm text-neutral-500 dark:text-neutral-400">No matches</li>
                       ) : (
@@ -176,7 +176,7 @@ export default function ManagerOrdersPage() {
             </div>
 
             {/* Orders Table */}
-            <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <div className="bg-neutral-100 dark:bg-neutral-900 rounded-lg shadow-md border-2 border-neutral-100 dark:border-neutral-800 overflow-hidden">
               {loading ? (
                 <div className="p-8 text-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
@@ -186,9 +186,9 @@ export default function ManagerOrdersPage() {
                   No orders found
                 </div>
               ) : (
-                <div className="pos-data-table-wrap border-2 border-neutral-200 dark:border-neutral-800">
+                <div className="pos-data-table-wrap border-2 border-neutral-100 dark:border-neutral-800">
                   <table className="w-full">
-                    <thead className="bg-neutral-100 dark:bg-neutral-800">
+                    <thead className="bg-white dark:bg-neutral-800">
                       <tr>
                         <th className="text-left py-3 px-6 text-sm font-semibold text-neutral-700 dark:text-neutral-300 rounded-tl-lg">
                           Order #
@@ -211,59 +211,67 @@ export default function ManagerOrdersPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredOrders.map((order) => (
-                        <tr
-                          key={order.orderId}
-                          className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                        >
-                          <td className="py-4 px-6 text-sm font-medium text-neutral-900 dark:text-neutral-100">
-                            {order.orderNumber}
-                          </td>
-                          <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
-                            {order.orderType === 'dine_in' ? 'Dine In' : 'Takeaway'}
-                          </td>
-                          <td className="py-4 px-6">
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                order.status === 'pending'
-                                  ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
-                                  : order.status === 'preparing'
-                                  ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
-                                  : order.status === 'ready'
-                                  ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
-                                  : order.status === 'served'
-                                  ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
-                                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
-                              }`}
-                            >
-                              {order.status}
-                            </span>
-                          </td>
-                          <td className="py-4 px-6 text-sm text-neutral-900 dark:text-neutral-100">
-                            {order.totalUgx.toLocaleString()} UGX
-                          </td>
-                          <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
-                            {order.totalPaidUgx.toLocaleString()} UGX
-                          </td>
-                          <td className="py-4 px-6">
-                            <div className="flex items-center gap-2">
-                              <Link
-                                href={`/manager/orders/${order.orderId}`}
-                                className="btn btn-outline p-2"
+                      {filteredOrders.map((order, idx) => (
+                        <Fragment key={order.orderId}>
+                          {idx > 0 && (
+                            <tr className="border-t border-neutral-200 dark:border-neutral-800">
+                              <td colSpan={6} className="py-0 px-6">
+                                <div className="h-px bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent"></div>
+                              </td>
+                            </tr>
+                          )}
+                          <tr
+                            className="border-t border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                          >
+                            <td className="py-4 px-6 text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                              {order.orderNumber}
+                            </td>
+                            <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
+                              {order.orderType === 'dine_in' ? 'Dine In' : 'Takeaway'}
+                            </td>
+                            <td className="py-4 px-6">
+                              <span
+                                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  order.status === 'pending'
+                                    ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
+                                    : order.status === 'preparing'
+                                    ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
+                                    : order.status === 'ready'
+                                    ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200'
+                                    : order.status === 'served'
+                                    ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
+                                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
+                                }`}
                               >
-                                <Eye className="w-4 h-4" />
-                              </Link>
-                              {order.status !== 'served' && order.status !== 'cancelled' && (
-                                <button
-                                  onClick={() => setConfirmCancelOrderId(order.orderId)}
-                                  className="btn btn-outline p-2 text-red-600 dark:text-red-400"
+                                {order.status}
+                              </span>
+                            </td>
+                            <td className="py-4 px-6 text-sm text-neutral-900 dark:text-neutral-100">
+                              {order.totalUgx.toLocaleString()} UGX
+                            </td>
+                            <td className="py-4 px-6 text-sm text-neutral-600 dark:text-neutral-400">
+                              {order.totalPaidUgx.toLocaleString()} UGX
+                            </td>
+                            <td className="py-4 px-6">
+                              <div className="flex items-center gap-2">
+                                <Link
+                                  href={`/manager/orders/${order.orderId}`}
+                                  className="btn btn-outline p-2"
                                 >
-                                  <X className="w-4 h-4" />
-                                </button>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
+                                  <Eye className="w-4 h-4" />
+                                </Link>
+                                {order.status !== 'served' && order.status !== 'cancelled' && (
+                                  <button
+                                    onClick={() => setConfirmCancelOrderId(order.orderId)}
+                                    className="btn btn-outline p-2 text-red-600 dark:text-red-400"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        </Fragment>
                       ))}
                     </tbody>
                   </table>
