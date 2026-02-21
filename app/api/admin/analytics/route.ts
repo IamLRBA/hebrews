@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { assertStaffRole } from '@/lib/domain/role-guard'
 
 export async function GET(request: NextRequest) {
   try {
-    const staffId = request.headers.get('x-staff-id')?.trim()
-    if (!staffId) {
-      return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
-    }
-
+    const { staffId } = await getAuthenticatedStaff(request)
     await assertStaffRole(staffId, ['admin'])
 
     const { searchParams } = new URL(request.url)
@@ -266,8 +263,12 @@ export async function GET(request: NextRequest) {
       salesByMethod,
       revenueTrends,
     })
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('[admin/analytics] Error:', error)
+    const err = error as { name?: string }
+    if (err.name === 'UnauthorizedError' || err.name === 'InvalidTokenError') {
+      return NextResponse.json({ error: err instanceof Error ? err.message : 'Unauthorized' }, { status: 401 })
+    }
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to fetch analytics' },
       { status: 500 }

@@ -38,10 +38,11 @@ import {
   OrderNotEditableError,
   OrderNotReadyForPaymentError,
 } from '@/lib/domain/orders'
-import { ShiftHasUnfinishedOrdersError } from '@/lib/domain/shifts'
+import { ShiftHasUnfinishedOrdersError, ManagerApprovalRequiredForCloseError } from '@/lib/domain/shifts'
 import { UnauthorizedRoleError, StaffNotFoundError as RoleGuardStaffNotFoundError } from '@/lib/domain/role-guard'
 import { UnauthorizedError, InvalidTokenError } from '@/lib/pos-auth'
 import { TerminalNotFoundError, TerminalInactiveError } from '@/lib/terminal'
+import { TableOccupiedByOtherError } from '@/lib/table-occupancy'
 
 const NOT_FOUND_ERRORS = [
   TerminalNotFoundError,
@@ -103,6 +104,29 @@ export function toPosApiResponse(error: unknown): NextResponse {
   }
   if (TERMINAL_STATE_ERRORS.some((E) => error instanceof E)) {
     return NextResponse.json({ error: message }, { status: 403 })
+  }
+  if (error instanceof TableOccupiedByOtherError) {
+    return NextResponse.json(
+      {
+        error: message,
+        conflict: 'TABLE_OCCUPIED',
+        tableId: error.tableId,
+        existingOrderId: error.existingOrderId,
+        terminalId: error.terminalId,
+      },
+      { status: 409 }
+    )
+  }
+  if (error instanceof ManagerApprovalRequiredForCloseError) {
+    return NextResponse.json(
+      {
+        error: message,
+        code: 'MANAGER_APPROVAL_REQUIRED',
+        varianceUgx: error.varianceUgx,
+        thresholdUgx: error.thresholdUgx,
+      },
+      { status: 403 }
+    )
   }
   if (INVALID_STATE_ERRORS.some((E) => error instanceof E)) {
     return NextResponse.json({ error: message }, { status: 409 })

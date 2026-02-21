@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { recordOrderPayment } from '@/lib/payments'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
-const STAFF_ID_HEADER = 'x-staff-id'
 const VALID_PAYMENT_TYPES = ['cash', 'mobile', 'card'] as const
 
 export async function POST(
@@ -10,10 +10,7 @@ export async function POST(
   { params }: { params: Promise<{ orderId: string }> }
 ) {
   try {
-    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) {
-      return NextResponse.json({ error: 'Staff session required' }, { status: 400 })
-    }
+    const { staffId } = await getAuthenticatedStaff(request)
 
     const { orderId } = await params
     if (!orderId) {

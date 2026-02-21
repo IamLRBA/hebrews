@@ -86,17 +86,29 @@ export default function PosClosePage() {
     setClosing(true)
     setError(null)
     try {
-      const res = await posFetch(`/api/shifts/${sid}/close`, {
+      const body: { countedCashUgx: number; closedByStaffId: string; managerApprovalStaffId?: string } = {
+        countedCashUgx: counted,
+        closedByStaffId: staffId,
+      }
+      let res = await posFetch(`/api/shifts/${sid}/close`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          countedCashUgx: counted,
-          closedByStaffId: staffId,
-        }),
+        body: JSON.stringify(body),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Failed to close shift')
+        if (res.status === 403 && (data as { code?: string }).code === 'MANAGER_APPROVAL_REQUIRED') {
+          body.managerApprovalStaffId = staffId
+          res = await posFetch(`/api/shifts/${sid}/close`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        }
+      }
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error((data as { error?: string }).error || 'Failed to close shift')
       }
       const data = await res.json()
       setCloseResult(data)

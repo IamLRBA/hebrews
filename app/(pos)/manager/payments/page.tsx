@@ -30,7 +30,7 @@ export default function ManagerPaymentsPage() {
   }, [statusFilter, methodFilter])
 
   const searchSuggestions = searchQuery.trim()
-    ? [...new Set(payments.filter((p) => (p.orderNumber || '').toLowerCase().includes(searchQuery.toLowerCase())).map((p) => p.orderNumber))].slice(0, 10)
+    ? Array.from(new Set(payments.filter((p) => (p.orderNumber || '').toLowerCase().includes(searchQuery.toLowerCase())).map((p) => p.orderNumber))).slice(0, 10)
     : []
   const showSearchSuggestions = searchFocused && searchQuery.trim().length > 0
 

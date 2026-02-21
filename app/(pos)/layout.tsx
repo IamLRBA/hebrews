@@ -3,6 +3,8 @@
 import BackToTop from '@/components/ui/BackToTop'
 import { PosAuthGuard } from '@/components/pos/PosAuthGuard'
 import { PosShiftGuard } from '@/components/pos/PosShiftGuard'
+import { OfflineBadge } from '@/components/pos/OfflineBadge'
+import { OfflineSyncProvider } from '@/components/pos/OfflineSyncProvider'
 import { usePathname } from 'next/navigation'
 
 /**
@@ -25,20 +27,26 @@ export default function PosLayout({
   // Skip shift guard for admin, manager, kitchen, and login routes
   if (isAdminRoute || isManagerRoute || isKitchenRoute || isLoginRoute) {
     return (
-      <div className="min-h-screen w-full flex flex-col bg-unified" style={{ minHeight: '100dvh' }}>
-        {children}
-        <BackToTop />
-      </div>
+      <>
+        <OfflineSyncProvider />
+        <div className="min-h-screen w-full flex flex-col bg-unified" style={{ minHeight: '100dvh' }}>
+          {children}
+          <BackToTop />
+        </div>
+        <OfflineBadge />
+      </>
     )
   }
 
   return (
     <PosAuthGuard>
       <PosShiftGuard>
+        <OfflineSyncProvider />
         <div className="min-h-screen w-full flex flex-col bg-unified" style={{ minHeight: '100dvh' }}>
           {children}
           <BackToTop />
         </div>
+        <OfflineBadge />
       </PosShiftGuard>
     </PosAuthGuard>
   )

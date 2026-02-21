@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
+import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { assertStaffRole } from '@/lib/domain/role-guard'
-
-const STAFF_ID_HEADER = 'x-staff-id'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
 
 export async function POST(request: NextRequest) {
   try {
-    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
+    const { staffId } = await getAuthenticatedStaff(request)
     await assertStaffRole(staffId, ['admin'])
 
     const formData = await request.formData()

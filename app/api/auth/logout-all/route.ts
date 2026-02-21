@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAuthenticatedStaff, incrementTokenVersion } from '@/lib/pos-auth'
+import { getAuthenticatedStaff, incrementTokenVersion, setLastForcedLogoutAt } from '@/lib/pos-auth'
 import { getOptionalTerminal } from '@/lib/terminal'
 import { appendAuditLog, AuditActionType, AuditEntityType } from '@/lib/audit-log'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
     const terminal = await getOptionalTerminal(request).catch(() => null)
 
     await incrementTokenVersion(staffId)
+    await setLastForcedLogoutAt(staffId)
 
     await appendAuditLog({
       staffId,

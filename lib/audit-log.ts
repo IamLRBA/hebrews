@@ -2,6 +2,7 @@
  * Append-only audit log for critical actions. Do not expose update/delete APIs.
  */
 
+import type { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 
 export const AuditActionType = {
@@ -16,6 +17,24 @@ export const AuditActionType = {
   SHIFT_CLOSE: 'SHIFT_CLOSE',
   AUTH_LOGIN: 'AUTH_LOGIN',
   AUTH_LOGOUT: 'AUTH_LOGOUT',
+  RECEIPT_PRINTED: 'RECEIPT_PRINTED',
+  RECEIPT_PRINT_FAILED: 'RECEIPT_PRINT_FAILED',
+  KITCHEN_TICKET_PRINTED: 'KITCHEN_TICKET_PRINTED',
+  KITCHEN_TICKET_PRINT_FAILED: 'KITCHEN_TICKET_PRINT_FAILED',
+  CASH_DRAWER_OPENED: 'CASH_DRAWER_OPENED',
+  CASH_DRAWER_MANUAL_OPEN: 'CASH_DRAWER_MANUAL_OPEN',
+  CONFLICT_RESOLVED: 'CONFLICT_RESOLVED',
+  TABLE_REASSIGNED: 'TABLE_REASSIGNED',
+  PAYMENT_ALREADY_PROCESSED: 'PAYMENT_ALREADY_PROCESSED',
+  ORDER_ALREADY_CLOSED: 'ORDER_ALREADY_CLOSED',
+  BACKUP_CREATED: 'BACKUP_CREATED',
+  BACKUP_DELETED: 'BACKUP_DELETED',
+  EXPORT_ORDERS: 'EXPORT_ORDERS',
+  EXPORT_PAYMENTS: 'EXPORT_PAYMENTS',
+  EXPORT_FULL: 'EXPORT_FULL',
+  IMPORT_DATA: 'IMPORT_DATA',
+  INTEGRITY_CHECK: 'INTEGRITY_CHECK',
+  RECOVERY_ACTION: 'RECOVERY_ACTION',
 } as const
 
 export const AuditEntityType = {
@@ -24,6 +43,11 @@ export const AuditEntityType = {
   table: 'table',
   shift: 'shift',
   auth: 'auth',
+  backup: 'backup',
+  export: 'export',
+  import: 'import',
+  integrity: 'integrity',
+  config: 'config',
 } as const
 
 export type AuditActionTypeValue = (typeof AuditActionType)[keyof typeof AuditActionType]
@@ -50,8 +74,8 @@ export async function appendAuditLog(params: AppendAuditParams): Promise<void> {
       actionType: params.actionType,
       entityType: params.entityType,
       entityId: params.entityId ?? undefined,
-      previousState: params.previousState ?? undefined,
-      newState: params.newState ?? undefined,
+      previousState: (params.previousState ?? undefined) as Prisma.InputJsonValue | undefined,
+      newState: (params.newState ?? undefined) as Prisma.InputJsonValue | undefined,
     },
   })
 }

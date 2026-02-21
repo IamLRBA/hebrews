@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useEffect, useState, useCallback } from 'react'
+import { Fragment, Suspense, useEffect, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
@@ -62,7 +62,7 @@ function itemsAreaBgClass(status: string): string {
   }
 }
 
-export default function KitchenPreparingPage() {
+function KitchenPreparingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const shiftId = searchParams.get('shiftId')
@@ -235,5 +235,17 @@ export default function KitchenPreparingPage() {
         </div>
       </div>
     </RoleGuard>
+  )
+}
+
+export default function KitchenPreparingPage() {
+  return (
+    <Suspense fallback={
+      <div className="pos-page min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+      </div>
+    }>
+      <KitchenPreparingContent />
+    </Suspense>
   )
 }

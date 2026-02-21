@@ -34,6 +34,8 @@ export type CreateOrderParams = {
   tableId?: string | null
   orderNumber: string
   assignedWaiterId?: string | null
+  /** When provided (e.g. sync), overrides shift.terminalId for audit. */
+  terminalId?: string | null
 }
 
 /**
@@ -43,7 +45,7 @@ export type CreateOrderParams = {
  * @throws TableRequiredForDineInError | TableNotAllowedForTakeawayError
  */
 export async function createOrder(params: CreateOrderParams): Promise<Order> {
-  const { staffId, orderType, tableId, orderNumber, assignedWaiterId } = params
+  const { staffId, orderType, tableId, orderNumber, assignedWaiterId, terminalId: overrideTerminalId } = params
 
   await getStaff(staffId)
   const shift = await getActiveShift(staffId)
@@ -58,6 +60,7 @@ export async function createOrder(params: CreateOrderParams): Promise<Order> {
     }
   }
 
+  const terminalIdToUse = overrideTerminalId != null && overrideTerminalId !== '' ? overrideTerminalId : shift.terminalId
   return prisma.order.create({
     data: {
       orderNumber,
@@ -66,7 +69,7 @@ export async function createOrder(params: CreateOrderParams): Promise<Order> {
       shiftId: shift.id,
       createdByStaffId: staffId,
       assignedWaiterId: assignedWaiterId ?? undefined,
-      terminalId: shift.terminalId,
+      terminalId: terminalIdToUse,
       status: 'pending',
       subtotalUgx: 0,
       taxUgx: 0,

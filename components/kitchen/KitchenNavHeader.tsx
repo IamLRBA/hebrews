@@ -49,7 +49,7 @@ export function KitchenNavHeader({ shiftId }: { shiftId?: string }) {
       <nav className="pos-dashboard-nav" aria-label="Kitchen sections">
         {NAV_ITEMS.map(({ href, label, iconOutline, iconFilled, requiresShiftId }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/') || (href === '/kitchen' && shiftId && pathname === `/kitchen/${shiftId}`)
-          const Icon = isActive && iconFilled ? iconFilled : iconOutline
+          const Icon = isActive ? iconFilled : iconOutline
           // Pending: with shiftId go to /kitchen/[shiftId]; else /kitchen. Preparing: with shiftId add ?shiftId=
           const finalHref = href === '/kitchen' && shiftId ? `/kitchen/${shiftId}` : requiresShiftId && shiftId ? `${href}?shiftId=${shiftId}` : href
           return (

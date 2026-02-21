@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { assertStaffRole } from '@/lib/domain/role-guard'
-import { getAuthenticatedStaff, incrementTokenVersion } from '@/lib/pos-auth'
+import { getAuthenticatedStaff, incrementTokenVersion, setLastPasswordChangeAt } from '@/lib/pos-auth'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 import bcrypt from 'bcrypt'
 
@@ -64,8 +64,8 @@ export async function PUT(
       updateData.isActive = Boolean(isActive)
     }
 
-    const shouldRevokeTokens =
-      (password !== undefined && password !== '') || (isActive === false)
+    const passwordChanged = password !== undefined && password !== ''
+    const shouldRevokeTokens = passwordChanged || (isActive === false)
 
     const updatedStaff = await prisma.staff.update({
       where: { id: targetStaffId },
@@ -82,6 +82,9 @@ export async function PUT(
     if (shouldRevokeTokens) {
       await incrementTokenVersion(targetStaffId)
     }
+    if (passwordChanged) {
+      await setLastPasswordChangeAt(targetStaffId)
+    }
 
     return NextResponse.json(updatedStaff)
   } catch (error) {
@@ -90,15 +93,11 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ staffId: string }> }
 ) {
   try {
-    const staffId = _request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) {
-      return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
-    }
-
+    const { staffId } = await getAuthenticatedStaff(request)
     await assertStaffRole(staffId, ['admin'])
 
     const { staffId: targetStaffId } = await params

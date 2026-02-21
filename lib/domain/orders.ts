@@ -32,8 +32,10 @@ export async function createDineInOrder(params: {
   createdByStaffId: string
   orderNumber?: string
   assignedWaiterId?: string | null
+  /** When provided (e.g. sync), overrides shift.terminalId for audit. */
+  terminalId?: string | null
 }): Promise<Order> {
-  const { tableId, createdByStaffId, orderNumber: customOrderNumber, assignedWaiterId } = params
+  const { tableId, createdByStaffId, orderNumber: customOrderNumber, assignedWaiterId, terminalId: overrideTerminalId } = params
 
   const shift = await getActiveShift(createdByStaffId)
 
@@ -56,7 +58,20 @@ export async function createDineInOrder(params: {
     orderNumber = `${prefix}${nextSeq}`
   }
 
-  return prisma.order.create({
+  const terminalIdToUse = overrideTerminalId != null && overrideTerminalId !== '' ? overrideTerminalId : shift.terminalId
+  const { acquireTableOccupancy } = await import('@/lib/table-occupancy')
+  const occ = await prisma.tableOccupancy.findUnique({ where: { tableId } })
+  if (occ) {
+    const existingOrder = await prisma.order.findUnique({
+      where: { id: occ.orderId },
+      select: { status: true },
+    })
+    if (existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'cancelled') {
+      throw new (await import('@/lib/table-occupancy')).TableOccupiedByOtherError(tableId, occ.orderId, occ.terminalId)
+    }
+    await prisma.tableOccupancy.delete({ where: { tableId } })
+  }
+  const order = await prisma.order.create({
     data: {
       orderNumber,
       orderType: 'dine_in',
@@ -64,13 +79,20 @@ export async function createDineInOrder(params: {
       shiftId: shift.id,
       createdByStaffId,
       assignedWaiterId: assignedWaiterId ?? undefined,
-      terminalId: shift.terminalId,
+      terminalId: terminalIdToUse,
       status: 'pending',
       subtotalUgx: 0,
       taxUgx: 0,
       totalUgx: 0,
     },
   })
+  await acquireTableOccupancy({
+    tableId,
+    orderId: order.id,
+    terminalId: terminalIdToUse,
+    staffId: createdByStaffId,
+  })
+  return order
 }
 
 // ---------------------------------------------------------------------------

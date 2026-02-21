@@ -59,11 +59,12 @@ export async function createStaffToken(payload: {
   return token
 }
 
-/** Decode and verify JWT signature/expiry only. Does not check tokenVersion or isActive. */
+/** Decode and verify JWT signature/expiry only. Does not check tokenVersion, isActive, or iat. */
 async function decodeToken(token: string): Promise<{
   staffId: string
   role: StaffRole
   v: number
+  iat: number
 } | null> {
   try {
     const secret = getSecret()
@@ -73,15 +74,17 @@ async function decodeToken(token: string): Promise<{
     const staffId = payload.staffId as string
     const role = payload.role as StaffRole
     const v = typeof payload.v === 'number' ? payload.v : 0
+    const iat = typeof payload.iat === 'number' ? payload.iat : 0
     if (!staffId || !role) return null
-    return { staffId, role, v }
+    return { staffId, role, v, iat }
   } catch {
     return null
   }
 }
 
 /**
- * Verify token (signature, expiry, tokenVersion, isActive). Returns null if invalid or revoked.
+ * Verify token (signature, expiry, tokenVersion, isActive, iat vs lastPasswordChangeAt/lastForcedLogoutAt).
+ * Returns null if invalid or revoked.
  */
 export async function verifyStaffToken(
   token: string
@@ -91,19 +94,49 @@ export async function verifyStaffToken(
 
   const staff = await prisma.staff.findUnique({
     where: { id: decoded.staffId },
-    select: { id: true, isActive: true, tokenVersion: true },
+    select: {
+      id: true,
+      isActive: true,
+      tokenVersion: true,
+      lastPasswordChangeAt: true,
+      lastForcedLogoutAt: true,
+    },
   })
   if (!staff || !staff.isActive) return null
   if (staff.tokenVersion > decoded.v) return null
 
+  const tokenIssuedAt = new Date(decoded.iat * 1000)
+  if (staff.lastPasswordChangeAt && tokenIssuedAt < staff.lastPasswordChangeAt) {
+    return null
+  }
+  if (staff.lastForcedLogoutAt && tokenIssuedAt < staff.lastForcedLogoutAt) {
+    return null
+  }
+
   return { staffId: staff.id, role: decoded.role }
 }
 
-/** Increment Staff.tokenVersion to revoke all existing tokens (logout all devices, password change, account disable). */
+/** Increment Staff.tokenVersion to revoke all existing tokens. */
 export async function incrementTokenVersion(staffId: string): Promise<void> {
   await prisma.staff.update({
     where: { id: staffId },
     data: { tokenVersion: { increment: 1 } },
+  })
+}
+
+/** Set lastForcedLogoutAt = now so tokens issued before this time are rejected (replay protection). */
+export async function setLastForcedLogoutAt(staffId: string): Promise<void> {
+  await prisma.staff.update({
+    where: { id: staffId },
+    data: { lastForcedLogoutAt: new Date() },
+  })
+}
+
+/** Set lastPasswordChangeAt = now so tokens issued before this time are rejected. */
+export async function setLastPasswordChangeAt(staffId: string): Promise<void> {
+  await prisma.staff.update({
+    where: { id: staffId },
+    data: { lastPasswordChangeAt: new Date() },
   })
 }
 

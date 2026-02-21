@@ -55,7 +55,7 @@ export function ManagerNavHeader() {
       <nav className="pos-dashboard-nav" aria-label="Manager sections">
         {NAV_ITEMS.map(({ href, label, iconOutline, iconFilled }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/')
-          const Icon = isActive && iconFilled ? iconFilled : iconOutline
+          const Icon = isActive ? iconFilled : iconOutline
           return (
             <Link
               key={href}

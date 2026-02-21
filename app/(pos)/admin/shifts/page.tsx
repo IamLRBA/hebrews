@@ -45,7 +45,7 @@ export default function AdminShiftsPage() {
     (s.staffName || '').toLowerCase().includes(searchQuery.toLowerCase().trim())
   )
   const searchSuggestions = searchQuery.trim()
-    ? [...new Set(shifts.filter((s) => (s.staffName || '').toLowerCase().includes(searchQuery.toLowerCase())).map((s) => s.staffName))].filter(Boolean).slice(0, 10)
+    ? Array.from(new Set(shifts.filter((s) => (s.staffName || '').toLowerCase().includes(searchQuery.toLowerCase())).map((s) => s.staffName))).filter(Boolean).slice(0, 10)
     : []
   const showSearchSuggestions = searchFocused && searchQuery.trim().length > 0
 

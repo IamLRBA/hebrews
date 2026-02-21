@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { assertStaffRole } from '@/lib/domain/role-guard'
-import { getAuthenticatedStaff } from '@/lib/pos-auth'
-import { incrementTokenVersion } from '@/lib/pos-auth'
+import { getAuthenticatedStaff, incrementTokenVersion, setLastForcedLogoutAt } from '@/lib/pos-auth'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
 export async function POST(
@@ -35,6 +34,7 @@ export async function POST(
 
     if (!isActive) {
       await incrementTokenVersion(targetStaffId)
+      await setLastForcedLogoutAt(targetStaffId)
     }
 
     return NextResponse.json(updatedStaff)

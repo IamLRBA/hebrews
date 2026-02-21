@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { assertStaffRole } from '@/lib/domain/role-guard'
 import bcrypt from 'bcrypt'
 
-const STAFF_ID_HEADER = 'x-staff-id'
-
 export async function GET(request: NextRequest) {
   try {
-    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) {
-      return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
-    }
+    const { staffId } = await getAuthenticatedStaff(request)
 
     // Check if admin (for full list) or return active staff only
     try {
@@ -53,11 +49,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) {
-      return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
-    }
-
+    const { staffId } = await getAuthenticatedStaff(request)
     await assertStaffRole(staffId, ['admin'])
 
     const body = await request.json()

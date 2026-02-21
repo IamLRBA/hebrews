@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { addItemToOrder } from '@/lib/domain/orders'
 import { getOrderDetail } from '@/lib/read-models'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
+import { getOrSetIdempotent } from '@/lib/idempotency'
 
 export async function POST(
   request: NextRequest,
@@ -14,7 +15,7 @@ export async function POST(
     }
 
     const body = await request.json()
-    const { productId, quantity = 1, size, modifier, notes } = body
+    const { productId, quantity = 1, size, modifier, notes, clientRequestId } = body
 
     if (typeof productId !== 'string' || !productId) {
       return NextResponse.json({ error: 'productId is required (string)' }, { status: 400 })
@@ -23,19 +24,35 @@ export async function POST(
       return NextResponse.json({ error: 'quantity is required (number >= 1)' }, { status: 400 })
     }
 
-    await addItemToOrder({
-      orderId,
-      productId,
-      quantity,
-      size: size ?? null,
-      modifier: modifier ?? null,
-      notes: notes ?? null,
-    })
+    const idempotencyKey = typeof clientRequestId === 'string' && clientRequestId.trim() ? clientRequestId.trim().slice(0, 64) : null
+    const order = idempotencyKey
+      ? await getOrSetIdempotent(idempotencyKey, 'add_item', async () => {
+          await addItemToOrder({
+            orderId,
+            productId,
+            quantity,
+            size: size ?? null,
+            modifier: modifier ?? null,
+            notes: notes ?? null,
+          })
+          const detail = await getOrderDetail(orderId)
+          if (!detail) throw new Error('Order not found')
+          return detail
+        })
+      : (async () => {
+          await addItemToOrder({
+            orderId,
+            productId,
+            quantity,
+            size: size ?? null,
+            modifier: modifier ?? null,
+            notes: notes ?? null,
+          })
+          const detail = await getOrderDetail(orderId)
+          if (!detail) throw new Error('Order not found')
+          return detail
+        })()
 
-    const order = await getOrderDetail(orderId)
-    if (!order) {
-      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
-    }
     return NextResponse.json(order)
   } catch (error) {
     return toPosApiResponse(error)
