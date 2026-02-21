@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { assertStaffRole } from '@/lib/domain/role-guard'
 import type { Prisma } from '@prisma/client'
-
-const STAFF_ID_HEADER = 'x-staff-id'
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ tableId: string }> }
 ) {
   try {
-    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
+    const { staffId } = await getAuthenticatedStaff(request)
     await assertStaffRole(staffId, ['admin'])
 
     const { tableId } = await params
@@ -51,12 +49,11 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ tableId: string }> }
 ) {
   try {
-    const staffId = _request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) return NextResponse.json({ error: 'Staff session required' }, { status: 401 })
+    const { staffId } = await getAuthenticatedStaff(request)
     await assertStaffRole(staffId, ['admin'])
 
     const { tableId } = await params

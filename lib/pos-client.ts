@@ -59,5 +59,27 @@ export async function posFetch(url: string, options?: RequestInit): Promise<Resp
   if (token) {
     headers.set('Authorization', `Bearer ${token}`)
   }
-  return fetch(url, { ...options, headers })
+  if (typeof window !== 'undefined') {
+    try {
+      const { getTerminalId } = await import('@/lib/terminal/terminal')
+      const terminalId = await getTerminalId()
+      if (terminalId) headers.set('x-terminal-id', terminalId)
+    } catch {
+      // terminal identity optional
+    }
+  }
+  try {
+    const res = await fetch(url, { ...options, headers })
+    if (res.status >= 500 || res.type === 'error') {
+      if (typeof window !== 'undefined') {
+        import('@/lib/offline/connection').then((m) => m.reportFailedRequest())
+      }
+    }
+    return res
+  } catch (e) {
+    if (typeof window !== 'undefined') {
+      import('@/lib/offline/connection').then((m) => m.reportFailedRequest())
+    }
+    throw e
+  }
 }

@@ -66,18 +66,22 @@ enum TableStatus {
 // ---------------------------------------------------------------------------
 
 model Staff {
-  id           String    @id @default(uuid()) @db.Uuid
-  username     String    @unique @db.VarChar(64)
-  passwordHash String   @map("password_hash") @db.VarChar(255)
-  fullName     String   @map("full_name") @db.VarChar(255)
-  role         StaffRole
-  isActive     Boolean  @default(true) @map("is_active")
-  tokenVersion Int      @default(0) @map("token_version")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id                    String    @id @default(uuid()) @db.Uuid
+  username              String    @unique @db.VarChar(64)
+  passwordHash          String    @map("password_hash") @db.VarChar(255)
+  fullName              String    @map("full_name") @db.VarChar(255)
+  role                  StaffRole
+  isActive              Boolean   @default(true) @map("is_active")
+  tokenVersion          Int       @default(0) @map("token_version")
+  lastPasswordChangeAt  DateTime? @map("last_password_change_at")
+  lastForcedLogoutAt    DateTime? @map("last_forced_logout_at")
+  lockedUntil           DateTime? @map("locked_until")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
 
-  shifts           Shift[]   @relation("ShiftStaff")
-  shiftsClosed     Shift[]   @relation("ShiftClosedBy")
+  shifts             Shift[]   @relation("ShiftStaff")
+  shiftsClosed       Shift[]   @relation("ShiftClosedBy")
+  shiftsManagerApproved Shift[] @relation("ShiftManagerApproval")
   ordersCreated    Order[]   @relation("CreatedByStaff")
   ordersAssigned   Order[]   @relation("AssignedWaiter")
   ordersUpdated    Order[]   @relation("UpdatedByStaff")
@@ -88,39 +92,112 @@ model Staff {
 }
 
 model Terminal {
-  id        String       @id @default(uuid()) @db.Uuid
-  code      String       @unique @map("code") @db.VarChar(32)
-  name      String       @map("name") @db.VarChar(64)
-  type      TerminalType @map("type")
-  location  String?      @map("location") @db.VarChar(128)
-  isActive  Boolean      @default(true) @map("is_active")
-  createdAt DateTime     @default(now()) @map("created_at")
-  updatedAt DateTime     @updatedAt @map("updated_at")
+  id             String       @id @default(uuid()) @db.Uuid
+  code           String       @unique @map("code") @db.VarChar(32)
+  name           String       @map("name") @db.VarChar(64)
+  type           TerminalType @map("type")
+  location       String?      @map("location") @db.VarChar(128)
+  isActive       Boolean      @default(true) @map("is_active")
+  receiptPrinter Boolean      @default(false) @map("receipt_printer")
+  kitchenPrinter Boolean      @default(false) @map("kitchen_printer")
+  cashDrawer     Boolean      @default(false) @map("cash_drawer")
+  lastSeenAt     DateTime?    @map("last_seen_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
 
   @@index([code])
   @@index([type])
   @@index([isActive])
 }
 
-model Shift {
-  id                String    @id @default(uuid()) @db.Uuid
-  staffId           String    @map("staff_id") @db.Uuid
-  terminalId        String    @map("terminal_id") @db.VarChar(32)
-  startTime         DateTime  @map("start_time")
-  endTime           DateTime? @map("end_time")
-  totalSales        Decimal   @default(0) @map("total_sales") @db.Decimal(12, 2)
-  closedByStaffId   String?   @map("closed_by_staff_id") @db.Uuid
-  countedCashUgx    Decimal?  @map("counted_cash_ugx") @db.Decimal(12, 2)
-  cashVarianceUgx   Decimal?  @map("cash_variance_ugx") @db.Decimal(12, 2)
-  createdAt         DateTime  @default(now()) @map("created_at")
+enum PrintJobType {
+  receipt
+  kitchen_ticket
+}
 
-  staff         Staff   @relation("ShiftStaff", fields: [staffId], references: [id])
-  closedByStaff Staff?  @relation("ShiftClosedBy", fields: [closedByStaffId], references: [id])
-  orders        Order[]
+enum PrintJobStatus {
+  pending
+  success
+  failed
+}
+
+model PrintJob {
+  id           String         @id @default(uuid()) @db.Uuid
+  orderId      String         @map("order_id") @db.Uuid
+  paymentId    String?        @map("payment_id") @db.Uuid
+  type         PrintJobType   @map("type")
+  terminalId   String?        @map("terminal_id") @db.VarChar(32)
+  deviceId     String?        @map("device_id") @db.VarChar(64)
+  status       PrintJobStatus @default(pending) @map("status")
+  retryCount   Int            @default(0) @map("retry_count")
+  errorMessage String?        @map("error_message") @db.VarChar(512)
+  createdAt    DateTime       @default(now()) @map("created_at")
+  completedAt  DateTime?      @map("completed_at")
+
+  @@unique([paymentId, type], map: "PrintJob_receipt_once_per_payment")
+  @@index([orderId])
+  @@index([paymentId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Shift {
+  id                     String    @id @default(uuid()) @db.Uuid
+  staffId                String    @map("staff_id") @db.Uuid
+  terminalId             String    @map("terminal_id") @db.VarChar(32)
+  startTime              DateTime  @map("start_time")
+  endTime                DateTime? @map("end_time")
+  totalSales             Decimal   @default(0) @map("total_sales") @db.Decimal(12, 2)
+  closedByStaffId        String?   @map("closed_by_staff_id") @db.Uuid
+  countedCashUgx         Decimal?  @map("counted_cash_ugx") @db.Decimal(12, 2)
+  cashVarianceUgx        Decimal?  @map("cash_variance_ugx") @db.Decimal(12, 2)
+  managerApprovalStaffId String?   @map("manager_approval_staff_id") @db.Uuid
+  createdAt              DateTime  @default(now()) @map("created_at")
+
+  staff                  Staff   @relation("ShiftStaff", fields: [staffId], references: [id])
+  closedByStaff          Staff?  @relation("ShiftClosedBy", fields: [closedByStaffId], references: [id])
+  managerApprovalStaff   Staff?  @relation("ShiftManagerApproval", fields: [managerApprovalStaffId], references: [id])
+  orders                 Order[]
+  terminalCashSummaries   TerminalCashSummary[]
+  financialSummary        ShiftFinancialSummary?
 
   @@index([staffId])
   @@index([terminalId])
   @@index([startTime])
+}
+
+// Per-terminal cash accountability within a shift (populated on shift close)
+model TerminalCashSummary {
+  id                String   @id @default(uuid()) @db.Uuid
+  shiftId           String   @map("shift_id") @db.Uuid
+  terminalId        String   @map("terminal_id") @db.VarChar(32)
+  cashSalesUgx      Decimal  @default(0) @map("cash_sales_ugx") @db.Decimal(12, 2)
+  dropsUgx          Decimal  @default(0) @map("drops_ugx") @db.Decimal(12, 2)
+  adjustmentsUgx    Decimal  @default(0) @map("adjustments_ugx") @db.Decimal(12, 2)
+  expectedBalanceUgx Decimal @default(0) @map("expected_balance_ugx") @db.Decimal(12, 2)
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  shift Shift @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+
+  @@unique([shiftId, terminalId])
+  @@index([shiftId])
+  @@index([terminalId])
+}
+
+// Snapshot of financial summary at shift close (reconciliation record)
+model ShiftFinancialSummary {
+  id                   String   @id @default(uuid()) @db.Uuid
+  shiftId              String   @unique @map("shift_id") @db.Uuid
+  expectedCashUgx      Decimal  @map("expected_cash_ugx") @db.Decimal(12, 2)
+  countedCashUgx       Decimal  @map("counted_cash_ugx") @db.Decimal(12, 2)
+  varianceUgx          Decimal  @map("variance_ugx") @db.Decimal(12, 2)
+  managerApprovalStaffId String? @map("manager_approval_staff_id") @db.Uuid
+  closedAt             DateTime @map("closed_at")
+
+  shift Shift @relation(fields: [shiftId], references: [id], onDelete: Cascade)
+
+  @@index([shiftId])
 }
 
 model RestaurantTable {
@@ -133,10 +210,27 @@ model RestaurantTable {
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
 
-  orders Order[]
+  orders         Order[]
+  tableOccupancy TableOccupancy[]
 
   @@index([code])
   @@index([status])
+}
+
+// Phase 9: table ownership — which terminal/staff has the table locked for an order
+model TableOccupancy {
+  id         String   @id @default(uuid()) @db.Uuid
+  tableId    String   @unique @map("table_id") @db.Uuid
+  orderId    String   @map("order_id") @db.Uuid
+  terminalId String   @map("terminal_id") @db.VarChar(32)
+  staffId    String   @map("staff_id") @db.Uuid
+  lockedAt   DateTime @map("locked_at")
+
+  table RestaurantTable @relation(fields: [tableId], references: [id], onDelete: Cascade)
+
+  @@index([tableId])
+  @@index([orderId])
+  @@index([terminalId])
 }
 
 model Product {
@@ -233,15 +327,30 @@ model Payment {
   externalReference  String?       @unique @map("external_reference") @db.VarChar(255)
   createdByStaffId   String         @map("created_by_staff_id") @db.Uuid
   terminalId         String?        @map("terminal_id") @db.VarChar(32)
-  createdAt          DateTime      @default(now()) @map("created_at")
+  originalPaymentId String?        @map("original_payment_id") @db.Uuid
+  createdAt          DateTime       @default(now()) @map("created_at")
 
-  order          Order @relation(fields: [orderId], references: [id])
-  createdByStaff Staff @relation(fields: [createdByStaffId], references: [id])
+  order            Order   @relation(fields: [orderId], references: [id])
+  createdByStaff   Staff   @relation(fields: [createdByStaffId], references: [id])
+  originalPayment Payment? @relation("RefundOf", fields: [originalPaymentId], references: [id])
+  refunds          Payment[] @relation("RefundOf")
 
   @@index([orderId])
   @@index([status])
   @@index([method])
   @@index([createdAt])
+  @@index([originalPaymentId])
+}
+
+// Phase 8: idempotency for offline sync replay (clientRequestId).
+model IdempotencyRecord {
+  id              String   @id @default(uuid()) @db.Uuid
+  clientRequestId String   @unique @map("client_request_id") @db.VarChar(64)
+  resourceType    String   @map("resource_type") @db.VarChar(32)
+  responseJson    Json     @map("response_json")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([clientRequestId])
 }
 
 // Append-only; no update/delete from application.
@@ -262,4 +371,38 @@ model AuditLog {
   @@index([entityType])
   @@index([entityId])
   @@index([createdAt])
+}
+
+// Phase 10: backup metadata
+enum DatabaseBackupType {
+  FULL
+  INCREMENTAL
+}
+
+enum DatabaseBackupStatus {
+  SUCCESS
+  FAILED
+}
+
+model DatabaseBackup {
+  id         String              @id @default(uuid()) @db.Uuid
+  filename   String              @map("filename") @db.VarChar(255)
+  sizeBytes  BigInt?             @map("size_bytes")
+  createdAt  DateTime            @default(now()) @map("created_at")
+  type       DatabaseBackupType   @map("type")
+  status     DatabaseBackupStatus @map("status")
+
+  @@index([createdAt])
+  @@index([type])
+  @@index([status])
+}
+
+// Phase 10: system configuration (backup retention, etc.)
+model SystemConfig {
+  id        String   @id @default(uuid()) @db.Uuid
+  key       String   @unique @db.VarChar(64)
+  value     String   @map("value") @db.VarChar(512)
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([key])
 }

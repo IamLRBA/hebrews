@@ -57,19 +57,31 @@ export default function ManagerShiftDetailPage() {
     setClosing(true)
     try {
       const staffId = localStorage.getItem('pos_staff_id')
-      const res = await posFetch(`/api/shifts/${shiftId}/close`, {
+      let body: { countedCashUgx: number; closedByStaffId: string; managerApprovalStaffId?: string } = {
+        countedCashUgx: Number(countedCash),
+        closedByStaffId: staffId,
+      }
+      let res = await posFetch(`/api/shifts/${shiftId}/close`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          countedCashUgx: Number(countedCash),
-          closedByStaffId: staffId,
-        }),
+        body: JSON.stringify(body),
       })
+      if (!res.ok && res.status === 403) {
+        const data = await res.json().catch(() => ({}))
+        if ((data as { code?: string }).code === 'MANAGER_APPROVAL_REQUIRED') {
+          body.managerApprovalStaffId = staffId
+          res = await posFetch(`/api/shifts/${shiftId}/close`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        }
+      }
       if (res.ok) {
         router.push('/manager/shifts')
       } else {
         const data = await res.json().catch(() => ({}))
-        alert(data.error || 'Failed to close shift')
+        alert((data as { error?: string }).error || 'Failed to close shift')
       }
     } catch (e) {
       alert('Failed to close shift')

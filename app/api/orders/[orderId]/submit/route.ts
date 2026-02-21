@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { transitionOrderStatus } from '@/lib/pos-service'
 import { getOrderDetail } from '@/lib/read-models'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
@@ -19,16 +20,16 @@ export async function POST(
     }
 
     const body = await request.json().catch(() => ({}))
-    const staffId = body.updatedByStaffId ?? request.headers.get('x-staff-id')?.trim()
-
-    if (typeof staffId !== 'string' || !staffId) {
-      return NextResponse.json({ error: 'updatedByStaffId or x-staff-id required' }, { status: 400 })
+    const { staffId } = await getAuthenticatedStaff(request)
+    const updatedByStaffId = body.updatedByStaffId ?? staffId
+    if (typeof updatedByStaffId !== 'string' || !updatedByStaffId) {
+      return NextResponse.json({ error: 'updatedByStaffId required' }, { status: 400 })
     }
 
     await transitionOrderStatus({
       orderId,
       newStatus: 'preparing',
-      updatedByStaffId: staffId,
+      updatedByStaffId,
     })
     const order = await getOrderDetail(orderId)
     if (!order) {

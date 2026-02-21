@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { getShiftId } from '@/lib/pos-shift-store'
 import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
+import { getReceiptDataOffline } from '@/lib/offline'
 
 const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
 
@@ -79,6 +80,7 @@ export default function PosReceiptPage() {
   const orderId = params.orderId as string
 
   const [receipt, setReceipt] = useState<Receipt | null>(null)
+  const [isOfflineReceipt, setIsOfflineReceipt] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -98,14 +100,43 @@ export default function PosReceiptPage() {
       setLoading(false)
       return
     }
-    posFetch(`/api/orders/${orderId}/receipt`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to load receipt')
-        return res.json()
+    let cancelled = false
+    getReceiptDataOffline(orderId)
+      .then((offline) => {
+        if (cancelled) return
+        if (offline) {
+          setReceipt({
+            orderId: offline.orderId,
+            status: offline.status,
+            createdAt: offline.createdAt,
+            servedAt: offline.servedAt,
+            staffName: offline.staffName,
+            tableLabel: offline.tableLabel,
+            items: offline.items,
+            totalUgx: offline.totalUgx,
+            payments: offline.payments,
+          })
+          setIsOfflineReceipt(Boolean(offline.isOffline))
+          setLoading(false)
+          return
+        }
+        return posFetch(`/api/orders/${orderId}/receipt`).then((res) => {
+          if (cancelled) return
+          if (!res.ok) throw new Error('Failed to load receipt')
+          return res.json()
+        })
       })
-      .then((data) => setReceipt(data))
-      .catch((e) => setError(e instanceof Error ? e.message : 'Failed to load'))
-      .finally(() => setLoading(false))
+      .then((data) => {
+        if (cancelled || data === undefined) return
+        if (data && typeof data.orderId === 'string') setReceipt(data)
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load')
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => { cancelled = true }
   }, [orderId])
 
   if (loading) {
@@ -146,6 +177,11 @@ export default function PosReceiptPage() {
           <p className="text-center m-0">{dateStr}</p>
           <p className="text-center m-0">Staff: {receipt.staffName}</p>
           <p className="text-center m-0">Table: {tableLabel}</p>
+          {isOfflineReceipt && (
+            <p className="text-center m-0 mt-2 text-amber-600 dark:text-amber-400 text-sm">
+              Paid offline — receipt will print after sync.
+            </p>
+          )}
           <hr className="receipt-divider border-neutral-200 dark:border-neutral-600 my-4" />
 
           <div className="receipt-row font-medium mb-1">

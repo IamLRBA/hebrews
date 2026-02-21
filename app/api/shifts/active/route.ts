@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { getActiveShift } from '@/lib/staff-session'
-
-const STAFF_ID_HEADER = 'x-staff-id'
 
 export async function GET(request: NextRequest) {
   try {
-    const staffId = request.headers.get(STAFF_ID_HEADER)?.trim()
-    if (!staffId) {
-      return NextResponse.json({ error: 'Staff session required' }, { status: 400 })
-    }
-
+    const { staffId } = await getAuthenticatedStaff(request)
     const shift = await getActiveShift(staffId)
 
     return NextResponse.json({
@@ -20,7 +15,10 @@ export async function GET(request: NextRequest) {
       endTime: shift.endTime,
     })
   } catch (error: unknown) {
-    const err = error as { code?: string }
+    const err = error as { code?: string; name?: string }
+    if (err.name === 'UnauthorizedError' || err.name === 'InvalidTokenError') {
+      return NextResponse.json({ error: err instanceof Error ? err.message : 'Unauthorized' }, { status: 401 })
+    }
     if (err.code === 'NO_ACTIVE_SHIFT' || err.code === 'STAFF_NOT_FOUND' || err.code === 'STAFF_INACTIVE') {
       return NextResponse.json({ error: err instanceof Error ? err.message : 'No active shift' }, { status: 404 })
     }

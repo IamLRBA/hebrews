@@ -9,6 +9,11 @@ import type { TerminalType } from '@prisma/client'
 
 export const TERMINAL_ID_HEADER = 'x-terminal-id'
 
+/** Normalize terminal id (e.g. UUID) to DB code: 32 chars max, no hyphens. */
+export function normalizeTerminalCode(terminalId: string): string {
+  return terminalId.trim().replace(/-/g, '').slice(0, 32)
+}
+
 export class TerminalNotFoundError extends Error {
   constructor(terminalId: string) {
     super(`Terminal not found: ${terminalId}`)
@@ -34,13 +39,25 @@ export interface TerminalInfo {
 
 /**
  * Fetch terminal by code (used in requests as terminalId). Returns null if not found.
+ * Tries exact trimmed code first (e.g. "pos-1"); then normalized form (hyphens removed, for UUIDs).
  */
 export async function getTerminalByCode(
   code: string
 ): Promise<TerminalInfo | null> {
-  const t = await prisma.terminal.findUnique({
-    where: { code: code.trim() },
+  const trimmed = code.trim()
+  if (!trimmed) return null
+  // Try exact match first so seeded codes like "pos-1" work
+  let t = await prisma.terminal.findUnique({
+    where: { code: trimmed },
   })
+  if (!t) {
+    const normalized = normalizeTerminalCode(code)
+    if (normalized && normalized !== trimmed) {
+      t = await prisma.terminal.findUnique({
+        where: { code: normalized },
+      })
+    }
+  }
   if (!t) return null
   return {
     id: t.id,

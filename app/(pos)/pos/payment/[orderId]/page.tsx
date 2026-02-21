@@ -5,6 +5,8 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { getShiftId } from '@/lib/pos-shift-store'
+import { isOnline } from '@/lib/offline/connection'
+import { getOrderDetailOfflineFormatted, payCashOffline } from '@/lib/offline/offline-order-service'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import { ErrorBanner } from '@/components/pos/ErrorBanner'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
@@ -59,14 +61,19 @@ export default function PosPaymentPage() {
       setLoading(false)
       return
     }
+    if (!isOnline()) {
+      getOrderDetailOfflineFormatted(orderId)
+        .then((data) => setOrder(data ?? null))
+        .catch(() => setOrder(null))
+        .finally(() => setLoading(false))
+      return
+    }
     posFetch(`/api/orders/${orderId}`)
       .then((res) => {
         if (!res.ok) throw new Error('Order not found')
         return res.json()
       })
-      .then((data) => {
-        setOrder(data)
-      })
+      .then((data) => setOrder(data))
       .catch(() => setOrder(null))
       .finally(() => setLoading(false))
   }, [orderId])
@@ -77,6 +84,15 @@ export default function PosPaymentPage() {
 
     setPaying('cash')
     try {
+      if (!isOnline()) {
+        await payCashOffline({
+          orderLocalId: orderId,
+          amountUgx: order.totalUgx,
+          changeUgx: 0,
+        })
+        router.push(`/pos/receipt/${orderId}`)
+        return
+      }
       const res = await posFetch(`/api/orders/${orderId}/pay-cash`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -257,6 +273,9 @@ export default function PosPaymentPage() {
           ) : (
             <>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4 text-center">Select payment method</p>
+          {!isOnline() && (
+            <p className="text-sm text-amber-600 dark:text-amber-400 mb-3 text-center">External payment (MoMo, Card) unavailable offline. Use Cash.</p>
+          )}
           <div className="grid grid-cols-2 gap-3 pos-payment-grid max-w-xs mx-auto">
             <button
               type="button"
@@ -270,8 +289,9 @@ export default function PosPaymentPage() {
             <button
               type="button"
               onClick={handlePayMomo}
-              disabled={paying !== null}
+              disabled={paying !== null || !isOnline()}
               className="btn btn-primary py-2.5 text-sm font-medium disabled:opacity-60 flex flex-col items-center gap-1.5"
+              title={!isOnline() ? 'Unavailable offline' : undefined}
             >
               <Smartphone className="w-4 h-4" />
               {paying === 'momo' ? 'Processing…' : 'MTN MoMo'}
@@ -279,8 +299,9 @@ export default function PosPaymentPage() {
             <button
               type="button"
               onClick={handlePayAirtel}
-              disabled={paying !== null}
+              disabled={paying !== null || !isOnline()}
               className="btn btn-primary py-2.5 text-sm font-medium disabled:opacity-60 flex flex-col items-center gap-1.5"
+              title={!isOnline() ? 'Unavailable offline' : undefined}
             >
               <Wallet className="w-4 h-4" />
               {paying === 'airtel' ? 'Redirecting…' : 'Airtel Money'}
@@ -288,8 +309,9 @@ export default function PosPaymentPage() {
             <button
               type="button"
               onClick={handlePayCard}
-              disabled={paying !== null}
+              disabled={paying !== null || !isOnline()}
               className="btn btn-outline py-2.5 text-sm font-medium disabled:opacity-60 flex flex-col items-center gap-1.5"
+              title={!isOnline() ? 'Unavailable offline' : undefined}
             >
               <CreditCard className="w-4 h-4" />
               {paying === 'card' ? 'Redirecting…' : 'Card'}

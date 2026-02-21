@@ -73,7 +73,7 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
       <nav className="pos-dashboard-nav" aria-label="POS sections">
         {NAV_ITEMS.map(({ href, label, iconOutline, iconFilled }) => {
           const isActive = href === '/pos' ? pathname === '/pos' : (pathname === href || pathname.startsWith(href))
-          const Icon = isActive && iconFilled ? iconFilled : iconOutline
+          const Icon = isActive ? iconFilled : iconOutline
           return (
             <Link
               key={href}

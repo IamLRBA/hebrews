@@ -1,7 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/db'
 import { updateOrderItemQuantity, removeOrderItem } from '@/lib/domain/orders'
 import { getOrderDetail } from '@/lib/read-models'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
+import { emitToShift } from '@/lib/realtime'
+
+async function emitOrderUpdated(orderId: string) {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    select: { shiftId: true, tableId: true, status: true, updatedAt: true },
+  })
+  if (order) {
+    emitToShift(order.shiftId, {
+      type: 'ORDER_UPDATED',
+      payload: {
+        orderId,
+        shiftId: order.shiftId,
+        tableId: order.tableId ?? undefined,
+        status: order.status as 'pending' | 'preparing' | 'ready' | 'awaiting_payment' | 'served' | 'cancelled',
+        updatedAt: order.updatedAt.toISOString(),
+        forKitchen: true,
+      },
+    })
+  }
+}
 
 export async function PATCH(
   request: NextRequest,
@@ -20,6 +42,7 @@ export async function PATCH(
     }
 
     const orderId = await updateOrderItemQuantity({ orderItemId, quantity })
+    emitOrderUpdated(orderId)
     const order = await getOrderDetail(orderId)
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
@@ -41,6 +64,7 @@ export async function DELETE(
     }
 
     const orderId = await removeOrderItem({ orderItemId })
+    emitOrderUpdated(orderId)
     const order = await getOrderDetail(orderId)
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })

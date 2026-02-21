@@ -72,6 +72,9 @@ export async function releaseTableForOrder(orderId: string): Promise<void> {
     throw new OrderNotTerminalError(orderId, order.status)
   }
 
+  const { releaseTableOccupancyForOrder } = await import('@/lib/table-occupancy')
+  await releaseTableOccupancyForOrder(orderId)
+
   const nonTerminalOnTable = await prisma.order.count({
     where: {
       tableId: order.tableId,

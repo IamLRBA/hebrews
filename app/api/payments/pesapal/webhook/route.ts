@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/db'
 import { recordExternalPayment, type ExternalPaymentMethod } from '@/lib/domain/orders'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
+import { triggerReceiptForPayment } from '@/lib/print-jobs'
+import { logError } from '@/lib/error-logger'
 import crypto from 'crypto'
 
 const STAFF_ID_SYSTEM = 'system'
@@ -75,6 +78,19 @@ export async function POST(request: NextRequest) {
       staffId: STAFF_ID_SYSTEM,
       externalReference: transaction_tracking_id,
     })
+
+    const latestPayment = await prisma.payment.findFirst({
+      where: { orderId, status: 'completed' },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true },
+    })
+    if (latestPayment) {
+      await triggerReceiptForPayment({
+        paymentId: latestPayment.id,
+        staffId: STAFF_ID_SYSTEM,
+        terminalId: null,
+      }).catch((e) => logError(e, { path: `pesapal/webhook#triggerReceipt(${orderId})` }))
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

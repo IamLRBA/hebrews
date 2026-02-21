@@ -6,6 +6,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { getShiftId } from '@/lib/pos-shift-store'
+import { isOnline } from '@/lib/offline/connection'
+import {
+  createOrderOffline,
+  addItemOffline,
+  updateOrderStatusOffline,
+  getOrderDetailOfflineFormatted,
+} from '@/lib/offline/offline-order-service'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
 import { ErrorBanner } from '@/components/pos/ErrorBanner'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
@@ -166,21 +173,23 @@ export default function PosOrdersPage() {
 
   const fetchOrder = useCallback(async (orderId: string) => {
     try {
+      if (!isOnline()) {
+        const detail = await getOrderDetailOfflineFormatted(orderId)
+        if (detail) {
+          setOrder(detail)
+          setOrderType(detail.orderType ?? null)
+          setSelectedTableId(detail.tableId ?? null)
+        } else setOrder(null)
+        return
+      }
       const res = await posFetch(`/api/orders/${orderId}`)
       if (res.ok) {
         const data = await res.json()
         setOrder(data)
-        // Sync orderType and tableId from fetched order (only if they exist)
-        if (data.orderType) {
-          setOrderType(data.orderType)
-        } else {
-          setOrderType(null) // Reset if no orderType in fetched order
-        }
-        if (data.tableId) {
-          setSelectedTableId(data.tableId)
-        } else {
-          setSelectedTableId(null)
-        }
+        if (data.orderType) setOrderType(data.orderType)
+        else setOrderType(null)
+        if (data.tableId) setSelectedTableId(data.tableId)
+        else setSelectedTableId(null)
       } else setOrder(null)
     } catch {
       setOrder(null)
@@ -253,6 +262,44 @@ export default function PosOrdersPage() {
     setCreating(true)
     setError(null)
     try {
+      if (!isOnline()) {
+        const o = await createOrderOffline(
+          orderType === 'dine_in' && selectedTableId
+            ? { orderType: 'dine_in', tableId: selectedTableId, orderNumber: orderName || undefined }
+            : { orderType: 'takeaway', orderNumber: orderName }
+        )
+        const detail = await getOrderDetailOfflineFormatted(o.localId)
+        if (detail) setOrder(detail)
+        if (orderType !== 'dine_in' || !selectedTableId) {
+          setOrderType('takeaway')
+          setSelectedTableId(null)
+        }
+        if (action && action !== 'new' && 'product' in action) {
+          setAddingItem(true)
+          try {
+            await addItemOffline({
+              orderLocalId: o.localId,
+              productId: action.product.productId,
+              productName: action.product.name,
+              quantity: 1,
+              unitPriceUgx: action.product.priceUgx,
+              size: action.size ?? null,
+              modifier: action.modifier ?? null,
+            })
+            const updated = await getOrderDetailOfflineFormatted(o.localId)
+            if (updated) setOrder(updated)
+            setModifierProduct(null)
+            setModifierSelections({})
+          } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed to add item')
+          } finally {
+            setAddingItem(false)
+          }
+        }
+        setCreating(false)
+        return
+      }
+
       const res = await posFetch('/api/orders/takeaway', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -315,6 +362,24 @@ export default function PosOrdersPage() {
     const orderId = order.orderId
     setAddingItem(true)
     try {
+      if (!isOnline()) {
+        await addItemOffline({
+          orderLocalId: orderId,
+          productId: product.productId,
+          productName: product.name,
+          quantity: 1,
+          unitPriceUgx: product.priceUgx,
+          size: size ?? null,
+          modifier: modifier ?? null,
+        })
+        const detail = await getOrderDetailOfflineFormatted(orderId)
+        if (detail) setOrder(detail)
+        setModifierProduct(null)
+        setModifierSelections({})
+        setAddingItem(false)
+        return
+      }
+
       const res = await posFetch(`/api/orders/${orderId}/items`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -473,6 +538,13 @@ export default function PosOrdersPage() {
     setSubmitting(true)
     setError(null)
     try {
+      if (!isOnline()) {
+        await updateOrderStatusOffline({ orderLocalId: order.orderId, newStatus: 'preparing' })
+        const detail = await getOrderDetailOfflineFormatted(order.orderId)
+        if (detail) setOrder(detail)
+        setSubmitting(false)
+        return
+      }
       const res = await posFetch(`/api/orders/${order.orderId}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -561,7 +633,7 @@ export default function PosOrdersPage() {
             { id: 'drinks' as const, label: 'Drinks', iconOutline: IconGlass, iconFilled: IconGlassFilled },
           ].map(({ id, label, iconOutline, iconFilled }) => {
             const isActive = viewMode === id
-            const CatIcon = isActive && iconFilled ? iconFilled : iconOutline
+            const CatIcon = isActive ? iconFilled : iconOutline
             return (
               <button
                 key={id}

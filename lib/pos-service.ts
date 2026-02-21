@@ -65,6 +65,8 @@ export type CreateDineInOrderParams = {
 export type CreateTakeawayOrderParams = {
   staffId: string
   orderNumber: string
+  /** When provided (e.g. sync), overrides shift.terminalId for audit. */
+  terminalId?: string | null
 }
 
 export type AddItemToOrderParams = {
@@ -125,6 +127,7 @@ export async function createTakeawayOrder(params: CreateTakeawayOrderParams) {
     orderType: 'takeaway',
     tableId: null,
     orderNumber: params.orderNumber,
+    terminalId: params.terminalId ?? undefined,
   })
 }
 
