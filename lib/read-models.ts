@@ -263,6 +263,7 @@ export type OrderDetail = {
   status: string
   totalUgx: number
   createdAt: Date
+  sentToKitchenAt?: Date | null
   items: OrderDetailItem[]
   payments: OrderDetailPayment[]
 }
@@ -284,6 +285,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
       status: true,
       totalUgx: true,
       createdAt: true,
+      sentToKitchenAt: true,
       orderItems: {
         orderBy: { sortOrder: 'asc' },
         select: {
@@ -322,6 +324,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
     status: order.status,
     totalUgx: Number(order.totalUgx),
     createdAt: order.createdAt,
+    sentToKitchenAt: order.sentToKitchenAt ?? undefined,
     items: order.orderItems.map((item) => ({
       id: item.id,
       productId: item.productId,
@@ -699,48 +702,69 @@ export type ReadyOrder = {
   tableId: string | null
   status: string
   createdAt: Date
+  totalUgx: number
+  totalPaidUgx: number
+  isFullyPaid: boolean
   items: ReadyOrderItem[]
 }
 
 /**
  * Returns orders with status 'ready' or 'awaiting_payment' for POS handover screen.
- * Read-only. Sorted by createdAt ascending (oldest first).
+ * Read-only. Sorted by createdAt ascending (oldest first). Includes totalUgx, totalPaidUgx, isFullyPaid.
  */
 export async function getReadyOrders(): Promise<ReadyOrder[]> {
-  const [orders, nameMap] = await Promise.all([
-    prisma.order.findMany({
-      where: { status: { in: ['ready', 'awaiting_payment'] } },
-      orderBy: { createdAt: 'asc' },
-      select: {
-        id: true,
-        orderNumber: true,
-        orderType: true,
-        tableId: true,
-        status: true,
-        createdAt: true,
-        orderItems: {
-          select: {
-            productId: true,
-            quantity: true,
-            product: { select: { images: true } },
-          },
+  const orders = await prisma.order.findMany({
+    where: { status: { in: ['ready', 'awaiting_payment'] } },
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      orderNumber: true,
+      orderType: true,
+      tableId: true,
+      status: true,
+      totalUgx: true,
+      createdAt: true,
+      orderItems: {
+        select: {
+          productId: true,
+          quantity: true,
+          product: { select: { images: true } },
         },
       },
-    }),
-    getProductNameMap(),
-  ])
-  return orders.map((o) => ({
-    orderId: o.id,
-    orderNumber: o.orderNumber,
-    orderType: o.orderType,
-    tableId: o.tableId,
-    status: o.status,
-    createdAt: o.createdAt,
-    items: o.orderItems.map((item) => ({
-      productId: item.productId,
-      productName: nameMap[item.productId] ?? item.productId,
-      imageUrl: item.product?.images?.[0] ?? null,
-      quantity: item.quantity,
-    })),
-  }))
+    },
+  })
+  if (orders.length === 0) return []
+  const orderIds = orders.map((o) => o.id)
+  const paymentSums = await prisma.payment.groupBy({
+    by: ['orderId'],
+    where: { orderId: { in: orderIds }, status: 'completed' },
+    _sum: { amountUgx: true },
+  })
+  const totalPaidByOrderId = new Map<string, number>()
+  for (const row of paymentSums) {
+    totalPaidByOrderId.set(row.orderId, row._sum.amountUgx != null ? Number(row._sum.amountUgx) : 0)
+  }
+  const nameMap = await getProductNameMap()
+  return orders.map((o) => {
+    const totalUgx = Number(o.totalUgx)
+    const totalPaidUgx = totalPaidByOrderId.get(o.id) ?? 0
+    const isFullyPaid = totalPaidUgx >= totalUgx
+    return {
+      orderId: o.id,
+      orderNumber: o.orderNumber,
+      orderType: o.orderType,
+      tableId: o.tableId,
+      status: o.status,
+      createdAt: o.createdAt,
+      totalUgx,
+      totalPaidUgx,
+      isFullyPaid,
+      items: o.orderItems.map((item) => ({
+        productId: item.productId,
+        productName: nameMap[item.productId] ?? item.productId,
+        imageUrl: item.product?.images?.[0] ?? null,
+        quantity: item.quantity,
+      })),
+    }
+  })
 }

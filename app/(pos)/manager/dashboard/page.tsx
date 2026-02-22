@@ -26,7 +26,7 @@ export default function ManagerDashboardPage() {
           setOrderCounts({ pending, preparing, ready })
         }
 
-        // Fetch shift summary for active shift
+        // Fetch shift summary for current user's active shift only
         const shiftRes = await posFetch('/api/shifts/active')
         if (shiftRes.ok) {
           const shiftData = await shiftRes.json()

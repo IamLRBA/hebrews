@@ -348,16 +348,31 @@ export default function PosDashboardPage() {
             </p>
             <span className="btn btn-outline pos-dashboard-card-cta-btn">Open Tables ⇒</span>
           </Link>
+          <Link href="/pos/order" className="pos-dashboard-card text-center items-center">
+            <div className="pos-dashboard-card-icon mx-auto">
+              <PlusCircle className="w-6 h-6" />
+            </div>
+            <h2 className="pos-dashboard-card-title">Order</h2>
+            <p className="pos-dashboard-card-desc">
+              Create a new order. Add items, choose service type, then send to kitchen.
+            </p>
+            <span className="btn btn-outline pos-dashboard-card-cta-btn">Make order ⇒</span>
+          </Link>
           <Link href="/pos/orders" className="pos-dashboard-card text-center items-center">
             <div className="pos-dashboard-card-icon mx-auto">
               <ListOrdered className="w-6 h-6" />
             </div>
-            <h2 className="pos-dashboard-card-title">Shift Orders</h2>
-            {orders.length > 0 && (
-              <p className="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-2">
-                {orders.length} {orders.length === 1 ? 'order' : 'orders'} active
-              </p>
-            )}
+            <h2 className="pos-dashboard-card-title">Orders</h2>
+            {(() => {
+              const listCount = orders.filter(
+                (o) => o.status === 'pending' || o.status === 'preparing' || o.status === 'awaiting_payment'
+              ).length
+              return listCount > 0 ? (
+                <p className="text-sm font-semibold text-primary-600 dark:text-primary-400 mb-2">
+                  {listCount} {listCount === 1 ? 'order' : 'orders'} active
+                </p>
+              ) : null
+            })()}
             <p className="pos-dashboard-card-desc">
               All active orders for this shift. Open, update status, or checkout.
             </p>
@@ -378,16 +393,18 @@ export default function PosDashboardPage() {
             </p>
             <span className="btn btn-outline pos-dashboard-card-cta-btn">Ready to serve ⇒</span>
           </Link>
-          <Link href="/pos/shift" className="pos-dashboard-card text-center items-center">
-            <div className="pos-dashboard-card-icon mx-auto">
-              <ClipboardList className="w-6 h-6" />
-            </div>
-            <h2 className="pos-dashboard-card-title">Shift</h2>
-            <p className="pos-dashboard-card-desc">
-              Shift summary, payment breakdown, and close shift with declared cash.
-            </p>
-            <span className="btn btn-outline pos-dashboard-card-cta-btn">Shift summary ⇒</span>
-          </Link>
+          <div className="flex justify-center col-span-full">
+            <Link href="/pos/shift" className="pos-dashboard-card text-center items-center w-full max-w-sm md:max-w-[calc((min(1000px,100%)-2rem)/2)]">
+              <div className="pos-dashboard-card-icon mx-auto">
+                <ClipboardList className="w-6 h-6" />
+              </div>
+              <h2 className="pos-dashboard-card-title">Shift</h2>
+              <p className="pos-dashboard-card-desc">
+                Shift summary, payment breakdown, and close shift with declared cash.
+              </p>
+              <span className="btn btn-outline pos-dashboard-card-cta-btn">Shift summary ⇒</span>
+            </Link>
+          </div>
         </section>
 
         {/* Quick actions */}
@@ -420,36 +437,35 @@ export default function PosDashboardPage() {
           {error && (
             <div className="pos-alert pos-alert-error mb-4 max-w-md mx-auto">{error}</div>
           )}
-          {!loading && !error && orders.length === 0 && (
-            <EmptyState
-              icon={ListOrdered}
-              title="No active orders"
-              description="Create a dine-in or takeaway order above, or open Tables to start from a table."
-            />
-          )}
-          {!loading && !error && orders.length > 0 && (
+          {!loading && !error && (() => {
+            const listOrders = orders.filter(
+              (o) => o.status === 'pending' || o.status === 'preparing' || o.status === 'awaiting_payment'
+            )
+            return listOrders.length === 0 ? (
+              <p className="text-neutral-600 dark:text-neutral-400 m-0">No Active Orders</p>
+            ) : (
             <ul
               className={
-                orders.length === 1
+                listOrders.length === 1
                   ? 'list-none p-0 flex justify-center'
-                  : orders.length === 2
+                  : listOrders.length === 2
                     ? 'list-none p-0 flex justify-center gap-4 flex-wrap max-w-2xl mx-auto'
                     : 'list-none p-0 flex flex-wrap justify-center gap-4 max-w-4xl mx-auto pos-order-list'
               }
             >
-              {orders.map((o) => (
+              {listOrders.map((o) => (
                 <li
                   key={o.orderId}
                   className={
-                    orders.length === 1
+                    listOrders.length === 1
                       ? 'w-full max-w-sm'
-                      : orders.length === 2
+                      : listOrders.length === 2
                         ? 'w-full min-w-[240px] sm:w-[calc(50%-0.5rem)] sm:max-w-[320px]'
                         : 'pos-order-list-item'
                   }
                 >
                   <Link
-                    href={`/pos/orders/${o.orderId}`}
+                    href={o.status === 'awaiting_payment' ? '/pos/ready' : `/pos/orders/${o.orderId}`}
                     className="pos-order-card pos-order-card-centered block no-underline text-inherit hover:border-primary-300 dark:hover:border-primary-600 h-full"
                   >
                     <p className="font-medium text-primary-800 dark:text-primary-100 m-0">{o.orderNumber}</p>
@@ -470,7 +486,8 @@ export default function PosDashboardPage() {
                 </li>
               ))}
             </ul>
-          )}
+            )
+          })()}
         </section>
 
         <OrderNameModal
@@ -478,6 +495,7 @@ export default function PosDashboardPage() {
           title="Order name"
           onConfirm={handleOrderNameConfirm}
           onCancel={() => setOrderNameModalOpen(false)}
+          cancelLabel="Cancel Order"
         />
       </div>
     </main>

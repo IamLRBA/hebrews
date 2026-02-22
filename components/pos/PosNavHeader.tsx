@@ -5,6 +5,8 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   IconLayoutGrid,
   IconLayoutGridFilled,
+  IconShoppingCart,
+  IconShoppingCartFilled,
   IconLayoutList,
   IconLayoutListFilled,
   IconClock,
@@ -18,6 +20,7 @@ import SettingsDropdown from '@/components/ui/SettingsDropdown'
 const NAV_ITEMS = [
   { href: '/pos', label: 'All', iconOutline: null, iconFilled: null },
   { href: '/pos/tables', label: 'Tables', iconOutline: IconLayoutGrid, iconFilled: IconLayoutGridFilled },
+  { href: '/pos/order', label: 'Order', iconOutline: IconShoppingCart, iconFilled: IconShoppingCartFilled },
   { href: '/pos/orders', label: 'Orders', iconOutline: IconLayoutList, iconFilled: IconLayoutListFilled },
   { href: '/pos/ready', label: 'Ready', iconOutline: IconClock, iconFilled: IconClockFilled },
   { href: '/pos/shift', label: 'Shift', iconOutline: IconClipboardList, iconFilled: IconClipboardListFilled },
@@ -26,7 +29,7 @@ const NAV_ITEMS = [
 export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
   const pathname = usePathname()
   const router = useRouter()
-  const isOrderDetail = /^\/pos\/orders\/[^/]+$/.test(pathname)
+  const isOrderDetail = /^\/pos\/orders\/[^/]+$/.test(pathname) && pathname !== '/pos/orders'
   const isPaymentPage = /^\/pos\/payment\/[^/]+$/.test(pathname)
   const showBackToHistory = (isOrderDetail && !pathname.includes('/receipt')) || isPaymentPage
 
@@ -72,7 +75,12 @@ export function PosNavHeader({ hideNav }: { hideNav?: boolean }) {
       {!hideNav && (
       <nav className="pos-dashboard-nav" aria-label="POS sections">
         {NAV_ITEMS.map(({ href, label, iconOutline, iconFilled }) => {
-          const isActive = href === '/pos' ? pathname === '/pos' : (pathname === href || pathname.startsWith(href))
+          const isActive =
+            href === '/pos'
+              ? pathname === '/pos'
+              : href === '/pos/order'
+                ? pathname === '/pos/order'
+                : pathname === href || pathname.startsWith(href + '/')
           const Icon = isActive ? iconFilled : iconOutline
           return (
             <Link

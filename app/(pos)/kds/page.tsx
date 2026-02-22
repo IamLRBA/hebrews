@@ -147,19 +147,23 @@ export default function KdsPage() {
               }
             >
               <div className="pos-card pos-order-card-border flex flex-col gap-2 h-full">
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                <p className="m-0 font-semibold text-primary-800 dark:text-primary-100">{o.orderNumber}</p>
-                <span className={statusBadgeClass(o.status)}>{o.status}</span>
-              </div>
-              <p className="m-0 text-sm text-neutral-600 dark:text-neutral-400">
+                <div className="text-center">
+                  <p className="m-0 font-semibold text-primary-800 dark:text-primary-100">
+                    Order #{o.orderNumber}
+                  </p>
+                  <p className="m-0 text-sm text-neutral-600 dark:text-neutral-400 mt-0.5 capitalize">
+                    {o.status.replace(/_/g, ' ')}
+                  </p>
+                </div>
+              <p className="m-0 text-sm text-neutral-600 dark:text-neutral-400 text-center">
                 {o.orderType === 'dine_in' && o.tableId ? `Table ${o.tableId}` : 'Takeaway'}
               </p>
-              <ul className="m-0 list-none p-0 text-neutral-700 dark:text-neutral-300 text-sm">
+              <ul className="m-0 list-none p-0 text-neutral-700 dark:text-neutral-300 text-sm text-left">
                 {o.items.map((item, i) => {
                   const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
                   return (
                     <Fragment key={i}>
-                      <li className="flex items-center gap-2 py-1">
+                      <li className="flex items-center gap-2 py-1 justify-start">
                         <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
                           <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
                         </div>

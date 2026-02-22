@@ -280,6 +280,7 @@ model Order {
   updatedAt          DateTime     @updatedAt @map("updated_at")
   updatedByStaffId   String?      @map("updated_by_staff_id") @db.Uuid
   servedAt           DateTime?    @map("served_at")
+  sentToKitchenAt    DateTime?    @map("sent_to_kitchen_at")
 
   table            RestaurantTable? @relation(fields: [tableId], references: [id])
   shift            Shift            @relation(fields: [shiftId], references: [id])

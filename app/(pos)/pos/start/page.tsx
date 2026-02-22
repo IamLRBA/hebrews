@@ -46,7 +46,7 @@ export default function PosStartPage() {
         throw new Error(data.error || `HTTP ${res.status}`)
       }
       setShiftId(data.shiftId)
-      router.replace('/pos/orders')
+      router.replace('/pos/order')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to start shift')
     } finally {

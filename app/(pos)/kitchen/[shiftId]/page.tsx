@@ -197,29 +197,27 @@ export default function KitchenDisplayPage() {
                     }
                   >
                     <div
-                      className={`pos-order-card-border rounded-lg p-4 flex flex-col items-center text-center h-full ${ticketBgClass(order.status)}`}
+                      className={`pos-order-card-border rounded-lg p-4 flex flex-col h-full ${ticketBgClass(order.status)}`}
                     >
-                      <div className="flex items-center justify-between gap-2 mb-2 w-full">
-                        <span className="font-mono font-semibold text-sm">
-                          #{order.orderId.slice(0, 8)}
-                        </span>
-                        <span className="text-xs text-neutral-500">{timeSince(order.createdAt)}</span>
-                      </div>
-                      {order.customerName && (
-                        <p className="m-0 text-sm font-semibold text-primary-700 dark:text-primary-300 mb-1">
-                          {order.customerName}
+                      <div className="text-center mb-3">
+                        <p className="m-0 font-semibold text-primary-800 dark:text-primary-100">
+                          Order #{order.customerName ?? order.orderId.slice(0, 8)}
                         </p>
-                      )}
-                      <p className="m-0 text-sm font-medium mb-3">
+                        <p className="m-0 text-sm text-neutral-600 dark:text-neutral-400 mt-0.5 capitalize">
+                          {order.status.replace(/_/g, ' ')}
+                        </p>
+                        <p className="m-0 text-xs text-neutral-500 mt-1">{timeSince(order.createdAt)}</p>
+                      </div>
+                      <p className="m-0 text-sm font-medium mb-3 text-center">
                         {order.tableLabel ?? 'Takeaway'}
                       </p>
                       <div className={`w-full ${itemsAreaBgClass(order.status)} rounded-lg p-3 mb-3 border border-neutral-200 dark:border-neutral-700`}>
-                        <ul className="m-0 list-none p-0 text-sm flex-1">
+                        <ul className="m-0 list-none p-0 text-sm flex-1 text-left">
                           {order.items.map((item, i) => {
                             const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
                             return (
                               <Fragment key={i}>
-                                <li className="flex items-center gap-2 py-1 justify-center">
+                                <li className="flex items-center gap-2 py-1 justify-start">
                                   <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
                                     <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
                                   </div>
@@ -231,7 +229,6 @@ export default function KitchenDisplayPage() {
                           })}
                         </ul>
                       </div>
-                      <p className="m-0 mb-3 text-xs capitalize">{order.status}</p>
                       <div className="mt-auto w-full">
                         <button
                           type="button"

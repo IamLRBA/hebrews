@@ -3,8 +3,8 @@ import { getKitchenQueueFromAllActiveShifts } from '@/lib/domain/orders'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
 /**
- * Returns kitchen queue: all pending and preparing orders from any active shift.
- * Kitchen sees all current orders regardless of which cashier/terminal created them.
+ * Returns kitchen queue: all preparing and ready orders from any active shift.
+ * Only orders that have been sent to kitchen (via "Send to Kitchen") appear here.
  */
 export async function GET(
   _request: NextRequest,

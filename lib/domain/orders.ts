@@ -156,16 +156,41 @@ export type AddItemToOrderParams = {
  * product must be active. Computes subtotal from product price × quantity,
  * inserts OrderItem, recalculates and updates order totalUgx.
  * All DB logic is in order-items; this is the domain entry point.
+ * If the order already has a line with the same productId, size, modifier, and notes,
+ * quantity is added to that line; otherwise a new line is created.
  */
 export async function addItemToOrder(params: AddItemToOrderParams): Promise<void> {
-  await addOrderItem({
-    orderId: params.orderId,
-    productId: params.productId,
-    quantity: params.quantity,
-    size: params.size ?? null,
-    modifier: params.modifier ?? null,
-    notes: params.notes ?? null,
+  const size = params.size ?? null
+  const modifier = params.modifier ?? null
+  const notes = params.notes ?? null
+
+  const existing = await prisma.orderItem.findFirst({
+    where: {
+      orderId: params.orderId,
+      productId: params.productId,
+      size,
+      modifier,
+      notes,
+    },
+    select: { id: true, quantity: true },
   })
+
+  if (existing) {
+    await updateOrderItemQuantityInOrderItems({
+      orderId: params.orderId,
+      orderItemId: existing.id,
+      quantity: existing.quantity + params.quantity,
+    })
+  } else {
+    await addOrderItem({
+      orderId: params.orderId,
+      productId: params.productId,
+      quantity: params.quantity,
+      size,
+      modifier,
+      notes,
+    })
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -929,17 +954,18 @@ export type KitchenQueueOrder = {
 }
 
 /**
- * Loads kitchen queue: all pending and preparing orders from any active shift
- * (shift where endTime is null). So the kitchen display shows all current orders
- * regardless of which cashier/terminal created them.
- * Sorted by creation time (oldest first).
- * Read-only, no side effects.
+ * Loads kitchen queue: pending orders that have been sent to kitchen (sentToKitchenAt set),
+ * plus preparing and awaiting_payment orders from any active shift (shift where endTime is null).
+ * Sorted by creation time (oldest first). Read-only, no side effects.
  */
 export async function getKitchenQueueFromAllActiveShifts(): Promise<KitchenQueueOrder[]> {
   const orders = await prisma.order.findMany({
     where: {
-      status: { in: ['pending', 'preparing'] },
       shift: { endTime: null },
+      OR: [
+        { status: 'pending', sentToKitchenAt: { not: null } },
+        { status: { in: ['preparing', 'awaiting_payment'] } },
+      ],
     },
     select: {
       id: true,
@@ -978,7 +1004,7 @@ export async function getKitchenQueueFromAllActiveShifts(): Promise<KitchenQueue
 }
 
 /**
- * Loads kitchen queue: all pending and preparing orders for a given shift.
+ * Loads kitchen queue: pending orders sent to kitchen plus preparing and awaiting_payment for a given shift.
  * Prefer getKitchenQueueFromAllActiveShifts() so kitchen sees all orders.
  * Sorted by creation time (oldest first).
  * Read-only, no side effects.
@@ -987,9 +1013,10 @@ export async function getKitchenQueue(shiftId: string): Promise<KitchenQueueOrde
   const orders = await prisma.order.findMany({
     where: {
       shiftId,
-      status: {
-        in: ['pending', 'preparing'],
-      },
+      OR: [
+        { status: 'pending', sentToKitchenAt: { not: null } },
+        { status: { in: ['preparing', 'awaiting_payment'] } },
+      ],
     },
     select: {
       id: true,
