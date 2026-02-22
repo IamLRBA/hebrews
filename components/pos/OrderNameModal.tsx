@@ -8,6 +8,8 @@ type OrderNameModalProps = {
   title?: string
   onConfirm: (orderName: string) => void
   onCancel: () => void
+  /** e.g. "Cancel Order" when creating an order */
+  cancelLabel?: string
 }
 
 export function OrderNameModal({
@@ -15,6 +17,7 @@ export function OrderNameModal({
   title = 'Order name',
   onConfirm,
   onCancel,
+  cancelLabel = 'Cancel',
 }: OrderNameModalProps) {
   const [name, setName] = useState('')
 
@@ -68,7 +71,7 @@ export function OrderNameModal({
           </label>
           <div className="flex gap-3 mt-4">
             <button type="button" onClick={onCancel} className="btn btn-outline flex-1">
-              Cancel
+              {cancelLabel}
             </button>
             <button type="submit" className="btn btn-primary flex-1" disabled={!name.trim()}>
               Continue

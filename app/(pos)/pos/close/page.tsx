@@ -246,7 +246,7 @@ export default function PosClosePage() {
         )}
 
         <p className="text-center mt-6">
-          <Link href="/pos/orders" className="pos-link text-sm">⇐ Back to Orders</Link>
+          <Link href="/pos/orders" className="pos-link text-sm">⇐ Back to Orders list</Link>
         </p>
       </div>
     </main>

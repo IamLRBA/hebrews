@@ -154,7 +154,7 @@ export default function PosReceiptPage() {
       <main className="pos-page">
         <div className="pos-page-container max-w-md mx-auto p-6">
           <div className="pos-alert pos-alert-error mb-4">{error || 'Receipt not found'}</div>
-          <Link href="/pos/orders" className="pos-link">⇐ Back to Orders</Link>
+          <Link href="/pos/orders" className="pos-link">⇐ Back to Orders list</Link>
         </div>
       </main>
     )
@@ -227,7 +227,7 @@ export default function PosReceiptPage() {
         </div>
 
         <div className="flex gap-4 mt-6 print:hidden">
-          <Link href="/pos/orders" className="btn btn-primary py-3 px-6">
+          <Link href="/pos/order" className="btn btn-primary py-3 px-6">
             New Order
           </Link>
           <button

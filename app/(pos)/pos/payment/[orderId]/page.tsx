@@ -191,7 +191,7 @@ export default function PosPaymentPage() {
         <div className="pos-page-container max-w-md mx-auto">
           <PosNavHeader />
           <ErrorBanner message="Order not found" onDismiss={() => {}} />
-          <Link href="/pos/orders" className="pos-link">⇐ Back to Orders</Link>
+          <Link href="/pos/ready" className="pos-link">⇐ Back to Ready</Link>
         </div>
       </main>
     )
@@ -264,11 +264,15 @@ export default function PosPaymentPage() {
           </div>
 
           {isFullyPaid ? (
-            <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border-2 border-green-200 dark:border-green-700 text-center">
-              <p className="font-semibold text-green-700 dark:text-green-300 m-0 mb-2">Payment complete</p>
-              <Link href={`/pos/receipt/${orderId}`} className="pos-link text-green-600 dark:text-green-400">
-                View receipt
-              </Link>
+            <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border-2 border-green-200 dark:border-green-700 text-center space-y-2">
+              <p className="font-semibold text-green-700 dark:text-green-300 m-0">Payment complete</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0">Return to Ready page to serve the order.</p>
+              <div className="flex flex-wrap gap-3 justify-center mt-3">
+                <Link href="/pos/ready" className="btn btn-primary">Ready → Serve Order</Link>
+                <Link href={`/pos/receipt/${orderId}`} className="pos-link text-green-600 dark:text-green-400">
+                  View receipt
+                </Link>
+              </div>
             </div>
           ) : (
             <>

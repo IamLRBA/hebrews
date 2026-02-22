@@ -10,6 +10,10 @@ export async function GET(
     if (!orderId) {
       return NextResponse.json({ error: 'orderId is required' }, { status: 400 })
     }
+    const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+    if (!uuidRegex.test(orderId)) {
+      return NextResponse.json({ error: 'Invalid order id format' }, { status: 400 })
+    }
 
     const result = await getOrderDetail(orderId)
 
@@ -25,6 +29,8 @@ export async function GET(
       tableCode: result.tableCode,
       status: result.status,
       totalUgx: result.totalUgx,
+      createdAt: result.createdAt,
+      sentToKitchenAt: result.sentToKitchenAt ?? null,
       items: result.items,
       payments: result.payments,
     })

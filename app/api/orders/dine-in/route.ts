@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createDineInOrder } from '@/lib/domain/orders'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
-import { emitToShift, emitTableEvent, emitOrderCountsForShift } from '@/lib/realtime'
+import { emitTableEvent, emitOrderCountsForShift } from '@/lib/realtime'
 import { getOrSetIdempotent } from '@/lib/idempotency'
 
 export async function POST(request: NextRequest) {
@@ -26,19 +26,6 @@ export async function POST(request: NextRequest) {
             ...(typeof orderNumber === 'string' && orderNumber.trim() ? { orderNumber: orderNumber.trim() } : {}),
             ...(terminalIdOverride ? { terminalId: terminalIdOverride } : {}),
           })
-          emitToShift(o.shiftId, {
-            type: 'ORDER_CREATED',
-            payload: {
-              orderId: o.id,
-              shiftId: o.shiftId,
-              tableId: o.tableId ?? undefined,
-              orderNumber: o.orderNumber,
-              status: o.status as 'pending',
-              assignedWaiterId: o.assignedWaiterId ?? undefined,
-              createdAt: o.createdAt.toISOString(),
-              forKitchen: true,
-            },
-          })
           if (o.tableId) {
             emitTableEvent({
               type: 'TABLE_OCCUPIED',
@@ -55,19 +42,6 @@ export async function POST(request: NextRequest) {
             ...(typeof orderNumber === 'string' && orderNumber.trim() ? { orderNumber: orderNumber.trim() } : {}),
             ...(terminalIdOverride ? { terminalId: terminalIdOverride } : {}),
           })
-          emitToShift(o.shiftId, {
-            type: 'ORDER_CREATED',
-            payload: {
-              orderId: o.id,
-              shiftId: o.shiftId,
-              tableId: o.tableId ?? undefined,
-              orderNumber: o.orderNumber,
-              status: o.status as 'pending',
-              assignedWaiterId: o.assignedWaiterId ?? undefined,
-              createdAt: o.createdAt.toISOString(),
-              forKitchen: true,
-            },
-          })
           if (o.tableId) {
             emitTableEvent({
               type: 'TABLE_OCCUPIED',
@@ -78,7 +52,13 @@ export async function POST(request: NextRequest) {
           return o
         })()
 
-    return NextResponse.json(order)
+    return NextResponse.json({
+      id: order.id,
+      orderId: order.id,
+      orderNumber: order.orderNumber,
+      status: order.status,
+      totalUgx: order.totalUgx ?? 0,
+    })
   } catch (error) {
     return toPosApiResponse(error)
   }

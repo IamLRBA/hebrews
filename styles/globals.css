@@ -1022,6 +1022,14 @@
     justify-content: center;
   }
 
+  /* Cashier Ready orders: left-align items list (override .pos-order-card-centered) */
+  .pos-ready-order-items {
+    text-align: left;
+  }
+  .pos-ready-order-items .flex {
+    justify-content: flex-start;
+  }
+
   .pos-table-btn {
     padding: var(--space-5);
     min-height: 3.5rem;

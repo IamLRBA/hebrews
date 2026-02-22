@@ -54,9 +54,13 @@ export default function ManagerShiftDetailPage() {
   async function doCloseShift() {
     setShowConfirmClose(false)
     if (!countedCash || isNaN(Number(countedCash))) return
+    const staffId = localStorage.getItem('pos_staff_id')
+    if (!staffId) {
+      alert('Staff session missing. Please sign in again.')
+      return
+    }
     setClosing(true)
     try {
-      const staffId = localStorage.getItem('pos_staff_id')
       let body: { countedCashUgx: number; closedByStaffId: string; managerApprovalStaffId?: string } = {
         countedCashUgx: Number(countedCash),
         closedByStaffId: staffId,

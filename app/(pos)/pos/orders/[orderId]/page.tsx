@@ -47,6 +47,7 @@ type OrderDetail = {
   status: string
   totalUgx: number
   createdAt?: string
+  sentToKitchenAt?: string | null
   items: OrderItem[]
   payments: Payment[]
 }
@@ -73,8 +74,8 @@ export default function OrderDetailPage() {
   const [searchFocused, setSearchFocused] = useState(false)
   const searchWrapperRef = useRef<HTMLDivElement>(null)
 
-  async function fetchOrder() {
-    setLoading(true)
+  async function fetchOrder(silent = false) {
+    if (!silent) setLoading(true)
     setError(null)
     try {
       const res = await posFetch(`/api/orders/${orderId}`)
@@ -88,11 +89,39 @@ export default function OrderDetailPage() {
         throw new Error(data.error || `HTTP ${res.status}`)
       }
       const data = await res.json()
-      setOrder(data)
+      setOrder(normaliseOrderDetail(data))
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load order')
+      if (!silent) setError(e instanceof Error ? e.message : 'Failed to load order')
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
+    }
+  }
+
+  function normaliseOrderDetail(data: unknown): OrderDetail {
+    const d = data as Record<string, unknown>
+    const items = (Array.isArray(d?.items) ? d.items : []) as OrderItem[]
+    return {
+      orderId: String(d?.orderId ?? d?.id ?? orderId),
+      orderNumber: String(d?.orderNumber ?? ''),
+      orderType: String(d?.orderType ?? 'takeaway'),
+      tableId: d?.tableId != null ? String(d.tableId) : null,
+      tableCode: d?.tableCode != null ? String(d.tableCode) : null,
+      status: String(d?.status ?? 'pending'),
+      totalUgx: Number(d?.totalUgx ?? 0),
+      createdAt: d?.createdAt != null ? String(d.createdAt) : undefined,
+      sentToKitchenAt: d?.sentToKitchenAt != null ? String(d.sentToKitchenAt) : undefined,
+      items: items.map((it: Record<string, unknown>) => ({
+        id: String(it.id),
+        productId: String(it.productId),
+        productName: String(it.productName ?? it.productId),
+        imageUrl: it.imageUrl != null ? String(it.imageUrl) : null,
+        quantity: Number(it.quantity ?? 1),
+        size: it.size != null ? String(it.size) : null,
+        modifier: it.modifier != null ? String(it.modifier) : null,
+        notes: it.notes != null ? String(it.notes) : null,
+        subtotalUgx: Number(it.subtotalUgx ?? it.lineTotalUgx ?? 0),
+      })),
+      payments: Array.isArray(d?.payments) ? (d.payments as Payment[]) : [],
     }
   }
 
@@ -152,7 +181,8 @@ export default function OrderDetailPage() {
       setProductId('')
       setSearchQuery('')
       setQuantity(1)
-      setOrder(data)
+      setOrder(normaliseOrderDetail(data))
+      await fetchOrder(true)
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to add item')
     } finally {
@@ -174,7 +204,7 @@ export default function OrderDetailPage() {
         throw new Error(data.error || `HTTP ${res.status}`)
       }
       const data = await res.json()
-      setOrder(data)
+      setOrder(normaliseOrderDetail(data))
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to update quantity')
     } finally {
@@ -202,7 +232,7 @@ export default function OrderDetailPage() {
         throw new Error(data.error || 'Failed to send')
       }
       const data = await res.json()
-      setOrder(data)
+      setOrder(normaliseOrderDetail(data))
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to send to kitchen')
     } finally {
@@ -230,7 +260,7 @@ export default function OrderDetailPage() {
         throw new Error(data.error || `HTTP ${res.status}`)
       }
       const data = await res.json()
-      setOrder(data)
+      setOrder(normaliseOrderDetail(data))
       setRemovedForUndo({
         productId: item.productId,
         productName: item.productName,
@@ -268,7 +298,8 @@ export default function OrderDetailPage() {
         throw new Error(data.error || 'Failed to restore')
       }
       const data = await res.json()
-      setOrder(data)
+      setOrder(normaliseOrderDetail(data))
+      await fetchOrder(true)
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to restore item')
     } finally {
@@ -276,8 +307,12 @@ export default function OrderDetailPage() {
     }
   }
 
-  const block = order?.status === 'served' || order?.status === 'cancelled'
-  const canSendToKitchen = order?.status === 'pending' && !block
+  const canEdit = order?.status === 'pending'
+  const block = !canEdit
+  const canSendToKitchen =
+    order?.status === 'pending' &&
+    (order?.items?.length ?? 0) > 0 &&
+    !order?.sentToKitchenAt
   const items = order?.items ?? []
   const hasItems = items.length > 0
 
@@ -307,14 +342,14 @@ export default function OrderDetailPage() {
       <div className="flex-shrink-0 fixed top-0 left-0 right-0 z-[1020] bg-[var(--color-bg-primary)] px-4 pt-4 [&_.pos-dashboard-header]:mb-0">
         <PosNavHeader />
       </div>
-      <div className="flex-shrink-0 min-h-[14rem]" aria-hidden />
+      <div className="flex-shrink-0 min-h-[14rem] sm:min-h-[16rem] md:min-h-[14rem]" aria-hidden />
       <div className="pos-page-container max-w-4xl mx-auto text-center flex-1 px-4 pb-6 pt-2">
         {error && (
           <div className="mb-4">
             <ErrorBanner message={error} onDismiss={() => setError(null)} />
           </div>
         )}
-        <h1 className="pos-section-title text-2xl mb-2">Order {order?.orderNumber}</h1>
+        <h1 className="pos-section-title text-2xl mb-2 mt-2 sm:mt-4">Order {order?.orderNumber}</h1>
 
         <section className="pos-section pos-card pos-order-card-centered">
           <div className="mb-4">
@@ -551,9 +586,9 @@ export default function OrderDetailPage() {
             {submitting ? 'Sending…' : 'Send to Kitchen'}
           </button>
         ) : (order?.status === 'ready' || order?.status === 'awaiting_payment') ? (
-          <button onClick={handlePayment} disabled={!hasItems || block} className="btn btn-primary disabled:opacity-60">
-            Payment
-          </button>
+          <Link href="/pos/ready" className="btn btn-primary disabled:opacity-60 inline-block">
+            Make payment on Ready page →
+          </Link>
         ) : null}
       </section>
       </div>

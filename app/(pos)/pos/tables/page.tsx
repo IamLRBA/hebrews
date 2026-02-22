@@ -28,6 +28,7 @@ export default function PosTablesPage() {
   const [error, setError] = useState<string | null>(null)
   const [creating, setCreating] = useState<string | null>(null)
   const [orderNameModalOpen, setOrderNameModalOpen] = useState(false)
+  const [orderCreatedFallbackOpen, setOrderCreatedFallbackOpen] = useState(false)
   const [pendingTableId, setPendingTableId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
@@ -131,7 +132,12 @@ export default function PosTablesPage() {
         throw new Error(data.error || `HTTP ${res.status}`)
       }
       const data = await res.json()
-      router.push(`/pos/orders/${data.id}`)
+      const orderId = data.orderId ?? data.id
+      if (orderId) {
+        router.push(`/pos/orders/${orderId}`)
+      } else {
+        setOrderCreatedFallbackOpen(true)
+      }
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to create order')
     } finally {
@@ -297,7 +303,42 @@ export default function PosTablesPage() {
             setOrderNameModalOpen(false)
             setPendingTableId(null)
           }}
+          cancelLabel="Cancel Order"
         />
+
+        {orderCreatedFallbackOpen && (
+          <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 dark:bg-black/60"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="order-created-fallback-title"
+          >
+            <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl border border-neutral-200 dark:border-neutral-800 w-full max-w-sm overflow-hidden p-4">
+              <h2 id="order-created-fallback-title" className="text-base font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
+                Order created
+              </h2>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mb-4">
+                Details could not be opened. Go to Orders to find and open it.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setOrderCreatedFallbackOpen(false)}
+                  className="btn btn-outline flex-1 py-2 text-sm"
+                >
+                  Dismiss
+                </button>
+                <Link
+                  href="/pos/orders"
+                  onClick={() => setOrderCreatedFallbackOpen(false)}
+                  className="btn btn-primary flex-1 py-2 text-sm text-center"
+                >
+                  Go to Orders
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   )

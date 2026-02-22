@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { PosNavHeader } from '@/components/pos/PosNavHeader'
-import { StatusBadge } from '@/components/ui/StatusBadge'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import { EmptyState } from '@/components/ui/EmptyState'
 import Image from 'next/image'
@@ -28,6 +27,9 @@ type ReadyOrder = {
   tableId: string | null
   status: string
   createdAt: string
+  totalUgx?: number
+  totalPaidUgx?: number
+  isFullyPaid?: boolean
   items: ReadyOrderItem[]
 }
 
@@ -152,11 +154,15 @@ export default function PosReadyPage() {
               }
             >
               <div className="pos-card pos-order-card-border pos-order-card-centered flex flex-col gap-3 animate-slide-in-up h-full">
-                <div className="flex items-center justify-between gap-2">
-                <p className="m-0 font-semibold text-lg text-primary-800 dark:text-primary-100">Order #{o.orderNumber}</p>
-                <StatusBadge status={o.status} />
-              </div>
-              <div className="text-sm space-y-1">
+                <div className="text-center">
+                  <p className="m-0 font-semibold text-lg text-primary-800 dark:text-primary-100">
+                    Order #{o.orderNumber}
+                  </p>
+                  <p className="m-0 text-sm text-neutral-600 dark:text-neutral-400 mt-0.5 capitalize">
+                    {o.status.replace(/_/g, ' ')}
+                  </p>
+                </div>
+              <div className="text-sm space-y-1 text-center">
                 <p className="m-0 text-neutral-600 dark:text-neutral-400">
                   {o.orderType === 'dine_in' && o.tableId ? `Table ${o.tableId}` : 'Takeaway'}
                 </p>
@@ -166,7 +172,7 @@ export default function PosReadyPage() {
                   </p>
                 )}
               </div>
-              <div className={`${itemsAreaBgClass(o.status)} rounded-lg p-3`}>
+              <div className={`${itemsAreaBgClass(o.status)} rounded-lg p-3 pos-ready-order-items`}>
                 <ul className="m-0 list-none p-0 text-sm text-neutral-700 dark:text-neutral-300">
                   {o.items.map((item, i) => {
                     const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
@@ -186,14 +192,23 @@ export default function PosReadyPage() {
                 </ul>
               </div>
               <div className="mt-auto pt-2">
-                <button
-                  type="button"
-                  onClick={() => handleServe(o.orderId)}
-                  disabled={acting !== null}
-                  className="btn btn-primary w-full disabled:opacity-60"
-                >
-                  {acting === o.orderId ? 'Serving…' : 'Serve Order'}
-                </button>
+                {o.status === 'awaiting_payment' && !(o.isFullyPaid ?? false) ? (
+                  <Link
+                    href={`/pos/payment/${o.orderId}`}
+                    className="btn btn-primary w-full inline-block text-center"
+                  >
+                    Make Payment
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleServe(o.orderId)}
+                    disabled={acting !== null}
+                    className="btn btn-primary w-full disabled:opacity-60"
+                  >
+                    {acting === o.orderId ? 'Serving…' : 'Serve Order'}
+                  </button>
+                )}
                 </div>
               </div>
             </li>
