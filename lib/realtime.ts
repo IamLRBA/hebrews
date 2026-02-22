@@ -27,6 +27,7 @@ export type OrderStatusValue =
 export type RealtimeEvent =
   | { type: 'ORDER_CREATED'; payload: OrderCreatedPayload }
   | { type: 'ORDER_UPDATED'; payload: OrderUpdatedPayload }
+  | { type: 'ORDER_SENT_TO_KITCHEN'; payload: OrderSentToKitchenPayload }
   | { type: 'ORDER_STATUS_CHANGED'; payload: OrderStatusChangedPayload }
   | { type: 'ORDER_CANCELLED'; payload: OrderCancelledPayload }
   | { type: 'ORDER_ASSIGNMENT_CHANGED'; payload: OrderAssignmentChangedPayload }
@@ -36,6 +37,16 @@ export type RealtimeEvent =
   | { type: 'ORDER_COUNTS_UPDATED'; payload: OrderCountsUpdatedPayload }
   | { type: 'SNAPSHOT'; payload: SnapshotPayload }
   | { type: 'HEARTBEAT'; payload: { ts: string } }
+
+export interface OrderSentToKitchenPayload {
+  orderId: string
+  shiftId: string
+  tableId?: string | null
+  status: string
+  updatedAt: string
+  forKitchen?: boolean
+  orderNumber?: string
+}
 
 export interface OrderCountsUpdatedPayload {
   shiftId: string
@@ -81,6 +92,7 @@ export interface OrderStatusChangedPayload {
   newStatus: OrderStatusValue
   updatedAt: string
   forKitchen?: boolean
+  orderNumber?: string
 }
 
 export interface OrderCancelledPayload {

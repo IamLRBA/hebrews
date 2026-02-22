@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@tabler/icons-react'],
+  },
   images: {
     domains: ['localhost'],
     formats: ['image/avif', 'image/webp'],

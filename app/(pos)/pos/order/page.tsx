@@ -1,6 +1,7 @@
 'use client'
 
-import { Fragment, useEffect, useState, useCallback, useRef } from 'react'
+import { Fragment, useEffect, useState, useCallback, useRef, useMemo, memo } from 'react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -20,7 +21,16 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { ShoppingCart, Package, Search, X } from 'lucide-react'
 import { IconSoup, IconSoupFilled, IconGlass, IconGlassFilled } from '@tabler/icons-react'
 import { getModifierGroupsForProduct } from '@/lib/pos-modifiers'
-import { OrderNameModal } from '@/components/pos/OrderNameModal'
+
+const OrderNameModal = dynamic(
+  () => import('@/components/pos/OrderNameModal').then((m) => ({ default: m.OrderNameModal })),
+  { ssr: false }
+)
+
+const ModifierModal = dynamic(
+  () => import('@/components/pos/ModifierModal').then((m) => ({ default: m.ModifierModal })),
+  { ssr: false }
+)
 
 type PosProduct = {
   productId: string
@@ -99,7 +109,7 @@ function pickHeroIndex(label: string, count: number) {
   return Math.abs(hash) % count
 }
 
-function ProductImage({ product }: { product: PosProduct }) {
+const ProductImage = memo(function ProductImage({ product }: { product: PosProduct }) {
   const src = product.images?.[0]
   const useSrc = src && (src.startsWith('http') || src.startsWith('/')) ? src : PLACEHOLDER_IMAGE
   return (
@@ -107,7 +117,7 @@ function ProductImage({ product }: { product: PosProduct }) {
       <Image src={useSrc} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
     </div>
   )
-}
+})
 
 export default function PosOrdersPage() {
   const router = useRouter()
@@ -751,28 +761,39 @@ export default function PosOrdersPage() {
   const drinkSections = selectedDrinkTier === 'Alcoholic' ? ALCOHOLIC_SECTIONS : NON_ALCOHOLIC_SECTIONS
   const sections = isFood ? FOOD_SECTIONS : drinkSections
 
-  let displayProducts: PosProduct[] = []
-  if (viewMode === 'popular') displayProducts = popularProducts.slice(0, 4)
-  else if (selectedSubcategory) {
-    displayProducts = products.filter((p) => {
-      const cat = String(p?.category ?? '').trim()
-      const sec = String(p?.section ?? '').trim()
+  const displayProducts = useMemo(() => {
+    if (viewMode === 'popular') return popularProducts.slice(0, 4)
+    if (selectedSubcategory) {
       const sel = String(selectedSubcategory ?? '').trim()
-      if (isFood) return cat === 'Food' && sec === sel
-      if (isDrinks) return cat === 'Drinks' && sec === sel
-      return false
-    })
-  } else displayProducts = []
+      return products.filter((p) => {
+        const cat = String(p?.category ?? '').trim()
+        const sec = String(p?.section ?? '').trim()
+        if (isFood) return cat === 'Food' && sec === sel
+        if (isDrinks) return cat === 'Drinks' && sec === sel
+        return false
+      })
+    }
+    return []
+  }, [viewMode, selectedSubcategory, products, popularProducts, isFood, isDrinks])
 
-  const searchFilter = (p: PosProduct) =>
-    !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  const filteredDisplayProducts = isSearchActive
-    ? products.filter(searchFilter)
-    : displayProducts.filter(searchFilter)
+  const searchFilter = useCallback(
+    (p: PosProduct) =>
+      !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    [searchQuery]
+  )
+  const filteredDisplayProducts = useMemo(
+    () =>
+      isSearchActive ? products.filter(searchFilter) : displayProducts.filter(searchFilter),
+    [isSearchActive, products, displayProducts, searchFilter]
+  )
 
-  const searchSuggestions = searchQuery.trim()
-    ? products.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 10)
-    : []
+  const searchSuggestions = useMemo(
+    () =>
+      searchQuery.trim()
+        ? products.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 10)
+        : [],
+    [searchQuery, products]
+  )
   const showSearchSuggestions = searchFocused && searchQuery.trim().length > 0
 
   if (!staffOk) {
@@ -1333,57 +1354,19 @@ export default function PosOrdersPage() {
         </aside>
       </div>
 
-      {/* Modifier modal */}
+      {/* Modifier modal – lazy-loaded when needed */}
       {modifierProduct && (
-        <div
-          className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modifier-title"
-        >
-          <div className="pos-card max-w-md w-full p-6">
-            <h2 id="modifier-title" className="pos-section-title text-lg mb-4">
-              {modifierProduct.name}
-            </h2>
-            {getModifierGroupsForProduct(modifierProduct.section ?? null).map((group) => (
-              <div key={group.name} className="mb-4">
-                <label className="pos-label block mb-2">{group.name}</label>
-                <div className="flex flex-wrap gap-2">
-                  {group.options.map((opt) => (
-                    <button
-                      key={opt}
-                      type="button"
-                      onClick={() => setModifierSelections((s) => ({ ...s, [group.name]: opt }))}
-                      className={`btn py-2 px-3 text-sm ${modifierSelections[group.name] === opt ? 'btn-primary' : 'btn-outline'}`}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <div className="flex gap-3 mt-6">
-              <button
-                type="button"
-                onClick={() => {
-                  setModifierProduct(null)
-                  setModifierSelections({})
-                }}
-                className="btn btn-outline flex-1"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleModifierConfirm}
-                disabled={addingItem}
-                className="btn btn-primary flex-1 disabled:opacity-60"
-              >
-                {addingItem ? 'Adding…' : 'Add to Order'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ModifierModal
+          product={modifierProduct}
+          modifierSelections={modifierSelections}
+          onSelectionChange={(group, option) => setModifierSelections((s) => ({ ...s, [group]: option }))}
+          onCancel={() => {
+            setModifierProduct(null)
+            setModifierSelections({})
+          }}
+          onConfirm={handleModifierConfirm}
+          addingItem={addingItem}
+        />
       )}
 
       <div className="flex-shrink-0 p-4 border-t border-neutral-200 dark:border-neutral-700">

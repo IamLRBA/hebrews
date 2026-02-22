@@ -1,11 +1,17 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import BackToTop from '@/components/ui/BackToTop'
 import { PosAuthGuard } from '@/components/pos/PosAuthGuard'
 import { PosShiftGuard } from '@/components/pos/PosShiftGuard'
 import { OfflineBadge } from '@/components/pos/OfflineBadge'
 import { OfflineSyncProvider } from '@/components/pos/OfflineSyncProvider'
 import { usePathname } from 'next/navigation'
+
+const RealtimeNotificationProvider = dynamic(
+  () => import('@/components/pos/RealtimeNotificationProvider').then((m) => ({ default: m.RealtimeNotificationProvider })),
+  { ssr: false, loading: () => null }
+)
 
 /**
  * POS route group layout.
@@ -29,6 +35,7 @@ export default function PosLayout({
     return (
       <>
         <OfflineSyncProvider />
+        <RealtimeNotificationProvider />
         <div className="min-h-screen w-full flex flex-col bg-unified" style={{ minHeight: '100dvh' }}>
           {children}
           <BackToTop />
@@ -42,6 +49,7 @@ export default function PosLayout({
     <PosAuthGuard>
       <PosShiftGuard>
         <OfflineSyncProvider />
+        <RealtimeNotificationProvider />
         <div className="min-h-screen w-full flex flex-col bg-unified" style={{ minHeight: '100dvh' }}>
           {children}
           <BackToTop />

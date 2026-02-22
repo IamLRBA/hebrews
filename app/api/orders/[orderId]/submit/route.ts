@@ -103,6 +103,7 @@ export async function POST(
       isReprint: false,
     }).catch((e) => logError(e, { path: `orders/submit#triggerKitchenTicket(${orderId})` }))
 
+    const order = await getOrderDetail(orderId)
     emitToShift(updated.shiftId, {
       type: 'ORDER_SENT_TO_KITCHEN',
       payload: {
@@ -112,11 +113,10 @@ export async function POST(
         status: updated.status,
         updatedAt: updated.updatedAt.toISOString(),
         forKitchen: true,
+        orderNumber: order?.orderNumber,
       },
     })
     await emitOrderCountsForShift(updated.shiftId)
-
-    const order = await getOrderDetail(orderId)
     if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }

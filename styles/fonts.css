@@ -1,0 +1,26 @@
+/* Self-hosted fonts (Fontsource) – replaces Google Fonts for privacy and performance */
+
+/* MuseoModerno – weights 100–900 (latin only) */
+@import '@fontsource/museomoderno/latin-100.css';
+@import '@fontsource/museomoderno/latin-200.css';
+@import '@fontsource/museomoderno/latin-300.css';
+@import '@fontsource/museomoderno/latin-400.css';
+@import '@fontsource/museomoderno/latin-500.css';
+@import '@fontsource/museomoderno/latin-600.css';
+@import '@fontsource/museomoderno/latin-700.css';
+@import '@fontsource/museomoderno/latin-800.css';
+@import '@fontsource/museomoderno/latin-900.css';
+
+/* JetBrains Mono – weights 100–800 (latin only) */
+@import '@fontsource/jetbrains-mono/latin-100.css';
+@import '@fontsource/jetbrains-mono/latin-200.css';
+@import '@fontsource/jetbrains-mono/latin-300.css';
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-500.css';
+@import '@fontsource/jetbrains-mono/latin-600.css';
+@import '@fontsource/jetbrains-mono/latin-700.css';
+@import '@fontsource/jetbrains-mono/latin-800.css';
+
+/* Mrs Saint Delafield, Zen Dots (display fonts) */
+@import '@fontsource/mrs-saint-delafield';
+@import '@fontsource/zen-dots';

@@ -47,7 +47,7 @@ export async function POST(
           }
           const order = await prisma.order.findUnique({
             where: { id: orderId },
-            select: { shiftId: true, tableId: true, status: true, updatedAt: true },
+            select: { shiftId: true, tableId: true, status: true, updatedAt: true, orderNumber: true },
           })
           if (order) {
             const previousStatus = newStatus === 'preparing' ? 'pending' : 'preparing'
@@ -62,6 +62,7 @@ export async function POST(
                 newStatus: newStatusValue as 'preparing' | 'awaiting_payment',
                 updatedAt: order.updatedAt.toISOString(),
                 forKitchen: true,
+                orderNumber: order.orderNumber,
               },
             })
             await emitOrderCountsForShift(order.shiftId)
@@ -80,7 +81,7 @@ export async function POST(
           }
           const order = await prisma.order.findUnique({
             where: { id: orderId },
-            select: { shiftId: true, tableId: true, status: true, updatedAt: true },
+            select: { shiftId: true, tableId: true, status: true, updatedAt: true, orderNumber: true },
           })
           if (order) {
             const previousStatus = newStatus === 'preparing' ? 'pending' : 'preparing'
@@ -95,6 +96,7 @@ export async function POST(
                 newStatus: newStatusValue as 'preparing' | 'awaiting_payment',
                 updatedAt: order.updatedAt.toISOString(),
                 forKitchen: true,
+                orderNumber: order.orderNumber,
               },
             })
             await emitOrderCountsForShift(order.shiftId)

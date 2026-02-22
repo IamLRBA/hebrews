@@ -67,13 +67,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@100;200;300;400;500;600;700;800;900&family=Mrs+Saint+Delafield&family=Zen+Dots&display=swap"
-          rel="stylesheet"
-          referrerPolicy="strict-origin-when-cross-origin"
-        />
         {/* Favicons - multiple formats for browser compatibility */}
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
