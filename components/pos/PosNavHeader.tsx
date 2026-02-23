@@ -20,12 +20,12 @@ import SettingsDropdown from '@/components/ui/SettingsDropdown'
 import { posFetch } from '@/lib/pos-client'
 
 const NAV_ITEMS = [
-  { href: '/pos', label: 'All', iconOutline: null, iconFilled: null },
-  { href: '/pos/tables', label: 'Tables', iconOutline: IconLayoutGrid, iconFilled: IconLayoutGridFilled },
-  { href: '/pos/order', label: 'Order', iconOutline: IconShoppingCart, iconFilled: IconShoppingCartFilled },
-  { href: '/pos/orders', label: 'Orders', iconOutline: IconLayoutList, iconFilled: IconLayoutListFilled },
+  { href: '/pos', label: 'All', iconOutline: null, iconFilled: null, countKey: 'all' as const },
+  { href: '/pos/tables', label: 'Tables', iconOutline: IconLayoutGrid, iconFilled: IconLayoutGridFilled, countKey: 'tables' as const },
+  { href: '/pos/order', label: 'Order', iconOutline: IconShoppingCart, iconFilled: IconShoppingCartFilled, countKey: 'order' as const },
+  { href: '/pos/orders', label: 'Orders', iconOutline: IconLayoutList, iconFilled: IconLayoutListFilled, countKey: 'orders' as const },
   { href: '/pos/ready', label: 'Ready', iconOutline: IconClock, iconFilled: IconClockFilled, countKey: 'ready' as const },
-  { href: '/pos/shift', label: 'Shift', iconOutline: IconClipboardList, iconFilled: IconClipboardListFilled },
+  { href: '/pos/shift', label: 'Shift', iconOutline: IconClipboardList, iconFilled: IconClipboardListFilled, countKey: 'shift' as const },
 ] as const
 
 const COUNT_POLL_MS = 30000
