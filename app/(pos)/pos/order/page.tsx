@@ -1,6 +1,7 @@
 'use client'
 
-import { Fragment, useEffect, useState, useCallback, useRef } from 'react'
+import { Fragment, useEffect, useState, useCallback, useRef, useMemo, memo } from 'react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -20,7 +21,21 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { ShoppingCart, Package, Search, X } from 'lucide-react'
 import { IconSoup, IconSoupFilled, IconGlass, IconGlassFilled } from '@tabler/icons-react'
 import { getModifierGroupsForProduct } from '@/lib/pos-modifiers'
-import { OrderNameModal } from '@/components/pos/OrderNameModal'
+
+const OrderNameModal = dynamic(
+  () => import('@/components/pos/OrderNameModal').then((m) => ({ default: m.OrderNameModal })),
+  { ssr: false }
+)
+
+const PreparationNotesModal = dynamic(
+  () => import('@/components/pos/PreparationNotesModal').then((m) => ({ default: m.PreparationNotesModal })),
+  { ssr: false }
+)
+
+const ModifierModal = dynamic(
+  () => import('@/components/pos/ModifierModal').then((m) => ({ default: m.ModifierModal })),
+  { ssr: false }
+)
 
 type PosProduct = {
   productId: string
@@ -37,6 +52,7 @@ type OrderItem = {
   id: string
   productId: string
   productName: string
+  category?: string | null
   imageUrl?: string | null
   quantity: number
   size?: string | null
@@ -56,13 +72,17 @@ type OrderDetail = {
   tableId?: string | null
   tableCode?: string | null
   sentToKitchenAt?: string | null
+  sentToBarAt?: string | null
+  preparationNotes?: string | null
 }
 
 type TableStatus = {
   tableId: string
   tableCode: string
   capacity?: number | null
+  activeOrderCount?: number
   hasActiveOrder: boolean
+  isFull?: boolean
   orderId: string | null
   orderNumber: string | null
 }
@@ -99,7 +119,7 @@ function pickHeroIndex(label: string, count: number) {
   return Math.abs(hash) % count
 }
 
-function ProductImage({ product }: { product: PosProduct }) {
+const ProductImage = memo(function ProductImage({ product }: { product: PosProduct }) {
   const src = product.images?.[0]
   const useSrc = src && (src.startsWith('http') || src.startsWith('/')) ? src : PLACEHOLDER_IMAGE
   return (
@@ -107,7 +127,7 @@ function ProductImage({ product }: { product: PosProduct }) {
       <Image src={useSrc} alt={product.name} fill className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
     </div>
   )
-}
+})
 
 export default function PosOrdersPage() {
   const router = useRouter()
@@ -134,6 +154,9 @@ export default function PosOrdersPage() {
   const [modifierSelections, setModifierSelections] = useState<Record<string, string>>({})
   const [orderType, setOrderType] = useState<'takeaway' | 'dine_in' | null>(null)
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null)
+  const [preparationNotesModalOpen, setPreparationNotesModalOpen] = useState(false)
+  const [pendingSendDestination, setPendingSendDestination] = useState<'kitchen' | 'bar' | null>(null)
+  const [mixedOrderPopupOpen, setMixedOrderPopupOpen] = useState(false)
   const [tables, setTables] = useState<TableStatus[]>([])
   const [tableSearchQuery, setTableSearchQuery] = useState('')
   const [tableSearchFocused, setTableSearchFocused] = useState(false)
@@ -163,6 +186,7 @@ export default function PosOrdersPage() {
         id: String(it.id),
         productId: String(it.productId),
         productName: String(it.productName ?? it.productId),
+        category: it.category != null ? String(it.category) : undefined,
         imageUrl: it.imageUrl != null ? String(it.imageUrl) : undefined,
         quantity: Number(it.quantity ?? 1),
         size: it.size != null ? String(it.size) : null,
@@ -175,6 +199,8 @@ export default function PosOrdersPage() {
       tableId: d?.tableId != null ? String(d.tableId) : null,
       tableCode: d?.tableCode != null ? String(d.tableCode) : null,
       sentToKitchenAt: d?.sentToKitchenAt != null ? String(d.sentToKitchenAt) : undefined,
+      sentToBarAt: d?.sentToBarAt != null ? String(d.sentToBarAt) : undefined,
+      preparationNotes: d?.preparationNotes != null ? String(d.preparationNotes) : undefined,
     }
   }
 
@@ -362,9 +388,37 @@ export default function PosOrdersPage() {
       const displayOrderNumber = (data as Record<string, unknown>).displayOrderNumber ?? data.orderNumber ?? ''
 
       if (action && action !== 'new' && 'product' in action) {
+        const orderIdStr = orderIdFromApi
+        currentOrderIdRef.current = orderIdStr
+        const priceUgx = Number(action.product.priceUgx ?? 0)
+        const optimisticItem: OrderItem = {
+          id: `temp-${orderIdStr}`,
+          productId: action.product.productId,
+          productName: action.product.name,
+          category: action.product.category ?? null,
+          imageUrl: action.product.images?.[0] ?? null,
+          quantity: 1,
+          size: action.size ?? null,
+          modifier: action.modifier ?? null,
+          notes: null,
+          subtotalUgx: priceUgx,
+          lineTotalUgx: priceUgx,
+        }
+        const optimisticOrder: OrderDetail = {
+          orderId: orderIdStr,
+          orderNumber: orderName?.trim() ? orderName.trim() : String((data as Record<string, unknown>).displayOrderNumber ?? data.orderNumber ?? ''),
+          status: (data as { status?: string }).status ?? 'pending',
+          totalUgx: priceUgx,
+          items: [optimisticItem],
+          tableId: null,
+          tableCode: null,
+        }
+        setOrder(optimisticOrder)
+        setOrderType(null)
+        setCreating(false)
         setAddingItem(true)
         try {
-          const addRes = await posFetch(`/api/orders/${orderIdFromApi}/items`, {
+          const addRes = await posFetch(`/api/orders/${orderIdStr}/items`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -375,22 +429,9 @@ export default function PosOrdersPage() {
             }),
           })
           if (!addRes.ok) throw new Error('Failed to add item')
-          const orderIdStr = orderIdFromApi
-          currentOrderIdRef.current = orderIdStr
-          // Refetch so the first product shows in the items list immediately
-          const getRes = await posFetch(`/api/orders/${orderIdStr}`)
-          if (getRes.ok) {
-            const getData = await getRes.json()
-            const normalised = normaliseOrderFromApi(getData)
-            setOrder({
-              ...normalised,
-              orderId: normalised.orderId || orderIdStr,
-              orderNumber: orderName?.trim() ? orderName.trim() : normalised.orderNumber,
-              orderType: undefined,
-            })
-          } else {
-            const updated = await addRes.json()
-            const normalised = normaliseOrderFromApi(updated)
+          const addData = (await addRes.json().catch(() => ({}))) as Record<string, unknown>
+          const normalised = normaliseOrderFromApi(addData)
+          if (normalised.items.length > 0) {
             setOrder({
               ...normalised,
               orderId: normalised.orderId || orderIdStr,
@@ -404,18 +445,6 @@ export default function PosOrdersPage() {
           if (shiftId) fetchPopularProducts()
         } catch (e) {
           setError(e instanceof Error ? e.message : 'Failed to add item')
-          // Keep the created order in state so user can add items manually; set ref so later clicks add to this order
-          currentOrderIdRef.current = orderIdFromApi
-          setOrder({
-            orderId: orderIdFromApi,
-            orderNumber: orderName?.trim() ? orderName.trim() : String((data as Record<string, unknown>).displayOrderNumber ?? data.orderNumber ?? ''),
-            status: (data as { status?: string }).status ?? 'pending',
-            totalUgx: Number((data as { totalUgx?: number }).totalUgx ?? 0),
-            items: [],
-            tableId: null,
-            tableCode: null,
-          })
-          setOrderType(null)
         } finally {
           setAddingItem(false)
         }
@@ -485,14 +514,18 @@ export default function PosOrdersPage() {
       }
       const safeOrderId = orderId
       currentOrderIdRef.current = safeOrderId
-      // Refetch the full order so the items list and total stay in sync with the server
-      const getRes = await posFetch(`/api/orders/${orderId}`)
-      let dataForOrder: Record<string, unknown>
-      if (getRes.ok) {
-        dataForOrder = (await getRes.json().catch(() => ({}))) as Record<string, unknown>
-      } else {
-        dataForOrder = (await res.json().catch(() => ({}))) as Record<string, unknown>
-      }
+      // Use add-item response (full order with new item) so the product appears instantly
+      const addData = (await res.json().catch(() => ({}))) as Record<string, unknown>
+      const dataForOrder =
+        addData && typeof addData.orderId === 'string' && Array.isArray(addData.items)
+          ? addData
+          : (await (async () => {
+              const getRes = await posFetch(`/api/orders/${orderId}`)
+              if (getRes.ok) {
+                return (await getRes.json().catch(() => ({}))) as Record<string, unknown>
+              }
+              return addData
+            })())
       const normalised = normaliseOrderFromApi(dataForOrder)
       const displayNumber = (order?.orderNumber || currentOrderDisplayName) && !normalised.orderNumber ? (order?.orderNumber || currentOrderDisplayName) : normalised.orderNumber
       setOrder({
@@ -647,11 +680,31 @@ export default function PosOrdersPage() {
     }
   }
 
-  async function handleSendToKitchen() {
+  const orderHasFood = (order?.items ?? []).some((it) => (it as OrderItem).category === 'Food')
+  const orderHasDrinks = (order?.items ?? []).some((it) => (it as OrderItem).category === 'Drinks')
+  const orderHasBoth = orderHasFood && orderHasDrinks
+  const orderSent = !!(order?.sentToKitchenAt || order?.sentToBarAt)
+
+  function handleSendToKitchenOrBarClick() {
+    if (!order || (order?.items ?? []).length === 0) return
+    if (orderHasBoth) {
+      setMixedOrderPopupOpen(true)
+      return
+    }
+    if (orderHasDrinks && !orderHasFood) {
+      setPendingSendDestination('bar')
+      setPreparationNotesModalOpen(true)
+      return
+    }
+    setPendingSendDestination('kitchen')
+    setPreparationNotesModalOpen(true)
+  }
+
+  async function doSendToKitchenOrBar(destination: 'kitchen' | 'bar', preparationNotes: string) {
     if (!order || order.status !== 'pending') return
     const items = order.items ?? []
     if (items.length === 0) {
-      setError('Add items before sending to kitchen')
+      setError(`Add items before sending to ${destination === 'bar' ? 'bar' : 'kitchen'}`)
       return
     }
     if (!orderType) {
@@ -664,6 +717,8 @@ export default function PosOrdersPage() {
     }
     setSubmitting(true)
     setError(null)
+    setPreparationNotesModalOpen(false)
+    setPendingSendDestination(null)
     try {
       if (!isOnline()) {
         await updateOrderStatusOffline({ orderLocalId: order.orderId, newStatus: 'preparing' })
@@ -679,6 +734,8 @@ export default function PosOrdersPage() {
           updatedByStaffId: getStaffId(),
           orderType: orderType ?? undefined,
           tableId: orderType === 'dine_in' && selectedTableId ? selectedTableId : undefined,
+          destination,
+          preparationNotes: preparationNotes || undefined,
         }),
       })
       if (!res.ok) {
@@ -691,7 +748,7 @@ export default function PosOrdersPage() {
       setSelectedTableId(null)
       setCurrentOrderDisplayName('')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to send to kitchen')
+      setError(e instanceof Error ? e.message : `Failed to send to ${destination === 'bar' ? 'bar' : 'kitchen'}`)
     } finally {
       setSubmitting(false)
     }
@@ -751,28 +808,39 @@ export default function PosOrdersPage() {
   const drinkSections = selectedDrinkTier === 'Alcoholic' ? ALCOHOLIC_SECTIONS : NON_ALCOHOLIC_SECTIONS
   const sections = isFood ? FOOD_SECTIONS : drinkSections
 
-  let displayProducts: PosProduct[] = []
-  if (viewMode === 'popular') displayProducts = popularProducts.slice(0, 4)
-  else if (selectedSubcategory) {
-    displayProducts = products.filter((p) => {
-      const cat = String(p?.category ?? '').trim()
-      const sec = String(p?.section ?? '').trim()
+  const displayProducts = useMemo(() => {
+    if (viewMode === 'popular') return popularProducts.slice(0, 4)
+    if (selectedSubcategory) {
       const sel = String(selectedSubcategory ?? '').trim()
-      if (isFood) return cat === 'Food' && sec === sel
-      if (isDrinks) return cat === 'Drinks' && sec === sel
-      return false
-    })
-  } else displayProducts = []
+      return products.filter((p) => {
+        const cat = String(p?.category ?? '').trim()
+        const sec = String(p?.section ?? '').trim()
+        if (isFood) return cat === 'Food' && sec === sel
+        if (isDrinks) return cat === 'Drinks' && sec === sel
+        return false
+      })
+    }
+    return []
+  }, [viewMode, selectedSubcategory, products, popularProducts, isFood, isDrinks])
 
-  const searchFilter = (p: PosProduct) =>
-    !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  const filteredDisplayProducts = isSearchActive
-    ? products.filter(searchFilter)
-    : displayProducts.filter(searchFilter)
+  const searchFilter = useCallback(
+    (p: PosProduct) =>
+      !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    [searchQuery]
+  )
+  const filteredDisplayProducts = useMemo(
+    () =>
+      isSearchActive ? products.filter(searchFilter) : displayProducts.filter(searchFilter),
+    [isSearchActive, products, displayProducts, searchFilter]
+  )
 
-  const searchSuggestions = searchQuery.trim()
-    ? products.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 10)
-    : []
+  const searchSuggestions = useMemo(
+    () =>
+      searchQuery.trim()
+        ? products.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 10)
+        : [],
+    [searchQuery, products]
+  )
   const showSearchSuggestions = searchFocused && searchQuery.trim().length > 0
 
   if (!staffOk) {
@@ -1252,8 +1320,10 @@ export default function PosOrdersPage() {
                             {tableSearchFocused && tableSearchQuery.trim().length > 0 && (
                               <ul className="absolute z-50 w-full mt-1 py-2 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 bg-white dark:bg-neutral-800 shadow-lg max-h-60 overflow-auto list-none">
                                 {tables
-                                  .filter((table) =>
-                                    table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase())
+                                  .filter(
+                                    (table) =>
+                                      table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase()) &&
+                                      (!table.isFull || table.tableId === selectedTableId)
                                   )
                                   .slice(0, 10)
                                   .length === 0 ? (
@@ -1262,8 +1332,10 @@ export default function PosOrdersPage() {
                                     </li>
                                   ) : (
                                     tables
-                                      .filter((table) =>
-                                        table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase())
+                                      .filter(
+                                        (table) =>
+                                          table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase()) &&
+                                          (!table.isFull || table.tableId === selectedTableId)
                                       )
                                       .slice(0, 10)
                                       .map((table) => (
@@ -1278,8 +1350,10 @@ export default function PosOrdersPage() {
                                             className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30 focus:bg-primary-50 dark:focus:bg-primary-900/30 focus:outline-none"
                                           >
                                             <span className="text-primary-700 dark:text-primary-300">Table {table.tableCode}</span>
-                                            {table.capacity && (
-                                              <span className="text-neutral-500 dark:text-neutral-400 ml-2">({table.capacity} seats)</span>
+                                            {table.capacity != null && (
+                                              <span className="text-neutral-500 dark:text-neutral-400 ml-2">
+                                                ({table.activeOrderCount != null ? `${table.activeOrderCount}/${table.capacity}` : table.capacity} seats)
+                                              </span>
                                             )}
                                           </button>
                                         </li>
@@ -1299,15 +1373,20 @@ export default function PosOrdersPage() {
                   </>
                 )}
                 <div className="flex flex-col gap-2 w-full items-center">
-                  {order.status === 'pending' && !order.sentToKitchenAt ? (
+                  {order.status === 'pending' && !orderSent ? (
                     <>
+                      {orderHasBoth && (
+                        <p className="text-sm text-amber-700 dark:text-amber-300 mb-1 text-center">
+                          Please make separate orders for Food and Drinks.
+                        </p>
+                      )}
                       <button
                         type="button"
-                        onClick={handleSendToKitchen}
-                        disabled={submitting || cancelling || (order?.items ?? []).length === 0 || !orderType || (orderType === 'dine_in' && !selectedTableId)}
+                        onClick={handleSendToKitchenOrBarClick}
+                        disabled={submitting || cancelling || orderHasBoth || (order?.items ?? []).length === 0 || !orderType || (orderType === 'dine_in' && !selectedTableId)}
                         className="btn btn-primary py-3 disabled:opacity-60 w-full max-w-xs"
                       >
-                        {submitting ? 'Sending…' : 'Send to Kitchen'}
+                        {submitting ? 'Sending…' : orderHasDrinks && !orderHasFood ? 'Send to Bar' : 'Send to Kitchen'}
                       </button>
                       <button
                         type="button"
@@ -1333,57 +1412,19 @@ export default function PosOrdersPage() {
         </aside>
       </div>
 
-      {/* Modifier modal */}
+      {/* Modifier modal – lazy-loaded when needed */}
       {modifierProduct && (
-        <div
-          className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="modifier-title"
-        >
-          <div className="pos-card max-w-md w-full p-6">
-            <h2 id="modifier-title" className="pos-section-title text-lg mb-4">
-              {modifierProduct.name}
-            </h2>
-            {getModifierGroupsForProduct(modifierProduct.section ?? null).map((group) => (
-              <div key={group.name} className="mb-4">
-                <label className="pos-label block mb-2">{group.name}</label>
-                <div className="flex flex-wrap gap-2">
-                  {group.options.map((opt) => (
-                    <button
-                      key={opt}
-                      type="button"
-                      onClick={() => setModifierSelections((s) => ({ ...s, [group.name]: opt }))}
-                      className={`btn py-2 px-3 text-sm ${modifierSelections[group.name] === opt ? 'btn-primary' : 'btn-outline'}`}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <div className="flex gap-3 mt-6">
-              <button
-                type="button"
-                onClick={() => {
-                  setModifierProduct(null)
-                  setModifierSelections({})
-                }}
-                className="btn btn-outline flex-1"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleModifierConfirm}
-                disabled={addingItem}
-                className="btn btn-primary flex-1 disabled:opacity-60"
-              >
-                {addingItem ? 'Adding…' : 'Add to Order'}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ModifierModal
+          product={modifierProduct}
+          modifierSelections={modifierSelections}
+          onSelectionChange={(group, option) => setModifierSelections((s) => ({ ...s, [group]: option }))}
+          onCancel={() => {
+            setModifierProduct(null)
+            setModifierSelections({})
+          }}
+          onConfirm={handleModifierConfirm}
+          addingItem={addingItem}
+        />
       )}
 
       <div className="flex-shrink-0 p-4 border-t border-neutral-200 dark:border-neutral-700">
@@ -1391,6 +1432,33 @@ export default function PosOrdersPage() {
           Close Shift
         </Link>
       </div>
+
+      <PreparationNotesModal
+        open={preparationNotesModalOpen && pendingSendDestination !== null}
+        title="Order notes (optional)"
+        confirmLabel={pendingSendDestination === 'bar' ? 'Send to Bar' : 'Send to Kitchen'}
+        onConfirm={(notes) => {
+          if (pendingSendDestination) doSendToKitchenOrBar(pendingSendDestination, notes)
+        }}
+        onCancel={() => {
+          setPreparationNotesModalOpen(false)
+          setPendingSendDestination(null)
+        }}
+      />
+
+      {mixedOrderPopupOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 dark:bg-black/60" role="dialog" aria-modal="true">
+          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl border border-neutral-200 dark:border-neutral-800 w-full max-w-md p-4">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">Separate orders required</h2>
+            <p className="text-neutral-600 dark:text-neutral-400 mb-4">
+              This order contains both Food and Drinks. Please create separate orders: one for Food (Send to Kitchen) and one for Drinks (Send to Bar).
+            </p>
+            <button type="button" onClick={() => setMixedOrderPopupOpen(false)} className="btn btn-primary w-full">
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       <OrderNameModal
         open={orderNameModalOpen}

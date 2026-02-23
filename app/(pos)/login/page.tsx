@@ -51,6 +51,9 @@ export default function UnifiedLoginPage() {
         case 'kitchen':
           router.replace('/kitchen')
           break
+        case 'bar':
+          router.replace('/bar')
+          break
         case 'waiter':
         case 'cashier':
         default:

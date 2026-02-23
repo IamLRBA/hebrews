@@ -3,7 +3,7 @@ import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { recordOrderPayment } from '@/lib/payments'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
-const VALID_PAYMENT_TYPES = ['cash', 'mobile', 'card'] as const
+const VALID_PAYMENT_TYPES = ['cash'] as const
 
 export async function POST(
   request: NextRequest,
@@ -24,7 +24,7 @@ export async function POST(
       return NextResponse.json({ error: 'amountUgx is required (number)' }, { status: 400 })
     }
     if (!VALID_PAYMENT_TYPES.includes(paymentType)) {
-      return NextResponse.json({ error: 'paymentType must be cash, mobile, or card' }, { status: 400 })
+      return NextResponse.json({ error: 'paymentType must be cash (other payment methods are disabled)' }, { status: 400 })
     }
 
     await recordOrderPayment({

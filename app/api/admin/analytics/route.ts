@@ -85,10 +85,80 @@ export async function GET(request: NextRequest) {
         cash: monthlyPayments.filter((p) => p.method === 'cash').reduce((sum, p) => sum + Number(p.amountUgx), 0),
         mtn_momo: monthlyPayments.filter((p) => p.method === 'mtn_momo').reduce((sum, p) => sum + Number(p.amountUgx), 0),
         airtel_money: monthlyPayments.filter((p) => p.method === 'airtel_money').reduce((sum, p) => sum + Number(p.amountUgx), 0),
-        card: monthlyPayments.filter((p) => p.method === 'card').reduce((sum, p) => sum + Number(p.amountUgx), 0),
       }
 
-      // Revenue trends for custom range (daily breakdown)
+      async function getFoodDrinksRevenueCustom(gte: Date, lt?: Date) {
+        const where: { order: { status: string; createdAt: { gte: Date; lte?: Date; lt?: Date } } } = {
+          order: { status: 'served', createdAt: { gte } },
+        }
+        if (lt) where.order.createdAt.lt = lt
+        else where.order.createdAt.lte = customEnd
+        const items = await prisma.orderItem.findMany({
+          where,
+          select: { lineTotalUgx: true, product: { select: { category: true } } },
+        })
+        let food = 0
+        let drinks = 0
+        for (const item of items) {
+          const amt = Number(item.lineTotalUgx)
+          const cat = (item.product as { category?: string | null }).category
+          if (cat === 'Food') food += amt
+          else if (cat === 'Drinks') drinks += amt
+        }
+        return { foodRevenue: food, drinksRevenue: drinks }
+      }
+      const customFoodDrinks = await getFoodDrinksRevenueCustom(customStart)
+
+      const topFoodProductsCustom = await prisma.orderItem.groupBy({
+        by: ['productId'],
+        where: {
+          order: { status: 'served', createdAt: customRange },
+          product: { category: 'Food' },
+        },
+        _sum: { quantity: true },
+        _count: { id: true },
+        orderBy: { _sum: { quantity: 'desc' } },
+        take: 10,
+      })
+      const topDrinksProductsCustom = await prisma.orderItem.groupBy({
+        by: ['productId'],
+        where: {
+          order: { status: 'served', createdAt: customRange },
+          product: { category: 'Drinks' },
+        },
+        _sum: { quantity: true },
+        _count: { id: true },
+        orderBy: { _sum: { quantity: 'desc' } },
+        take: 10,
+      })
+      const foodDetails = await prisma.product.findMany({
+        where: { id: { in: topFoodProductsCustom.map((p) => p.productId) } },
+        select: { id: true, name: true },
+      })
+      const drinksDetails = await prisma.product.findMany({
+        where: { id: { in: topDrinksProductsCustom.map((p) => p.productId) } },
+        select: { id: true, name: true },
+      })
+      const topFoodProductsCustomWithNames = topFoodProductsCustom.map((item) => {
+        const product = foodDetails.find((p) => p.id === item.productId)
+        return {
+          productId: item.productId,
+          name: product?.name || 'Unknown',
+          quantity: item._sum.quantity || 0,
+          orderCount: item._count.id || 0,
+        }
+      })
+      const topDrinksProductsCustomWithNames = topDrinksProductsCustom.map((item) => {
+        const product = drinksDetails.find((p) => p.id === item.productId)
+        return {
+          productId: item.productId,
+          name: product?.name || 'Unknown',
+          quantity: item._sum.quantity || 0,
+          orderCount: item._count.id || 0,
+        }
+      })
+
+      // Revenue trends for custom range (daily breakdown) with Food/Drinks
       const daysDiff = Math.ceil((customEnd.getTime() - customStart.getTime()) / (1000 * 60 * 60 * 24))
       const revenueTrends = []
       for (let i = 0; i <= Math.min(daysDiff, 30); i++) {
@@ -106,33 +176,44 @@ export async function GET(request: NextRequest) {
           },
           select: { amountUgx: true },
         })
+        const dayFoodDrinks = await getFoodDrinksRevenueCustom(date, nextDate)
 
         revenueTrends.push({
           date: date.toISOString().split('T')[0],
           revenue: dayPayments.reduce((sum, p) => sum + Number(p.amountUgx), 0),
+          foodRevenue: dayFoodDrinks.foodRevenue,
+          drinksRevenue: dayFoodDrinks.drinksRevenue,
         })
       }
 
       return NextResponse.json({
         daily: {
           revenue: dailyPayments.reduce((sum, p) => sum + Number(p.amountUgx), 0),
+          foodRevenue: customFoodDrinks.foodRevenue,
+          drinksRevenue: customFoodDrinks.drinksRevenue,
           orders: await prisma.order.count({
             where: { status: 'served', createdAt: customRange },
           }),
         },
         weekly: {
           revenue: weeklyPayments.reduce((sum, p) => sum + Number(p.amountUgx), 0),
+          foodRevenue: customFoodDrinks.foodRevenue,
+          drinksRevenue: customFoodDrinks.drinksRevenue,
           orders: await prisma.order.count({
             where: { status: 'served', createdAt: customRange },
           }),
         },
         monthly: {
           revenue: monthlyPayments.reduce((sum, p) => sum + Number(p.amountUgx), 0),
+          foodRevenue: customFoodDrinks.foodRevenue,
+          drinksRevenue: customFoodDrinks.drinksRevenue,
           orders: await prisma.order.count({
             where: { status: 'served', createdAt: customRange },
           }),
         },
         topProducts: topProductsWithNames,
+        topFoodProducts: topFoodProductsCustomWithNames,
+        topDrinksProducts: topDrinksProductsCustomWithNames,
         salesByMethod,
         revenueTrends,
       })
@@ -208,15 +289,90 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Sales by payment method
+    // Sales by payment method (Cash, MTN MoMo, Airtel Money only)
     const salesByMethod = {
       cash: monthlyPayments.filter((p) => p.method === 'cash').reduce((sum, p) => sum + Number(p.amountUgx), 0),
       mtn_momo: monthlyPayments.filter((p) => p.method === 'mtn_momo').reduce((sum, p) => sum + Number(p.amountUgx), 0),
       airtel_money: monthlyPayments.filter((p) => p.method === 'airtel_money').reduce((sum, p) => sum + Number(p.amountUgx), 0),
-      card: monthlyPayments.filter((p) => p.method === 'card').reduce((sum, p) => sum + Number(p.amountUgx), 0),
     }
 
-    // Revenue trends (last 7 days)
+    // Food vs Drinks revenue (order item totals by product category for served orders in range)
+    async function getFoodDrinksRevenue(gte: Date, lt?: Date) {
+      const where: { order: { status: string; createdAt: { gte: Date; lt?: Date } } } = {
+        order: { status: 'served', createdAt: { gte } },
+      }
+      if (lt) where.order.createdAt.lt = lt
+      const items = await prisma.orderItem.findMany({
+        where,
+        select: { lineTotalUgx: true, product: { select: { category: true } } },
+      })
+      let food = 0
+      let drinks = 0
+      for (const item of items) {
+        const amt = Number(item.lineTotalUgx)
+        const cat = (item.product as { category?: string | null }).category
+        if (cat === 'Food') food += amt
+        else if (cat === 'Drinks') drinks += amt
+      }
+      return { foodRevenue: food, drinksRevenue: drinks }
+    }
+    const [dailyFoodDrinks, weeklyFoodDrinks, monthlyFoodDrinks] = await Promise.all([
+      getFoodDrinksRevenue(todayStart),
+      getFoodDrinksRevenue(weekStart),
+      getFoodDrinksRevenue(monthStart),
+    ])
+
+    // Top products by category (Food and Drinks separately)
+    const topFoodProductsRaw = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: {
+        order: { status: 'served', createdAt: { gte: monthStart } },
+        product: { category: 'Food' },
+      },
+      _sum: { quantity: true },
+      _count: { id: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 10,
+    })
+    const topDrinksProductsRaw = await prisma.orderItem.groupBy({
+      by: ['productId'],
+      where: {
+        order: { status: 'served', createdAt: { gte: monthStart } },
+        product: { category: 'Drinks' },
+      },
+      _sum: { quantity: true },
+      _count: { id: true },
+      orderBy: { _sum: { quantity: 'desc' } },
+      take: 10,
+    })
+    const foodProductDetails = await prisma.product.findMany({
+      where: { id: { in: topFoodProductsRaw.map((p) => p.productId) } },
+      select: { id: true, name: true },
+    })
+    const drinksProductDetails = await prisma.product.findMany({
+      where: { id: { in: topDrinksProductsRaw.map((p) => p.productId) } },
+      select: { id: true, name: true },
+    })
+    const topFoodProducts = topFoodProductsRaw.map((item) => {
+      const product = foodProductDetails.find((p) => p.id === item.productId)
+      return {
+        productId: item.productId,
+        name: product?.name || 'Unknown',
+        quantity: item._sum.quantity || 0,
+        orderCount: item._count.id || 0,
+      }
+    })
+    const topDrinksProducts = topDrinksProductsRaw.map((item) => {
+      const product = drinksProductDetails.find((p) => p.id === item.productId)
+      return {
+        productId: item.productId,
+        name: product?.name || 'Unknown',
+        quantity: item._sum.quantity || 0,
+        orderCount: item._count.id || 0,
+      }
+    })
+
+    // Revenue trends (last 7 days) with Food and Drinks
     const revenueTrends = []
     for (let i = 6; i >= 0; i--) {
       const date = new Date()
@@ -233,33 +389,44 @@ export async function GET(request: NextRequest) {
         },
         select: { amountUgx: true },
       })
+      const dayFoodDrinks = await getFoodDrinksRevenue(date, nextDate)
 
       revenueTrends.push({
         date: date.toISOString().split('T')[0],
         revenue: dayPayments.reduce((sum, p) => sum + Number(p.amountUgx), 0),
+        foodRevenue: dayFoodDrinks.foodRevenue,
+        drinksRevenue: dayFoodDrinks.drinksRevenue,
       })
     }
 
     return NextResponse.json({
       daily: {
         revenue: dailyPayments.reduce((sum, p) => sum + Number(p.amountUgx), 0),
+        foodRevenue: dailyFoodDrinks.foodRevenue,
+        drinksRevenue: dailyFoodDrinks.drinksRevenue,
         orders: await prisma.order.count({
           where: { status: 'served', createdAt: { gte: todayStart } },
         }),
       },
       weekly: {
         revenue: weeklyPayments.reduce((sum, p) => sum + Number(p.amountUgx), 0),
+        foodRevenue: weeklyFoodDrinks.foodRevenue,
+        drinksRevenue: weeklyFoodDrinks.drinksRevenue,
         orders: await prisma.order.count({
           where: { status: 'served', createdAt: { gte: weekStart } },
         }),
       },
       monthly: {
         revenue: monthlyPayments.reduce((sum, p) => sum + Number(p.amountUgx), 0),
+        foodRevenue: monthlyFoodDrinks.foodRevenue,
+        drinksRevenue: monthlyFoodDrinks.drinksRevenue,
         orders: await prisma.order.count({
           where: { status: 'served', createdAt: { gte: monthStart } },
         }),
       },
       topProducts: topProductsWithNames,
+      topFoodProducts,
+      topDrinksProducts,
       salesByMethod,
       revenueTrends,
     })

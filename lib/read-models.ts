@@ -241,6 +241,7 @@ export type OrderDetailItem = {
   id: string
   productId: string
   productName: string
+  category: string | null
   imageUrl: string | null
   quantity: number
   size: string | null
@@ -264,6 +265,8 @@ export type OrderDetail = {
   totalUgx: number
   createdAt: Date
   sentToKitchenAt?: Date | null
+  sentToBarAt?: Date | null
+  preparationNotes?: string | null
   items: OrderDetailItem[]
   payments: OrderDetailPayment[]
 }
@@ -286,6 +289,8 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
       totalUgx: true,
       createdAt: true,
       sentToKitchenAt: true,
+      sentToBarAt: true,
+      preparationNotes: true,
       orderItems: {
         orderBy: { sortOrder: 'asc' },
         select: {
@@ -296,7 +301,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
           modifier: true,
           notes: true,
           lineTotalUgx: true,
-          product: { select: { images: true } },
+          product: { select: { images: true, category: true } },
         },
       },
       payments: {
@@ -325,10 +330,13 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
     totalUgx: Number(order.totalUgx),
     createdAt: order.createdAt,
     sentToKitchenAt: order.sentToKitchenAt ?? undefined,
+    sentToBarAt: order.sentToBarAt ?? undefined,
+    preparationNotes: order.preparationNotes ?? undefined,
     items: order.orderItems.map((item) => ({
       id: item.id,
       productId: item.productId,
       productName: nameMap[item.productId] ?? item.productId,
+      category: item.product?.category ?? null,
       imageUrl: item.product?.images?.[0] ?? null,
       quantity: item.quantity,
       size: item.size,
@@ -360,6 +368,9 @@ export type ShiftSummary = {
   totalPaymentsUgx: number
   cashPaymentsUgx: number
   nonCashPaymentsUgx: number
+  countedCashUgx?: number | null
+  cashVarianceUgx?: number | null
+  shortageUgx?: number | null
 }
 
 /**
@@ -377,6 +388,9 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary | n
       terminalId: true,
       startTime: true,
       endTime: true,
+      countedCashUgx: true,
+      cashVarianceUgx: true,
+      shortageUgx: true,
     },
   })
 
@@ -438,6 +452,9 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary | n
     totalPaymentsUgx,
     cashPaymentsUgx,
     nonCashPaymentsUgx,
+    countedCashUgx: shift.countedCashUgx != null ? Number(shift.countedCashUgx) : null,
+    cashVarianceUgx: shift.cashVarianceUgx != null ? Number(shift.cashVarianceUgx) : null,
+    shortageUgx: shift.shortageUgx != null ? Number(shift.shortageUgx) : null,
   }
 }
 
@@ -473,13 +490,9 @@ export async function getShiftPaymentSummary(shiftId: string): Promise<ShiftPaym
     status: 'completed' as const,
   }
 
-  const [cashResult, cardResult, momoResult, totalResult] = await Promise.all([
+  const [cashResult, momoResult, totalResult] = await Promise.all([
     prisma.payment.aggregate({
       where: { ...baseWhere, method: 'cash' },
-      _sum: { amountUgx: true },
-    }),
-    prisma.payment.aggregate({
-      where: { ...baseWhere, method: 'card' },
       _sum: { amountUgx: true },
     }),
     prisma.payment.aggregate({
@@ -493,14 +506,13 @@ export async function getShiftPaymentSummary(shiftId: string): Promise<ShiftPaym
   ])
 
   const cashTotalUgx = cashResult._sum.amountUgx != null ? Number(cashResult._sum.amountUgx) : 0
-  const cardTotalUgx = cardResult._sum.amountUgx != null ? Number(cardResult._sum.amountUgx) : 0
   const momoTotalUgx = momoResult._sum.amountUgx != null ? Number(momoResult._sum.amountUgx) : 0
   const grandTotalUgx = totalResult._sum.amountUgx != null ? Number(totalResult._sum.amountUgx) : 0
 
   return {
     cashTotalUgx,
     momoTotalUgx,
-    cardTotalUgx,
+    cardTotalUgx: 0,
     grandTotalUgx,
   }
 }
@@ -513,7 +525,12 @@ export type TableStatus = {
   tableId: string
   tableCode: string
   capacity: number | null
+  /** Number of active orders (pending/preparing/ready/awaiting_payment) on this table */
+  activeOrderCount: number
+  /** True when there is at least one active order */
   hasActiveOrder: boolean
+  /** True when activeOrderCount >= capacity (table full; no new orders allowed) */
+  isFull: boolean
   orderId: string | null
   orderNumber: string | null
 }
@@ -539,20 +556,30 @@ export async function getTableStatuses(shiftId: string): Promise<TableStatus[]> 
     }),
   ])
 
-  const orderByTableId = new Map<string, { id: string; orderNumber: string }>()
+  const ordersPerTable = new Map<string, { id: string; orderNumber: string }[]>()
   for (const o of orders) {
-    if (o.tableId) orderByTableId.set(o.tableId, { id: o.id, orderNumber: o.orderNumber })
+    if (o.tableId) {
+      const list = ordersPerTable.get(o.tableId) ?? []
+      list.push({ id: o.id, orderNumber: o.orderNumber })
+      ordersPerTable.set(o.tableId, list)
+    }
   }
 
   const result = tables.map((t) => {
-    const order = orderByTableId.get(t.id)
+    const tableOrders = ordersPerTable.get(t.id) ?? []
+    const capacity = t.capacity != null && t.capacity >= 1 ? t.capacity : 1
+    const activeOrderCount = tableOrders.length
+    const isFull = activeOrderCount >= capacity
+    const first = tableOrders[0]
     return {
       tableId: t.id,
       tableCode: t.code,
       capacity: t.capacity,
-      hasActiveOrder: !!order,
-      orderId: order?.id ?? null,
-      orderNumber: order?.orderNumber ?? null,
+      activeOrderCount,
+      hasActiveOrder: activeOrderCount > 0,
+      isFull,
+      orderId: first?.id ?? null,
+      orderNumber: first?.orderNumber ?? null,
     }
   })
 

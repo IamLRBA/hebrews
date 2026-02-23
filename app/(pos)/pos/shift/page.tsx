@@ -47,15 +47,6 @@ export default function ShiftPage() {
   const [paymentSummary, setPaymentSummary] = useState<PaymentSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [declaredCashUgx, setDeclaredCashUgx] = useState('')
-  const [closing, setClosing] = useState(false)
-  const [closed, setClosed] = useState(false)
-  const [closeResult, setCloseResult] = useState<{
-    expectedCash: number
-    countedCashUgx: number
-    variance: number
-  } | null>(null)
-
   async function fetchActiveShift() {
     try {
       const res = await posFetch('/api/shifts/active')
@@ -129,42 +120,6 @@ export default function ShiftPage() {
       setPaymentSummary(null)
     }
   }, [activeShift?.shiftId])
-
-  async function handleCloseShift(e: React.FormEvent) {
-    e.preventDefault()
-    if (!activeShift?.shiftId) return
-    const amount = parseFloat(declaredCashUgx)
-    if (isNaN(amount) || amount < 0) {
-      alert('Enter a valid counted cash amount')
-      return
-    }
-    setClosing(true)
-    try {
-      const res = await posFetch(`/api/shifts/${activeShift.shiftId}/close`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          closedByStaffId: getStaffId(),
-          countedCashUgx: amount,
-        }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || `HTTP ${res.status}`)
-      }
-      const data = await res.json()
-      setCloseResult({
-        expectedCash: data.expectedCash,
-        countedCashUgx: data.countedCashUgx,
-        variance: data.variance,
-      })
-      setClosed(true)
-    } catch (e) {
-      alert(e instanceof Error ? e.message : 'Failed to close shift')
-    } finally {
-      setClosing(false)
-    }
-  }
 
   if (!staffOk || loading) {
     return (
@@ -259,96 +214,12 @@ export default function ShiftPage() {
                   {formatCurrency(paymentSummary.airtelSales ?? 0)}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-2 bg-neutral-50 dark:bg-neutral-800 rounded">
-                <span className="text-neutral-700 dark:text-neutral-300">Card:</span>
-                <span className="font-medium text-primary-700 dark:text-primary-200">
-                  {formatCurrency(paymentSummary.cardSales ?? 0)}
-                </span>
-              </div>
             </div>
             <div className="mt-4 pt-4 border-t-2 border-primary-200 dark:border-primary-700 flex justify-between items-center">
               <span className="font-semibold text-lg text-neutral-800 dark:text-neutral-200">Total:</span>
               <span className="font-bold text-xl text-primary-700 dark:text-primary-200">
                 {formatCurrency(paymentSummary.totalSales ?? 0)}
               </span>
-            </div>
-          </section>
-        )}
-
-        {!closed && activeShift && (
-          <form onSubmit={handleCloseShift} className="pos-section pos-card pos-order-card-centered">
-            <h2 className="pos-section-title text-lg mb-3">Close Shift</h2>
-            <label className="block">
-              <span className="pos-label">Counted Cash (UGX)</span>
-              <div className="relative inline-flex items-stretch mt-1 max-w-xs w-full">
-                <input
-                  type="number"
-                  min="0"
-                  step="100"
-                  required
-                  placeholder="Enter counted cash"
-                  value={declaredCashUgx}
-                  onChange={(e) => setDeclaredCashUgx(e.target.value)}
-                  className="pos-input pos-input-no-spinner pr-12 rounded-r-none border-r-0 rounded-l-xl min-w-0"
-                />
-                <div className="flex flex-col border border-neutral-200 dark:border-neutral-600 rounded-r-xl border-l-0 overflow-hidden bg-neutral-50 dark:bg-neutral-800">
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => {
-                      const n = Math.max(0, (parseFloat(declaredCashUgx) || 0) + 100)
-                      setDeclaredCashUgx(String(n))
-                    }}
-                    className="flex-1 flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors border-b border-neutral-200 dark:border-neutral-600"
-                    aria-label="Increase by 100"
-                  >
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 3v6M3 6h6" /></svg>
-                  </button>
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => {
-                      const n = Math.max(0, (parseFloat(declaredCashUgx) || 0) - 100)
-                      setDeclaredCashUgx(String(n))
-                    }}
-                    className="flex-1 flex items-center justify-center p-2 text-neutral-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
-                    aria-label="Decrease by 100"
-                  >
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M3 6h6" /></svg>
-                  </button>
-                </div>
-              </div>
-            </label>
-            <button type="submit" disabled={closing} className="btn btn-primary mt-4 disabled:opacity-60">Close Shift</button>
-          </form>
-        )}
-
-        {closed && closeResult && (
-          <section className="pos-section pos-card pos-order-card-centered border-2 border-primary-300 dark:border-primary-600">
-            <p className="font-semibold text-primary-700 dark:text-primary-200 m-0 mb-2">Shift closed.</p>
-            <div className="space-y-3">
-              <div className="flex justify-between p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
-                <span className="text-neutral-700 dark:text-neutral-300">Expected cash:</span>
-                <span className="font-semibold">{formatCurrency(closeResult.expectedCash)}</span>
-              </div>
-              <div className="flex justify-between p-3 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
-                <span className="text-neutral-700 dark:text-neutral-300">Counted cash:</span>
-                <span className="font-semibold">{formatCurrency(closeResult.countedCashUgx)}</span>
-              </div>
-              <div className={`flex justify-between p-3 rounded-lg ${
-                Math.abs(closeResult.variance) < 0.01 
-                  ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' 
-                  : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
-              }`}>
-                <span className="font-semibold text-neutral-800 dark:text-neutral-200">Variance:</span>
-                <span className={`font-bold text-lg ${
-                  Math.abs(closeResult.variance) < 0.01 
-                    ? 'text-green-700 dark:text-green-300' 
-                    : 'text-yellow-700 dark:text-yellow-300'
-                }`}>
-                  {formatCurrency(closeResult.variance)}
-                </span>
-              </div>
             </div>
           </section>
         )}

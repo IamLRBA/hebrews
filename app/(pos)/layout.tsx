@@ -1,11 +1,17 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import BackToTop from '@/components/ui/BackToTop'
 import { PosAuthGuard } from '@/components/pos/PosAuthGuard'
 import { PosShiftGuard } from '@/components/pos/PosShiftGuard'
 import { OfflineBadge } from '@/components/pos/OfflineBadge'
 import { OfflineSyncProvider } from '@/components/pos/OfflineSyncProvider'
 import { usePathname } from 'next/navigation'
+
+const RealtimeNotificationProvider = dynamic(
+  () => import('@/components/pos/RealtimeNotificationProvider').then((m) => ({ default: m.RealtimeNotificationProvider })),
+  { ssr: false, loading: () => null }
+)
 
 /**
  * POS route group layout.
@@ -22,13 +28,16 @@ export default function PosLayout({
   const isAdminRoute = pathname?.startsWith('/admin')
   const isManagerRoute = pathname?.startsWith('/manager')
   const isKitchenRoute = pathname?.startsWith('/kitchen')
+  const isBarRoute = pathname?.startsWith('/bar')
   const isLoginRoute = pathname === '/login'
+  const isOrderPrintRoute = pathname?.startsWith('/order-print')
 
-  // Skip shift guard for admin, manager, kitchen, and login routes
-  if (isAdminRoute || isManagerRoute || isKitchenRoute || isLoginRoute) {
+  // Skip shift guard for admin, manager, kitchen, bar, order-print, and login routes
+  if (isAdminRoute || isManagerRoute || isKitchenRoute || isBarRoute || isOrderPrintRoute || isLoginRoute) {
     return (
       <>
         <OfflineSyncProvider />
+        <RealtimeNotificationProvider />
         <div className="min-h-screen w-full flex flex-col bg-unified" style={{ minHeight: '100dvh' }}>
           {children}
           <BackToTop />
@@ -42,6 +51,7 @@ export default function PosLayout({
     <PosAuthGuard>
       <PosShiftGuard>
         <OfflineSyncProvider />
+        <RealtimeNotificationProvider />
         <div className="min-h-screen w-full flex flex-col bg-unified" style={{ minHeight: '100dvh' }}>
           {children}
           <BackToTop />

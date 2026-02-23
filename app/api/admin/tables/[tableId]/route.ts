@@ -10,7 +10,7 @@ export async function PUT(
 ) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const { tableId } = await params
     if (!tableId) return NextResponse.json({ error: 'tableId required' }, { status: 400 })
@@ -54,7 +54,7 @@ export async function DELETE(
 ) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const { tableId } = await params
     if (!tableId) return NextResponse.json({ error: 'tableId required' }, { status: 400 })

@@ -52,6 +52,32 @@ module.exports = {
           800: '#453025',   /* Darker Coffee */
           900: '#30221C',   /* Darkest Coffee */
         },
+        /* Food (warm amber/orange) — charts and badges; light and dark friendly */
+        food: {
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FDE68A',
+          300: '#FCD34D',
+          400: '#FBBF24',
+          500: '#D97706',
+          600: '#B45309',
+          700: '#92400E',
+          800: '#78350F',
+          900: '#451A03',
+        },
+        /* Drinks (warm gold/honey) — charts and badges; light and dark friendly */
+        drinks: {
+          50: '#FEFCE8',
+          100: '#FEF9C3',
+          200: '#FEF08A',
+          300: '#FDE047',
+          400: '#FACC15',
+          500: '#CA8A04',
+          600: '#A16207',
+          700: '#854D0E',
+          800: '#713F12',
+          900: '#422006',
+        },
       },
       fontFamily: {
         primary: ['MuseoModerno', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],

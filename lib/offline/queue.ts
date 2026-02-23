@@ -19,6 +19,8 @@ export type MutationType =
   | 'updateItem'
   | 'updateOrderStatus'
   | 'payCash'
+  | 'payMomo'
+  | 'payAirtel'
 
 export interface EnqueueCreateOrderPayload {
   localId: string
@@ -63,6 +65,24 @@ export interface EnqueuePayCashPayload {
   orderServerId: string | null
   amountUgx: number
   changeUgx: number | null
+  staffId: string
+  terminalId: string | null
+  paymentLocalId: string
+}
+
+export interface EnqueuePayMomoPayload {
+  orderLocalId: string
+  orderServerId: string | null
+  amountUgx: number
+  staffId: string
+  terminalId: string | null
+  paymentLocalId: string
+}
+
+export interface EnqueuePayAirtelPayload {
+  orderLocalId: string
+  orderServerId: string | null
+  amountUgx: number
   staffId: string
   terminalId: string | null
   paymentLocalId: string
@@ -174,6 +194,52 @@ export async function enqueuePayCash(
   const item: MutationQueueItem = {
     id: generateLocalId(),
     type: 'payCash',
+    payload: payload as unknown as Record<string, unknown>,
+    clientRequestId,
+    dependencies: [payload.orderLocalId],
+    retryCount: 0,
+    status: 'pending',
+    errorMessage: null,
+    createdAt: now(),
+    updatedAt: now(),
+  }
+  await putQueueItem(item)
+  return item
+}
+
+/**
+ * Enqueue MTN MoMo payment. Same dependency as payCash.
+ */
+export async function enqueuePayMomo(
+  clientRequestId: string,
+  payload: EnqueuePayMomoPayload
+): Promise<MutationQueueItem> {
+  const item: MutationQueueItem = {
+    id: generateLocalId(),
+    type: 'payMomo',
+    payload: payload as unknown as Record<string, unknown>,
+    clientRequestId,
+    dependencies: [payload.orderLocalId],
+    retryCount: 0,
+    status: 'pending',
+    errorMessage: null,
+    createdAt: now(),
+    updatedAt: now(),
+  }
+  await putQueueItem(item)
+  return item
+}
+
+/**
+ * Enqueue Airtel Money payment. Same dependency as payCash.
+ */
+export async function enqueuePayAirtel(
+  clientRequestId: string,
+  payload: EnqueuePayAirtelPayload
+): Promise<MutationQueueItem> {
+  const item: MutationQueueItem = {
+    id: generateLocalId(),
+    type: 'payAirtel',
     payload: payload as unknown as Record<string, unknown>,
     clientRequestId,
     dependencies: [payload.orderLocalId],

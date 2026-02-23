@@ -16,6 +16,7 @@ export default function ManagerShiftDetailPage() {
   const [shift, setShift] = useState<any>(null)
   const [summary, setSummary] = useState<any>(null)
   const [countedCash, setCountedCash] = useState('')
+  const [shortageUgx, setShortageUgx] = useState('')
   const [loading, setLoading] = useState(true)
   const [closing, setClosing] = useState(false)
   const [showConfirmClose, setShowConfirmClose] = useState(false)
@@ -61,10 +62,12 @@ export default function ManagerShiftDetailPage() {
     }
     setClosing(true)
     try {
-      let body: { countedCashUgx: number; closedByStaffId: string; managerApprovalStaffId?: string } = {
+      const shortage = shortageUgx.trim() === '' ? undefined : Math.max(0, Number(shortageUgx))
+      let body: { countedCashUgx: number; closedByStaffId: string; managerApprovalStaffId?: string; shortageUgx?: number } = {
         countedCashUgx: Number(countedCash),
         closedByStaffId: staffId,
       }
+      if (shortage != null && !Number.isNaN(shortage)) body.shortageUgx = shortage
       let res = await posFetch(`/api/shifts/${shiftId}/close`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -134,7 +137,7 @@ export default function ManagerShiftDetailPage() {
                   <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                     Shift Summary
                   </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 justify-items-center">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4 justify-items-center">
                     <div className="text-center flex flex-col items-center">
                       <p className="text-sm text-neutral-600 dark:text-neutral-400">Orders Served</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -154,9 +157,36 @@ export default function ManagerShiftDetailPage() {
                       </p>
                     </div>
                     <div className="text-center flex flex-col items-center">
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Card Sales</p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">MTN MoMo</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-                        {summary.cardSales.toLocaleString()} UGX
+                        {summary.mtnMomoSales.toLocaleString()} UGX
+                      </p>
+                    </div>
+                    <div className="text-center flex flex-col items-center">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Airtel Money</p>
+                      <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {summary.airtelSales.toLocaleString()} UGX
+                      </p>
+                    </div>
+                  </div>
+                  {/* Food vs Drinks */}
+                  <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-neutral-50 dark:bg-neutral-800/50 rounded-lg border border-neutral-200 dark:border-neutral-700">
+                    <div>
+                      <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Food</p>
+                      <p className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
+                        {(summary.foodSalesUgx ?? 0).toLocaleString()} UGX
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        {(summary.foodOrdersServed ?? 0)} orders
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">Drinks</p>
+                      <p className="text-lg font-bold text-neutral-900 dark:text-neutral-100">
+                        {(summary.drinksSalesUgx ?? 0).toLocaleString()} UGX
+                      </p>
+                      <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                        {(summary.drinksOrdersServed ?? 0)} orders
                       </p>
                     </div>
                   </div>
@@ -166,9 +196,14 @@ export default function ManagerShiftDetailPage() {
                       <p className="text-green-800 dark:text-green-200 font-medium">
                         Shift closed on {new Date(shift.endTime).toLocaleString()}
                       </p>
-                      {shift.cashVarianceUgx !== null && (
+                      {shift.cashVarianceUgx != null && (
                         <p className="text-sm text-green-700 dark:text-green-300 mt-2">
                           Cash Variance: {Number(shift.cashVarianceUgx).toLocaleString()} UGX
+                        </p>
+                      )}
+                      {shift.shortageUgx != null && Number(shift.shortageUgx) > 0 && (
+                        <p className="text-sm text-amber-700 dark:text-amber-300 mt-2 font-medium">
+                          Shortage declared: {Number(shift.shortageUgx).toLocaleString()} UGX
                         </p>
                       )}
                     </div>
@@ -217,6 +252,21 @@ export default function ManagerShiftDetailPage() {
                               </button>
                             </div>
                           </div>
+                        </label>
+                        <label className="block w-full max-w-xs">
+                          <span className="pos-label">Shortage (UGX) — optional</span>
+                          <input
+                            type="number"
+                            min="0"
+                            step="1000"
+                            value={shortageUgx}
+                            onChange={(e) => setShortageUgx(e.target.value)}
+                            className="pos-input mt-1 w-full"
+                            placeholder="0 if no shortage"
+                          />
+                          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                            Enter if cash is missing (e.g. loss); shift still closes and can be handled later.
+                          </p>
                         </label>
                         <button
                           onClick={handleCloseShift}

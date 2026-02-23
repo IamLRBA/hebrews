@@ -16,7 +16,7 @@ export async function POST(
     }
 
     const body = await request.json().catch(() => ({}))
-    const { closedByStaffId, countedCashUgx, managerApprovalStaffId } = body
+    const { closedByStaffId, countedCashUgx, managerApprovalStaffId, shortageUgx } = body
 
     if (typeof closedByStaffId !== 'string' || !closedByStaffId) {
       return NextResponse.json({ error: 'closedByStaffId is required (string)' }, { status: 400 })
@@ -26,6 +26,7 @@ export async function POST(
       return NextResponse.json({ error: 'countedCashUgx is required (number)' }, { status: 400 })
     }
 
+    const shortage = typeof shortageUgx === 'number' && !Number.isNaN(shortageUgx) && shortageUgx >= 0 ? shortageUgx : undefined
     const result = await closeShift({
       shiftId,
       closedByStaffId,
@@ -34,6 +35,7 @@ export async function POST(
         typeof managerApprovalStaffId === 'string' && managerApprovalStaffId.trim()
           ? managerApprovalStaffId.trim()
           : undefined,
+      shortageUgx: shortage,
     })
 
     await appendAuditLog({
@@ -45,6 +47,7 @@ export async function POST(
         expectedCash: result.expectedCash,
         countedCashUgx: result.countedCashUgx,
         variance: result.variance,
+        shortageUgx: result.shortageUgx,
         managerApprovalRequired: result.managerApprovalRequired,
         managerApprovalStaffId: result.managerApprovalStaffId,
       },

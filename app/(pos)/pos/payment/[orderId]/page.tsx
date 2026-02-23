@@ -12,7 +12,7 @@ import { ErrorBanner } from '@/components/pos/ErrorBanner'
 import { SkeletonLoader } from '@/components/ui/SkeletonLoader'
 import Image from 'next/image'
 import { formatCurrency } from '@/lib/utils/format'
-import { DollarSign, Smartphone, CreditCard, Wallet } from 'lucide-react'
+import { DollarSign } from 'lucide-react'
 
 const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
 
@@ -110,71 +110,6 @@ export default function PosPaymentPage() {
     }
   }
 
-  async function handlePayMomo() {
-    const staffId = getStaffId()
-    if (!staffId || !order) return
-
-    setPaying('momo')
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/pay-momo`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amountUgx: order.totalUgx, staffId }),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Payment failed')
-      }
-      router.push(`/pos/receipt/${orderId}`)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Payment failed')
-    } finally {
-      setPaying(null)
-    }
-  }
-
-  async function handlePayAirtel() {
-    if (!order) return
-    setPaying('airtel')
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/pay-pesapal`, { method: 'POST' })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Payment failed')
-      }
-      const data = await res.json()
-      if (data.paymentUrl) {
-        window.location.href = data.paymentUrl
-      } else {
-        throw new Error('No payment URL')
-      }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Payment failed')
-      setPaying(null)
-    }
-  }
-
-  async function handlePayCard() {
-    if (!order) return
-    setPaying('card')
-    try {
-      const res = await posFetch(`/api/orders/${orderId}/pay-pesapal`, { method: 'POST' })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data.error || 'Payment failed')
-      }
-      const data = await res.json()
-      if (data.paymentUrl) {
-        window.location.href = data.paymentUrl
-      } else {
-        throw new Error('No payment URL')
-      }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Payment failed')
-      setPaying(null)
-    }
-  }
-
   if (loading) {
     return (
       <main className="pos-page flex items-center justify-center min-h-screen">
@@ -264,63 +199,46 @@ export default function PosPaymentPage() {
           </div>
 
           {isFullyPaid ? (
-            <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border-2 border-green-200 dark:border-green-700 text-center space-y-2">
-              <p className="font-semibold text-green-700 dark:text-green-300 m-0">Payment complete</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0">Return to Ready page to serve the order.</p>
-              <div className="flex flex-wrap gap-3 justify-center mt-3">
-                <Link href="/pos/ready" className="btn btn-primary">Ready → Serve Order</Link>
-                <Link href={`/pos/receipt/${orderId}`} className="pos-link text-green-600 dark:text-green-400">
+            <div className="p-8 bg-green-50 dark:bg-green-900/20 rounded-xl border-2 border-green-200 dark:border-green-700 text-center">
+              <p className="font-semibold text-green-700 dark:text-green-300 m-0 mb-1">Payment complete</p>
+              <p className="text-sm text-neutral-600 dark:text-neutral-400 m-0 mb-6">The order has been marked as served.</p>
+              <div className="flex justify-center">
+                <Link
+                  href={`/pos/receipt/${orderId}`}
+                  className="btn btn-primary py-3 px-8 text-base font-medium inline-flex items-center justify-center gap-2"
+                >
                   View receipt
                 </Link>
               </div>
             </div>
           ) : (
             <>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4 text-center">Select payment method</p>
-          {!isOnline() && (
-            <p className="text-sm text-amber-600 dark:text-amber-400 mb-3 text-center">External payment (MoMo, Card) unavailable offline. Use Cash.</p>
-          )}
-          <div className="grid grid-cols-2 gap-3 pos-payment-grid max-w-xs mx-auto">
-            <button
-              type="button"
-              onClick={handlePayCash}
-              disabled={paying !== null}
-              className="btn btn-outline py-2.5 text-sm font-medium disabled:opacity-60 flex flex-col items-center gap-1.5"
-            >
-              <DollarSign className="w-4 h-4" />
-              {paying === 'cash' ? 'Processing…' : 'Cash'}
-            </button>
-            <button
-              type="button"
-              onClick={handlePayMomo}
-              disabled={paying !== null || !isOnline()}
-              className="btn btn-primary py-2.5 text-sm font-medium disabled:opacity-60 flex flex-col items-center gap-1.5"
-              title={!isOnline() ? 'Unavailable offline' : undefined}
-            >
-              <Smartphone className="w-4 h-4" />
-              {paying === 'momo' ? 'Processing…' : 'MTN MoMo'}
-            </button>
-            <button
-              type="button"
-              onClick={handlePayAirtel}
-              disabled={paying !== null || !isOnline()}
-              className="btn btn-primary py-2.5 text-sm font-medium disabled:opacity-60 flex flex-col items-center gap-1.5"
-              title={!isOnline() ? 'Unavailable offline' : undefined}
-            >
-              <Wallet className="w-4 h-4" />
-              {paying === 'airtel' ? 'Redirecting…' : 'Airtel Money'}
-            </button>
-            <button
-              type="button"
-              onClick={handlePayCard}
-              disabled={paying !== null || !isOnline()}
-              className="btn btn-outline py-2.5 text-sm font-medium disabled:opacity-60 flex flex-col items-center gap-1.5"
-              title={!isOnline() ? 'Unavailable offline' : undefined}
-            >
-              <CreditCard className="w-4 h-4" />
-              {paying === 'card' ? 'Redirecting…' : 'Card'}
-            </button>
-          </div>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4 text-center">Select payment method</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button
+                  type="button"
+                  onClick={handlePayCash}
+                  disabled={paying !== null}
+                  className="pos-payment-method-btn flex flex-col items-center justify-center gap-2 py-6 px-4 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 hover:border-primary-500 dark:hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 disabled:opacity-60 transition-colors min-h-[100px] touch-manipulation"
+                >
+                  <DollarSign className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">{paying === 'cash' ? 'Processing…' : 'Cash'}</span>
+                </button>
+                <Link
+                  href={`/pos/payment/${orderId}/momo`}
+                  className="pos-payment-method-btn flex flex-col items-center justify-center gap-2 py-6 px-4 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 hover:border-yellow-600 dark:hover:border-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors min-h-[100px] touch-manipulation no-underline text-current"
+                >
+                  <span className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">MTN</span>
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">MTN MoMo</span>
+                </Link>
+                <Link
+                  href={`/pos/payment/${orderId}/airtel`}
+                  className="pos-payment-method-btn flex flex-col items-center justify-center gap-2 py-6 px-4 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 hover:border-red-600 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors min-h-[100px] touch-manipulation no-underline text-current"
+                >
+                  <span className="text-2xl font-bold text-red-600 dark:text-red-400">Airtel</span>
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">Airtel Money</span>
+                </Link>
+              </div>
             </>
           )}
         </div>

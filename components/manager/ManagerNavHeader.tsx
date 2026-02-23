@@ -11,6 +11,9 @@ import {
   IconCreditCardFilled,
   IconClock,
   IconClockFilled,
+  IconPackage,
+  IconTable,
+  IconTableFilled,
 } from '@tabler/icons-react'
 import CafeHavilahWord from '@/components/ui/CafeHavilahWord'
 import SettingsDropdown from '@/components/ui/SettingsDropdown'
@@ -20,6 +23,8 @@ const NAV_ITEMS = [
   { href: '/manager/orders', label: 'Orders', iconOutline: IconShoppingCart, iconFilled: IconShoppingCartFilled },
   { href: '/manager/payments', label: 'Payments', iconOutline: IconCreditCard, iconFilled: IconCreditCardFilled },
   { href: '/manager/shifts', label: 'Shifts', iconOutline: IconClock, iconFilled: IconClockFilled },
+  { href: '/manager/products', label: 'Products', iconOutline: IconPackage, iconFilled: null },
+  { href: '/manager/tables', label: 'Tables', iconOutline: IconTable, iconFilled: IconTableFilled },
 ] as const
 
 export function ManagerNavHeader() {
@@ -55,7 +60,7 @@ export function ManagerNavHeader() {
       <nav className="pos-dashboard-nav" aria-label="Manager sections">
         {NAV_ITEMS.map(({ href, label, iconOutline, iconFilled }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/')
-          const Icon = isActive ? iconFilled : iconOutline
+          const Icon = ((isActive && iconFilled) ? iconFilled : iconOutline) ?? iconOutline
           return (
             <Link
               key={href}

@@ -1,0 +1,74 @@
+# POS system — production stack (single VPS)
+# Usage: copy .env.docker.example to .env, set secrets, then:
+#   docker compose up -d
+#   docker compose exec pos-app npx prisma migrate deploy
+#   docker compose exec pos-app npx prisma db seed   # first time only
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-posuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-pos}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-posuser} -d ${POSTGRES_DB:-pos}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  pos-app:
+    build: .
+    image: pos-app:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-posuser}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-pos}?schema=public
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: production
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    volumes:
+      - pos_uploads:/app/public/pos-images
+      - pos_backups:/app/backups
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/nginx.conf:ro
+      # For HTTPS, create deploy/ssl/ and add fullchain.pem, privkey.pem; then uncomment:
+      # - ./deploy/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - pos-app
+
+volumes:
+  postgres_data:
+  redis_data:
+  pos_uploads:
+  pos_backups:

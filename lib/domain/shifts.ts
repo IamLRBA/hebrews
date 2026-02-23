@@ -68,6 +68,14 @@ export type ShiftSummary = {
   mtnMomoSales: number
   airtelSales: number
   cardSales: number
+  /** Sales from order items whose product category is Food */
+  foodSalesUgx: number
+  /** Sales from order items whose product category is Drinks */
+  drinksSalesUgx: number
+  /** Served orders that contained at least one Food item */
+  foodOrdersServed: number
+  /** Served orders that contained at least one Drinks item */
+  drinksOrdersServed: number
 }
 
 /**
@@ -111,7 +119,6 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary> {
   let cashSales = 0
   let mtnMomoSales = 0
   let airtelSales = 0
-  let cardSales = 0
 
   for (const payment of payments) {
     const amount = Number(payment.amountUgx)
@@ -125,13 +132,42 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary> {
       case 'airtel_money':
         airtelSales += amount
         break
-      case 'card':
-        cardSales += amount
+      default:
         break
     }
   }
 
-  const totalSales = cashSales + mtnMomoSales + airtelSales + cardSales
+  const totalSales = cashSales + mtnMomoSales + airtelSales
+
+  // Food vs Drinks: sum order item totals by product category for served orders
+  const servedOrderIds = orders
+    .filter((o) => o.status === 'served')
+    .map((o) => o.id)
+  let foodSalesUgx = 0
+  let drinksSalesUgx = 0
+  const orderIdsWithFood = new Set<string>()
+  const orderIdsWithDrinks = new Set<string>()
+  if (servedOrderIds.length > 0) {
+    const items = await prisma.orderItem.findMany({
+      where: { orderId: { in: servedOrderIds } },
+      select: {
+        orderId: true,
+        lineTotalUgx: true,
+        product: { select: { category: true } },
+      },
+    })
+    for (const item of items) {
+      const amt = Number(item.lineTotalUgx)
+      const cat = (item.product as { category?: string | null }).category
+      if (cat === 'Food') {
+        foodSalesUgx += amt
+        orderIdsWithFood.add(item.orderId)
+      } else if (cat === 'Drinks') {
+        drinksSalesUgx += amt
+        orderIdsWithDrinks.add(item.orderId)
+      }
+    }
+  }
 
   return {
     shiftId,
@@ -140,7 +176,11 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary> {
     cashSales,
     mtnMomoSales,
     airtelSales,
-    cardSales,
+    cardSales: 0,
+    foodSalesUgx,
+    drinksSalesUgx,
+    foodOrdersServed: orderIdsWithFood.size,
+    drinksOrdersServed: orderIdsWithDrinks.size,
   }
 }
 
@@ -153,6 +193,7 @@ export type CloseShiftResult = {
   expectedCash: number
   countedCashUgx: number
   variance: number
+  shortageUgx?: number | null
   managerApprovalRequired?: boolean
   managerApprovalStaffId?: string | null
 }
@@ -188,8 +229,9 @@ export async function closeShift(params: {
   countedCashUgx: number
   closedByStaffId: string
   managerApprovalStaffId?: string | null
+  shortageUgx?: number | null
 }): Promise<CloseShiftResult> {
-  const { shiftId, countedCashUgx, closedByStaffId, managerApprovalStaffId } = params
+  const { shiftId, countedCashUgx, closedByStaffId, managerApprovalStaffId, shortageUgx } = params
 
   await assertStaffRole(closedByStaffId, [...CLOSE_SHIFT_ROLES])
 
@@ -229,6 +271,7 @@ export async function closeShift(params: {
     if (!shift) throw new ShiftNotFoundError(shiftId)
     if (shift.endTime !== null) throw new ShiftAlreadyClosedError(shiftId)
 
+    const shortageDecimal = shortageUgx != null && !Number.isNaN(shortageUgx) && shortageUgx >= 0 ? new Decimal(shortageUgx) : null
     await tx.shift.update({
       where: { id: shiftId },
       data: {
@@ -236,6 +279,7 @@ export async function closeShift(params: {
         closedByStaffId,
         countedCashUgx: new Decimal(countedCashUgx),
         cashVarianceUgx: new Decimal(variance),
+        shortageUgx: shortageDecimal,
         managerApprovalStaffId: exceedsThreshold ? managerApprovalStaffId ?? null : null,
       },
     })
@@ -246,6 +290,7 @@ export async function closeShift(params: {
         expectedCashUgx: new Decimal(expectedCash),
         countedCashUgx: new Decimal(countedCashUgx),
         varianceUgx: new Decimal(variance),
+        shortageUgx: shortageDecimal,
         managerApprovalStaffId: exceedsThreshold ? managerApprovalStaffId ?? null : null,
         closedAt: now,
       },
@@ -270,6 +315,7 @@ export async function closeShift(params: {
     expectedCash,
     countedCashUgx,
     variance,
+    shortageUgx: shortageUgx != null && !Number.isNaN(shortageUgx) && shortageUgx >= 0 ? shortageUgx : null,
     managerApprovalRequired: exceedsThreshold,
     managerApprovalStaffId: exceedsThreshold ? managerApprovalStaffId ?? null : null,
   }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { recordPayment } from '@/lib/pos-service'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 
-const VALID_METHODS = ['cash', 'card', 'mtn_momo', 'airtel_money'] as const
+const VALID_METHODS = ['cash', 'mtn_momo', 'airtel_money'] as const
 const VALID_STATUSES = ['pending', 'completed', 'failed'] as const
 
 export async function POST(
@@ -22,7 +22,7 @@ export async function POST(
       return NextResponse.json({ error: 'amountUgx is required (number)' }, { status: 400 })
     }
     if (!VALID_METHODS.includes(method)) {
-      return NextResponse.json({ error: 'method must be cash, card, mtn_momo, or airtel_money' }, { status: 400 })
+      return NextResponse.json({ error: 'method must be cash, mtn_momo, or airtel_money' }, { status: 400 })
     }
     if (!VALID_STATUSES.includes(status)) {
       return NextResponse.json({ error: 'status must be pending, completed, or failed' }, { status: 400 })

@@ -23,6 +23,7 @@ type QueueOrder = {
   items: QueueItem[]
   status: string
   createdAt: string
+  preparationNotes?: string | null
 }
 
 function timeSince(dateStr: string): string {
@@ -195,6 +196,11 @@ function KitchenPreparingContent() {
                       <p className="m-0 text-sm font-medium mb-3 text-center">
                         {order.tableLabel ?? 'Takeaway'}
                       </p>
+                      {order.preparationNotes && (
+                        <p className="m-0 text-sm text-amber-700 dark:text-amber-300 mb-2 px-2 py-1.5 bg-amber-50 dark:bg-amber-900/30 rounded border border-amber-200 dark:border-amber-800">
+                          <span className="font-medium">Note:</span> {order.preparationNotes}
+                        </p>
+                      )}
                       <div className={`w-full ${itemsAreaBgClass(order.status)} rounded-lg p-3 mb-3 border border-neutral-200 dark:border-neutral-700`}>
                         <ul className="m-0 list-none p-0 text-sm flex-1 text-left">
                           {order.items.map((item, i) => {
@@ -213,15 +219,23 @@ function KitchenPreparingContent() {
                           })}
                         </ul>
                       </div>
-                      <div className="mt-auto w-full">
+                      <div className="mt-auto w-full flex gap-2">
                         <button
                           type="button"
                           onClick={() => handleStatusChange(order.orderId, 'ready')}
                           disabled={acting !== null}
-                          className="btn btn-primary w-full py-2 text-sm disabled:opacity-60"
+                          className="btn btn-primary flex-1 py-2 text-sm disabled:opacity-60"
                         >
                           Mark Ready
                         </button>
+                        <a
+                          href={`/order-print/${order.orderId}?autoPrint=1`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-outline flex-1 py-2 text-sm text-center"
+                        >
+                          Print Order
+                        </a>
                       </div>
                     </div>
                   </li>

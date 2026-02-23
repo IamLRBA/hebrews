@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') // 'completed' | 'pending' | 'failed' | 'all'
-    const method = searchParams.get('method') // 'cash' | 'card' | 'mtn_momo' | 'airtel_money' | 'all'
+    const method = searchParams.get('method') // 'cash' | 'mtn_momo' | 'airtel_money' | 'all'
     const startDate = searchParams.get('startDate')
     const endDate = searchParams.get('endDate')
     const limit = parseInt(searchParams.get('limit') || '100')

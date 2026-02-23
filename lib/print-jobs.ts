@@ -75,9 +75,7 @@ export async function triggerReceiptForPayment(params: {
         ? 'MTN MoMo'
         : payment.method === 'airtel_money'
           ? 'Airtel Money'
-          : payment.method === 'card'
-            ? 'Card'
-            : String(payment.method)
+          : String(payment.method)
   const amountUgx = Number(payment.amountUgx)
   const changeUgx = payment.changeUgx != null ? Number(payment.changeUgx) : undefined
   const totalUgx = Number(order.totalUgx)
@@ -310,12 +308,14 @@ export async function openCashDrawerForPayment(params: {
   })
   if (existing) return
 
+  const payment = await prisma.payment.findUnique({
+    where: { id: paymentId },
+    select: { method: true, terminalId: true },
+  })
+  if (!payment || payment.method !== 'cash') return
+
   if (requestTerminalId != null && requestTerminalId !== '') {
-    const payment = await prisma.payment.findUnique({
-      where: { id: paymentId },
-      select: { terminalId: true },
-    })
-    const payTerminal = payment?.terminalId ?? null
+    const payTerminal = payment.terminalId ?? null
     const reqNorm = requestTerminalId.trim().replace(/-/g, '').slice(0, 32)
     const payNorm = payTerminal ? payTerminal.replace(/-/g, '').slice(0, 32) : ''
     if (payNorm && reqNorm !== payNorm) return

@@ -49,8 +49,8 @@ export async function PUT(
       updateData.fullName = fullName.trim()
     }
     if (role !== undefined) {
-      if (!['admin', 'manager', 'cashier', 'waiter', 'kitchen'].includes(role)) {
-        return NextResponse.json({ error: 'role must be admin, manager, cashier, waiter, or kitchen' }, { status: 400 })
+      if (!['admin', 'manager', 'cashier', 'waiter', 'kitchen', 'bar'].includes(role)) {
+        return NextResponse.json({ error: 'role must be admin, manager, cashier, waiter, kitchen, or bar' }, { status: 400 })
       }
       updateData.role = role
     }

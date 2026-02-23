@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { ManagerNavHeader } from '@/components/manager/ManagerNavHeader'
 import { posFetch } from '@/lib/pos-client'
-import { DollarSign, ShoppingCart, Clock, AlertCircle, CreditCard } from 'lucide-react'
+import { DollarSign, ShoppingCart, Clock, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 
 export default function ManagerDashboardPage() {
@@ -125,13 +125,20 @@ export default function ManagerDashboardPage() {
                 <div className="bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">Card Sales</p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">MTN MoMo</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-                        {stats.cardSales.toLocaleString()} UGX
+                        {(stats.mtnMomoSales ?? 0).toLocaleString()} UGX
                       </p>
                     </div>
-                    <div className="w-12 h-12 rounded-full border-2 border-primary-300 dark:border-primary-700 flex items-center justify-center bg-transparent">
-                      <CreditCard className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                  </div>
+                </div>
+                <div className="bg-primary-50 dark:bg-neutral-900 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-800">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-1">Airtel Money</p>
+                      <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {(stats.airtelSales ?? 0).toLocaleString()} UGX
+                      </p>
                     </div>
                   </div>
                 </div>

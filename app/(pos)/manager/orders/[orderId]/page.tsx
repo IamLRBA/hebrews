@@ -134,6 +134,13 @@ export default function ManagerOrderDetailPage() {
                       </p>
                     </div>
                   </div>
+                  {order.preparationNotes && (
+                    <div className="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+                      <p className="m-0 text-sm text-amber-800 dark:text-amber-200">
+                        <strong>Order note:</strong> {order.preparationNotes}
+                      </p>
+                    </div>
+                  )}
                   {order.status !== 'served' && order.status !== 'cancelled' && (
                     <div className="flex justify-center mt-4">
                       <button

@@ -58,7 +58,7 @@ export interface OfflinePayment {
   orderServerId: string | null
   amountUgx: number
   changeUgx: number | null
-  method: 'cash'
+  method: 'cash' | 'mtn_momo' | 'airtel_money'
   createdByStaffId: string
   terminalId: string | null
   clientRequestId: string

@@ -24,7 +24,7 @@ import {
   type OfflinePayment,
 } from '@/lib/offline/db'
 
-const SYNC_ORDER: string[] = ['createOrder', 'addItem', 'updateItem', 'updateOrderStatus', 'payCash']
+const SYNC_ORDER: string[] = ['createOrder', 'addItem', 'updateItem', 'updateOrderStatus', 'payCash', 'payMomo', 'payAirtel']
 const MAX_RETRIES = 5
 const BASE_BACKOFF_MS = 1000
 
@@ -295,6 +295,74 @@ async function executeMutation(
       const orderServerId = serverIdMap.get(p.orderLocalId) ?? (await getOrderByLocalId(p.orderLocalId))?.serverId
       if (!orderServerId) return { success: false, error: 'Order not yet synced', orderLocalId: p.orderLocalId }
       const res = await posFetch(`/api/orders/${orderServerId}/pay-cash`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+        body: JSON.stringify({
+          amountUgx: p.amountUgx,
+          clientRequestId: item.clientRequestId,
+          terminalId: p.terminalId ?? undefined,
+        }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        return { success: false, error: (err as { error?: string }).error ?? res.statusText, orderLocalId: p.orderLocalId }
+      }
+      await res.json()
+      const payment = await getPaymentsByOrderLocalId(p.orderLocalId).then((list) =>
+        list.find((x) => x.localId === p.paymentLocalId)
+      )
+      if (payment) {
+        await putPayment({ ...payment, syncStatus: 'synced' })
+      }
+      return { success: true, serverOrderId: orderServerId, orderLocalId: p.orderLocalId }
+    }
+
+    case 'payMomo': {
+      const p = item.payload as {
+        orderLocalId: string
+        orderServerId: string | null
+        amountUgx: number
+        staffId: string
+        terminalId: string | null
+        paymentLocalId: string
+      }
+      const orderServerId = serverIdMap.get(p.orderLocalId) ?? (await getOrderByLocalId(p.orderLocalId))?.serverId
+      if (!orderServerId) return { success: false, error: 'Order not yet synced', orderLocalId: p.orderLocalId }
+      const res = await posFetch(`/api/orders/${orderServerId}/pay-momo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+        body: JSON.stringify({
+          amountUgx: p.amountUgx,
+          clientRequestId: item.clientRequestId,
+          terminalId: p.terminalId ?? undefined,
+        }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        return { success: false, error: (err as { error?: string }).error ?? res.statusText, orderLocalId: p.orderLocalId }
+      }
+      await res.json()
+      const payment = await getPaymentsByOrderLocalId(p.orderLocalId).then((list) =>
+        list.find((x) => x.localId === p.paymentLocalId)
+      )
+      if (payment) {
+        await putPayment({ ...payment, syncStatus: 'synced' })
+      }
+      return { success: true, serverOrderId: orderServerId, orderLocalId: p.orderLocalId }
+    }
+
+    case 'payAirtel': {
+      const p = item.payload as {
+        orderLocalId: string
+        orderServerId: string | null
+        amountUgx: number
+        staffId: string
+        terminalId: string | null
+        paymentLocalId: string
+      }
+      const orderServerId = serverIdMap.get(p.orderLocalId) ?? (await getOrderByLocalId(p.orderLocalId))?.serverId
+      if (!orderServerId) return { success: false, error: 'Order not yet synced', orderLocalId: p.orderLocalId }
+      const res = await posFetch(`/api/orders/${orderServerId}/pay-airtel`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
         body: JSON.stringify({

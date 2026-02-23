@@ -47,6 +47,7 @@ enum StaffRole {
   cashier
   waiter
   kitchen
+  bar
 }
 
 enum TerminalType {
@@ -152,6 +153,7 @@ model Shift {
   closedByStaffId        String?   @map("closed_by_staff_id") @db.Uuid
   countedCashUgx         Decimal?  @map("counted_cash_ugx") @db.Decimal(12, 2)
   cashVarianceUgx        Decimal?  @map("cash_variance_ugx") @db.Decimal(12, 2)
+  shortageUgx            Decimal?  @map("shortage_ugx") @db.Decimal(12, 2)
   managerApprovalStaffId String?   @map("manager_approval_staff_id") @db.Uuid
   createdAt              DateTime  @default(now()) @map("created_at")
 
@@ -192,6 +194,7 @@ model ShiftFinancialSummary {
   expectedCashUgx      Decimal  @map("expected_cash_ugx") @db.Decimal(12, 2)
   countedCashUgx       Decimal  @map("counted_cash_ugx") @db.Decimal(12, 2)
   varianceUgx          Decimal  @map("variance_ugx") @db.Decimal(12, 2)
+  shortageUgx          Decimal? @map("shortage_ugx") @db.Decimal(12, 2)
   managerApprovalStaffId String? @map("manager_approval_staff_id") @db.Uuid
   closedAt             DateTime @map("closed_at")
 
@@ -220,7 +223,7 @@ model RestaurantTable {
 // Phase 9: table ownership — which terminal/staff has the table locked for an order
 model TableOccupancy {
   id         String   @id @default(uuid()) @db.Uuid
-  tableId    String   @unique @map("table_id") @db.Uuid
+  tableId    String   @map("table_id") @db.Uuid
   orderId    String   @map("order_id") @db.Uuid
   terminalId String   @map("terminal_id") @db.VarChar(32)
   staffId    String   @map("staff_id") @db.Uuid
@@ -281,6 +284,8 @@ model Order {
   updatedByStaffId   String?      @map("updated_by_staff_id") @db.Uuid
   servedAt           DateTime?    @map("served_at")
   sentToKitchenAt    DateTime?    @map("sent_to_kitchen_at")
+  sentToBarAt        DateTime?    @map("sent_to_bar_at")
+  preparationNotes   String?      @map("preparation_notes")
 
   table            RestaurantTable? @relation(fields: [tableId], references: [id])
   shift            Shift            @relation(fields: [shiftId], references: [id])
