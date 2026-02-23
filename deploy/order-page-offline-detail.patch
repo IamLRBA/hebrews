@@ -1,0 +1,47 @@
+--- a/app/(pos)/pos/order/page.tsx
++++ b/app/(pos)/pos/order/page.tsx
+@@ -202,6 +202,13 @@
+       preparationNotes: d?.preparationNotes != null ? String(d.preparationNotes) : undefined,
+     }
+   }
++
++  function offlineDetailToOrderDetail(
++    d: NonNullable<Awaited<ReturnType<typeof getOrderDetailOfflineFormatted>>>
++  ): OrderDetail {
++    return { ...d, orderType: d.orderType === 'dine_in' ? 'dine_in' : 'takeaway' }
++  }
+ 
+   const fetchProducts = useCallback(async () => {
+@@ -354,7 +354,7 @@
+         )
+         const detail = await getOrderDetailOfflineFormatted(o.localId)
+-        if (detail) setOrder(detail)
++        if (detail) setOrder(offlineDetailToOrderDetail(detail))
+         if (orderType !== 'dine_in' || !selectedTableId) {
+           setSelectedTableId(null)
+         }
+@@ -361,7 +361,7 @@
+             })
+             const updated = await getOrderDetailOfflineFormatted(o.localId)
+-            if (updated) setOrder(updated)
++            if (updated) setOrder(offlineDetailToOrderDetail(updated))
+             setModifierProduct(null)
+             setModifierSelections({})
+           } catch (e) {
+@@ -503,7 +503,7 @@
+         })
+         const detail = await getOrderDetailOfflineFormatted(orderId)
+-        if (detail) setOrder(detail)
++        if (detail) setOrder(offlineDetailToOrderDetail(detail))
+         setModifierProduct(null)
+         setModifierSelections({})
+         setAddingItem(false)
+@@ -734,7 +734,7 @@
+       if (!isOnline()) {
+         await updateOrderStatusOffline({ orderLocalId: order.orderId, newStatus: 'preparing' })
+         const detail = await getOrderDetailOfflineFormatted(order.orderId)
+-        if (detail) setOrder(detail)
++        if (detail) setOrder(offlineDetailToOrderDetail(detail))
+         setSubmitting(false)
+         return
+       }

@@ -204,6 +204,12 @@ export default function PosOrdersPage() {
     }
   }
 
+  function offlineDetailToOrderDetail(
+    d: NonNullable<Awaited<ReturnType<typeof getOrderDetailOfflineFormatted>>>
+  ): OrderDetail {
+    return { ...d, orderType: d.orderType === 'dine_in' ? 'dine_in' : 'takeaway' }
+  }
+
   const fetchProducts = useCallback(async () => {
     try {
       const res = await posFetch('/api/pos/products')
@@ -236,11 +242,7 @@ export default function PosOrdersPage() {
         const detail = await getOrderDetailOfflineFormatted(orderId)
         if (detail) {
           currentOrderIdRef.current = detail.orderId
-          const orderDetail: OrderDetail = {
-            ...detail,
-            orderType: detail.orderType === 'dine_in' ? 'dine_in' : 'takeaway',
-          }
-          setOrder(orderDetail)
+          setOrder(offlineDetailToOrderDetail(detail))
           setOrderType(detail.orderType === 'dine_in' ? 'dine_in' : detail.orderType === 'takeaway' ? 'takeaway' : null)
           setSelectedTableId(detail.tableId ?? null)
           setCurrentOrderDisplayName('')
@@ -348,7 +350,7 @@ export default function PosOrdersPage() {
             : { orderType: 'takeaway', orderNumber: orderName }
         )
         const detail = await getOrderDetailOfflineFormatted(o.localId)
-        if (detail) setOrder(detail)
+        if (detail) setOrder(offlineDetailToOrderDetail(detail))
         if (orderType !== 'dine_in' || !selectedTableId) {
           setSelectedTableId(null)
         }
@@ -365,7 +367,7 @@ export default function PosOrdersPage() {
               modifier: action.modifier ?? null,
             })
             const updated = await getOrderDetailOfflineFormatted(o.localId)
-            if (updated) setOrder(updated)
+            if (updated) setOrder(offlineDetailToOrderDetail(updated))
             setModifierProduct(null)
             setModifierSelections({})
           } catch (e) {
@@ -495,7 +497,7 @@ export default function PosOrdersPage() {
           modifier: modifier ?? null,
         })
         const detail = await getOrderDetailOfflineFormatted(orderId)
-        if (detail) setOrder(detail)
+        if (detail) setOrder(offlineDetailToOrderDetail(detail))
         setModifierProduct(null)
         setModifierSelections({})
         setAddingItem(false)
@@ -727,7 +729,7 @@ export default function PosOrdersPage() {
       if (!isOnline()) {
         await updateOrderStatusOffline({ orderLocalId: order.orderId, newStatus: 'preparing' })
         const detail = await getOrderDetailOfflineFormatted(order.orderId)
-        if (detail) setOrder(detail)
+        if (detail) setOrder(offlineDetailToOrderDetail(detail))
         setSubmitting(false)
         return
       }
