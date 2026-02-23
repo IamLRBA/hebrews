@@ -28,10 +28,11 @@ export default function PosLayout({
   const isAdminRoute = pathname?.startsWith('/admin')
   const isManagerRoute = pathname?.startsWith('/manager')
   const isKitchenRoute = pathname?.startsWith('/kitchen')
+  const isBarRoute = pathname?.startsWith('/bar')
   const isLoginRoute = pathname === '/login'
 
-  // Skip shift guard for admin, manager, kitchen, and login routes
-  if (isAdminRoute || isManagerRoute || isKitchenRoute || isLoginRoute) {
+  // Skip shift guard for admin, manager, kitchen, bar, and login routes
+  if (isAdminRoute || isManagerRoute || isKitchenRoute || isBarRoute || isLoginRoute) {
     return (
       <>
         <OfflineSyncProvider />

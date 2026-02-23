@@ -47,6 +47,7 @@ enum StaffRole {
   cashier
   waiter
   kitchen
+  bar
 }
 
 enum TerminalType {
@@ -281,6 +282,8 @@ model Order {
   updatedByStaffId   String?      @map("updated_by_staff_id") @db.Uuid
   servedAt           DateTime?    @map("served_at")
   sentToKitchenAt    DateTime?    @map("sent_to_kitchen_at")
+  sentToBarAt        DateTime?    @map("sent_to_bar_at")
+  preparationNotes   String?      @map("preparation_notes")
 
   table            RestaurantTable? @relation(fields: [tableId], references: [id])
   shift            Shift            @relation(fields: [shiftId], references: [id])

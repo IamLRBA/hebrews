@@ -9,7 +9,7 @@ type Staff = {
   id?: string
   username: string
   fullName: string
-  role: 'admin' | 'manager' | 'cashier' | 'kitchen'
+  role: 'admin' | 'manager' | 'cashier' | 'kitchen' | 'bar'
   password?: string
   isActive: boolean
 }
@@ -178,6 +178,7 @@ export function StaffModal({ isOpen, onClose, onSuccess, staff }: StaffModalProp
               >
                 <option value="cashier">Cashier</option>
                 <option value="kitchen">Kitchen</option>
+                <option value="bar">Bar</option>
                 <option value="manager">Manager</option>
                 <option value="admin">Admin</option>
               </select>

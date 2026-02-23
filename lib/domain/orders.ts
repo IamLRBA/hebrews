@@ -20,7 +20,7 @@ import {
 } from '@/lib/order-items'
 
 const PAYMENT_ROLES = ['cashier', 'manager', 'admin'] as const
-const KITCHEN_ROLES = ['kitchen', 'manager', 'admin'] as const
+const KITCHEN_ROLES = ['kitchen', 'bar', 'manager', 'admin'] as const
 
 /**
  * Creates a dine-in order for the staff's active shift.
@@ -951,6 +951,7 @@ export type KitchenQueueOrder = {
   items: KitchenQueueItem[]
   status: string
   createdAt: Date
+  preparationNotes?: string | null
 }
 
 /**
@@ -973,6 +974,7 @@ export async function getKitchenQueueFromAllActiveShifts(): Promise<KitchenQueue
       createdAt: true,
       customerName: true,
       orderNumber: true,
+      preparationNotes: true,
       table: {
         select: { code: true },
       },
@@ -1000,6 +1002,7 @@ export async function getKitchenQueueFromAllActiveShifts(): Promise<KitchenQueue
     })),
     status: order.status,
     createdAt: order.createdAt,
+    preparationNotes: (order as { preparationNotes?: string | null }).preparationNotes ?? null,
   }))
 }
 
@@ -1023,6 +1026,7 @@ export async function getKitchenQueue(shiftId: string): Promise<KitchenQueueOrde
       status: true,
       createdAt: true,
       orderNumber: true,
+      preparationNotes: true,
       table: {
         select: {
           code: true,
@@ -1060,6 +1064,107 @@ export async function getKitchenQueue(shiftId: string): Promise<KitchenQueueOrde
     })),
     status: order.status,
     createdAt: order.createdAt,
+    preparationNotes: (order as { preparationNotes?: string | null }).preparationNotes ?? null,
+  }))
+}
+
+// ---------------------------------------------------------------------------
+// Bar queue (same as kitchen but filtered by sentToBarAt)
+// ---------------------------------------------------------------------------
+
+/**
+ * Loads bar queue: pending orders sent to bar (sentToBarAt set) plus preparing and awaiting_payment
+ * from any active shift. Sorted by creation time (oldest first).
+ */
+export async function getBarQueueFromAllActiveShifts(): Promise<KitchenQueueOrder[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      shift: { endTime: null },
+      sentToBarAt: { not: null },
+      OR: [
+        { status: 'pending' },
+        { status: { in: ['preparing', 'awaiting_payment'] } },
+      ],
+    },
+    select: {
+      id: true,
+      status: true,
+      createdAt: true,
+      customerName: true,
+      orderNumber: true,
+      preparationNotes: true,
+      table: {
+        select: { code: true },
+      },
+      orderItems: {
+        select: {
+          quantity: true,
+          product: {
+            select: { name: true, images: true },
+          },
+        },
+        orderBy: { sortOrder: 'asc' as const },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  })
+
+  return orders.map((order) => ({
+    orderId: order.id,
+    tableLabel: order.table?.code ?? null,
+    customerName: order.customerName ?? order.orderNumber,
+    items: order.orderItems.map((item) => ({
+      name: item.product.name,
+      imageUrl: item.product?.images?.[0] ?? null,
+      quantity: item.quantity,
+    })),
+    status: order.status,
+    createdAt: order.createdAt,
+    preparationNotes: (order as { preparationNotes?: string | null }).preparationNotes ?? null,
+  }))
+}
+
+export async function getBarQueue(shiftId: string): Promise<KitchenQueueOrder[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      shiftId,
+      sentToBarAt: { not: null },
+      OR: [
+        { status: 'pending' },
+        { status: { in: ['preparing', 'awaiting_payment'] } },
+      ],
+    },
+    select: {
+      id: true,
+      status: true,
+      createdAt: true,
+      orderNumber: true,
+      preparationNotes: true,
+      table: { select: { code: true } },
+      customerName: true,
+      orderItems: {
+        select: {
+          quantity: true,
+          product: { select: { name: true, images: true } },
+        },
+        orderBy: { sortOrder: 'asc' },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  })
+
+  return orders.map((order) => ({
+    orderId: order.id,
+    tableLabel: order.table?.code ?? null,
+    customerName: order.customerName ?? order.orderNumber,
+    items: order.orderItems.map((item) => ({
+      name: item.product.name,
+      imageUrl: item.product?.images?.[0] ?? null,
+      quantity: item.quantity,
+    })),
+    status: order.status,
+    createdAt: order.createdAt,
+    preparationNotes: (order as { preparationNotes?: string | null }).preparationNotes ?? null,
   }))
 }
 

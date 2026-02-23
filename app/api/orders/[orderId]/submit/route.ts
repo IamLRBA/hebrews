@@ -34,6 +34,8 @@ export async function POST(
 
     const orderType = body.orderType === 'dine_in' || body.orderType === 'takeaway' ? body.orderType : undefined
     const tableId = typeof body.tableId === 'string' && body.tableId.trim() ? body.tableId.trim() : null
+    const destination = body.destination === 'bar' ? 'bar' : 'kitchen'
+    const preparationNotes = typeof body.preparationNotes === 'string' ? body.preparationNotes.trim() || null : null
 
     const itemCount = await prisma.orderItem.count({ where: { orderId } })
     if (itemCount === 0) {
@@ -90,29 +92,33 @@ export async function POST(
     const updated = await prisma.order.update({
       where: { id: orderId },
       data: {
-        sentToKitchenAt: new Date(),
+        ...(destination === 'kitchen' ? { sentToKitchenAt: new Date() } : { sentToBarAt: new Date() }),
+        preparationNotes,
         updatedByStaffId,
       },
       select: { shiftId: true, tableId: true, status: true, updatedAt: true },
     })
 
-    await triggerKitchenTicketForOrder({
-      orderId,
-      staffId: updatedByStaffId,
-      terminalId: existing.terminalId ?? null,
-      isReprint: false,
-    }).catch((e) => logError(e, { path: `orders/submit#triggerKitchenTicket(${orderId})` }))
+    if (destination === 'kitchen') {
+      await triggerKitchenTicketForOrder({
+        orderId,
+        staffId: updatedByStaffId,
+        terminalId: existing.terminalId ?? null,
+        isReprint: false,
+      }).catch((e) => logError(e, { path: `orders/submit#triggerKitchenTicket(${orderId})` }))
+    }
 
     const order = await getOrderDetail(orderId)
     emitToShift(updated.shiftId, {
-      type: 'ORDER_SENT_TO_KITCHEN',
+      type: destination === 'bar' ? 'ORDER_SENT_TO_BAR' : 'ORDER_SENT_TO_KITCHEN',
       payload: {
         orderId,
         shiftId: updated.shiftId,
         tableId: updated.tableId ?? undefined,
         status: updated.status,
         updatedAt: updated.updatedAt.toISOString(),
-        forKitchen: true,
+        forKitchen: destination === 'kitchen',
+        forBar: destination === 'bar',
         orderNumber: order?.orderNumber,
       },
     })

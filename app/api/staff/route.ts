@@ -61,8 +61,8 @@ export async function POST(request: NextRequest) {
     if (!fullName || typeof fullName !== 'string') {
       return NextResponse.json({ error: 'fullName is required (string)' }, { status: 400 })
     }
-    if (!role || !['admin', 'manager', 'cashier', 'kitchen'].includes(role)) {
-      return NextResponse.json({ error: 'role must be admin, manager, cashier, or kitchen' }, { status: 400 })
+    if (!role || !['admin', 'manager', 'cashier', 'kitchen', 'bar'].includes(role)) {
+      return NextResponse.json({ error: 'role must be admin, manager, cashier, kitchen, or bar' }, { status: 400 })
     }
     if (!password || typeof password !== 'string' || password.length < 6) {
       return NextResponse.json({ error: 'password is required (string, min 6 characters)' }, { status: 400 })

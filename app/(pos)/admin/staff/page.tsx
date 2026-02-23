@@ -11,7 +11,7 @@ type Staff = {
   id: string
   username: string
   fullName: string
-  role: 'admin' | 'manager' | 'cashier' | 'kitchen'
+  role: 'admin' | 'manager' | 'cashier' | 'kitchen' | 'bar'
   isActive: boolean
 }
 

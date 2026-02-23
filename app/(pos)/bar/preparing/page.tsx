@@ -1,13 +1,12 @@
 'use client'
 
-import { Fragment, useEffect, useState, useCallback } from 'react'
-import { useRouter, useParams } from 'next/navigation'
-import Link from 'next/link'
+import { Fragment, Suspense, useEffect, useState, useCallback } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { ErrorBanner } from '@/components/pos/ErrorBanner'
-import { KitchenNavHeader } from '@/components/kitchen/KitchenNavHeader'
+import { BarNavHeader } from '@/components/bar/BarNavHeader'
 
 const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
 
@@ -64,34 +63,35 @@ function itemsAreaBgClass(status: string): string {
   }
 }
 
-export default function KitchenDisplayPage() {
+function BarPreparingContent() {
   const router = useRouter()
-  const params = useParams()
-  const shiftId = params.shiftId as string
-
+  const searchParams = useSearchParams()
+  const shiftId = searchParams.get('shiftId')
   const [queue, setQueue] = useState<QueueOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [acting, setActing] = useState<string | null>(null)
 
   const fetchQueue = useCallback(async () => {
-    if (!shiftId) return
+    if (!shiftId) {
+      setError('Shift ID required')
+      setLoading(false)
+      return
+    }
     try {
-      const res = await posFetch(`/api/kitchen/${shiftId}/queue`)
+      const res = await posFetch(`/api/bar/${shiftId}/queue`)
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}))
         throw new Error(errorData.error || 'Failed to load queue')
       }
       const data = await res.json()
       const allOrders = Array.isArray(data) ? data : []
-      // This page shows only pending orders (Preparing has its own page)
-      setQueue(allOrders.filter((order: QueueOrder) => order.status === 'pending'))
+      setQueue(allOrders.filter((order: QueueOrder) => order.status === 'preparing'))
       setError(null)
     } catch (e) {
       const errorMsg = e instanceof Error ? e.message : 'Failed to load queue'
       setError(errorMsg)
       setQueue([])
-      console.error('Kitchen queue error:', e)
     } finally {
       setLoading(false)
     }
@@ -102,24 +102,17 @@ export default function KitchenDisplayPage() {
       router.replace('/login')
       return
     }
-  }, [router])
-
-  useEffect(() => {
-    if (!shiftId) {
+    if (shiftId) {
+      setLoading(true)
+      fetchQueue()
+      const interval = setInterval(fetchQueue, 5000)
+      return () => clearInterval(interval)
+    } else {
       setLoading(false)
-      return
     }
-    setLoading(true)
-    fetchQueue()
-  }, [shiftId, fetchQueue])
+  }, [shiftId, fetchQueue, router])
 
-  useEffect(() => {
-    if (!shiftId) return
-    const interval = setInterval(fetchQueue, 5000)
-    return () => clearInterval(interval)
-  }, [shiftId, fetchQueue])
-
-  async function handleStatusChange(orderId: string, newStatus: 'preparing' | 'ready') {
+  async function handleStatusChange(orderId: string, newStatus: 'ready') {
     const staffId = getStaffId()
     if (!staffId) return
 
@@ -142,24 +135,11 @@ export default function KitchenDisplayPage() {
     }
   }
 
-  if (!shiftId) {
-    return (
-      <RoleGuard allowedRoles={['kitchen']}>
-        <main className="pos-page flex items-center justify-center min-h-screen">
-          <div className="pos-card max-w-sm w-full text-center">
-            <p className="text-neutral-600 dark:text-neutral-400 m-0">Invalid shift</p>
-            <Link href="/kitchen" className="pos-link mt-4 inline-block">← Back to Kitchen</Link>
-          </div>
-        </main>
-      </RoleGuard>
-    )
-  }
-
   return (
-    <RoleGuard allowedRoles={['kitchen']}>
+    <RoleGuard allowedRoles={['bar']}>
       <div className="pos-page min-h-screen">
         <div className="pos-page-container">
-          <KitchenNavHeader shiftId={shiftId} />
+          <BarNavHeader shiftId={shiftId ?? undefined} />
           <main className="flex flex-col items-center">
             {error && (
               <div className="mb-4 w-full max-w-7xl">
@@ -172,9 +152,13 @@ export default function KitchenDisplayPage() {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
                 <p className="text-neutral-500 dark:text-neutral-400 mt-4">Loading orders...</p>
               </div>
+            ) : !shiftId ? (
+              <div className="pos-card max-w-md mx-auto text-center py-12">
+                <p className="m-0 text-neutral-600 dark:text-neutral-400">Shift ID required. Use Pending to open a shift first.</p>
+              </div>
             ) : queue.length === 0 ? (
               <div className="pos-card max-w-md mx-auto text-center py-12">
-                <p className="m-0 text-neutral-600 dark:text-neutral-400">No pending orders</p>
+                <p className="m-0 text-neutral-600 dark:text-neutral-400">No preparing orders</p>
               </div>
             ) : (
               <ul
@@ -238,11 +222,11 @@ export default function KitchenDisplayPage() {
                       <div className="mt-auto w-full">
                         <button
                           type="button"
-                          onClick={() => handleStatusChange(order.orderId, 'preparing')}
+                          onClick={() => handleStatusChange(order.orderId, 'ready')}
                           disabled={acting !== null}
                           className="btn btn-primary w-full py-2 text-sm disabled:opacity-60"
                         >
-                          Start Preparing
+                          Mark Ready
                         </button>
                       </div>
                     </div>
@@ -254,5 +238,17 @@ export default function KitchenDisplayPage() {
         </div>
       </div>
     </RoleGuard>
+  )
+}
+
+export default function BarPreparingPage() {
+  return (
+    <Suspense fallback={
+      <div className="pos-page min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+      </div>
+    }>
+      <BarPreparingContent />
+    </Suspense>
   )
 }

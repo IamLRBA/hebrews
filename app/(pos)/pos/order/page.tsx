@@ -27,6 +27,11 @@ const OrderNameModal = dynamic(
   { ssr: false }
 )
 
+const PreparationNotesModal = dynamic(
+  () => import('@/components/pos/PreparationNotesModal').then((m) => ({ default: m.PreparationNotesModal })),
+  { ssr: false }
+)
+
 const ModifierModal = dynamic(
   () => import('@/components/pos/ModifierModal').then((m) => ({ default: m.ModifierModal })),
   { ssr: false }
@@ -47,6 +52,7 @@ type OrderItem = {
   id: string
   productId: string
   productName: string
+  category?: string | null
   imageUrl?: string | null
   quantity: number
   size?: string | null
@@ -66,6 +72,8 @@ type OrderDetail = {
   tableId?: string | null
   tableCode?: string | null
   sentToKitchenAt?: string | null
+  sentToBarAt?: string | null
+  preparationNotes?: string | null
 }
 
 type TableStatus = {
@@ -144,6 +152,9 @@ export default function PosOrdersPage() {
   const [modifierSelections, setModifierSelections] = useState<Record<string, string>>({})
   const [orderType, setOrderType] = useState<'takeaway' | 'dine_in' | null>(null)
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null)
+  const [preparationNotesModalOpen, setPreparationNotesModalOpen] = useState(false)
+  const [pendingSendDestination, setPendingSendDestination] = useState<'kitchen' | 'bar' | null>(null)
+  const [mixedOrderPopupOpen, setMixedOrderPopupOpen] = useState(false)
   const [tables, setTables] = useState<TableStatus[]>([])
   const [tableSearchQuery, setTableSearchQuery] = useState('')
   const [tableSearchFocused, setTableSearchFocused] = useState(false)
@@ -173,6 +184,7 @@ export default function PosOrdersPage() {
         id: String(it.id),
         productId: String(it.productId),
         productName: String(it.productName ?? it.productId),
+        category: it.category != null ? String(it.category) : undefined,
         imageUrl: it.imageUrl != null ? String(it.imageUrl) : undefined,
         quantity: Number(it.quantity ?? 1),
         size: it.size != null ? String(it.size) : null,
@@ -185,6 +197,8 @@ export default function PosOrdersPage() {
       tableId: d?.tableId != null ? String(d.tableId) : null,
       tableCode: d?.tableCode != null ? String(d.tableCode) : null,
       sentToKitchenAt: d?.sentToKitchenAt != null ? String(d.sentToKitchenAt) : undefined,
+      sentToBarAt: d?.sentToBarAt != null ? String(d.sentToBarAt) : undefined,
+      preparationNotes: d?.preparationNotes != null ? String(d.preparationNotes) : undefined,
     }
   }
 
@@ -657,11 +671,31 @@ export default function PosOrdersPage() {
     }
   }
 
-  async function handleSendToKitchen() {
+  const orderHasFood = (order?.items ?? []).some((it) => (it as OrderItem).category === 'Food')
+  const orderHasDrinks = (order?.items ?? []).some((it) => (it as OrderItem).category === 'Drinks')
+  const orderHasBoth = orderHasFood && orderHasDrinks
+  const orderSent = !!(order?.sentToKitchenAt || order?.sentToBarAt)
+
+  function handleSendToKitchenOrBarClick() {
+    if (!order || (order?.items ?? []).length === 0) return
+    if (orderHasBoth) {
+      setMixedOrderPopupOpen(true)
+      return
+    }
+    if (orderHasDrinks && !orderHasFood) {
+      setPendingSendDestination('bar')
+      setPreparationNotesModalOpen(true)
+      return
+    }
+    setPendingSendDestination('kitchen')
+    setPreparationNotesModalOpen(true)
+  }
+
+  async function doSendToKitchenOrBar(destination: 'kitchen' | 'bar', preparationNotes: string) {
     if (!order || order.status !== 'pending') return
     const items = order.items ?? []
     if (items.length === 0) {
-      setError('Add items before sending to kitchen')
+      setError(`Add items before sending to ${destination === 'bar' ? 'bar' : 'kitchen'}`)
       return
     }
     if (!orderType) {
@@ -674,6 +708,8 @@ export default function PosOrdersPage() {
     }
     setSubmitting(true)
     setError(null)
+    setPreparationNotesModalOpen(false)
+    setPendingSendDestination(null)
     try {
       if (!isOnline()) {
         await updateOrderStatusOffline({ orderLocalId: order.orderId, newStatus: 'preparing' })
@@ -689,6 +725,8 @@ export default function PosOrdersPage() {
           updatedByStaffId: getStaffId(),
           orderType: orderType ?? undefined,
           tableId: orderType === 'dine_in' && selectedTableId ? selectedTableId : undefined,
+          destination,
+          preparationNotes: preparationNotes || undefined,
         }),
       })
       if (!res.ok) {
@@ -701,7 +739,7 @@ export default function PosOrdersPage() {
       setSelectedTableId(null)
       setCurrentOrderDisplayName('')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to send to kitchen')
+      setError(e instanceof Error ? e.message : `Failed to send to ${destination === 'bar' ? 'bar' : 'kitchen'}`)
     } finally {
       setSubmitting(false)
     }
@@ -1320,15 +1358,20 @@ export default function PosOrdersPage() {
                   </>
                 )}
                 <div className="flex flex-col gap-2 w-full items-center">
-                  {order.status === 'pending' && !order.sentToKitchenAt ? (
+                  {order.status === 'pending' && !orderSent ? (
                     <>
+                      {orderHasBoth && (
+                        <p className="text-sm text-amber-700 dark:text-amber-300 mb-1 text-center">
+                          Please make separate orders for Food and Drinks.
+                        </p>
+                      )}
                       <button
                         type="button"
-                        onClick={handleSendToKitchen}
+                        onClick={handleSendToKitchenOrBarClick}
                         disabled={submitting || cancelling || (order?.items ?? []).length === 0 || !orderType || (orderType === 'dine_in' && !selectedTableId)}
                         className="btn btn-primary py-3 disabled:opacity-60 w-full max-w-xs"
                       >
-                        {submitting ? 'Sending…' : 'Send to Kitchen'}
+                        {submitting ? 'Sending…' : orderHasDrinks && !orderHasFood ? 'Send to Bar' : 'Send to Kitchen'}
                       </button>
                       <button
                         type="button"
@@ -1374,6 +1417,33 @@ export default function PosOrdersPage() {
           Close Shift
         </Link>
       </div>
+
+      <PreparationNotesModal
+        open={preparationNotesModalOpen && pendingSendDestination !== null}
+        title="Order notes (optional)"
+        confirmLabel={pendingSendDestination === 'bar' ? 'Send to Bar' : 'Send to Kitchen'}
+        onConfirm={(notes) => {
+          if (pendingSendDestination) doSendToKitchenOrBar(pendingSendDestination, notes)
+        }}
+        onCancel={() => {
+          setPreparationNotesModalOpen(false)
+          setPendingSendDestination(null)
+        }}
+      />
+
+      {mixedOrderPopupOpen && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 dark:bg-black/60" role="dialog" aria-modal="true">
+          <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-xl border border-neutral-200 dark:border-neutral-800 w-full max-w-md p-4">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-2">Separate orders required</h2>
+            <p className="text-neutral-600 dark:text-neutral-400 mb-4">
+              This order contains both Food and Drinks. Please create separate orders: one for Food (Send to Kitchen) and one for Drinks (Send to Bar).
+            </p>
+            <button type="button" onClick={() => setMixedOrderPopupOpen(false)} className="btn btn-primary w-full">
+              OK
+            </button>
+          </div>
+        </div>
+      )}
 
       <OrderNameModal
         open={orderNameModalOpen}

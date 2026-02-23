@@ -241,6 +241,7 @@ export type OrderDetailItem = {
   id: string
   productId: string
   productName: string
+  category: string | null
   imageUrl: string | null
   quantity: number
   size: string | null
@@ -264,6 +265,8 @@ export type OrderDetail = {
   totalUgx: number
   createdAt: Date
   sentToKitchenAt?: Date | null
+  sentToBarAt?: Date | null
+  preparationNotes?: string | null
   items: OrderDetailItem[]
   payments: OrderDetailPayment[]
 }
@@ -286,6 +289,8 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
       totalUgx: true,
       createdAt: true,
       sentToKitchenAt: true,
+      sentToBarAt: true,
+      preparationNotes: true,
       orderItems: {
         orderBy: { sortOrder: 'asc' },
         select: {
@@ -296,7 +301,7 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
           modifier: true,
           notes: true,
           lineTotalUgx: true,
-          product: { select: { images: true } },
+          product: { select: { images: true, category: true } },
         },
       },
       payments: {
@@ -325,10 +330,13 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
     totalUgx: Number(order.totalUgx),
     createdAt: order.createdAt,
     sentToKitchenAt: order.sentToKitchenAt ?? undefined,
+    sentToBarAt: (order as { sentToBarAt?: Date | null }).sentToBarAt ?? undefined,
+    preparationNotes: (order as { preparationNotes?: string | null }).preparationNotes ?? undefined,
     items: order.orderItems.map((item) => ({
       id: item.id,
       productId: item.productId,
       productName: nameMap[item.productId] ?? item.productId,
+      category: item.product?.category ?? null,
       imageUrl: item.product?.images?.[0] ?? null,
       quantity: item.quantity,
       size: item.size,

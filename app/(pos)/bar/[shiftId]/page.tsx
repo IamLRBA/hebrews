@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { getStaffId, posFetch } from '@/lib/pos-client'
 import { RoleGuard } from '@/components/pos/RoleGuard'
 import { ErrorBanner } from '@/components/pos/ErrorBanner'
-import { KitchenNavHeader } from '@/components/kitchen/KitchenNavHeader'
+import { BarNavHeader } from '@/components/bar/BarNavHeader'
 
 const PLACEHOLDER_IMAGE = '/pos-images/placeholder.svg'
 
@@ -64,7 +64,7 @@ function itemsAreaBgClass(status: string): string {
   }
 }
 
-export default function KitchenDisplayPage() {
+export default function BarDisplayPage() {
   const router = useRouter()
   const params = useParams()
   const shiftId = params.shiftId as string
@@ -77,21 +77,20 @@ export default function KitchenDisplayPage() {
   const fetchQueue = useCallback(async () => {
     if (!shiftId) return
     try {
-      const res = await posFetch(`/api/kitchen/${shiftId}/queue`)
+      const res = await posFetch(`/api/bar/${shiftId}/queue`)
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}))
         throw new Error(errorData.error || 'Failed to load queue')
       }
       const data = await res.json()
       const allOrders = Array.isArray(data) ? data : []
-      // This page shows only pending orders (Preparing has its own page)
       setQueue(allOrders.filter((order: QueueOrder) => order.status === 'pending'))
       setError(null)
     } catch (e) {
       const errorMsg = e instanceof Error ? e.message : 'Failed to load queue'
       setError(errorMsg)
       setQueue([])
-      console.error('Kitchen queue error:', e)
+      console.error('Bar queue error:', e)
     } finally {
       setLoading(false)
     }
@@ -144,11 +143,11 @@ export default function KitchenDisplayPage() {
 
   if (!shiftId) {
     return (
-      <RoleGuard allowedRoles={['kitchen']}>
+      <RoleGuard allowedRoles={['bar']}>
         <main className="pos-page flex items-center justify-center min-h-screen">
           <div className="pos-card max-w-sm w-full text-center">
             <p className="text-neutral-600 dark:text-neutral-400 m-0">Invalid shift</p>
-            <Link href="/kitchen" className="pos-link mt-4 inline-block">← Back to Kitchen</Link>
+            <Link href="/bar" className="pos-link mt-4 inline-block">← Back to Bar</Link>
           </div>
         </main>
       </RoleGuard>
@@ -156,10 +155,10 @@ export default function KitchenDisplayPage() {
   }
 
   return (
-    <RoleGuard allowedRoles={['kitchen']}>
+    <RoleGuard allowedRoles={['bar']}>
       <div className="pos-page min-h-screen">
         <div className="pos-page-container">
-          <KitchenNavHeader shiftId={shiftId} />
+          <BarNavHeader shiftId={shiftId} />
           <main className="flex flex-col items-center">
             {error && (
               <div className="mb-4 w-full max-w-7xl">

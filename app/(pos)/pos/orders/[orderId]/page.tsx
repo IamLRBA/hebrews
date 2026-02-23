@@ -48,6 +48,8 @@ type OrderDetail = {
   totalUgx: number
   createdAt?: string
   sentToKitchenAt?: string | null
+  sentToBarAt?: string | null
+  preparationNotes?: string | null
   items: OrderItem[]
   payments: Payment[]
 }
@@ -110,6 +112,8 @@ export default function OrderDetailPage() {
       totalUgx: Number(d?.totalUgx ?? 0),
       createdAt: d?.createdAt != null ? String(d.createdAt) : undefined,
       sentToKitchenAt: d?.sentToKitchenAt != null ? String(d.sentToKitchenAt) : undefined,
+      sentToBarAt: d?.sentToBarAt != null ? String(d.sentToBarAt) : undefined,
+      preparationNotes: d?.preparationNotes != null ? String(d.preparationNotes) : undefined,
       items: items.map((it: Record<string, unknown>) => ({
         id: String(it.id),
         productId: String(it.productId),
@@ -368,6 +372,13 @@ export default function OrderDetailPage() {
               <p className="m-0 text-neutral-600 dark:text-neutral-400">
                 Created {formatRelativeTime(order.createdAt)}
               </p>
+            )}
+            {order?.preparationNotes && (
+              <div className="mt-2 p-2 bg-amber-50 dark:bg-amber-900/20 rounded border border-amber-200 dark:border-amber-800">
+                <p className="m-0 text-sm text-amber-800 dark:text-amber-200">
+                  <strong>Order note:</strong> {order.preparationNotes}
+                </p>
+              </div>
             )}
           </div>
           {order?.status === 'served' && (
