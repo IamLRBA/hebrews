@@ -42,7 +42,7 @@ import { ShiftHasUnfinishedOrdersError, ManagerApprovalRequiredForCloseError } f
 import { UnauthorizedRoleError, StaffNotFoundError as RoleGuardStaffNotFoundError } from '@/lib/domain/role-guard'
 import { UnauthorizedError, InvalidTokenError } from '@/lib/pos-auth'
 import { TerminalNotFoundError, TerminalInactiveError } from '@/lib/terminal'
-import { TableOccupiedByOtherError } from '@/lib/table-occupancy'
+import { TableOccupiedByOtherError, TableAtCapacityError } from '@/lib/table-occupancy'
 
 const NOT_FOUND_ERRORS = [
   TerminalNotFoundError,
@@ -113,6 +113,18 @@ export function toPosApiResponse(error: unknown): NextResponse {
         tableId: error.tableId,
         existingOrderId: error.existingOrderId,
         terminalId: error.terminalId,
+      },
+      { status: 409 }
+    )
+  }
+  if (error instanceof TableAtCapacityError) {
+    return NextResponse.json(
+      {
+        error: message,
+        conflict: 'TABLE_AT_CAPACITY',
+        tableId: error.tableId,
+        capacity: error.capacity,
+        currentCount: error.currentCount,
       },
       { status: 409 }
     )

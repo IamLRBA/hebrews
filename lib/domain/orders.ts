@@ -59,18 +59,8 @@ export async function createDineInOrder(params: {
   }
 
   const terminalIdToUse = overrideTerminalId != null && overrideTerminalId !== '' ? overrideTerminalId : shift.terminalId
-  const { acquireTableOccupancy } = await import('@/lib/table-occupancy')
-  const occ = await prisma.tableOccupancy.findUnique({ where: { tableId } })
-  if (occ) {
-    const existingOrder = await prisma.order.findUnique({
-      where: { id: occ.orderId },
-      select: { status: true },
-    })
-    if (existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'cancelled') {
-      throw new (await import('@/lib/table-occupancy')).TableOccupiedByOtherError(tableId, occ.orderId, occ.terminalId)
-    }
-    await prisma.tableOccupancy.delete({ where: { tableId } })
-  }
+  const { acquireTableOccupancy, checkTableCapacity } = await import('@/lib/table-occupancy')
+  await checkTableCapacity(tableId)
   const order = await prisma.order.create({
     data: {
       orderNumber,

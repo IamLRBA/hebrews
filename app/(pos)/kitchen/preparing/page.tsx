@@ -219,15 +219,23 @@ function KitchenPreparingContent() {
                           })}
                         </ul>
                       </div>
-                      <div className="mt-auto w-full">
+                      <div className="mt-auto w-full flex gap-2">
                         <button
                           type="button"
                           onClick={() => handleStatusChange(order.orderId, 'ready')}
                           disabled={acting !== null}
-                          className="btn btn-primary w-full py-2 text-sm disabled:opacity-60"
+                          className="btn btn-primary flex-1 py-2 text-sm disabled:opacity-60"
                         >
                           Mark Ready
                         </button>
+                        <a
+                          href={`/order-print/${order.orderId}?autoPrint=1`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-outline flex-1 py-2 text-sm text-center"
+                        >
+                          Print Order
+                        </a>
                       </div>
                     </div>
                   </li>

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
         orders: {
           where: {
             status: {
-              in: ['pending', 'preparing', 'ready'],
+              in: ['pending', 'preparing', 'ready', 'awaiting_payment'],
             },
           },
           select: {
@@ -25,24 +25,29 @@ export async function GET(request: NextRequest) {
             orderNumber: true,
             status: true,
           },
-          take: 1,
         },
       },
     })
 
     return NextResponse.json({
-      tables: tables.map((table) => ({
-        id: table.id,
-        tableId: table.id,
-        code: table.code,
-        tableCode: table.code,
-        capacity: table.capacity,
-        images: (table as { images?: string[] }).images ?? [],
-        status: table.orders.length > 0 ? 'occupied' : 'available',
-        hasActiveOrder: table.orders.length > 0,
-        orderId: table.orders[0]?.id || null,
-        orderNumber: table.orders[0]?.orderNumber || null,
-      })),
+      tables: tables.map((table) => {
+        const activeOrderCount = table.orders.length
+        const capacity = table.capacity != null && table.capacity >= 1 ? table.capacity : 1
+        const isFull = activeOrderCount >= capacity
+        return {
+          id: table.id,
+          tableId: table.id,
+          code: table.code,
+          tableCode: table.code,
+          capacity: table.capacity,
+          images: (table as { images?: string[] }).images ?? [],
+          status: isFull ? 'occupied' : 'available',
+          hasActiveOrder: activeOrderCount > 0,
+          activeOrderCount,
+          orderId: table.orders[0]?.id || null,
+          orderNumber: table.orders[0]?.orderNumber || null,
+        }
+      }),
     })
   } catch (error) {
     console.error('[admin/tables] GET error:', error)

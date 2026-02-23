@@ -80,7 +80,9 @@ type TableStatus = {
   tableId: string
   tableCode: string
   capacity?: number | null
+  activeOrderCount?: number
   hasActiveOrder: boolean
+  isFull?: boolean
   orderId: string | null
   orderNumber: string | null
 }
@@ -386,9 +388,37 @@ export default function PosOrdersPage() {
       const displayOrderNumber = (data as Record<string, unknown>).displayOrderNumber ?? data.orderNumber ?? ''
 
       if (action && action !== 'new' && 'product' in action) {
+        const orderIdStr = orderIdFromApi
+        currentOrderIdRef.current = orderIdStr
+        const priceUgx = Number(action.product.priceUgx ?? 0)
+        const optimisticItem: OrderItem = {
+          id: `temp-${orderIdStr}`,
+          productId: action.product.productId,
+          productName: action.product.name,
+          category: action.product.category ?? null,
+          imageUrl: action.product.images?.[0] ?? null,
+          quantity: 1,
+          size: action.size ?? null,
+          modifier: action.modifier ?? null,
+          notes: null,
+          subtotalUgx: priceUgx,
+          lineTotalUgx: priceUgx,
+        }
+        const optimisticOrder: OrderDetail = {
+          orderId: orderIdStr,
+          orderNumber: orderName?.trim() ? orderName.trim() : String((data as Record<string, unknown>).displayOrderNumber ?? data.orderNumber ?? ''),
+          status: (data as { status?: string }).status ?? 'pending',
+          totalUgx: priceUgx,
+          items: [optimisticItem],
+          tableId: null,
+          tableCode: null,
+        }
+        setOrder(optimisticOrder)
+        setOrderType(null)
+        setCreating(false)
         setAddingItem(true)
         try {
-          const addRes = await posFetch(`/api/orders/${orderIdFromApi}/items`, {
+          const addRes = await posFetch(`/api/orders/${orderIdStr}/items`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -399,22 +429,9 @@ export default function PosOrdersPage() {
             }),
           })
           if (!addRes.ok) throw new Error('Failed to add item')
-          const orderIdStr = orderIdFromApi
-          currentOrderIdRef.current = orderIdStr
-          // Refetch so the first product shows in the items list immediately
-          const getRes = await posFetch(`/api/orders/${orderIdStr}`)
-          if (getRes.ok) {
-            const getData = await getRes.json()
-            const normalised = normaliseOrderFromApi(getData)
-            setOrder({
-              ...normalised,
-              orderId: normalised.orderId || orderIdStr,
-              orderNumber: orderName?.trim() ? orderName.trim() : normalised.orderNumber,
-              orderType: undefined,
-            })
-          } else {
-            const updated = await addRes.json()
-            const normalised = normaliseOrderFromApi(updated)
+          const addData = (await addRes.json().catch(() => ({}))) as Record<string, unknown>
+          const normalised = normaliseOrderFromApi(addData)
+          if (normalised.items.length > 0) {
             setOrder({
               ...normalised,
               orderId: normalised.orderId || orderIdStr,
@@ -428,18 +445,6 @@ export default function PosOrdersPage() {
           if (shiftId) fetchPopularProducts()
         } catch (e) {
           setError(e instanceof Error ? e.message : 'Failed to add item')
-          // Keep the created order in state so user can add items manually; set ref so later clicks add to this order
-          currentOrderIdRef.current = orderIdFromApi
-          setOrder({
-            orderId: orderIdFromApi,
-            orderNumber: orderName?.trim() ? orderName.trim() : String((data as Record<string, unknown>).displayOrderNumber ?? data.orderNumber ?? ''),
-            status: (data as { status?: string }).status ?? 'pending',
-            totalUgx: Number((data as { totalUgx?: number }).totalUgx ?? 0),
-            items: [],
-            tableId: null,
-            tableCode: null,
-          })
-          setOrderType(null)
         } finally {
           setAddingItem(false)
         }
@@ -509,14 +514,18 @@ export default function PosOrdersPage() {
       }
       const safeOrderId = orderId
       currentOrderIdRef.current = safeOrderId
-      // Refetch the full order so the items list and total stay in sync with the server
-      const getRes = await posFetch(`/api/orders/${orderId}`)
-      let dataForOrder: Record<string, unknown>
-      if (getRes.ok) {
-        dataForOrder = (await getRes.json().catch(() => ({}))) as Record<string, unknown>
-      } else {
-        dataForOrder = (await res.json().catch(() => ({}))) as Record<string, unknown>
-      }
+      // Use add-item response (full order with new item) so the product appears instantly
+      const addData = (await res.json().catch(() => ({}))) as Record<string, unknown>
+      const dataForOrder =
+        addData && typeof addData.orderId === 'string' && Array.isArray(addData.items)
+          ? addData
+          : (await (async () => {
+              const getRes = await posFetch(`/api/orders/${orderId}`)
+              if (getRes.ok) {
+                return (await getRes.json().catch(() => ({}))) as Record<string, unknown>
+              }
+              return addData
+            })())
       const normalised = normaliseOrderFromApi(dataForOrder)
       const displayNumber = (order?.orderNumber || currentOrderDisplayName) && !normalised.orderNumber ? (order?.orderNumber || currentOrderDisplayName) : normalised.orderNumber
       setOrder({
@@ -1311,8 +1320,10 @@ export default function PosOrdersPage() {
                             {tableSearchFocused && tableSearchQuery.trim().length > 0 && (
                               <ul className="absolute z-50 w-full mt-1 py-2 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 bg-white dark:bg-neutral-800 shadow-lg max-h-60 overflow-auto list-none">
                                 {tables
-                                  .filter((table) =>
-                                    table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase())
+                                  .filter(
+                                    (table) =>
+                                      table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase()) &&
+                                      (!table.isFull || table.tableId === selectedTableId)
                                   )
                                   .slice(0, 10)
                                   .length === 0 ? (
@@ -1321,8 +1332,10 @@ export default function PosOrdersPage() {
                                     </li>
                                   ) : (
                                     tables
-                                      .filter((table) =>
-                                        table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase())
+                                      .filter(
+                                        (table) =>
+                                          table.tableCode.toLowerCase().includes(tableSearchQuery.toLowerCase()) &&
+                                          (!table.isFull || table.tableId === selectedTableId)
                                       )
                                       .slice(0, 10)
                                       .map((table) => (
@@ -1337,8 +1350,10 @@ export default function PosOrdersPage() {
                                             className="w-full text-left px-4 py-2.5 text-sm font-medium text-neutral-800 dark:text-neutral-200 hover:bg-primary-50 dark:hover:bg-primary-900/30 focus:bg-primary-50 dark:focus:bg-primary-900/30 focus:outline-none"
                                           >
                                             <span className="text-primary-700 dark:text-primary-300">Table {table.tableCode}</span>
-                                            {table.capacity && (
-                                              <span className="text-neutral-500 dark:text-neutral-400 ml-2">({table.capacity} seats)</span>
+                                            {table.capacity != null && (
+                                              <span className="text-neutral-500 dark:text-neutral-400 ml-2">
+                                                ({table.activeOrderCount != null ? `${table.activeOrderCount}/${table.capacity}` : table.capacity} seats)
+                                              </span>
                                             )}
                                           </button>
                                         </li>
@@ -1368,7 +1383,7 @@ export default function PosOrdersPage() {
                       <button
                         type="button"
                         onClick={handleSendToKitchenOrBarClick}
-                        disabled={submitting || cancelling || (order?.items ?? []).length === 0 || !orderType || (orderType === 'dine_in' && !selectedTableId)}
+                        disabled={submitting || cancelling || orderHasBoth || (order?.items ?? []).length === 0 || !orderType || (orderType === 'dine_in' && !selectedTableId)}
                         className="btn btn-primary py-3 disabled:opacity-60 w-full max-w-xs"
                       >
                         {submitting ? 'Sending…' : orderHasDrinks && !orderHasFood ? 'Send to Bar' : 'Send to Kitchen'}

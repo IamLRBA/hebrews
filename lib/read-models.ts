@@ -330,8 +330,8 @@ export async function getOrderDetail(orderId: string): Promise<OrderDetail | nul
     totalUgx: Number(order.totalUgx),
     createdAt: order.createdAt,
     sentToKitchenAt: order.sentToKitchenAt ?? undefined,
-    sentToBarAt: (order as { sentToBarAt?: Date | null }).sentToBarAt ?? undefined,
-    preparationNotes: (order as { preparationNotes?: string | null }).preparationNotes ?? undefined,
+    sentToBarAt: order.sentToBarAt ?? undefined,
+    preparationNotes: order.preparationNotes ?? undefined,
     items: order.orderItems.map((item) => ({
       id: item.id,
       productId: item.productId,
@@ -368,6 +368,9 @@ export type ShiftSummary = {
   totalPaymentsUgx: number
   cashPaymentsUgx: number
   nonCashPaymentsUgx: number
+  countedCashUgx?: number | null
+  cashVarianceUgx?: number | null
+  shortageUgx?: number | null
 }
 
 /**
@@ -385,6 +388,9 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary | n
       terminalId: true,
       startTime: true,
       endTime: true,
+      countedCashUgx: true,
+      cashVarianceUgx: true,
+      shortageUgx: true,
     },
   })
 
@@ -446,6 +452,9 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary | n
     totalPaymentsUgx,
     cashPaymentsUgx,
     nonCashPaymentsUgx,
+    countedCashUgx: shift.countedCashUgx != null ? Number(shift.countedCashUgx) : null,
+    cashVarianceUgx: shift.cashVarianceUgx != null ? Number(shift.cashVarianceUgx) : null,
+    shortageUgx: shift.shortageUgx != null ? Number(shift.shortageUgx) : null,
   }
 }
 
@@ -521,7 +530,12 @@ export type TableStatus = {
   tableId: string
   tableCode: string
   capacity: number | null
+  /** Number of active orders (pending/preparing/ready/awaiting_payment) on this table */
+  activeOrderCount: number
+  /** True when there is at least one active order */
   hasActiveOrder: boolean
+  /** True when activeOrderCount >= capacity (table full; no new orders allowed) */
+  isFull: boolean
   orderId: string | null
   orderNumber: string | null
 }
@@ -547,20 +561,30 @@ export async function getTableStatuses(shiftId: string): Promise<TableStatus[]> 
     }),
   ])
 
-  const orderByTableId = new Map<string, { id: string; orderNumber: string }>()
+  const ordersPerTable = new Map<string, { id: string; orderNumber: string }[]>()
   for (const o of orders) {
-    if (o.tableId) orderByTableId.set(o.tableId, { id: o.id, orderNumber: o.orderNumber })
+    if (o.tableId) {
+      const list = ordersPerTable.get(o.tableId) ?? []
+      list.push({ id: o.id, orderNumber: o.orderNumber })
+      ordersPerTable.set(o.tableId, list)
+    }
   }
 
   const result = tables.map((t) => {
-    const order = orderByTableId.get(t.id)
+    const tableOrders = ordersPerTable.get(t.id) ?? []
+    const capacity = t.capacity != null && t.capacity >= 1 ? t.capacity : 1
+    const activeOrderCount = tableOrders.length
+    const isFull = activeOrderCount >= capacity
+    const first = tableOrders[0]
     return {
       tableId: t.id,
       tableCode: t.code,
       capacity: t.capacity,
-      hasActiveOrder: !!order,
-      orderId: order?.id ?? null,
-      orderNumber: order?.orderNumber ?? null,
+      activeOrderCount,
+      hasActiveOrder: activeOrderCount > 0,
+      isFull,
+      orderId: first?.id ?? null,
+      orderNumber: first?.orderNumber ?? null,
     }
   })
 

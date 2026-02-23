@@ -30,9 +30,10 @@ export default function PosLayout({
   const isKitchenRoute = pathname?.startsWith('/kitchen')
   const isBarRoute = pathname?.startsWith('/bar')
   const isLoginRoute = pathname === '/login'
+  const isOrderPrintRoute = pathname?.startsWith('/order-print')
 
-  // Skip shift guard for admin, manager, kitchen, bar, and login routes
-  if (isAdminRoute || isManagerRoute || isKitchenRoute || isBarRoute || isLoginRoute) {
+  // Skip shift guard for admin, manager, kitchen, bar, order-print, and login routes
+  if (isAdminRoute || isManagerRoute || isKitchenRoute || isBarRoute || isOrderPrintRoute || isLoginRoute) {
     return (
       <>
         <OfflineSyncProvider />

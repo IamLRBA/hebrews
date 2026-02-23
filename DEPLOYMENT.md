@@ -338,6 +338,20 @@ First-time setup (server prep + Docker install) is documented in the phase list 
 
 ---
 
+## Troubleshooting
+
+### "Unknown field `sentToBarAt`" or "Unknown field `preparationNotes`" for Order
+
+The schema includes `sentToBarAt` and `preparationNotes` on the Order model. If you see these errors from Prisma, the generated client is out of sync:
+
+1. **Stop the dev server** (and any process holding `node_modules\.prisma\client\query_engine-*.node`).
+2. Run: **`npm run db:generate`** (or `npx prisma generate`).
+3. Restart the dev server.
+
+On Windows, if you get `EPERM: operation not permitted` when running `prisma generate`, close the Next.js dev server and any terminals that might be using the app, then run the command again.
+
+---
+
 ## Go-Live Checklist
 
 - [ ] Ubuntu 22.04 VPS created; SSH access configured

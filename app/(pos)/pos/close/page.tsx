@@ -16,6 +16,10 @@ type ShiftSummary = {
   mtnMomoSales: number
   airtelSales: number
   cardSales: number
+  foodSalesUgx?: number
+  drinksSalesUgx?: number
+  foodOrdersServed?: number
+  drinksOrdersServed?: number
 }
 
 type CloseResult = {
@@ -35,6 +39,7 @@ export default function PosClosePage() {
   const [closed, setClosed] = useState(false)
   const [closeResult, setCloseResult] = useState<CloseResult | null>(null)
   const [countedCashUgx, setCountedCashUgx] = useState('')
+  const [shortageUgx, setShortageUgx] = useState('')
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -86,10 +91,12 @@ export default function PosClosePage() {
     setClosing(true)
     setError(null)
     try {
-      const body: { countedCashUgx: number; closedByStaffId: string; managerApprovalStaffId?: string } = {
+      const shortage = shortageUgx.trim() === '' ? undefined : Math.max(0, Number(shortageUgx))
+      const body: { countedCashUgx: number; closedByStaffId: string; managerApprovalStaffId?: string; shortageUgx?: number } = {
         countedCashUgx: counted,
         closedByStaffId: staffId,
       }
+      if (shortage != null && !Number.isNaN(shortage)) body.shortageUgx = shortage
       let res = await posFetch(`/api/shifts/${sid}/close`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -168,13 +175,25 @@ export default function PosClosePage() {
               <p className="m-0 py-1"><strong>MTN MoMo:</strong> UGX {summary.mtnMomoSales.toLocaleString()}</p>
               <p className="m-0 py-1"><strong>Airtel:</strong> UGX {summary.airtelSales.toLocaleString()}</p>
               <p className="m-0 py-1"><strong>Card:</strong> UGX {summary.cardSales.toLocaleString()}</p>
+              <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700 grid grid-cols-2 gap-2">
+                <div>
+                  <p className="m-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">Food</p>
+                  <p className="m-0">UGX {(summary.foodSalesUgx ?? 0).toLocaleString()}</p>
+                  <p className="m-0 text-xs text-neutral-500">{(summary.foodOrdersServed ?? 0)} orders</p>
+                </div>
+                <div>
+                  <p className="m-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">Drinks</p>
+                  <p className="m-0">UGX {(summary.drinksSalesUgx ?? 0).toLocaleString()}</p>
+                  <p className="m-0 text-xs text-neutral-500">{(summary.drinksOrdersServed ?? 0)} orders</p>
+                </div>
+              </div>
             </div>
           )}
         </div>
 
         {!closed && summary && (
           <form onSubmit={handleCloseShift} className="pos-card p-6">
-            <label className="block mb-4">
+            <label className="block mb-3">
               <span className="pos-label">Counted Cash (UGX)</span>
               <div className="relative inline-flex items-stretch mt-1 w-full">
                 <input
@@ -215,6 +234,21 @@ export default function PosClosePage() {
                 </div>
               </div>
             </label>
+            <label className="block mb-4">
+              <span className="pos-label">Shortage (UGX) — optional</span>
+              <input
+                type="number"
+                min="0"
+                step="1000"
+                value={shortageUgx}
+                onChange={(e) => setShortageUgx(e.target.value)}
+                className="pos-input mt-1 w-full py-2"
+                placeholder="0 if no shortage"
+              />
+              <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                Enter if cash is missing; shift still closes.
+              </p>
+            </label>
             <button
               type="submit"
               disabled={closing}
@@ -239,6 +273,11 @@ export default function PosClosePage() {
             <p className="m-0 pt-2 font-medium text-primary-700 dark:text-primary-200">
               Variance: UGX {closeResult.variance.toLocaleString()}
             </p>
+            {closeResult.shortageUgx != null && closeResult.shortageUgx > 0 && (
+              <p className="m-0 pt-2 font-medium text-amber-700 dark:text-amber-300">
+                Shortage declared: UGX {closeResult.shortageUgx.toLocaleString()}
+              </p>
+            )}
             <p className="m-0 mt-4 text-sm text-neutral-500">
               Redirecting to start screen…
             </p>

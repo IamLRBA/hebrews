@@ -53,11 +53,24 @@ export async function POST(
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
+    const { releaseTableOccupancyForOrder } = await import('@/lib/table-occupancy')
+    if (orderType === 'takeaway' && existing.tableId) {
+      await releaseTableOccupancyForOrder(orderId)
+    }
     if (orderType === 'dine_in' && tableId) {
+      if (existing.tableId && existing.tableId !== tableId) {
+        await releaseTableOccupancyForOrder(orderId)
+      }
       const conflict = await getTableOccupancyConflict(tableId, orderId)
       if (conflict) {
+        if ('atCapacity' in conflict && conflict.atCapacity) {
+          return NextResponse.json(
+            { error: `Table is at capacity (${conflict.currentCount}/${conflict.capacity} seats).` },
+            { status: 409 }
+          )
+        }
         return NextResponse.json(
-          { error: `Table is already occupied by another order (terminal ${conflict.terminalId}).` },
+          { error: `Table is already occupied by another order (terminal ${(conflict as { terminalId: string }).terminalId}).` },
           { status: 409 }
         )
       }

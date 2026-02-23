@@ -31,6 +31,8 @@ export async function GET(
       totalUgx: result.totalUgx,
       createdAt: result.createdAt,
       sentToKitchenAt: result.sentToKitchenAt ?? null,
+      sentToBarAt: result.sentToBarAt ?? null,
+      preparationNotes: result.preparationNotes ?? null,
       items: result.items,
       payments: result.payments,
     })

@@ -14,7 +14,9 @@ type TableStatus = {
   tableId: string
   tableCode: string
   capacity?: number | null
+  activeOrderCount?: number
   hasActiveOrder: boolean
+  isFull?: boolean
   orderId: string | null
   orderNumber: string | null
 }
@@ -102,7 +104,7 @@ export default function PosTablesPage() {
   }, [shiftId])
 
   function handleTableClick(table: TableStatus) {
-    if (table.hasActiveOrder && table.orderId) {
+    if (table.isFull && table.orderId) {
       router.push(`/pos/orders/${table.orderId}`)
       return
     }
@@ -156,7 +158,7 @@ export default function PosTablesPage() {
     : []
   const showSuggestions = searchFocused && searchQuery.trim().length > 0
 
-  const occupiedCount = tables.filter((t) => t.hasActiveOrder).length
+  const occupiedCount = tables.filter((t) => t.isFull).length
   const availableCount = tables.length - occupiedCount
 
   if (!staffOk || loading) {
@@ -279,11 +281,15 @@ export default function PosTablesPage() {
                 type="button"
                 onClick={() => handleTableClick(table)}
                 disabled={creating !== null}
-                className={`pos-table-btn text-center font-medium disabled:opacity-60 disabled:cursor-not-allowed w-[calc((100%-1rem)/2)] sm:w-[calc((100%-2rem)/3)] md:w-[calc((100%-3rem)/4)] lg:w-[calc((100%-4rem)/5)] min-w-[100px] ${table.hasActiveOrder ? 'pos-table-btn-occupied' : ''}`}
+                className={`pos-table-btn text-center font-medium disabled:opacity-60 disabled:cursor-not-allowed w-[calc((100%-1rem)/2)] sm:w-[calc((100%-2rem)/3)] md:w-[calc((100%-3rem)/4)] lg:w-[calc((100%-4rem)/5)] min-w-[100px] ${table.isFull ? 'pos-table-btn-occupied' : ''}`}
               >
                 <div className="flex flex-col items-center gap-1">
                   <span>{table.tableCode.startsWith('Booth') ? table.tableCode : `Table ${table.tableCode}`}</span>
-                  {table.capacity && <span className="text-xs text-neutral-500 dark:text-neutral-400 font-normal">{table.capacity} seats</span>}
+                  {table.capacity != null && (
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400 font-normal">
+                      {table.activeOrderCount != null ? `${table.activeOrderCount}/${table.capacity} orders` : `${table.capacity} seats`}
+                    </span>
+                  )}
                   {table.hasActiveOrder && table.orderNumber && (
                     <span className="text-xs text-primary-600 dark:text-primary-400 font-normal">
                       #{table.orderNumber}
