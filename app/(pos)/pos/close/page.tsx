@@ -27,6 +27,7 @@ type CloseResult = {
   expectedCash: number
   countedCashUgx: number
   variance: number
+  shortageUgx?: number | null
 }
 
 export default function PosClosePage() {

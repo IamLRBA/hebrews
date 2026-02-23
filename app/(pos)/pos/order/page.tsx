@@ -236,8 +236,12 @@ export default function PosOrdersPage() {
         const detail = await getOrderDetailOfflineFormatted(orderId)
         if (detail) {
           currentOrderIdRef.current = detail.orderId
-          setOrder(detail)
-          setOrderType(detail.orderType ?? null)
+          const orderDetail: OrderDetail = {
+            ...detail,
+            orderType: detail.orderType === 'dine_in' ? 'dine_in' : 'takeaway',
+          }
+          setOrder(orderDetail)
+          setOrderType(detail.orderType === 'dine_in' ? 'dine_in' : detail.orderType === 'takeaway' ? 'takeaway' : null)
           setSelectedTableId(detail.tableId ?? null)
           setCurrentOrderDisplayName('')
         } else {
