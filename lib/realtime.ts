@@ -46,6 +46,7 @@ export interface OrderSentToKitchenPayload {
   status: string
   updatedAt: string
   forKitchen?: boolean
+  forBar?: boolean
   orderNumber?: string
 }
 

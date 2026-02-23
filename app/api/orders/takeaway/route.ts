@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     const terminalIdOverride = typeof bodyTerminalId === 'string' && bodyTerminalId.trim() ? bodyTerminalId.trim() : undefined
     const idempotencyKey = typeof clientRequestId === 'string' && clientRequestId.trim() ? clientRequestId.trim().slice(0, 64) : null
 
-    async function createAndEmit() {
+    const createAndEmit = async () => {
       const o = await createTakeawayOrder({ staffId, orderNumber: uniqueOrderNumber, terminalId: terminalIdOverride })
       try {
         await emitOrderCountsForShift(o.shiftId)

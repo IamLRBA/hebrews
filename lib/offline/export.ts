@@ -48,6 +48,21 @@ export async function exportOfflineDataJSON(): Promise<string> {
 }
 
 /**
+ * Export offline data as JSON and trigger a browser download. No-op on server.
+ */
+export async function downloadOfflineDataJSON(): Promise<void> {
+  const json = await exportOfflineDataJSON()
+  if (typeof window === 'undefined') return
+  const blob = new Blob([json], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `pos-offline-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+/**
  * Export orders, items, payments, queue as CSV-style text (one section per store).
  */
 export async function exportOfflineDataCSV(): Promise<string> {
