@@ -392,10 +392,9 @@ export default function OrderDetailPage() {
               </p>
             )}
             {order?.preparationNotes && (
-              <div className="mt-2 p-2 bg-amber-50 dark:bg-amber-900/20 rounded border border-amber-200 dark:border-amber-800">
-                <p className="m-0 text-sm text-amber-800 dark:text-amber-200">
-                  <strong>Order note:</strong> {order.preparationNotes}
-                </p>
+              <div className="mt-2 p-2 bg-amber-50 dark:bg-amber-900/20 rounded border border-amber-200 dark:border-amber-800 text-center">
+                <p className="m-0 text-sm font-medium text-amber-800 dark:text-amber-200">Order note:</p>
+                <p className="m-0 text-sm text-amber-800 dark:text-amber-200 mt-0.5">{order.preparationNotes}</p>
               </div>
             )}
           </div>
@@ -474,6 +473,12 @@ export default function OrderDetailPage() {
                 {item.modifier && ` • ${item.modifier}`}
               </span>
               <span className="font-medium text-primary-700 dark:text-primary-200">{formatCurrency(item.subtotalUgx)}</span>
+              {item.notes && (
+                <div className="w-full mt-1 text-center text-sm text-amber-700 dark:text-amber-300">
+                  <p className="m-0 font-medium">Note:</p>
+                  <p className="m-0">{item.notes}</p>
+                </div>
+              )}
             </li>
             {index < items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
           </Fragment>

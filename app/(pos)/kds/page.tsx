@@ -163,16 +163,23 @@ export default function KdsPage() {
                   const imgSrc = item.imageUrl && (item.imageUrl.startsWith('http') || item.imageUrl.startsWith('/')) ? item.imageUrl : PLACEHOLDER_IMAGE
                   return (
                     <Fragment key={i}>
-                      <li className="flex items-center gap-2 py-1 justify-start">
-                        <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
-                          <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
+                      <li className="py-1">
+                        <div className="flex items-center gap-2 justify-start">
+                          <div className="relative w-8 h-8 flex-shrink-0 rounded overflow-hidden bg-neutral-200 dark:bg-neutral-700">
+                            <Image src={imgSrc} alt="" fill className="object-cover" sizes="32px" />
+                          </div>
+                          <span>
+                            {item.productName} × {item.quantity}
+                            {item.size && ` • ${item.size}`}
+                            {item.modifier && ` • ${item.modifier}`}
+                          </span>
                         </div>
-                        <span>
-                          {item.productName} × {item.quantity}
-                          {item.size && ` • ${item.size}`}
-                          {item.modifier && ` • ${item.modifier}`}
-                          {item.notes && ` — ${item.notes}`}
-                        </span>
+                        {item.notes && (
+                          <div className="text-center text-sm text-amber-700 dark:text-amber-300 mt-0.5 px-1">
+                            <p className="m-0 font-medium">Note:</p>
+                            <p className="m-0">{item.notes}</p>
+                          </div>
+                        )}
                       </li>
                       {i < o.items.length - 1 && <li aria-hidden className="pos-order-item-divider" />}
                     </Fragment>
