@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
         airtel_money: monthlyPayments.filter((p) => p.method === 'airtel_money').reduce((sum, p) => sum + Number(p.amountUgx), 0),
       }
 
-      async function getFoodDrinksRevenueCustom(gte: Date, lt?: Date) {
+      const getFoodDrinksRevenueCustom = async (gte: Date, lt?: Date) => {
         const where: { order: { status: string; createdAt: { gte: Date; lte?: Date; lt?: Date } } } = {
           order: { status: 'served', createdAt: { gte } },
         }
@@ -297,7 +297,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Food vs Drinks revenue (order item totals by product category for served orders in range)
-    async function getFoodDrinksRevenue(gte: Date, lt?: Date) {
+    const getFoodDrinksRevenue = async (gte: Date, lt?: Date) => {
       const where: { order: { status: string; createdAt: { gte: Date; lt?: Date } } } = {
         order: { status: 'served', createdAt: { gte } },
       }
