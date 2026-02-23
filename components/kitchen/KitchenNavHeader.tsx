@@ -15,7 +15,7 @@ import { posFetch } from '@/lib/pos-client'
 
 const NAV_ITEMS = [
   { href: '/kitchen', label: 'Pending', iconOutline: IconClock, iconFilled: IconClockFilled, requiresShiftId: false, countKey: 'pending' as const },
-  { href: '/kitchen/preparing', label: 'Preparing', iconOutline: IconChefHat, iconFilled: IconChefHatFilled, requiresShiftId: true },
+  { href: '/kitchen/preparing', label: 'Preparing', iconOutline: IconChefHat, iconFilled: IconChefHatFilled, requiresShiftId: true, countKey: 'preparing' as const },
 ] as const
 
 const COUNT_POLL_MS = 30000
