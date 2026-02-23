@@ -212,9 +212,10 @@ export default function BarDisplayPage() {
                         {order.tableLabel ?? 'Takeaway'}
                       </p>
                       {order.preparationNotes && (
-                        <p className="m-0 text-sm text-amber-700 dark:text-amber-300 mb-2 px-2 py-1.5 bg-amber-50 dark:bg-amber-900/30 rounded border border-amber-200 dark:border-amber-800">
-                          <span className="font-medium">Note:</span> {order.preparationNotes}
-                        </p>
+                        <div className="m-0 text-sm text-amber-700 dark:text-amber-300 mb-2 px-2 py-1.5 bg-amber-50 dark:bg-amber-900/30 rounded border border-amber-200 dark:border-amber-800 text-center">
+                          <p className="m-0 font-medium">Note:</p>
+                          <p className="m-0 mt-0.5">{order.preparationNotes}</p>
+                        </div>
                       )}
                       <div className={`w-full ${itemsAreaBgClass(order.status)} rounded-lg p-3 mb-3 border border-neutral-200 dark:border-neutral-700`}>
                         <ul className="m-0 list-none p-0 text-sm flex-1 text-left">

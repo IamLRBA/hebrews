@@ -135,10 +135,9 @@ export default function ManagerOrderDetailPage() {
                     </div>
                   </div>
                   {order.preparationNotes && (
-                    <div className="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                      <p className="m-0 text-sm text-amber-800 dark:text-amber-200">
-                        <strong>Order note:</strong> {order.preparationNotes}
-                      </p>
+                    <div className="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800 text-center">
+                      <p className="m-0 text-sm font-medium text-amber-800 dark:text-amber-200">Order note:</p>
+                      <p className="m-0 text-sm text-amber-800 dark:text-amber-200 mt-0.5">{order.preparationNotes}</p>
                     </div>
                   )}
                   {order.status !== 'served' && order.status !== 'cancelled' && (
