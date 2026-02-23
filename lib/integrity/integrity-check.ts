@@ -61,7 +61,7 @@ export async function runIntegrityChecks(): Promise<IntegrityIssue[]> {
   }
 
   // Multiple completed payments for same order; or total payments exceed order total
-  const orderIds = [...new Set(payments.map((p) => p.orderId))]
+  const orderIds = Array.from(new Set(payments.map((p) => p.orderId)))
   for (const orderId of orderIds) {
     const order = await prisma.order.findUnique({
       where: { id: orderId },
