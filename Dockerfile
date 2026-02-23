@@ -10,11 +10,11 @@ RUN apk add --no-cache libc6-compat wget
 WORKDIR /app
 
 # -----------------------------------------------------------------------------
-# Stage: deps — production dependencies only
+# Stage: deps — all dependencies (dev needed for next build: autoprefixer, postcss, etc.)
 # -----------------------------------------------------------------------------
 FROM base AS deps
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev --ignore-scripts
+RUN npm ci --ignore-scripts
 
 # -----------------------------------------------------------------------------
 # Stage: builder — Prisma generate + Next.js build
