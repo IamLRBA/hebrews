@@ -577,6 +577,40 @@ export async function payOrderMomo(params: {
   return orderId
 }
 
+/**
+ * Records full Airtel Money payment and marks order as served.
+ * Same rules as payOrderMomo: order must not be served or cancelled; amountUgx must be >= order total.
+ * Requires role: cashier, manager, or admin.
+ * Returns orderId.
+ */
+export async function payOrderAirtelMoney(params: {
+  orderId: string
+  amountUgx: number
+  staffId: string
+  terminalId?: string | null
+}): Promise<string> {
+  const { orderId, amountUgx, staffId, terminalId } = params
+
+  if (amountUgx <= 0) {
+    throw new PaymentZeroAmountError()
+  }
+
+  await assertStaffRole(staffId, [...PAYMENT_ROLES])
+
+  await prisma.$transaction(async (tx) => {
+    await finalizePayment(tx, {
+      orderId,
+      amountUgx,
+      method: 'airtel_money',
+      staffId,
+      terminalId: terminalId ?? undefined,
+    })
+  })
+
+  await releaseTableForOrder(orderId)
+  return orderId
+}
+
 // ---------------------------------------------------------------------------
 // Pesapal payment session (create payment URL; no DB change)
 // ---------------------------------------------------------------------------

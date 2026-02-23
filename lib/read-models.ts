@@ -490,13 +490,9 @@ export async function getShiftPaymentSummary(shiftId: string): Promise<ShiftPaym
     status: 'completed' as const,
   }
 
-  const [cashResult, cardResult, momoResult, totalResult] = await Promise.all([
+  const [cashResult, momoResult, totalResult] = await Promise.all([
     prisma.payment.aggregate({
       where: { ...baseWhere, method: 'cash' },
-      _sum: { amountUgx: true },
-    }),
-    prisma.payment.aggregate({
-      where: { ...baseWhere, method: 'card' },
       _sum: { amountUgx: true },
     }),
     prisma.payment.aggregate({
@@ -510,14 +506,13 @@ export async function getShiftPaymentSummary(shiftId: string): Promise<ShiftPaym
   ])
 
   const cashTotalUgx = cashResult._sum.amountUgx != null ? Number(cashResult._sum.amountUgx) : 0
-  const cardTotalUgx = cardResult._sum.amountUgx != null ? Number(cardResult._sum.amountUgx) : 0
   const momoTotalUgx = momoResult._sum.amountUgx != null ? Number(momoResult._sum.amountUgx) : 0
   const grandTotalUgx = totalResult._sum.amountUgx != null ? Number(totalResult._sum.amountUgx) : 0
 
   return {
     cashTotalUgx,
     momoTotalUgx,
-    cardTotalUgx,
+    cardTotalUgx: 0,
     grandTotalUgx,
   }
 }

@@ -137,7 +137,7 @@ export default function ManagerShiftDetailPage() {
                   <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-4 text-center">
                     Shift Summary
                   </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 justify-items-center">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4 justify-items-center">
                     <div className="text-center flex flex-col items-center">
                       <p className="text-sm text-neutral-600 dark:text-neutral-400">Orders Served</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -157,9 +157,15 @@ export default function ManagerShiftDetailPage() {
                       </p>
                     </div>
                     <div className="text-center flex flex-col items-center">
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Card Sales</p>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">MTN MoMo</p>
                       <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-                        {summary.cardSales.toLocaleString()} UGX
+                        {summary.mtnMomoSales.toLocaleString()} UGX
+                      </p>
+                    </div>
+                    <div className="text-center flex flex-col items-center">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">Airtel Money</p>
+                      <p className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+                        {summary.airtelSales.toLocaleString()} UGX
                       </p>
                     </div>
                   </div>

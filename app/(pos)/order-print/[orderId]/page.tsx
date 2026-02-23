@@ -65,7 +65,6 @@ function methodLabel(method: string): string {
     cash: 'Cash',
     mtn_momo: 'MTN MoMo',
     airtel_money: 'Airtel Money',
-    card: 'Card',
   }
   return labels[method] ?? method
 }

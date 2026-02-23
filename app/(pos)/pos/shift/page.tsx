@@ -214,12 +214,6 @@ export default function ShiftPage() {
                   {formatCurrency(paymentSummary.airtelSales ?? 0)}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-2 bg-neutral-50 dark:bg-neutral-800 rounded">
-                <span className="text-neutral-700 dark:text-neutral-300">Card:</span>
-                <span className="font-medium text-primary-700 dark:text-primary-200">
-                  {formatCurrency(paymentSummary.cardSales ?? 0)}
-                </span>
-              </div>
             </div>
             <div className="mt-4 pt-4 border-t-2 border-primary-200 dark:border-primary-700 flex justify-between items-center">
               <span className="font-semibold text-lg text-neutral-800 dark:text-neutral-200">Total:</span>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { payOrderMomo } from '@/lib/domain/orders'
+import { payOrderAirtelMoney } from '@/lib/domain/orders'
 import { getOrderDetail } from '@/lib/read-models'
 import { toPosApiResponse } from '@/lib/pos-api-errors'
 import { getAuthenticatedStaff } from '@/lib/pos-auth'
@@ -11,7 +11,7 @@ import { emitToShift, emitTableEvent, emitOrderCountsForShift } from '@/lib/real
 import { triggerReceiptForPayment } from '@/lib/print-jobs'
 import { getOrSetIdempotent } from '@/lib/idempotency'
 
-/** Manual MTN MoMo payment: same pipeline as cash (receipt, events, table release) but no cash drawer. */
+/** Manual Airtel Money payment: same pipeline as cash (receipt, events, table release) but no cash drawer. */
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ orderId: string }> }
@@ -37,7 +37,7 @@ export async function POST(
 
     const idempotencyKey = typeof body?.clientRequestId === 'string' && body.clientRequestId.trim() ? body.clientRequestId.trim().slice(0, 64) : null
     const runPayment = async () => {
-      await payOrderMomo({
+      await payOrderAirtelMoney({
         orderId,
         amountUgx,
         staffId,
@@ -49,7 +49,7 @@ export async function POST(
         actionType: AuditActionType.PAYMENT,
         entityType: AuditEntityType.payment,
         entityId: orderId,
-        newState: { method: 'mtn_momo', amountUgx },
+        newState: { method: 'airtel_money', amountUgx },
       }).catch((e) => logError(e, { staffId, terminalId: terminalCode, path: request.nextUrl?.pathname }))
 
       const latestPayment = await prisma.payment.findFirst({
@@ -62,7 +62,7 @@ export async function POST(
           paymentId: latestPayment.id,
           staffId,
           terminalId: terminalCode ?? null,
-        }).catch((e) => logError(e, { path: `pay-momo#triggerReceipt(${orderId})` }))
+        }).catch((e) => logError(e, { path: `pay-airtel#triggerReceipt(${orderId})` }))
         // Do NOT open cash drawer for mobile money
       }
 
@@ -79,7 +79,7 @@ export async function POST(
             tableId: orderRow.tableId ?? undefined,
             newStatus: 'served',
             amountUgx,
-            method: 'mtn_momo',
+            method: 'airtel_money',
             completedAt: new Date().toISOString(),
           },
         })
@@ -98,7 +98,7 @@ export async function POST(
     }
 
     const order = idempotencyKey
-      ? await getOrSetIdempotent(idempotencyKey, 'pay_momo', runPayment)
+      ? await getOrSetIdempotent(idempotencyKey, 'pay_airtel', runPayment)
       : await runPayment()
 
     return NextResponse.json(order)

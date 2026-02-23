@@ -213,18 +213,32 @@ export default function PosPaymentPage() {
             </div>
           ) : (
             <>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4 text-center">Pay with cash</p>
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={handlePayCash}
-              disabled={paying !== null}
-              className="btn btn-primary py-3 px-8 text-base font-medium disabled:opacity-60 flex flex-col items-center gap-2"
-            >
-              <DollarSign className="w-6 h-6" />
-              {paying === 'cash' ? 'Processing…' : 'Pay cash'}
-            </button>
-          </div>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-4 text-center">Select payment method</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button
+                  type="button"
+                  onClick={handlePayCash}
+                  disabled={paying !== null}
+                  className="pos-payment-method-btn flex flex-col items-center justify-center gap-2 py-6 px-4 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 hover:border-primary-500 dark:hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 disabled:opacity-60 transition-colors min-h-[100px] touch-manipulation"
+                >
+                  <DollarSign className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">{paying === 'cash' ? 'Processing…' : 'Cash'}</span>
+                </button>
+                <Link
+                  href={`/pos/payment/${orderId}/momo`}
+                  className="pos-payment-method-btn flex flex-col items-center justify-center gap-2 py-6 px-4 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 hover:border-yellow-600 dark:hover:border-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors min-h-[100px] touch-manipulation no-underline text-current"
+                >
+                  <span className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">MTN</span>
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">MTN MoMo</span>
+                </Link>
+                <Link
+                  href={`/pos/payment/${orderId}/airtel`}
+                  className="pos-payment-method-btn flex flex-col items-center justify-center gap-2 py-6 px-4 rounded-xl border-2 border-neutral-200 dark:border-neutral-600 hover:border-red-600 dark:hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors min-h-[100px] touch-manipulation no-underline text-current"
+                >
+                  <span className="text-2xl font-bold text-red-600 dark:text-red-400">Airtel</span>
+                  <span className="font-medium text-neutral-800 dark:text-neutral-200">Airtel Money</span>
+                </Link>
+              </div>
             </>
           )}
         </div>

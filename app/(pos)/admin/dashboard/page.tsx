@@ -94,6 +94,12 @@ export default function AdminDashboardPage() {
       csvRows.push([''], ['Top Drinks Products', 'Quantity', 'Orders'])
       csvRows.push(...analytics.topDrinksProducts.map((p: { name: string; quantity: number; orderCount: number }) => [p.name, p.quantity, p.orderCount]))
     }
+    if (analytics.salesByMethod) {
+      csvRows.push([''], ['Payment method', 'Revenue (UGX)'])
+      csvRows.push(['Cash', String(analytics.salesByMethod.cash ?? 0)])
+      csvRows.push(['MTN MoMo', String(analytics.salesByMethod.mtn_momo ?? 0)])
+      csvRows.push(['Airtel Money', String(analytics.salesByMethod.airtel_money ?? 0)])
+    }
 
     const csv = csvRows.map((row) => row.join(',')).join('\n')
     const blob = new Blob([csv], { type: 'text/csv' })
@@ -141,7 +147,6 @@ export default function AdminDashboardPage() {
     { name: 'Cash', value: analytics.salesByMethod.cash },
     { name: 'MTN MoMo', value: analytics.salesByMethod.mtn_momo },
     { name: 'Airtel Money', value: analytics.salesByMethod.airtel_money },
-    { name: 'Card', value: analytics.salesByMethod.card },
   ]
 
   return (

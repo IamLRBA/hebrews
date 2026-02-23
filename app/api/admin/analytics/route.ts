@@ -85,7 +85,6 @@ export async function GET(request: NextRequest) {
         cash: monthlyPayments.filter((p) => p.method === 'cash').reduce((sum, p) => sum + Number(p.amountUgx), 0),
         mtn_momo: monthlyPayments.filter((p) => p.method === 'mtn_momo').reduce((sum, p) => sum + Number(p.amountUgx), 0),
         airtel_money: monthlyPayments.filter((p) => p.method === 'airtel_money').reduce((sum, p) => sum + Number(p.amountUgx), 0),
-        card: monthlyPayments.filter((p) => p.method === 'card').reduce((sum, p) => sum + Number(p.amountUgx), 0),
       }
 
       async function getFoodDrinksRevenueCustom(gte: Date, lt?: Date) {
@@ -290,12 +289,11 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Sales by payment method
+    // Sales by payment method (Cash, MTN MoMo, Airtel Money only)
     const salesByMethod = {
       cash: monthlyPayments.filter((p) => p.method === 'cash').reduce((sum, p) => sum + Number(p.amountUgx), 0),
       mtn_momo: monthlyPayments.filter((p) => p.method === 'mtn_momo').reduce((sum, p) => sum + Number(p.amountUgx), 0),
       airtel_money: monthlyPayments.filter((p) => p.method === 'airtel_money').reduce((sum, p) => sum + Number(p.amountUgx), 0),
-      card: monthlyPayments.filter((p) => p.method === 'card').reduce((sum, p) => sum + Number(p.amountUgx), 0),
     }
 
     // Food vs Drinks revenue (order item totals by product category for served orders in range)

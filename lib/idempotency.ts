@@ -10,6 +10,8 @@ export type ResourceType =
   | 'order_create_takeaway'
   | 'add_item'
   | 'pay_cash'
+  | 'pay_momo'
+  | 'pay_airtel'
   | 'kitchen_status'
 
 /**

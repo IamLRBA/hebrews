@@ -26,6 +26,8 @@ import {
   enqueueAddItem,
   enqueueUpdateOrderStatus,
   enqueuePayCash,
+  enqueuePayMomo,
+  enqueuePayAirtel,
   type EnqueueCreateOrderPayload,
   type EnqueueAddItemPayload,
   type EnqueueUpdateStatusPayload,
@@ -240,6 +242,116 @@ export async function payCashOffline(params: {
     orderServerId: order.serverId,
     amountUgx: params.amountUgx,
     changeUgx: params.changeUgx,
+    staffId,
+    terminalId,
+    paymentLocalId,
+  })
+  return payment
+}
+
+/**
+ * Record MTN MoMo payment offline. Same flow as cash but method mtn_momo; no changeUgx. Enqueue for sync.
+ */
+export async function payMomoOffline(params: {
+  orderLocalId: string
+  amountUgx: number
+}): Promise<OfflinePayment> {
+  const order = await getOrderByLocalId(params.orderLocalId)
+  if (!order) throw new Error('Order not found')
+  if (order.isOfflineServed) throw new Error('Order already paid')
+  const staffId = getStaffId()
+  if (!staffId) throw new Error('Staff required')
+  let terminalId: string | null = null
+  if (typeof window !== 'undefined') {
+    try {
+      const { getTerminalId } = await import('@/lib/terminal/terminal')
+      terminalId = await getTerminalId()
+    } catch {
+      // keep null if terminal identity unavailable
+    }
+  }
+  const paymentLocalId = generateLocalId()
+  const clientRequestId = generateLocalId()
+  const payment: OfflinePayment = {
+    localId: paymentLocalId,
+    serverId: null,
+    orderLocalId: params.orderLocalId,
+    orderServerId: order.serverId,
+    amountUgx: params.amountUgx,
+    changeUgx: null,
+    method: 'mtn_momo',
+    createdByStaffId: staffId,
+    terminalId,
+    clientRequestId,
+    createdAt: now(),
+    syncStatus: 'pending',
+  }
+  await putPayment(payment)
+  await putOrder({
+    ...order,
+    status: 'served',
+    isOfflineServed: true,
+    updatedAt: now(),
+  })
+  await enqueuePayMomo(clientRequestId, {
+    orderLocalId: params.orderLocalId,
+    orderServerId: order.serverId,
+    amountUgx: params.amountUgx,
+    staffId,
+    terminalId,
+    paymentLocalId,
+  })
+  return payment
+}
+
+/**
+ * Record Airtel Money payment offline. Same flow as cash but method airtel_money; no changeUgx. Enqueue for sync.
+ */
+export async function payAirtelOffline(params: {
+  orderLocalId: string
+  amountUgx: number
+}): Promise<OfflinePayment> {
+  const order = await getOrderByLocalId(params.orderLocalId)
+  if (!order) throw new Error('Order not found')
+  if (order.isOfflineServed) throw new Error('Order already paid')
+  const staffId = getStaffId()
+  if (!staffId) throw new Error('Staff required')
+  let terminalId: string | null = null
+  if (typeof window !== 'undefined') {
+    try {
+      const { getTerminalId } = await import('@/lib/terminal/terminal')
+      terminalId = await getTerminalId()
+    } catch {
+      // keep null if terminal identity unavailable
+    }
+  }
+  const paymentLocalId = generateLocalId()
+  const clientRequestId = generateLocalId()
+  const payment: OfflinePayment = {
+    localId: paymentLocalId,
+    serverId: null,
+    orderLocalId: params.orderLocalId,
+    orderServerId: order.serverId,
+    amountUgx: params.amountUgx,
+    changeUgx: null,
+    method: 'airtel_money',
+    createdByStaffId: staffId,
+    terminalId,
+    clientRequestId,
+    createdAt: now(),
+    syncStatus: 'pending',
+  }
+  await putPayment(payment)
+  await putOrder({
+    ...order,
+    status: 'served',
+    isOfflineServed: true,
+    updatedAt: now(),
+  })
+  await enqueuePayAirtel(clientRequestId, {
+    orderLocalId: params.orderLocalId,
+    orderServerId: order.serverId,
+    amountUgx: params.amountUgx,
     staffId,
     terminalId,
     paymentLocalId,

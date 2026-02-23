@@ -119,7 +119,6 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary> {
   let cashSales = 0
   let mtnMomoSales = 0
   let airtelSales = 0
-  let cardSales = 0
 
   for (const payment of payments) {
     const amount = Number(payment.amountUgx)
@@ -133,13 +132,12 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary> {
       case 'airtel_money':
         airtelSales += amount
         break
-      case 'card':
-        cardSales += amount
+      default:
         break
     }
   }
 
-  const totalSales = cashSales + mtnMomoSales + airtelSales + cardSales
+  const totalSales = cashSales + mtnMomoSales + airtelSales
 
   // Food vs Drinks: sum order item totals by product category for served orders
   const servedOrderIds = orders
@@ -178,7 +176,7 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary> {
     cashSales,
     mtnMomoSales,
     airtelSales,
-    cardSales,
+    cardSales: 0,
     foodSalesUgx,
     drinksSalesUgx,
     foodOrdersServed: orderIdsWithFood.size,

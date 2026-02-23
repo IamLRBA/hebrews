@@ -174,7 +174,6 @@ export default function PosClosePage() {
               <p className="m-0 py-1"><strong>Cash sales:</strong> UGX {summary.cashSales.toLocaleString()}</p>
               <p className="m-0 py-1"><strong>MTN MoMo:</strong> UGX {summary.mtnMomoSales.toLocaleString()}</p>
               <p className="m-0 py-1"><strong>Airtel:</strong> UGX {summary.airtelSales.toLocaleString()}</p>
-              <p className="m-0 py-1"><strong>Card:</strong> UGX {summary.cardSales.toLocaleString()}</p>
               <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700 grid grid-cols-2 gap-2">
                 <div>
                   <p className="m-0 text-sm font-medium text-neutral-600 dark:text-neutral-400">Food</p>
