@@ -140,9 +140,11 @@ export async function getShiftSummary(shiftId: string): Promise<ShiftSummary> {
   const totalSales = cashSales + mtnMomoSales + airtelSales
 
   // Food vs Drinks: sum order item totals by product category for served orders
-  const servedOrderIds = orders
-    .filter((o) => o.status === 'served')
-    .map((o) => o.id)
+  const servedOrders = await prisma.order.findMany({
+    where: { shiftId, status: 'served' },
+    select: { id: true },
+  })
+  const servedOrderIds = servedOrders.map((o) => o.id)
   let foodSalesUgx = 0
   let drinksSalesUgx = 0
   const orderIdsWithFood = new Set<string>()
