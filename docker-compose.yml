@@ -1,8 +1,12 @@
-# POS system — production stack (single VPS)
-# Usage: copy .env.docker.example to .env, set secrets, then:
-#   docker compose up -d
-#   docker compose exec pos-app npx prisma migrate deploy
-#   docker compose exec pos-app npx prisma db seed   # first time only
+# =============================================================================
+# POS System — Production Stack (Single VPS)
+# =============================================================================
+# Prerequisites: Copy .env.production.example to .env, set POSTGRES_PASSWORD and POS_JWT_SECRET.
+# Start:  docker compose up -d --build
+# With Redis (realtime): docker compose --profile redis up -d --build
+# Migrate: docker compose exec pos-app npx prisma migrate deploy
+# Seed:    docker compose exec pos-app npx prisma db seed   # first time only
+# =============================================================================
 
 services:
   postgres:
@@ -19,10 +23,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
+    networks:
+      - pos-internal
 
+  # Optional: enable Redis for realtime SSE multi-instance. Omit REDIS_URL in .env to use in-memory.
   redis:
     image: redis:7-alpine
     restart: unless-stopped
+    profiles:
+      - redis
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
@@ -31,19 +41,21 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    networks:
+      - pos-internal
 
   pos-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: pos-app:latest
     restart: unless-stopped
     env_file: .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-posuser}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-pos}?schema=public
-      REDIS_URL: redis://redis:6379
       NODE_ENV: production
     depends_on:
       postgres: { condition: service_healthy }
-      redis: { condition: service_healthy }
     volumes:
       - pos_uploads:/app/public/pos-images
       - pos_backups:/app/backups
@@ -53,6 +65,8 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+    networks:
+      - pos-internal
 
   nginx:
     image: nginx:alpine
@@ -62,13 +76,19 @@ services:
       - "443:443"
     volumes:
       - ./deploy/nginx.conf:/etc/nginx/nginx.conf:ro
-      # For HTTPS, create deploy/ssl/ and add fullchain.pem, privkey.pem; then uncomment:
+      # For HTTPS, uncomment after placing certs in deploy/ssl/:
       # - ./deploy/ssl:/etc/nginx/ssl:ro
     depends_on:
-      - pos-app
+      pos-app: { condition: service_healthy }
+    networks:
+      - pos-internal
 
 volumes:
   postgres_data:
   redis_data:
   pos_uploads:
   pos_backups:
+
+networks:
+  pos-internal:
+    driver: bridge

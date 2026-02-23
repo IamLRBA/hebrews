@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
+import { writeFile } from 'fs/promises'
 import path from 'path'
 import { getAuthenticatedStaff } from '@/lib/pos-auth'
 import { assertStaffRole } from '@/lib/domain/role-guard'
+import { ensureUploadDirs } from '@/lib/storage-paths'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
@@ -24,11 +25,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File too large. Max 5MB.' }, { status: 400 })
     }
 
+    const dir = ensureUploadDirs().products
     const ext = path.extname(file.name) || '.jpg'
     const safeExt = /^\.(jpe?g|png|gif|webp)$/i.test(ext) ? ext : '.jpg'
     const filename = `product-${crypto.randomUUID()}${safeExt}`
-    const dir = path.join(process.cwd(), 'public', 'pos-images', 'products')
-    await mkdir(dir, { recursive: true })
     const filePath = path.join(dir, filename)
     const buffer = Buffer.from(await file.arrayBuffer())
     await writeFile(filePath, buffer)

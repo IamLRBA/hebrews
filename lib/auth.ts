@@ -20,16 +20,6 @@ export interface Review {
   productName?: string
 }
 
-export interface Admin {
-  username: string
-  password: string
-}
-
-const ADMIN_CREDENTIALS: Admin = {
-  username: 'IamLRBA',
-  password: 'L@ruba1212'
-}
-
 export class AuthManager {
   private static USERS_KEY = 'fusioncraft_users'
   private static CURRENT_USER_KEY = 'fusioncraft_current_user'
@@ -213,16 +203,25 @@ export class AuthManager {
     return reviewsData ? JSON.parse(reviewsData) : []
   }
 
-  // Admin Management
-  static adminLogin(username: string, password: string): boolean {
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-      if (typeof window !== 'undefined') {
+  // Admin Management — server-side verification via env (ADMIN_USERNAME, ADMIN_PASSWORD_HASH). No plaintext stored.
+  static async adminLogin(username: string, password: string): Promise<boolean> {
+    if (typeof window === 'undefined') return false
+    try {
+      const res = await fetch('/api/auth/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (res.ok && data.success === true) {
         localStorage.setItem(this.ADMIN_KEY, 'true')
         window.dispatchEvent(new CustomEvent('adminStateChanged'))
+        return true
       }
-      return true
+      return false
+    } catch {
+      return false
     }
-    return false
   }
 
   static adminLogout(): void {
