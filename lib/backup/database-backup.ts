@@ -173,9 +173,15 @@ export async function runIncrementalBackup(): Promise<BackupResult> {
   }
 }
 
-export async function listBackups(params?: { limit?: number; type?: DatabaseBackupType }): Promise<BackupResult[]> {
+export async function listBackups(params?: {
+  limit?: number
+  type?: DatabaseBackupType
+  status?: DatabaseBackupStatus
+}): Promise<BackupResult[]> {
   const limit = Math.min(params?.limit ?? 100, 500)
-  const where = params?.type ? { type: params.type } : {}
+  const where: { type?: DatabaseBackupType; status?: DatabaseBackupStatus } = {}
+  if (params?.type) where.type = params.type
+  if (params?.status) where.status = params.status
   const rows = await prisma.databaseBackup.findMany({
     where,
     orderBy: { createdAt: 'desc' },
