@@ -99,8 +99,13 @@ export async function runIntegrityChecks(): Promise<IntegrityIssue[]> {
   // Cash sale outside active shift (payment recorded after shift closed)
   const cashPayments = await prisma.payment.findMany({
     where: { method: 'cash', status: 'completed' },
-    select: { id: true, orderId: true, amountUgx: true, createdAt: true },
-    include: { order: { select: { shiftId: true, shift: { select: { endTime: true } } } } },
+    select: {
+      id: true,
+      orderId: true,
+      amountUgx: true,
+      createdAt: true,
+      order: { select: { shiftId: true, shift: { select: { endTime: true } } } },
+    },
   })
   for (const p of cashPayments) {
     if (p.order?.shift?.endTime != null) {
