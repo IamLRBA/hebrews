@@ -6,7 +6,7 @@
 # =============================================================================
 
 FROM node:20-alpine AS base
-RUN apk add --no-cache libc6-compat wget
+RUN apk add --no-cache libc6-compat wget openssl
 WORKDIR /app
 
 # -----------------------------------------------------------------------------
@@ -34,8 +34,8 @@ RUN npx prisma generate && npm run build
 # -----------------------------------------------------------------------------
 FROM base AS runner
 
-# postgresql-client for in-app pg_dump when BACKUP_DIR is used
-RUN apk add --no-cache postgresql-client
+# postgresql-client for in-app pg_dump; openssl for Prisma migration/query engine
+RUN apk add --no-cache postgresql-client openssl
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
