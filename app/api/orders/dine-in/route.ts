@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
           await emitOrderCountsForShift(o.shiftId)
           return o
         })
-      : (async () => {
+      : await (async () => {
           const o = await createDineInOrder({
             tableId,
             createdByStaffId,
