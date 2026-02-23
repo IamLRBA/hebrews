@@ -1,0 +1,55 @@
+# Dependencies and build artifacts (rebuilt in container)
+node_modules
+.next
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment and secrets (never in image)
+.env
+.env.*
+!.env.example
+!.env.docker.example
+!.env.production.example
+
+# Git and IDE
+.git
+.gitignore
+.dockerignore
+.cursor
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Tests and dev tooling
+coverage
+.nyc_output
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+jest.config.*
+cypress
+.playwright
+
+# Documentation (optional: include if you want in image)
+# *.md
+# docs
+
+# Scripts not needed at runtime
+scripts
+*.md
+!README.md
+
+# Prisma: keep schema and migrations; omit dev-only
+# prisma/schema.prisma and prisma/migrations/ are copied
+
+# Deployment docs (not needed inside container)
+deploy
+DEPLOYMENT.md
+DEPLOYMENT_SPECIFICATION.md
+SETUP_PRODUCTION.md
+phase1-server-prep.md

@@ -1,6 +1,7 @@
 /**
  * Phase 10: Database backup service.
  * Full backup via pg_dump; metadata stored in DatabaseBackup.
+ * Uses production-safe paths (BACKUP_DIR, default /app/backups in container).
  */
 
 import { spawn } from 'child_process'
@@ -8,16 +9,13 @@ import fs from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/db'
 import { getBackupRetentionDays } from '@/lib/config/system-config'
+import { ensureBackupDir } from '@/lib/storage-paths'
 import type { DatabaseBackupType, DatabaseBackupStatus } from '@prisma/client'
 
-const BACKUP_DIR = process.env.BACKUP_DIR || path.join(process.cwd(), 'backups')
 const DEFAULT_RETENTION_DAYS = 30
 
-function ensureBackupDir(): string {
-  if (!fs.existsSync(BACKUP_DIR)) {
-    fs.mkdirSync(BACKUP_DIR, { recursive: true })
-  }
-  return BACKUP_DIR
+function ensureBackupDirExists(): string {
+  return ensureBackupDir()
 }
 
 function parseDatabaseUrl(url: string): { host?: string; port?: string; user?: string; password?: string; dbname?: string } {
@@ -88,7 +86,7 @@ export interface BackupResult {
 }
 
 export async function runFullBackup(): Promise<BackupResult> {
-  const dir = ensureBackupDir()
+  const dir = ensureBackupDirExists()
   const filename = `full-${new Date().toISOString().replace(/[:.]/g, '-')}.sql`
   const outPath = path.join(dir, filename)
 
@@ -132,7 +130,7 @@ export async function runFullBackup(): Promise<BackupResult> {
 }
 
 export async function runIncrementalBackup(): Promise<BackupResult> {
-  const dir = ensureBackupDir()
+  const dir = ensureBackupDirExists()
   const filename = `incr-${new Date().toISOString().replace(/[:.]/g, '-')}.sql`
   const outPath = path.join(dir, filename)
 
