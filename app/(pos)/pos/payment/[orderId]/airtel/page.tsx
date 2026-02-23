@@ -123,22 +123,29 @@ export default function PosPaymentAirtelPage() {
       <div className="flex-shrink-0 fixed top-0 left-0 right-0 z-[1020] bg-[var(--color-bg-primary)] px-4 pt-4 [&_.pos-dashboard-header]:mb-0">
         <PosNavHeader />
       </div>
-      <div className="flex-shrink-0 min-h-[8rem]" aria-hidden />
+      <div className="flex-shrink-0 min-h-[13rem]" aria-hidden />
       {error && (
         <div className="mx-4 mt-2 flex-shrink-0">
           <ErrorBanner message={error} onDismiss={() => setError(null)} />
         </div>
       )}
-      <div className="flex-1 flex flex-col items-center p-6 overflow-auto">
+      <div className="flex-1 flex flex-col items-center p-6 overflow-auto pt-6">
         <div className="pos-card w-full max-w-lg p-8 text-center">
-          <h1 className="pos-section-title text-2xl mb-6">Pay using Airtel Money</h1>
+          <h1 className="pos-section-title text-2xl mb-6 mt-4">Pay using Airtel Money</h1>
 
-          <div className="space-y-4 text-left mb-8 p-6 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200 dark:border-neutral-700">
-            <p className="m-0"><span className="text-neutral-500 dark:text-neutral-400">Merchant ID:</span> <strong className="font-mono">{AIRTEL_MERCHANT_ID}</strong></p>
-            <p className="m-0"><span className="text-neutral-500 dark:text-neutral-400">Dial:</span> <strong className="font-mono text-lg">{AIRTEL_DIAL}</strong></p>
-            <p className="m-0 pt-2 border-t border-neutral-200 dark:border-neutral-600">
-              <span className="text-neutral-500 dark:text-neutral-400">Amount:</span> <strong className="text-primary-700 dark:text-primary-200">{formatCurrency(amount)} UGX</strong>
-            </p>
+          <div className="space-y-5 text-center mb-8 p-6 bg-neutral-50 dark:bg-neutral-800/50 rounded-xl border border-neutral-200 dark:border-neutral-700">
+            <div>
+              <p className="m-0 text-sm text-neutral-500 dark:text-neutral-400">Merchant ID:</p>
+              <p className="m-0 mt-1 font-mono font-semibold text-neutral-900 dark:text-neutral-100">{AIRTEL_MERCHANT_ID}</p>
+            </div>
+            <div>
+              <p className="m-0 text-sm text-neutral-500 dark:text-neutral-400">Dial:</p>
+              <p className="m-0 mt-1 font-mono text-lg font-semibold text-neutral-900 dark:text-neutral-100">{AIRTEL_DIAL}</p>
+            </div>
+            <div className="pt-2 border-t border-neutral-200 dark:border-neutral-600">
+              <p className="m-0 text-sm text-neutral-500 dark:text-neutral-400">Amount:</p>
+              <p className="m-0 mt-1 font-semibold text-primary-700 dark:text-primary-200">{formatCurrency(amount)}</p>
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
