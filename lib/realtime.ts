@@ -28,6 +28,7 @@ export type RealtimeEvent =
   | { type: 'ORDER_CREATED'; payload: OrderCreatedPayload }
   | { type: 'ORDER_UPDATED'; payload: OrderUpdatedPayload }
   | { type: 'ORDER_SENT_TO_KITCHEN'; payload: OrderSentToKitchenPayload }
+  | { type: 'ORDER_SENT_TO_BAR'; payload: OrderSentToKitchenPayload }
   | { type: 'ORDER_STATUS_CHANGED'; payload: OrderStatusChangedPayload }
   | { type: 'ORDER_CANCELLED'; payload: OrderCancelledPayload }
   | { type: 'ORDER_ASSIGNMENT_CHANGED'; payload: OrderAssignmentChangedPayload }
