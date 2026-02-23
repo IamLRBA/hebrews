@@ -13,6 +13,8 @@ import {
   generateLocalId,
 } from '@/lib/offline/db'
 
+export type { MutationQueueItem } from '@/lib/offline/db'
+
 export type MutationType =
   | 'createOrder'
   | 'addItem'
