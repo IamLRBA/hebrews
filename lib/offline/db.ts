@@ -222,7 +222,7 @@ export async function getPaymentsByOrderLocalId(orderLocalId: string): Promise<O
 }
 
 // --- Sync metadata ---
-const META_ID = 'default'
+export const META_ID = 'default'
 export async function getSyncMetadata(): Promise<SyncMetadata | null> {
   const db = await getDb()
   return new Promise((resolve, reject) => {

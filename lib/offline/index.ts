@@ -64,4 +64,9 @@ export {
   getReceiptDataOffline,
   type OfflineReceipt,
 } from './offline-order-service'
-export { exportOfflineDataJSON, exportOfflineDataCSV, type OfflineExportSnapshot } from './export'
+export {
+  exportOfflineDataJSON,
+  exportOfflineDataCSV,
+  downloadOfflineDataJSON,
+  type OfflineExportSnapshot,
+} from './export'
