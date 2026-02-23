@@ -9,7 +9,7 @@ export async function PUT(
 ) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const { productId } = await params
     if (!productId) {
@@ -63,7 +63,7 @@ export async function DELETE(
 ) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const { productId } = await params
     if (!productId) {

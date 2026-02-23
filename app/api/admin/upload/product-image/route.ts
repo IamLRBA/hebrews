@@ -10,7 +10,7 @@ const MAX_SIZE = 5 * 1024 * 1024 // 5MB
 export async function POST(request: NextRequest) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const formData = await request.formData()
     const file = formData.get('file') as File | null

@@ -6,7 +6,7 @@ import { assertStaffRole } from '@/lib/domain/role-guard'
 export async function GET(request: NextRequest) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const tables = await prisma.restaurantTable.findMany({
       where: {
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
     const body = await request.json()
     const { code, capacity, images } = body
     if (typeof code !== 'string' || !code.trim()) return NextResponse.json({ error: 'code is required' }, { status: 400 })

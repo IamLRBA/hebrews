@@ -6,7 +6,7 @@ import { assertStaffRole } from '@/lib/domain/role-guard'
 export async function GET(request: NextRequest) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const products = await prisma.product.findMany({
       orderBy: [{ category: 'asc' }, { section: 'asc' }, { name: 'asc' }],
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { staffId } = await getAuthenticatedStaff(request)
-    await assertStaffRole(staffId, ['admin'])
+    await assertStaffRole(staffId, ['admin', 'manager'])
 
     const body = await request.json()
     const { name, category, section, priceUgx, sizes, images, stockQty, isActive, description, sku } = body
