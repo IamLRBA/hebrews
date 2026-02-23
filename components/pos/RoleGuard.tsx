@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { getStaffId, getStaffRole, posFetch } from '@/lib/pos-client'
 
-type Role = 'admin' | 'manager' | 'cashier' | 'kitchen'
+type Role = 'admin' | 'manager' | 'cashier' | 'waiter' | 'kitchen' | 'bar'
 
 interface RoleGuardProps {
   children: React.ReactNode
@@ -82,7 +82,10 @@ function getDefaultRedirect(role: Role): string {
       return '/manager/dashboard'
     case 'kitchen':
       return '/kitchen'
+    case 'bar':
+      return '/bar'
     case 'cashier':
+    case 'waiter':
     default:
       return '/pos/start'
   }
