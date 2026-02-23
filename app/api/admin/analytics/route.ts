@@ -88,11 +88,12 @@ export async function GET(request: NextRequest) {
       }
 
       const getFoodDrinksRevenueCustom = async (gte: Date, lt?: Date) => {
-        const where: { order: { status: string; createdAt: { gte: Date; lte?: Date; lt?: Date } } } = {
-          order: { status: 'served', createdAt: { gte } },
+        const where = {
+          order: {
+            status: 'served' as const,
+            createdAt: lt ? { gte, lt } : { gte, lte: customEnd },
+          },
         }
-        if (lt) where.order.createdAt.lt = lt
-        else where.order.createdAt.lte = customEnd
         const items = await prisma.orderItem.findMany({
           where,
           select: { lineTotalUgx: true, product: { select: { category: true } } },
@@ -298,10 +299,12 @@ export async function GET(request: NextRequest) {
 
     // Food vs Drinks revenue (order item totals by product category for served orders in range)
     const getFoodDrinksRevenue = async (gte: Date, lt?: Date) => {
-      const where: { order: { status: string; createdAt: { gte: Date; lt?: Date } } } = {
-        order: { status: 'served', createdAt: { gte } },
+      const where = {
+        order: {
+          status: 'served' as const,
+          createdAt: lt ? { gte, lt } : { gte },
+        },
       }
-      if (lt) where.order.createdAt.lt = lt
       const items = await prisma.orderItem.findMany({
         where,
         select: { lineTotalUgx: true, product: { select: { category: true } } },
