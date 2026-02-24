@@ -19,7 +19,7 @@
     "test:order-number": "ts-node --compiler-options {\"module\":\"CommonJS\"} scripts/test-order-number-unique.ts"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.2.8",
